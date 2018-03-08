@@ -187,6 +187,8 @@
      <addaction name="drawWingSamplePointsAction"/>
      <addaction name="drawWingOverlayCPACSProfilePointsAction"/>
      <addaction name="drawWingCSPointAction"/>
+     <addaction name="separator"/>
+     <addaction name="drawTEDAction"/>
     </widget>
     <widget class="QMenu" name="menuFuselages">
      <property name="title">
@@ -1442,6 +1444,17 @@
    </property>
    <property name="shortcut">
     <string>F5</string>
+   </property>
+  </action>
+  <action name="drawTEDAction">
+   <property name="text">
+    <string>Show TED</string>
+   </property>
+   <property name="toolTip">
+    <string>Show Trailing Edge Device</string>
+   </property>
+   <property name="shortcut">
+    <string>J</string>
    </property>
   </action>
  </widget>

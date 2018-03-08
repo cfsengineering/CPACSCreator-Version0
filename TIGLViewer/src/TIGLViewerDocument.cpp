@@ -2032,6 +2032,34 @@ void TIGLViewerDocument::drawWingStructure()
 
 }
 
+
+void TIGLViewerDocument::drawTED(){
+    QString wingUid = dlgGetWingSelection();
+    try {
+    tigl::CCPACSWing& wing = GetConfiguration().GetWing(wingUid.toStdString());
+        drawTED(wing);
+    }
+    catch (tigl::CTiglError& ex) {
+        displayError(ex.what());
+    }
+
+}
+
+
+void TIGLViewerDocument::drawTED(tigl::CCPACSWing& wing){
+
+    START_COMMAND();
+
+    app->getScene()->deleteAllObjects();
+
+    for (int i = 1; i <= wing.GetSegmentCount(); i++) {
+        // Draw segment loft
+        app->getScene()->displayShape(wing.GetSegment(i).GetLoft(), true);
+    }
+}
+
+
+
 void TIGLViewerDocument::drawFarField()
 {
     START_COMMAND();

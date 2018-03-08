@@ -78,6 +78,8 @@ public slots:
     void drawWingShells();
     void drawWingStructure();
 
+    void drawTED();
+
     // Fuselage slots
     void drawFuselageProfiles();
     void drawFuselage();
@@ -179,6 +181,8 @@ private:
 
     void createShapeTriangulation(const class TopoDS_Shape& shape, class TopoDS_Compound& compound);
     
+    void drawTED(tigl::CCPACSWing& wing);
+
 };
 
 Q_DECLARE_METATYPE(TIGLViewerDocument*)
