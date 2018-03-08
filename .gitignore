@@ -6,4 +6,5 @@ cmake-build-debug/*
 .idea/*
 *.txt.user
 *.directory
+*.autosave
  

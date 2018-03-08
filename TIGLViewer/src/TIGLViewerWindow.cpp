@@ -574,6 +574,8 @@ void TIGLViewerWindow::connectConfiguration()
     connect(drawWingShellAction, SIGNAL(triggered()), cpacsConfiguration, SLOT(drawWingShells()));
     connect(drawWingStructureAction, SIGNAL(triggered(bool)), cpacsConfiguration, SLOT(drawWingStructure()));
 
+    connect(drawTEDAction, SIGNAL(triggered()), cpacsConfiguration, SLOT(drawTED()));
+
 
     // CPACS Aircraft Actions
     connect(showAllWingsAndFuselagesAction, SIGNAL(triggered()), cpacsConfiguration, SLOT(drawAllFuselagesAndWings()));
