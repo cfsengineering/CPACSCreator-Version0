@@ -64,7 +64,7 @@
      <x>0</x>
      <y>0</y>
      <width>783</width>
-     <height>21</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="fileMenu">
@@ -141,8 +141,10 @@
     <addaction name="newAction"/>
     <addaction name="openAction"/>
     <addaction name="recentFileMenu"/>
-    <addaction name="openScriptAction"/>
     <addaction name="setBackgroundAction"/>
+    <addaction name="openScriptAction"/>
+    <addaction name="separator"/>
+    <addaction name="refreshAction"/>
     <addaction name="separator"/>
     <addaction name="saveAction"/>
     <addaction name="saveScreenshotAction"/>
@@ -320,6 +322,7 @@
    <addaction name="closeAction"/>
    <addaction name="separator"/>
    <addaction name="settingsAction"/>
+   <addaction name="refreshAction"/>
   </widget>
   <widget class="QToolBar" name="toolBarView">
    <property name="windowTitle">
@@ -1431,6 +1434,14 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+A</string>
+   </property>
+  </action>
+  <action name="refreshAction">
+   <property name="text">
+    <string>Refresh</string>
+   </property>
+   <property name="shortcut">
+    <string>F5</string>
    </property>
   </action>
  </widget>
