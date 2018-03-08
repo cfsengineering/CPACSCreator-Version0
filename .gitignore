@@ -1,4 +1,9 @@
 /bin
 /build*
 /docs
+cmake-build-debug/*
 *.pyc
+.idea/*
+*.txt.user
+*.directory
+ 
