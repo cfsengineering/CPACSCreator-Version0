@@ -643,6 +643,7 @@ void TIGLViewerWindow::connectSignals()
     connect(openAction, SIGNAL(triggered()), this, SLOT(open()));
     connect(openScriptAction, SIGNAL(triggered()), this, SLOT(openScript()));
     connect(closeAction, SIGNAL(triggered()), this, SLOT(closeConfiguration()));
+    connect(refreshAction,SIGNAL(triggered()), this, SLOT(reopenFile()));
 
     for (int i = 0; i < MaxRecentFiles; ++i) {
         recentFileActions[i] = new QAction(this);
