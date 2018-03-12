@@ -46,6 +46,9 @@ public:
 
     TiglReturnCode openCpacsConfiguration(const QString fileName);
     void closeCpacsConfiguration();
+
+    void saveCpacsConfiguration();
+
     TiglCPACSConfigurationHandle getCpacsHandle() const;
 
     // Returns the CPACS configuration
@@ -78,7 +81,9 @@ public slots:
     void drawWingShells();
     void drawWingStructure();
 
-    void drawTED();
+    // Set Wing slot
+    void setScaleWing(tigl::CTiglPoint value);
+
 
     // Fuselage slots
     void drawFuselageProfiles();
@@ -180,9 +185,8 @@ private:
     void drawWingShells(tigl::CCPACSWing& wing);
 
     void createShapeTriangulation(const class TopoDS_Shape& shape, class TopoDS_Compound& compound);
-    
-    void drawTED(tigl::CCPACSWing& wing);
 
+    void setScaleWing(tigl::CCPACSWing& wing, tigl::CTiglPoint newScale);
 };
 
 Q_DECLARE_METATYPE(TIGLViewerDocument*)

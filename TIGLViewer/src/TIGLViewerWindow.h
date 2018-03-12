@@ -102,6 +102,9 @@ private:
     void connectSignals();
     void connectConfiguration();
     void createMenus();
+
+    void initCreatorInterface();
+
     void updateRecentFileActions();
     void setCurrentFile(const QString &);
 
