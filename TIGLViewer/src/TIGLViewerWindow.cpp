@@ -115,6 +115,8 @@ TIGLViewerWindow::TIGLViewerWindow()
     
     setAcceptDrops(true);
 
+    initCreatorInterface();
+
     connectSignals();
     createMenus();
     updateMenus();
@@ -574,8 +576,6 @@ void TIGLViewerWindow::connectConfiguration()
     connect(drawWingShellAction, SIGNAL(triggered()), cpacsConfiguration, SLOT(drawWingShells()));
     connect(drawWingStructureAction, SIGNAL(triggered(bool)), cpacsConfiguration, SLOT(drawWingStructure()));
 
-    connect(drawTEDAction, SIGNAL(triggered()), cpacsConfiguration, SLOT(drawTED()));
-
 
     // CPACS Aircraft Actions
     connect(showAllWingsAndFuselagesAction, SIGNAL(triggered()), cpacsConfiguration, SLOT(drawAllFuselagesAndWings()));
@@ -637,6 +637,13 @@ void TIGLViewerWindow::connectConfiguration()
     
     connect(cpacsConfiguration, SIGNAL(documentUpdated(TiglCPACSConfigurationHandle)), 
              this, SLOT(updateMenus()) );
+
+    // Set functions
+    // connect(scaleXDoubleSpinBox,SIGNAL( valueChanged(double )), cpacsConfiguration,SLOT( setScaleWing(double)) );
+
+    connect(tiglPointInput, SIGNAL(valueChanged(tigl::CTiglPoint)),cpacsConfiguration, SLOT(setScaleWing(tigl::CTiglPoint)) );
+
+
 }
 
 void TIGLViewerWindow::connectSignals()
@@ -731,6 +738,7 @@ void TIGLViewerWindow::connectSignals()
     connect(console, SIGNAL(onCommand(QString)), scriptEngine, SLOT(eval(QString)));
 
     connect(settingsAction, SIGNAL(triggered()), this, SLOT(changeSettings()));
+
 }
 
 void TIGLViewerWindow::createMenus()
@@ -740,6 +748,16 @@ void TIGLViewerWindow::createMenus()
     }
     updateRecentFileActions();
 }
+
+
+
+void TIGLViewerWindow::initCreatorInterface()
+{
+    tiglPointInput->init();
+
+}
+
+
 
 void TIGLViewerWindow::updateRecentFileActions()
 {

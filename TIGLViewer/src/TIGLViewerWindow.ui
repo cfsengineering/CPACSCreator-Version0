@@ -374,6 +374,64 @@
     </layout>
    </widget>
   </widget>
+  <widget class="QDockWidget" name="wingDockWidget">
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents">
+    <layout class="QVBoxLayout" name="verticalLayout_2">
+     <item>
+      <spacer name="verticalSpacer">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="TIGLPointWidget" name="tiglPointInput" native="true">
+       <layout class="QHBoxLayout" name="PointInput">
+        <item>
+         <widget class="QLabel" name="labelX">
+          <property name="text">
+           <string>X:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QDoubleSpinBox" name="doubleSpinBoxZ"/>
+        </item>
+        <item>
+         <widget class="QLabel" name="labelY">
+          <property name="text">
+           <string>Y:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QDoubleSpinBox" name="doubleSpinBoxX"/>
+        </item>
+        <item>
+         <widget class="QLabel" name="labelZ">
+          <property name="text">
+           <string>Z:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QDoubleSpinBox" name="doubleSpinBoxY"/>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
   <action name="newAction">
    <property name="text">
     <string>&amp;New</string>
@@ -1469,6 +1527,12 @@
    <class>Console</class>
    <extends>QPlainTextEdit</extends>
    <header>TiglViewerConsole.h</header>
+  </customwidget>
+  <customwidget>
+   <class>TIGLPointWidget</class>
+   <extends>QWidget</extends>
+   <header>TIGLPointWidget.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources>

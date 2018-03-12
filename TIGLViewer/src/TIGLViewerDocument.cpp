@@ -83,6 +83,8 @@
 #include "CCPACSWingSparSegment.h"
 #include "CCPACSWingRibsDefinition.h"
 #include "CTiglAttachedRotorBlade.h"
+#include "CCPACSWingSection.h"
+
 
 #define max(a,b) ((a) > (b) ? (a) : (b))
 
@@ -215,6 +217,9 @@ TiglReturnCode TIGLViewerDocument::openCpacsConfiguration(const QString fileName
     return TIGL_SUCCESS;
 }
 
+
+
+
 void TIGLViewerDocument::closeCpacsConfiguration()
 {
     if (m_cpacsHandle < 1) {
@@ -234,6 +239,24 @@ void TIGLViewerDocument::closeCpacsConfiguration()
     emit documentUpdated(m_cpacsHandle);
 }
 
+
+
+void TIGLViewerDocument::saveCpacsConfiguration()
+{
+    // Right now, we just close the tigl session and open a new one
+    if (!loadedConfigurationFileName.isEmpty()) {
+        START_COMMAND();
+
+        // save CPACS
+        tiglSaveCPACSConfiguration("mDsave", m_cpacsHandle);
+
+        // SAVE Tixi
+        TixiDocumentHandle tixiHandle = -1;
+        tiglGetCPACSTixiHandle(m_cpacsHandle, &tixiHandle);
+        char *cfileName = strdup((const char*)loadedConfigurationFileName.toLatin1());
+        tixiSaveDocument(tixiHandle, cfileName  );
+    }
+}
 
 /**
  * Re-reads the CPACS configuration.
@@ -786,7 +809,6 @@ void TIGLViewerDocument::drawAllFuselagesAndWings( )
 }
 
 
-
 void TIGLViewerDocument::drawWingProfiles()
 {
     QString wingProfile = dlgGetWingProfileSelection();
@@ -1147,6 +1169,51 @@ void TIGLViewerDocument::drawAllFuselagesAndWingsSurfacePoints()
     }
     app->getScene()->updateViewer();
 }
+
+
+
+// -----------------------
+// Set Functions
+// -----------------------
+
+void TIGLViewerDocument::setScaleWing(tigl::CCPACSWing& wing, tigl::CTiglPoint newScale)
+{
+    //START_COMMAND();
+
+    tigl::CCPACSWingSections& sections = wing.GetSections();
+
+    for (int i = 1; i <= sections.GetSectionCount(); i++) {
+
+        tigl::CCPACSWingSection& section =  sections.GetSection(i);
+        tigl::CTiglPoint oldSscale = section.GetScaling();
+        section.SetScaling(newScale);
+        app->getConsole()->output(QString("Change Section %1 of the wing from %2 to %3").arg(i).arg(oldSscale.y).arg(newScale.y));
+
+    }
+    saveCpacsConfiguration();
+}
+
+
+void TIGLViewerDocument::setScaleWing(tigl::CTiglPoint value)
+{
+    QString wingUid = "D150_VAMP_wing_W1";
+
+    try {
+    tigl::CCPACSWing& wing = GetConfiguration().GetWing(wingUid.toStdString());
+        setScaleWing(wing, value);
+    }
+    catch (tigl::CTiglError& ex) {
+        displayError(ex.what());
+    }
+
+}
+
+
+
+
+
+
+
 
 
 // -----------------------
@@ -2033,33 +2100,6 @@ void TIGLViewerDocument::drawWingStructure()
 }
 
 
-void TIGLViewerDocument::drawTED(){
-    QString wingUid = dlgGetWingSelection();
-    try {
-    tigl::CCPACSWing& wing = GetConfiguration().GetWing(wingUid.toStdString());
-        drawTED(wing);
-    }
-    catch (tigl::CTiglError& ex) {
-        displayError(ex.what());
-    }
-
-}
-
-
-void TIGLViewerDocument::drawTED(tigl::CCPACSWing& wing){
-
-    START_COMMAND();
-
-    app->getScene()->deleteAllObjects();
-
-    for (int i = 1; i <= wing.GetSegmentCount(); i++) {
-        // Draw segment loft
-        app->getScene()->displayShape(wing.GetSegment(i).GetLoft(), true);
-    }
-}
-
-
-
 void TIGLViewerDocument::drawFarField()
 {
     START_COMMAND();
@@ -2702,5 +2742,7 @@ TiglCPACSConfigurationHandle TIGLViewerDocument::getCpacsHandle() const
 {
     return this->m_cpacsHandle;
 }
+
+
 
 
