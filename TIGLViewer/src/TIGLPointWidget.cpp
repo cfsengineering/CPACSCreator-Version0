@@ -31,7 +31,7 @@ void TIGLPointWidget::setSpinBoxesFromTiglePoint()
 {
     boxX->setValue(tiglPoint.x);
     boxY->setValue(tiglPoint.y);
-    boxZ->setValue(tiglPoint.y);
+    boxZ->setValue(tiglPoint.z);
 }
 
 void TIGLPointWidget::setTiglePointFromSpinBoxes()

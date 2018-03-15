@@ -1178,7 +1178,7 @@ void TIGLViewerDocument::drawAllFuselagesAndWingsSurfacePoints()
 
 void TIGLViewerDocument::setScaleWing(tigl::CCPACSWing& wing, tigl::CTiglPoint newScale)
 {
-    //START_COMMAND();
+    START_COMMAND(); // WHATS THAT?
 
     tigl::CCPACSWingSections& sections = wing.GetSections();
 
@@ -1207,13 +1207,6 @@ void TIGLViewerDocument::setScaleWing(tigl::CTiglPoint value)
     }
 
 }
-
-
-
-
-
-
-
 
 
 // -----------------------
@@ -2742,7 +2735,6 @@ TiglCPACSConfigurationHandle TIGLViewerDocument::getCpacsHandle() const
 {
     return this->m_cpacsHandle;
 }
-
 
 
 

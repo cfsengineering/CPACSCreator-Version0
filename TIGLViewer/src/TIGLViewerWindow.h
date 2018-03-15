@@ -28,6 +28,7 @@
 #include "TIGLViewerDocument.h"
 #include "tigl.h"
 #include "CSharedPtr.h"
+#include "CPACSAbstractModel.h"
 
 #include "ui_TIGLViewerWindow.h"
 
@@ -97,13 +98,14 @@ private slots:
     void makeScreenShot();
     void drawPoint();
     void drawVector();
+    void updateCreatorInterface();
 
 private:
     void connectSignals();
     void connectConfiguration();
     void createMenus();
-
     void initCreatorInterface();
+
 
     void updateRecentFileActions();
     void setCurrentFile(const QString &);
@@ -119,6 +121,7 @@ private:
     QString                 myLastFolder;
 
     TIGLViewerDocument* cpacsConfiguration;
+    CPACSAbstractModel* model;
     QString currentFile;
     QString controlFileName;
     QFileSystemWatcher *watcher;

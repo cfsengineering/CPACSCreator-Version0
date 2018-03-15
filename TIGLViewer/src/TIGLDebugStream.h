@@ -15,6 +15,12 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
+/*
+ * @brief Create a basic_streambuf that emit a Qt signal when some sequence is puted.
+ *
+ * The buffer will override the buffer of the stream given as input and take its place.
+ * If the duplicate bool is set to true, the message is forward to the old buffer.
+ */
 
 #ifndef QDEBUGSTREAM_H
 #define QDEBUGSTREAM_H
@@ -35,10 +41,14 @@ signals:
    void sendString(QString text);
 
 public:
-    QDebugStream(std::ostream &stream) : m_stream(stream)
+
+    QDebugStream(std::ostream &stream, bool duplicate = false) : m_stream(stream)
     {
-      m_old_buf = stream.rdbuf();
-      stream.rdbuf(this);
+      this->duplicate = duplicate;
+      m_old_buf = stream.rdbuf(); // save the old buffer
+      stream.rdbuf(this);   // associate the argument stream (eg: std::cout) with this buffer
+
+
     }
     ~QDebugStream() OVERRIDE
     {
@@ -57,7 +67,14 @@ public:
 protected:
     int_type overflow(int_type v) OVERRIDE
     {
-        mutex.lock();      
+        mutex.lock();
+
+
+        // sending to the old buffer
+        if(duplicate) m_old_buf->sputc(v);
+
+
+        // emit a signal
         if (v == '\n') {
             emit sendString(front + m_string.c_str() + back);
             m_string.erase(m_string.begin(), m_string.end());
@@ -73,7 +90,12 @@ protected:
     std::streamsize xsputn(const char *p, std::streamsize n) OVERRIDE 
     {
         mutex.lock();
-      
+
+        // sending to the old buffer
+        if(duplicate) m_old_buf->sputn(p, n);
+
+
+        // emit a signal
         m_string.append(p, p + n);
         size_t pos = 0;
         while (pos != std::string::npos) {
@@ -96,6 +118,7 @@ private:
     std::string m_string;
     QMutex mutex;
     QString front, back;
+    bool duplicate;
 };
 
 

@@ -53,6 +53,9 @@
 #include "api/tigl_version.h"
 #include "CCPACSConfigurationManager.h"
 
+#include "CPACSAbstractModel.h"
+#include "CPACSOverTreeItem.h"
+
 #include <cstdlib>
 
 namespace
@@ -88,8 +91,8 @@ TIGLViewerWindow::TIGLViewerWindow()
     openTimer->setInterval(200);
 
     //redirect everything to TIGL console, let error messages be printed in red
-    stdoutStream = new QDebugStream(std::cout);
-    errorStream  = new QDebugStream(std::cerr);
+    stdoutStream = new QDebugStream(std::cout, true);
+    errorStream  = new QDebugStream(std::cerr, true);
     errorStream->setMarkup("<b><font color=\"red\">","</font></b>");
 
     // insert two loggers, one for the log history and one for the console
@@ -132,6 +135,7 @@ TIGLViewerWindow::~TIGLViewerWindow()
 {
     delete stdoutStream;
     delete errorStream;
+    delete model;
 }
 
 void TIGLViewerWindow::dragEnterEvent(QDragEnterEvent * ev)
@@ -281,6 +285,7 @@ void TIGLViewerWindow::openFile(const QString& fileName)
             
             connectConfiguration();
             updateMenus();
+            updateCreatorInterface();
             success = true;
         }
         else {
@@ -642,6 +647,7 @@ void TIGLViewerWindow::connectConfiguration()
     // connect(scaleXDoubleSpinBox,SIGNAL( valueChanged(double )), cpacsConfiguration,SLOT( setScaleWing(double)) );
 
     connect(tiglPointInput, SIGNAL(valueChanged(tigl::CTiglPoint)),cpacsConfiguration, SLOT(setScaleWing(tigl::CTiglPoint)) );
+    connect(cpacsConfiguration, SIGNAL(documentUpdated(TiglCPACSConfigurationHandle)), this, SLOT(updateCreatorInterface()) );
 
 
 }
@@ -739,6 +745,8 @@ void TIGLViewerWindow::connectSignals()
 
     connect(settingsAction, SIGNAL(triggered()), this, SLOT(changeSettings()));
 
+
+
 }
 
 void TIGLViewerWindow::createMenus()
@@ -753,10 +761,21 @@ void TIGLViewerWindow::createMenus()
 
 void TIGLViewerWindow::initCreatorInterface()
 {
+
     tiglPointInput->init();
+    model = nullptr;
 
 }
 
+
+void TIGLViewerWindow::updateCreatorInterface()
+{
+    if(model != nullptr) {
+        delete model;
+    }
+    model = new CPACSAbstractModel(*cpacsConfiguration);
+    treeView->setModel(model);
+}
 
 
 void TIGLViewerWindow::updateRecentFileActions()
