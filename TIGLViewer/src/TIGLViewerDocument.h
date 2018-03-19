@@ -54,6 +54,8 @@ public:
     // Returns the CPACS configuration
     tigl::CCPACSConfiguration& GetConfiguration() const;
 
+    QString getLoadedDocumentFileName() const {return loadedConfigurationFileName;}
+
 signals:
     void documentUpdated(TiglCPACSConfigurationHandle);
 

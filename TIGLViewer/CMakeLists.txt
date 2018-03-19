@@ -109,6 +109,8 @@ set(tv_src
     test.cpp
     CPACSAbstractModel.cpp
     CPACSOverTreeItem.cpp
+    MyCPACSReader.cpp
+
 )
 	
 # normal header files
@@ -128,6 +130,7 @@ set(tv_hdr
     TIGLQAspectWindow.h
     test.h
     CPACSOverTreeItem.h
+    MyCPACSReader.h
 )
 
 # qobject header files that have to be moced
