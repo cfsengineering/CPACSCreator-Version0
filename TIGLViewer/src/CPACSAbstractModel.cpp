@@ -4,16 +4,21 @@
 
 #include "CPACSAbstractModel.h"
 #include "CCPACSWingSection.h"
+#include "CCPACSWings.h"
 #include "CCPACSWingSectionElement.h"
 #include "CCPACSWing.h"
 
+#include "MyCPACSReader.h"
 
 
 CPACSAbstractModel::CPACSAbstractModel(const TIGLViewerDocument& doc, QObject* parent)
         : QAbstractItemModel(parent)
 {
+    MyCPACSReader reader = MyCPACSReader();
 
-    initTree(doc);
+    root = reader.createRoot(doc.getLoadedDocumentFileName());
+
+    //initTree(doc);
 
 }
 
@@ -21,47 +26,71 @@ CPACSAbstractModel::CPACSAbstractModel(const TIGLViewerDocument& doc, QObject* p
 
 CPACSAbstractModel::~CPACSAbstractModel()
 {
-    delete root;
+    root.reset();
 }
 
+void CPACSAbstractModel::initWingPart( tigl::CCPACSConfiguration& config ){
 
-
-void CPACSAbstractModel::initTree(const TIGLViewerDocument &doc)
-{
 
     QString tempUid;
     QString tempType;
 
-    tigl::CCPACSConfiguration& config = doc.GetConfiguration();
-
-
-    tempUid = QString(config.GetUID().c_str() ) ;
-    tempType = QString("root");
-    root = new CPACSOverTreeItem(1, tempUid, tempType) ;
-
+    tigl::CCPACSWings& wings = config.GetWings();
+    tempUid = QString("" ) ; // no UID  for wings by definition of the cpacs
+    tempType = QString("wings");
+    CPACSOverTreeItem* newWings = root->addChild(1, tempUid, tempType);
 
 
     for( int i = 1; i <= config.GetWingCount(); i++){  // cpacs index start at 1
         tigl::CCPACSWing& wing = config.GetWing(i);
         tempUid = QString(wing.GetUID().c_str() ) ;
         tempType = QString("wing");
-        CPACSOverTreeItem* newWing = root->addChild(i, tempUid, tempType);
+        CPACSOverTreeItem* newWing = newWings->addChild(i, tempUid, tempType);
+
+        tigl::CCPACSWingSections& sections = wing.GetSections();
+        tempUid = QString("" ) ;
+        tempType = QString("sections");
+        CPACSOverTreeItem* newSections = newWing->addChild(i, tempUid, tempType);
+
 
         for(int j = 1; j <= wing.GetSectionCount(); j++){
             tigl::CCPACSWingSection& section = wing.GetSection(j);
             tempUid = QString(section.GetUID().c_str() ) ;
             tempType = QString("section");
-            CPACSOverTreeItem* newSection = newWing->addChild(j,tempUid, tempType);
+            CPACSOverTreeItem* newSection = newSections->addChild(j,tempUid, tempType);
+
+            tigl::CCPACSWingSectionElements& elements = section.GetElements();
+            tempUid = QString("" ) ;
+            tempType = QString("elements");
+            CPACSOverTreeItem* newElements = newSection->addChild(i, tempUid, tempType);
+
 
             for(int k = 1; k <= section.GetSectionElementCount(); k++ ){
                 tigl::CCPACSWingSectionElement& element = section.GetSectionElement(k);
                 tempUid = QString(element.GetUID().c_str());
                 tempType = QString("element");
-                CPACSOverTreeItem * newElement = newSection->addChild(k, tempUid, tempType);
+                CPACSOverTreeItem * newElement = newElements->addChild(k, tempUid, tempType);
             }
         }
     }
+}
 
+
+void CPACSAbstractModel::initTree(const TIGLViewerDocument &doc)
+{
+/*
+    QString tempUid;
+    QString tempType;
+
+    tigl::CCPACSConfiguration& config = doc.GetConfiguration();
+
+    // init root
+    tempUid = QString(config.GetUID().c_str() ) ;
+    tempType = QString("root");
+    root = new CPACSOverTreeItem(1, tempUid, tempType) ;
+
+    initWingPart(config);
+*/
 
 
 
@@ -144,7 +173,7 @@ QModelIndex CPACSAbstractModel::index(int row, int column, const QModelIndex &pa
 
 QModelIndex CPACSAbstractModel::getIndex(CPACSOverTreeItem *item, int column) const
 {
-    if(item == root || item == nullptr ){
+    if(item == root.get() || item == nullptr ){
         return QModelIndex();   // We use empty index for the root
     }
 
@@ -159,5 +188,5 @@ CPACSOverTreeItem* CPACSAbstractModel::getItem(QModelIndex index) const
         CPACSOverTreeItem* item = static_cast<CPACSOverTreeItem*>(index.internalPointer());
         if(item) return item;
      }
-    return root;    // empty index is the root
+    return root.get();    // empty index is the root
 }

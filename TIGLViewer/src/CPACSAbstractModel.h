@@ -46,8 +46,10 @@ protected:
 private:
 
     void initTree( const TIGLViewerDocument& doc);
-    void deleteTree();
-    CPACSOverTreeItem * root;
+    void initWingPart( tigl::CCPACSConfiguration& config );
+    void initFuslagePart( tigl::CCPACSConfiguration& config );
+
+    CSharedPtr<CPACSOverTreeItem>  root;
 
 };
 

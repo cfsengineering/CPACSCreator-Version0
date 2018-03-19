@@ -15,6 +15,7 @@
 #include <QString>
 #include <QList>
 #include <QVariant>
+#include "TIGLViewerDocument.h"
 
 class CPACSOverTreeItem {
 
@@ -56,6 +57,7 @@ private:
     int cpacsIndex;
     QString cpacsUid;
     QString cpacsType;
+    QString xPath;
 
     CPACSOverTreeItem* parent;
     QList<CPACSOverTreeItem*> children;
