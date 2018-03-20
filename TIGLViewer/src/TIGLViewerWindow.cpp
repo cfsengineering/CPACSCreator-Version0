@@ -649,7 +649,6 @@ void TIGLViewerWindow::connectConfiguration()
     connect(tiglPointInput, SIGNAL(valueChanged(tigl::CTiglPoint)),cpacsConfiguration, SLOT(setScaleWing(tigl::CTiglPoint)) );
     connect(cpacsConfiguration, SIGNAL(documentUpdated(TiglCPACSConfigurationHandle)), this, SLOT(updateCreatorInterface()) );
 
-
 }
 
 void TIGLViewerWindow::connectSignals()
@@ -763,18 +762,20 @@ void TIGLViewerWindow::initCreatorInterface()
 {
 
     tiglPointInput->init();
-    model = nullptr;
+    model = new CPACSAbstractModel(*this );
+    treeView->setModel(model);
+    selectionModel = treeView->selectionModel();
+
+    connect(selectionModel, SIGNAL(selectionChanged (const QItemSelection &, const QItemSelection &)),model,
+            SLOT(onItemSelectionChanged(const QItemSelection &, const QItemSelection &)) );
 
 }
 
 
 void TIGLViewerWindow::updateCreatorInterface()
 {
-    if(model != nullptr) {
-        delete model;
-    }
-    model = new CPACSAbstractModel(*cpacsConfiguration);
-    treeView->setModel(model);
+    model->initTree(*cpacsConfiguration);
+    treeView->reset();
 }
 
 

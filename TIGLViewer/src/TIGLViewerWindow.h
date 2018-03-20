@@ -121,7 +121,10 @@ private:
     QString                 myLastFolder;
 
     TIGLViewerDocument* cpacsConfiguration;
+
     CPACSAbstractModel* model;
+    QItemSelectionModel* selectionModel;
+
     QString currentFile;
     QString controlFileName;
     QFileSystemWatcher *watcher;

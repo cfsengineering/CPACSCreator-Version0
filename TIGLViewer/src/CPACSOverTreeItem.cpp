@@ -7,7 +7,7 @@
 #include <QtGui>
 
 
-CPACSOverTreeItem::CPACSOverTreeItem(int index, QString uid, QString cpacsType)
+CPACSOverTreeItem::CPACSOverTreeItem(int index, std::string uid, std::string cpacsType)
 {
     this->cpacsIndex = index;
     this->cpacsUid = uid;
@@ -16,13 +16,12 @@ CPACSOverTreeItem::CPACSOverTreeItem(int index, QString uid, QString cpacsType)
 }
 
 CPACSOverTreeItem::~CPACSOverTreeItem(){
-    //std::cout << "destructor tree item called" << cpacsUid.toStdString() << std::endl;
     qDeleteAll(children);   //recursive call of destructor
 }
 
 
 
-CPACSOverTreeItem*  CPACSOverTreeItem::addChild(int index, QString uid, QString cpacsType) {
+CPACSOverTreeItem*  CPACSOverTreeItem::addChild(int index, std::string uid, std::string cpacsType) {
 
     CPACSOverTreeItem* newChild = new CPACSOverTreeItem(index, uid, cpacsType);
     newChild->parent = this;
@@ -38,20 +37,15 @@ QList<CPACSOverTreeItem*> CPACSOverTreeItem::getChildren() const{
     return children;
 };
 
-
-QString CPACSOverTreeItem::print() const {
-    return QString("TreeItem: cpacsType: %1, uid: %2, index: %3").arg(cpacsType).arg(cpacsUid).arg(cpacsIndex) ;
-}
-
 int CPACSOverTreeItem::getCpacsIndex() const {
     return cpacsIndex;
 }
 
-QString CPACSOverTreeItem::getCpacsType() const {
+std::string CPACSOverTreeItem::getCpacsType() const {
     return cpacsType;
 }
 
-QString CPACSOverTreeItem::getCpacsUid() const {
+std::string CPACSOverTreeItem::getCpacsUid() const {
     return cpacsUid;
 }
 
@@ -65,7 +59,7 @@ int CPACSOverTreeItem::positionRelativelyToParent() const {
     return position;
 }
 
-QString CPACSOverTreeItem::getDataName(int i) {
+std::string CPACSOverTreeItem::getDataName(int i) {
     if(i == 0){
         return "index";
     }else if (i==1){

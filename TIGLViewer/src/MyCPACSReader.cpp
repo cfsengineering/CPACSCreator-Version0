@@ -60,21 +60,29 @@ int MyCPACSReader::openCpacsConfiguration(const QString fileName)
     return 0;
 }
 
-CSharedPtr<CPACSOverTreeItem> MyCPACSReader::createRoot(const QString fileName) {
+CSharedPtr<CPACSOverTreeItem> MyCPACSReader::createRoot(const QString fileName, const QString configUid) {
 
+
+    std::cout << "creating root from filename " << fileName.toStdString() << " with uid " << configUid.toStdString() << std::endl;
     openCpacsConfiguration(fileName);
+
 
     CSharedPtr<CPACSOverTreeItem> root = nullptr;
 
     if(tixiHandle < 0){
-        return nullptr ;
+        return root ;
     }
 
     int countAircrafts = 0;
     ReturnCode tixiRet = tixiGetNamedChildrenCount( tixiHandle, CPACS_XPATH_AIRCRAFT, "model", &countAircrafts );
 
     std::string xpath = CPACS_XPATH_AIRCRAFT;
-    xpath += "/model[1]";
+    if(configUid == ""){
+        xpath += "/model[1]";
+    }else{
+        xpath += "/model[@uID=\"" + configUid.toStdString() + "\"]";
+    }
+
 
     int childrenCount = -1 ;
     int attributesCount = -1;
@@ -97,8 +105,6 @@ CSharedPtr<CPACSOverTreeItem> MyCPACSReader::createRoot(const QString fileName) 
     root =  CSharedPtr<CPACSOverTreeItem>(new CPACSOverTreeItem(1, uid.c_str(), "model"));
 
     createNode(xpath, root.get(), 1, "model");
-
-    
     return root;
 
 
@@ -109,7 +115,8 @@ CSharedPtr<CPACSOverTreeItem> MyCPACSReader::createRoot(const QString fileName) 
 
 void MyCPACSReader::createNode(std::string xpath, CPACSOverTreeItem* parent, int cpacsIdx, std::string elementName) {
 
-    std::cout << xpath.c_str() << std::endl;
+    //
+    // std::cout << xpath.c_str() << std::endl;
     ReturnCode tixiRet;
     
     int childrenCount = -1 ;
@@ -145,7 +152,7 @@ void MyCPACSReader::createNode(std::string xpath, CPACSOverTreeItem* parent, int
         tixiRet = tixiGetChildNodeName(tixiHandle, xpath.c_str(), i, &childName);
         // TODO: FIND HOW TIXI SHOULD MANAGE THE NONE NODE ELEMENT LIKE TEXT
         if(childName[0] == '#' ) {
-            std::cout << childName << std::endl;
+            //std::cout << childName << std::endl;
         }else{
             names.push_back(childName);
         }

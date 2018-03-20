@@ -12,7 +12,6 @@
 #ifndef TIGL_CPACSOVERTREEITEM_H
 #define TIGL_CPACSOVERTREEITEM_H
 
-#include <QString>
 #include <QList>
 #include <QVariant>
 #include "TIGLViewerDocument.h"
@@ -22,11 +21,11 @@ class CPACSOverTreeItem {
 public:
 
     // should be only used to create the root
-    CPACSOverTreeItem(int cpacsIndex, QString cpacsUid, QString cpacsType);
+    CPACSOverTreeItem(int cpacsIndex, std::string cpacsUid, std::string cpacsType);
     ~CPACSOverTreeItem();
 
     // this should be the only way to add children
-    CPACSOverTreeItem*  addChild(int cpacsIndex, QString cpacsUid, QString cpacsType);
+    CPACSOverTreeItem*  addChild(int cpacsIndex, std::string cpacsUid, std::string cpacsType);
 
     CPACSOverTreeItem* getParent() const;
     QList<CPACSOverTreeItem*> getChildren() const;
@@ -42,22 +41,20 @@ public:
     // DATA
     // functions to fetch data
     int getCpacsIndex() const;
-    QString getCpacsType() const;
-    QString getCpacsUid() const;
+    std::string getCpacsType() const;
+    std::string getCpacsUid() const;
     // return how many different data the structure hold
     inline int getDataCount() {return 3;}
     // get the Name associated with the data index
-    QString getDataName(int i);
-    // summarize the data in one string
-    QString print() const;
+    std::string getDataName(int i);
 
 
 private:
 
     int cpacsIndex;
-    QString cpacsUid;
-    QString cpacsType;
-    QString xPath;
+    std::string cpacsUid;
+    std::string cpacsType;
+    std::string xPath;
 
     CPACSOverTreeItem* parent;
     QList<CPACSOverTreeItem*> children;
