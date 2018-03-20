@@ -54,12 +54,16 @@ public:
     // Returns the CPACS configuration
     tigl::CCPACSConfiguration& GetConfiguration() const;
 
-    QString getLoadedDocumentFileName() const {return loadedConfigurationFileName;}
+    bool isConfigurationValid() const;
+
+    // Return the loaded file name if the document is valid and empty QString otherwise
+    QString getLoadedDocumentFileName() const;
 
 signals:
     void documentUpdated(TiglCPACSConfigurationHandle);
 
 public slots:
+
     // Aircraft slots
     void drawAllFuselagesAndWings();
     void drawAllFuselagesAndWingsSurfacePoints();

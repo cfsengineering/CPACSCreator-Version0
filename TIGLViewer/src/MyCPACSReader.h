@@ -11,9 +11,7 @@
 class MyCPACSReader {
 
 public:
-    CSharedPtr<CPACSOverTreeItem> createRoot(QString fileName);
-
-
+    CSharedPtr<CPACSOverTreeItem> createRoot(QString fileName, QString configUid);
 
 private:
 

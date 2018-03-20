@@ -2736,5 +2736,19 @@ TiglCPACSConfigurationHandle TIGLViewerDocument::getCpacsHandle() const
     return this->m_cpacsHandle;
 }
 
+QString TIGLViewerDocument::getLoadedDocumentFileName() const {
+
+    if(isConfigurationValid()){
+        return loadedConfigurationFileName;
+    }
+    return QString();
+}
+
+bool TIGLViewerDocument::isConfigurationValid() const {
+    TiglBoolean valid = TIGL_FALSE;
+    tiglIsCPACSConfigurationHandleValid(m_cpacsHandle, &valid );
+    return valid;
+}
+
 
 
