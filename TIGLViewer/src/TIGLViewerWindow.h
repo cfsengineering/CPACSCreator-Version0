@@ -31,6 +31,7 @@
 #include "CPACSAbstractModel.h"
 
 #include "ui_TIGLViewerWindow.h"
+#include "CPACSCreatorAdapter.h"
 
 class QAction;
 class QLabel;
@@ -124,6 +125,7 @@ private:
 
     CPACSAbstractModel* model;
     QItemSelectionModel* selectionModel;
+    CPACSCreatorAdapter* adapter;
 
     QString currentFile;
     QString controlFileName;

@@ -244,17 +244,23 @@ void TIGLViewerDocument::closeCpacsConfiguration()
 void TIGLViewerDocument::saveCpacsConfiguration()
 {
     // Right now, we just close the tigl session and open a new one
-    if (!loadedConfigurationFileName.isEmpty()) {
+    if (isConfigurationValid()) {
         START_COMMAND();
 
+        std::string configUid = GetConfiguration().GetUID();
+        if( configUid == ""){
+            configUid = "CPACSCreatorSaving";
+            std::cout << "No model uid found to saved the document, " + configUid + " used" << std::endl;
+        }
         // save CPACS
-        tiglSaveCPACSConfiguration("mDsave", m_cpacsHandle);
+        tiglSaveCPACSConfiguration(configUid.c_str(), m_cpacsHandle);
 
         // SAVE Tixi
         TixiDocumentHandle tixiHandle = -1;
         tiglGetCPACSTixiHandle(m_cpacsHandle, &tixiHandle);
         char *cfileName = strdup((const char*)loadedConfigurationFileName.toLatin1());
         tixiSaveDocument(tixiHandle, cfileName  );
+       // FIXME update creator
     }
 }
 
@@ -266,9 +272,11 @@ void TIGLViewerDocument::updateConfiguration()
     // Right now, we just close the tigl session and open a new one
     if (!loadedConfigurationFileName.isEmpty()) {
         START_COMMAND();
+        app->getScene()->deleteAllObjects();
+
         tiglCloseCPACSConfiguration(m_cpacsHandle);
         m_cpacsHandle = -1;
-        app->getScene()->deleteAllObjects();
+
         openCpacsConfiguration(loadedConfigurationFileName);
         emit documentUpdated(m_cpacsHandle);
     }
@@ -1191,22 +1199,10 @@ void TIGLViewerDocument::setScaleWing(tigl::CCPACSWing& wing, tigl::CTiglPoint n
 
     }
     saveCpacsConfiguration();
-}
-
-
-void TIGLViewerDocument::setScaleWing(tigl::CTiglPoint value)
-{
-    QString wingUid = "D150_VAMP_wing_W1";
-
-    try {
-    tigl::CCPACSWing& wing = GetConfiguration().GetWing(wingUid.toStdString());
-        setScaleWing(wing, value);
-    }
-    catch (tigl::CTiglError& ex) {
-        displayError(ex.what());
-    }
 
 }
+
+
 
 
 // -----------------------

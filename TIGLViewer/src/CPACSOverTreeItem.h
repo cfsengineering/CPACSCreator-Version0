@@ -21,11 +21,11 @@ class CPACSOverTreeItem {
 public:
 
     // should be only used to create the root
-    CPACSOverTreeItem(int cpacsIndex, std::string cpacsUid, std::string cpacsType);
+    CPACSOverTreeItem(int cpacsIndex, std::string cpacsUid, std::string cpacsType, std::string xpath = "XPath not set");
     ~CPACSOverTreeItem();
 
     // this should be the only way to add children
-    CPACSOverTreeItem*  addChild(int cpacsIndex, std::string cpacsUid, std::string cpacsType);
+    CPACSOverTreeItem*  addChild(int cpacsIndex, std::string cpacsUid, std::string cpacsType, std::string xpath = "XPath not set");
 
     CPACSOverTreeItem* getParent() const;
     QList<CPACSOverTreeItem*> getChildren() const;
@@ -43,8 +43,9 @@ public:
     int getCpacsIndex() const;
     std::string getCpacsType() const;
     std::string getCpacsUid() const;
+    std::string getXPath() const;
     // return how many different data the structure hold
-    inline int getDataCount() {return 3;}
+    inline int getDataCount() {return 4;}
     // get the Name associated with the data index
     std::string getDataName(int i);
 

@@ -87,10 +87,6 @@ public slots:
     void drawWingShells();
     void drawWingStructure();
 
-    // Set Wing slot
-    void setScaleWing(tigl::CTiglPoint value);
-
-
     // Fuselage slots
     void drawFuselageProfiles();
     void drawFuselage();

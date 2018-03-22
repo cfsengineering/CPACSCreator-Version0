@@ -136,6 +136,7 @@ TIGLViewerWindow::~TIGLViewerWindow()
     delete stdoutStream;
     delete errorStream;
     delete model;
+    delete adapter;
 }
 
 void TIGLViewerWindow::dragEnterEvent(QDragEnterEvent * ev)
@@ -646,7 +647,6 @@ void TIGLViewerWindow::connectConfiguration()
     // Set functions
     // connect(scaleXDoubleSpinBox,SIGNAL( valueChanged(double )), cpacsConfiguration,SLOT( setScaleWing(double)) );
 
-    connect(tiglPointInput, SIGNAL(valueChanged(tigl::CTiglPoint)),cpacsConfiguration, SLOT(setScaleWing(tigl::CTiglPoint)) );
     connect(cpacsConfiguration, SIGNAL(documentUpdated(TiglCPACSConfigurationHandle)), this, SLOT(updateCreatorInterface()) );
 
 }
@@ -761,20 +761,31 @@ void TIGLViewerWindow::createMenus()
 void TIGLViewerWindow::initCreatorInterface()
 {
 
-    tiglPointInput->init();
-    model = new CPACSAbstractModel(*this );
+    transforamtionModificator->init();
+    adapter = new CPACSCreatorAdapter();
+
+    model = new CPACSAbstractModel(adapter);
+
+
     treeView->setModel(model);
     selectionModel = treeView->selectionModel();
 
+
     connect(selectionModel, SIGNAL(selectionChanged (const QItemSelection &, const QItemSelection &)),model,
             SLOT(onItemSelectionChanged(const QItemSelection &, const QItemSelection &)) );
+
+    connect(model,SIGNAL(selectionIsATransformation(CPACSOverTreeItem * )), adapter, SLOT(prepareTransformationValues(CPACSOverTreeItem * )));
+
+    connect(adapter, SIGNAL(newTransformationValues( double, double, double, double, double, double, double, double, double)),
+            transforamtionModificator, SLOT(setSpinBoxes(double, double, double, double, double, double, double, double, double )));
 
 }
 
 
 void TIGLViewerWindow::updateCreatorInterface()
 {
-    model->initTree(*cpacsConfiguration);
+
+    adapter->resetCpacsConfig(* cpacsConfiguration);
     treeView->reset();
 }
 
