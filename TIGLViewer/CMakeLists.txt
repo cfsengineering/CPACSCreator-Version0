@@ -109,7 +109,9 @@ set(tv_src
     test.cpp
     CPACSAbstractModel.cpp
     CPACSOverTreeItem.cpp
-    MyCPACSReader.cpp
+    CPACSCreator.cpp
+    CPACSCreatorAdapter.cpp
+    TIGLViewerTransformationWidget.cpp
 
 )
 	
@@ -130,7 +132,8 @@ set(tv_hdr
     TIGLQAspectWindow.h
     test.h
     CPACSOverTreeItem.h
-    MyCPACSReader.h
+    CPACSCreator.h
+
 )
 
 # qobject header files that have to be moced
@@ -158,6 +161,8 @@ set(tv_hdr_qobj
 	TIGLSliderDialog.h
     TIGLPointWidget.h
     CPACSAbstractModel.h
+    CPACSCreatorAdapter.h
+    TIGLViewerTransformationWidget.h
 )
 
 set(tv_ui_comp

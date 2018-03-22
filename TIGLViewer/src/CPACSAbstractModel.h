@@ -13,14 +13,28 @@
 #include "TIGLViewerDocument.h"
 
 #include <Quantity_Color.hxx>
+#include <QMutex>
+
+#include "CPACSCreator.h"
+#include "CPACSCreatorAdapter.h"
 
 
 class CPACSAbstractModel: public QAbstractItemModel {
 
 Q_OBJECT
 
+
+
+signals:
+    void selectionIsATransformation(CPACSOverTreeItem * transformation);
+
+public slots:
+    void onItemSelectionChanged(const QItemSelection &, const QItemSelection &);
+
+
+
 public:
-    explicit CPACSAbstractModel( TIGLViewerWindow& main, QObject *parent = 0);
+    explicit CPACSAbstractModel( CPACSCreatorAdapter* adapter ,QObject *parent = 0);
     ~CPACSAbstractModel();
 
     void initTree( TIGLViewerDocument& doc);
@@ -30,7 +44,7 @@ public:
 
     // Qt::ItemFlags flags(const QModelIndex &index) const override;
 
-    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override ;
 
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
 
@@ -45,11 +59,6 @@ public:
     inline bool isValid() const;
 
 
-
-public slots:
-    void onItemSelectionChanged(const QItemSelection &, const QItemSelection &);
-
-
 protected:
 
 
@@ -60,17 +69,16 @@ protected:
     // return a index for the item
     QModelIndex getIndex( CPACSOverTreeItem * item, int column ) const ;
 
-    QString stdStringToQString(std::string stdString);
 
 private:
 
     // alternative to CPACS reader, take info form tigl instead from the xml directly
 //    void initWingsFrom(tigl::CCPACSConfiguration &config);
 
-    CSharedPtr<CPACSOverTreeItem>  root;
-    TIGLViewerWindow& app;
+    CPACSCreatorAdapter* creatorAdapter;
     QString currentFileName;    // filename of the displayed tree
     QString currentConfigUid;   // Uid of the display tree model
+
 };
 
 

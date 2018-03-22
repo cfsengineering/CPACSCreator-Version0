@@ -7,12 +7,13 @@
 #include <QtGui>
 
 
-CPACSOverTreeItem::CPACSOverTreeItem(int index, std::string uid, std::string cpacsType)
+CPACSOverTreeItem::CPACSOverTreeItem(int index, std::string uid, std::string cpacsType, std::string xPath)
 {
     this->cpacsIndex = index;
     this->cpacsUid = uid;
     this->cpacsType = cpacsType;
     this->parent = nullptr;
+    this->xPath = xPath;
 }
 
 CPACSOverTreeItem::~CPACSOverTreeItem(){
@@ -21,9 +22,9 @@ CPACSOverTreeItem::~CPACSOverTreeItem(){
 
 
 
-CPACSOverTreeItem*  CPACSOverTreeItem::addChild(int index, std::string uid, std::string cpacsType) {
+CPACSOverTreeItem*  CPACSOverTreeItem::addChild(int index, std::string uid, std::string cpacsType, std::string xPath) {
 
-    CPACSOverTreeItem* newChild = new CPACSOverTreeItem(index, uid, cpacsType);
+    CPACSOverTreeItem* newChild = new CPACSOverTreeItem(index, uid, cpacsType, xPath);
     newChild->parent = this;
     children.push_back(newChild);
     return newChild;
@@ -49,6 +50,10 @@ std::string CPACSOverTreeItem::getCpacsUid() const {
     return cpacsUid;
 }
 
+std::string CPACSOverTreeItem::getXPath() const {
+    return xPath;
+}
+
 int CPACSOverTreeItem::positionRelativelyToParent() const {
 
     int position = -1;
@@ -66,6 +71,8 @@ std::string CPACSOverTreeItem::getDataName(int i) {
         return "type";
     }else if (i==2){
         return "UID";
+    }else if (i=3){
+        return "XPath";
     }else{
         return "invalid";
     }

@@ -9,16 +9,14 @@
 #include "CCPACSWingSectionElement.h"
 #include "CCPACSWing.h"
 #include "TIGLViewerWindow.h"
-#include "MyCPACSReader.h"
+#include "CPACSCreator.h"
 #include "CCPACSWingSegment.h"
 
 
-CPACSAbstractModel::CPACSAbstractModel(TIGLViewerWindow& main, QObject* parent)
-        : QAbstractItemModel(parent), app(main)
+CPACSAbstractModel::CPACSAbstractModel(CPACSCreatorAdapter* adapter, QObject* parent )
+        : QAbstractItemModel(parent)
 {
-    root = nullptr;
-    currentFileName = QString();
-    currentConfigUid = QString();
+   creatorAdapter = adapter;
 }
 
 
@@ -75,41 +73,43 @@ CPACSAbstractModel::~CPACSAbstractModel()
 
 
 
+//
+//
+//void CPACSAbstractModel::initTree( TIGLViewerDocument &doc)
+//{
+//    // Destroy old tree if existe
+//    std::cout << "Destroy tree model: filename=" << currentFileName.toStdString() << " uid=" << currentConfigUid.toStdString() << std::endl;
+//    root = nullptr;
+//    currentFileName = QString();
+//    currentConfigUid = QString();
+//
+//    // Check if the new document is valid
+//    if(!doc.isConfigurationValid()){
+//        return;
+//    }
+//
+//    // check rotorcraft
+//    tigl::CCPACSConfiguration& config = doc.GetConfiguration();
+//    if( config.IsRotorcraft() ){
+//        std::cout << "Rotorcraft is not supported by the tree viewer" << std::endl;
+//        return;
+//    }
+//
+//    // Create the tree
+//    currentFileName = doc.getLoadedDocumentFileName();
+//    currentConfigUid = QString(config.GetUID().c_str());
+//    creator = CPACSCreator();
+//    creator.open(currentFileName.toStdString(), currentConfigUid.toStdString());
+//    root = creator.createRoot( );
+//
+//    return;
+//}
 
 
-void CPACSAbstractModel::initTree( TIGLViewerDocument &doc)
-{
-    // Destroy old tree if existe
-    std::cout << "Destroy tree model: filename=" << currentFileName.toStdString() << " uid=" << currentConfigUid.toStdString() << std::endl;
-    root = nullptr;
-    currentFileName = QString();
-    currentConfigUid = QString();
-
-    // Check if the new document is valid
-    if(!doc.isConfigurationValid()){
-        return;
-    }
-
-    // check rotorcraft
-    tigl::CCPACSConfiguration& config = doc.GetConfiguration();
-    if( config.IsRotorcraft() ){
-        std::cout << "Rotorcraft is not supported by the tree viewer" << std::endl;
-        return;
-    }
-
-    // Create the tree
-    MyCPACSReader reader = MyCPACSReader();
-    currentFileName = doc.getLoadedDocumentFileName();
-    currentConfigUid = QString(config.GetUID().c_str()) ;
-    root = reader.createRoot(currentFileName, currentConfigUid );
-    return;
-}
-
-
-QVariant CPACSAbstractModel::headerData(int section, Qt::Orientation orientation, int role) const {
+QVariant CPACSAbstractModel::headerData(int section, Qt::Orientation orientation, int role) const  {
 
     if (isValid() && orientation == Qt::Horizontal && role == Qt::DisplayRole){
-        return QString((root->getDataName(section)).c_str());
+        return QString((creatorAdapter->getRoot()->getDataName(section)).c_str());
     }
 
     return QVariant();
@@ -132,6 +132,8 @@ QVariant CPACSAbstractModel::data(const QModelIndex &index, int role) const
         data = QString( item->getCpacsType().c_str() );
     }else if(index.column() == 2){
         data = QString(item->getCpacsUid().c_str());
+    }else if(index.column() == 3){
+        data = QString(item->getXPath().c_str());
     }else{
         data = QVariant();
     }
@@ -192,7 +194,7 @@ QModelIndex CPACSAbstractModel::index(int row, int column, const QModelIndex &pa
 
 QModelIndex CPACSAbstractModel::getIndex(CPACSOverTreeItem *item, int column) const
 {
-    if( !isValid() || item == root.get() || item == nullptr ){
+    if( !isValid() || item == creatorAdapter->getRoot().get() || item == nullptr ){
         return QModelIndex();   // We use empty index for the root
     }
 
@@ -207,7 +209,7 @@ CPACSOverTreeItem* CPACSAbstractModel::getItem(QModelIndex index) const
         CPACSOverTreeItem* item = static_cast<CPACSOverTreeItem*>(index.internalPointer());
         if(item) return item;
      }
-    return root.get();    // empty index is the root
+    return creatorAdapter->getRoot().get();    // empty index is the root
 }
 
 void CPACSAbstractModel::onItemSelectionChanged(const QItemSelection & newSelection, const QItemSelection & oldSelection)
@@ -216,7 +218,11 @@ void CPACSAbstractModel::onItemSelectionChanged(const QItemSelection & newSelect
 
     std::cout << "selection changed " << item->getCpacsUid() << std::endl;
 
-    Quantity_Color color = Quantity_Color( 255/255.,192/255.,203/255.  , Quantity_TOC_RGB);
+    if(item->getCpacsType() == "transformation"){
+        emit selectionIsATransformation(item);
+    }
+
+//    Quantity_Color color = Quantity_Color( 255/255.,192/255.,203/255.  , Quantity_TOC_RGB);
 //
 //    if(item->getCpacsType() == "wing"){
 //
@@ -230,5 +236,5 @@ void CPACSAbstractModel::onItemSelectionChanged(const QItemSelection & newSelect
 }
 
 inline bool CPACSAbstractModel::isValid() const {
-    return root != nullptr;
+    return creatorAdapter->getRoot() != nullptr;
 }
