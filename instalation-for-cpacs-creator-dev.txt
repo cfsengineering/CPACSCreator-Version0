@@ -1,0 +1,48 @@
+# Debian 8 
+
+# install the repo 
+$ echo 'deb http://download.opensuse.org/repositories/home:martinsiggel/xUbuntu_12.04/ /' >> /etc/apt/sources.list.d/tigl.list 
+
+# update packages list
+$ sudo apt-get update
+
+# install lib for opencascade (oce)
+$ sudo apt-get install cmake  qt4-dev-tools liboce-dev
+
+$ sudo apt-get install oce-draw
+
+# installing and building oce-0.17.1 from the source code !!!!
+
+https://github.com/tpaviot/oce/wiki/Build
+change oce lib/ include/ share/ bin/ in my laptop 
+ 
+
+# installing qt5 dependencies
+$ apt-get install qtscript5-dev
+
+# build with clion 
+# put shaders in the right place -> for me: /home/makem/JobProject/newStage/CPACSCreator/cmake-build-debug/share/tigl3/
+ 
+
+
+# install tixi ##########################################################
+
+clone git repo of tixi
+move into the repo
+
+
+$ mkdir build
+$ cd build
+
+# Create the makefiles by running cmake:
+
+$ cmake -DCMAKE_INSTALL_PREFIX=install ..
+$ make
+
+# install dependencies for tixi 
+$ sudo apt-get install libcurl4-nss-dev (or libcurl4-openssl-dev, i do not remain)
+$ sudo apt-get install libxslt-dev  
+
+copying the files of build/install into /usr/local/
+
+# end install tixi ######################################################
