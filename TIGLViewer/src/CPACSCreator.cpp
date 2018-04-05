@@ -199,6 +199,54 @@ std::vector<double> CPACSCreator::getPoint(std::string xpath) {
 
 
 
+void CPACSCreator::setPoint(std::string xpath, const std::vector<double>& point) {
+
+    if (point.size() != 3 ) {
+        std::cerr << "point have not 3 values" << std::endl;
+        return;
+    }
+
+    if( !tixi::TixiCheckElement(tixiHandle, xpath) ){
+        std::cout << "element not found" << std::endl;
+        return;
+    }
+
+
+    std::string tempXpath = xpath + "/x";
+
+    if ( tixi::TixiCheckElement(tixiHandle, tempXpath) ){
+        tixi::TixiSaveElement(tixiHandle,tempXpath, point[0]);
+    }else{
+        std::cout << "x value not foun" << std::endl;
+    }
+    tempXpath = xpath + "/y";
+    if ( tixi::TixiCheckElement(tixiHandle, tempXpath) ){
+        tixi::TixiSaveElement(tixiHandle,tempXpath, point[1]);
+    }else{
+        std::cout << "x value not foun" << std::endl;
+    }
+    tempXpath = xpath + "/z";
+    if ( tixi::TixiCheckElement(tixiHandle, tempXpath) ){
+        tixi::TixiSaveElement(tixiHandle,tempXpath, point[2]);
+    }else{
+        std::cout << "x value not foun" << std::endl;
+    }
+
+    return ;
+}
+
+void CPACSCreator::save() {
+    if( tixiHandle <= 0 ){
+        std::cerr << "tixi handle is not valid, we can not save the document" << std::endl;
+
+    }
+    tixiSaveDocument(tixiHandle, fileName.c_str());
+    tixiCloseDocument(tixiHandle );
+    tixiHandle = tixi::TixiOpenDocument(fileName);
+}
+
+
+
 
 
 

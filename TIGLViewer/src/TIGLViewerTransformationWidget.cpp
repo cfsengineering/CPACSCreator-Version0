@@ -3,7 +3,7 @@
 //
 
 #include "TIGLViewerTransformationWidget.h"
-
+#include <iostream>
 
 TIGLViewerTransformationWidget::TIGLViewerTransformationWidget(QWidget *parent):
     QWidget(parent)
@@ -44,9 +44,29 @@ void TIGLViewerTransformationWidget::setSpinBoxesFromInternal()
 }
 
 
-void TIGLViewerTransformationWidget::setSpinBoxes(double sx, double sy, double sz,
+void TIGLViewerTransformationWidget::setInternalFromSpinBoxes()
+{
+    sx = boxSX->value();
+    sy = boxSY->value();
+    sz = boxSZ->value();
+
+    rx = boxRX->value();
+    ry = boxRY->value();
+    rz = boxRZ->value();
+
+    tx = boxTX->value();
+    ty = boxTY->value();
+    tz = boxTZ->value();
+
+}
+
+
+void TIGLViewerTransformationWidget::setSpinBoxes(QString xpath,
+                                                  double sx, double sy, double sz,
                                                   double rx, double ry, double rz,
                                                   double tx, double ty, double tz)  {
+    this->xpath = xpath;
+
     this->sx = sx;
     this->sy = sy;
     this->sz = sz;
@@ -62,3 +82,15 @@ void TIGLViewerTransformationWidget::setSpinBoxes(double sx, double sy, double s
     setSpinBoxesFromInternal();
 }
 
+
+
+
+void TIGLViewerTransformationWidget::keyPressEvent(QKeyEvent *event)
+{
+    std::cout << "event->key(): "  << std::endl;
+
+
+    setInternalFromSpinBoxes();
+
+    emit valuesChanged(xpath, sx,sy,sz, rx,ry,rz, tx,ty,tz );
+}
