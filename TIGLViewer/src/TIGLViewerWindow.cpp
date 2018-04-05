@@ -776,8 +776,13 @@ void TIGLViewerWindow::initCreatorInterface()
 
     connect(model,SIGNAL(selectionIsATransformation(CPACSOverTreeItem * )), adapter, SLOT(prepareTransformationValues(CPACSOverTreeItem * )));
 
-    connect(adapter, SIGNAL(newTransformationValues( double, double, double, double, double, double, double, double, double)),
-            transforamtionModificator, SLOT(setSpinBoxes(double, double, double, double, double, double, double, double, double )));
+    connect(adapter, SIGNAL(newTransformationValues( QString, double, double, double, double, double, double, double, double, double)),
+            transforamtionModificator, SLOT(setSpinBoxes(QString, double, double, double, double, double, double, double, double, double )));
+
+    // when enter occurs
+    connect(transforamtionModificator, SIGNAL(valuesChanged( QString, double, double, double, double, double, double, double, double, double)),
+            adapter, SLOT(setTransformation(QString, double, double, double, double, double, double, double, double, double)));
+
 
 }
 

@@ -7,16 +7,21 @@
 
 #include <QWidget>
 #include <QDoubleSpinBox>
+#include "CPACSOverTreeItem.h"
 
 class TIGLViewerTransformationWidget : public QWidget
 {
     Q_OBJECT
 
 signals:
-   void valuesChanged();
+   void valuesChanged( QString xpath,
+                      double sx, double sy, double  sz,
+                      double rx, double ry, double  rz,
+                      double tx, double ty, double  tz);
 
 public slots:
-    void setSpinBoxes(double sx, double sy, double  sz,
+    void setSpinBoxes( QString xpath,
+                    double sx, double sy, double  sz,
                     double rx, double ry, double  rz,
                     double tx, double ty, double  tz);
 
@@ -25,10 +30,17 @@ public:
     TIGLViewerTransformationWidget(QWidget * parent = 0);
     // Initialize the linked objects
     void init();
-    void setSpinBoxesFromInternal();
 
+    void setSpinBoxesFromInternal();
+    void setInternalFromSpinBoxes();
+
+protected:
+
+    void keyPressEvent(QKeyEvent *event);
 
 private:
+
+    QString xpath;
 
     QDoubleSpinBox* boxSX;
     QDoubleSpinBox* boxSY;

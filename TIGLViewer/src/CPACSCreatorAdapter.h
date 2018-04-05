@@ -17,14 +17,18 @@ class CPACSCreatorAdapter : public QObject{
     Q_OBJECT
 
 signals:
-    void newTransformationValues( double sx, double sy, double  sz,
+    void newTransformationValues( QString xpath,
+                                  double sx, double sy, double  sz,
                                   double rx, double ry, double  rz,
                                   double tx, double ty, double  tz);
 
 public slots:
 
     void prepareTransformationValues(CPACSOverTreeItem * item);
-
+    void setTransformation(QString xpath,
+                           double sx, double sy, double  sz,
+                           double rx, double ry, double  rz,
+                           double tx, double ty, double  tz);
 
 public:
 

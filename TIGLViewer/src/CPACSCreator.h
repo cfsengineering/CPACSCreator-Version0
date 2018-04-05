@@ -8,6 +8,16 @@
 #include "CPACSOverTreeItem.h"
 #include "tixicpp.h"
 
+
+
+
+/**
+ * @brief Manage one aircraft
+ *
+ *
+ */
+
+
 class CPACSCreator {
 
 public:
@@ -15,9 +25,13 @@ public:
 
     void open(std::string fileName, std::string configUid = "");
 
+    void save();
+
     CSharedPtr<CPACSOverTreeItem> createRoot();
 
     std::vector<double> getPoint(std::string xpath);
+    void setPoint(std::string xpath, const std::vector<double>& point );
+
 
     inline CSharedPtr<CPACSOverTreeItem> getRoot() const  {return m_root;}
     inline bool isValid(){return m_isValid;}

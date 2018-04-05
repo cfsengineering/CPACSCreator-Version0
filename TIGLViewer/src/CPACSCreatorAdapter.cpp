@@ -17,13 +17,33 @@ void CPACSCreatorAdapter::prepareTransformationValues(CPACSOverTreeItem *item) {
     std::vector<double> rotation = creator.getPoint(item->getXPath() + "/rotation" );
     std::vector<double> translation  = creator.getPoint(item->getXPath() + "/translation");
 
+    QString xpath = QString(item->getXPath().c_str());
 
     std::cout << "Prepare transformation Values  recived: "<< scaling[0] << " " <<scaling[1]<< " " << scaling[2]  << std::endl;
 
-    emit newTransformationValues(scaling[0], scaling[1], scaling[2],
+    emit newTransformationValues(xpath,
+                                 scaling[0], scaling[1], scaling[2],
                                  rotation[0], rotation[1], rotation[2],
                                  translation[0], translation[1], translation[2] );
-    
+
+}
+
+void CPACSCreatorAdapter::setTransformation(QString xpath,
+                                            double sx, double sy, double sz,
+                                            double rx, double ry, double rz,
+                                            double tx, double ty, double tz) {
+
+
+    std::string xpathStd = xpath.toStdString();
+
+    creator.setPoint(xpathStd + "/scaling", { sx, sy, sz});
+    creator.setPoint(xpathStd + "/rotation", { rx, ry, rz});
+    creator.setPoint(xpathStd + "/translation", { tx, ty, tz});
+
+
+    std::cout << "Set transformation Values for xPath: "<< xpathStd << std::endl;
+
+    creator.save();
 
 }
 
