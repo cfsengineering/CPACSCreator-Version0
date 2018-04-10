@@ -53,7 +53,7 @@ void CPACSCreatorAdapter::setTransformation(QString xpath,
 void CPACSCreatorAdapter::resetCpacsConfig(const TIGLViewerDocument& doc) {
     QMutexLocker locker(&mutex); // ensure that the tree is not accessed during the creation
 
-    creator = CPACSCreator();
+    creator = AircraftTree();
 
     // Check if the new document is valid
     if(!doc.isConfigurationValid()){
@@ -67,8 +67,7 @@ void CPACSCreatorAdapter::resetCpacsConfig(const TIGLViewerDocument& doc) {
         return;
     }
 
-    creator.open(doc.getLoadedDocumentFileName().toStdString(), config.GetUID() );
-    creator.createRoot();
+    creator.build(doc.getLoadedDocumentFileName().toStdString(), config.GetUID() );
 
     return;
 

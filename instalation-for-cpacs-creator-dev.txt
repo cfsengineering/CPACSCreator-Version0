@@ -21,7 +21,7 @@ change oce lib/ include/ share/ bin/ in my laptop
 $ apt-get install qtscript5-dev
 
 # build with clion 
-# put shaders in the right place -> for me: /home/makem/JobProject/newStage/CPACSCreator/cmake-build-debug/share/tigl3/
+# put shaders in the right place -> for me: /home/makem/JobProject/newStage/AircraftTree/cmake-build-debug/share/tigl3/
  
 
 
