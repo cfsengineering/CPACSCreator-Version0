@@ -9,7 +9,7 @@
 #include "tixicpp.h"
 
 
-
+#include "CPACSCreatorLib/CPACSFile.h"
 
 /**
  * @brief Manage one aircraft
@@ -18,42 +18,42 @@
  */
 
 
-class CPACSCreator {
+
+class AircraftTree {
 
 public:
 
+    AircraftTree();
 
-    void open(std::string fileName, std::string configUid = "");
+    void build(std::string file, std::string uid = "");
+    inline bool isBuild(){return m_isBuild;}
 
-    void save();
-
-    CSharedPtr<CPACSOverTreeItem> createRoot();
+    inline CSharedPtr<CPACSOverTreeItem> getRoot() const  {return m_root;}
 
     std::vector<double> getPoint(std::string xpath);
     void setPoint(std::string xpath, const std::vector<double>& point );
 
-
-    inline CSharedPtr<CPACSOverTreeItem> getRoot() const  {return m_root;}
-    inline bool isValid(){return m_isValid;}
+    void save();
 
 
 protected:
     void createNode(TixiDocumentHandle  tixiHandle, std::string xpath, CPACSOverTreeItem* parent, int cpacsIdx, std::string elementName);
-    bool isValidWithWarning();
 
 
 
 private:
 
-    TixiDocumentHandle  tixiHandle;
-
     std::string fileName;
-    std::string configUid;
-    std::string configXPath;
+
+    std::string aircraftUid;
+    std::string aircraftXPath;
+
+    bool m_isBuild;
 
     CSharedPtr<CPACSOverTreeItem> m_root;
+    cpcr::CPACSFile modifier;
 
-    bool m_isValid;
+
 };
 
 

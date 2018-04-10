@@ -2,7 +2,7 @@
 // Created by cfse on 3/16/18.
 //
 
-#include "CPACSCreator.h"
+#include "AircraftTree.h"
 #include "tixicpp.h"
 
 
@@ -10,33 +10,80 @@
 
 
 
+AircraftTree::AircraftTree() {
+
+    fileName = "";
+    aircraftUid = "";
+    aircraftXPath = "";
+
+    m_isBuild = false;
+
+    CSharedPtr<CPACSOverTreeItem> m_root = nullptr;
+    cpcr::CPACSFile modifier;
+
+}
 
 
-CSharedPtr<CPACSOverTreeItem> CPACSCreator::createRoot() {
+void AircraftTree::save() {
+    modifier.save();
+}
 
 
-    std::cout << "creating root from filename " << fileName << " with uid " << configUid << std::endl;
-    m_root = CSharedPtr<CPACSOverTreeItem>();
-    if(!isValidWithWarning())
-        return m_root;
+void AircraftTree::build(std::string file, std::string uid) {
+
+    m_isBuild = false;
+    m_root = nullptr;
+
+    fileName = file;
+    aircraftUid = uid;
+    aircraftXPath = "";
 
 
+    modifier.open(fileName);
+    TixiDocumentHandle tixiHandle = modifier.getTixiHandle();
+
+    // find model
+    aircraftXPath = CPACS_XPATH_AIRCRAFT;
+    if(aircraftUid == ""){
+        aircraftXPath += "/model[1]";
+    }else{
+        aircraftXPath += "/model[@uID=\"" + aircraftUid + "\"]";
+    }
+
+    if( !tixi::TixiCheckElement(tixiHandle, aircraftXPath)) {
+        std::cerr << "XPath: " <<  aircraftXPath << " not found in the document " << std::endl;
+        aircraftXPath = "";
+        return;
+    } else {
+        std::string uID = aircraftUid;
+        if(tixi::TixiCheckAttribute(tixiHandle,aircraftXPath, "uID" ) ){
+            uID = tixi::TixiGetAttribute<std::string>(tixiHandle, aircraftXPath, "uID");
+        }
+        if(aircraftUid != uID){
+            aircraftUid = uID;    // happen's if the uID is not given
+        }
+    }
+
+
+    // build the tree
     // create first element
     m_root =  CSharedPtr<CPACSOverTreeItem>(new CPACSOverTreeItem(0, "", "dummyRoot"));
 
     // recursive call to create element
-    createNode(tixiHandle, configXPath, m_root.get(), 1, "model");
+    createNode(modifier.getTixiHandle(), aircraftXPath, m_root.get(), 1, "model");
 
-    return m_root;
-
+    m_isBuild = true;
 }
 
-void CPACSCreator::createNode(TixiDocumentHandle  tixiHandle,std::string xpath, CPACSOverTreeItem* parent, int cpacsIdx, std::string elementName) {
+
+
+
+void AircraftTree::createNode(TixiDocumentHandle  tixiHandle,std::string xpath, CPACSOverTreeItem* parent, int cpacsIdx, std::string elementName) {
 
     //
     // std::cout << xpath.c_str() << std::endl;
     ReturnCode tixiRet;
-    
+
     int childrenCount = -1 ;
     int attributesCount = -1;
     std::string nodeType = "";
@@ -98,154 +145,20 @@ void CPACSCreator::createNode(TixiDocumentHandle  tixiHandle,std::string xpath, 
             }
         }
     }
-    
-    return ;
-}
-
-
-
-void CPACSCreator::open(std::string inFileName, std::string inConfigUid) {
-
-    m_isValid = false;
-    configXPath = "";
-    tixiHandle = -1;
-    fileName = inFileName;
-    configUid = inConfigUid;
-
-
-    // Open document
-    try {
-        tixiHandle = tixi::TixiOpenDocument(fileName);
-        CSharedPtr<CPACSOverTreeItem> root = nullptr;
-    }catch(tixi::TixiError error){
-        std::cerr << error.what() << std::endl;
-        tixiHandle = -1;
-        return;
-    }
-
-    // find model
-    configXPath = CPACS_XPATH_AIRCRAFT;
-    if(configUid == ""){
-        configXPath += "/model[1]";
-    }else{
-        configXPath += "/model[@uID=\"" + configUid + "\"]";
-    }
-
-    if( !tixi::TixiCheckElement(tixiHandle, configXPath)) {
-        std::cerr << "XPath: " <<  configXPath << " not found in the document " << std::endl;
-        configXPath = "";
-        tixiHandle = -1;
-        return;
-    } else {
-        std::string uID = configUid;
-        if(tixi::TixiCheckAttribute(tixiHandle,configXPath, "uID" ) ){
-            uID = tixi::TixiGetAttribute<std::string>(tixiHandle, configXPath, "uID");
-        }
-        if(configUid != uID){
-            configUid = uID;    // happen's if the uID is not given
-        }
-        m_isValid = true;
-    }
-
-}
-
-bool CPACSCreator::isValidWithWarning() {
-    if(isValid()){
-        return true;
-
-    }else{
-        std::cout << "Trying to perform operation on a invalid CPACSCreator" << std::endl;
-        return false;
-    };
-}
-
-
-
-
-std::vector<double> CPACSCreator::getPoint(std::string xpath) {
-
-    std::vector<double> point = {-1,-1,-1};
-
-    if ( !isValidWithWarning() ){
-        return point;
-    }
-
-    if( !tixi::TixiCheckElement(tixiHandle, xpath) ){
-        std::cout << "element not found" << std::endl;
-    }
-
-
-    std::string tempXpath = xpath + "/x";
-
-    if ( tixi::TixiCheckElement(tixiHandle, tempXpath) ){
-        point[0] = tixi::TixiGetElement<double>(tixiHandle,tempXpath);
-    }else{
-        std::cout << "x value not foun" << std::endl;
-    }
-    tempXpath = xpath + "/y";
-    if ( tixi::TixiCheckElement(tixiHandle, tempXpath) ){
-        point[1] = tixi::TixiGetElement<double>(tixiHandle,tempXpath);
-    }else{
-        std::cout << "x value not foun" << std::endl;
-    }
-    tempXpath = xpath + "/z";
-    if ( tixi::TixiCheckElement(tixiHandle, tempXpath) ){
-        point[2] = tixi::TixiGetElement<double>(tixiHandle,tempXpath);
-    }else{
-        std::cout << "x value not foun" << std::endl;
-    }
-    return point;
-}
-
-
-
-void CPACSCreator::setPoint(std::string xpath, const std::vector<double>& point) {
-
-    if (point.size() != 3 ) {
-        std::cerr << "point have not 3 values" << std::endl;
-        return;
-    }
-
-    if( !tixi::TixiCheckElement(tixiHandle, xpath) ){
-        std::cout << "element not found" << std::endl;
-        return;
-    }
-
-
-    std::string tempXpath = xpath + "/x";
-
-    if ( tixi::TixiCheckElement(tixiHandle, tempXpath) ){
-        tixi::TixiSaveElement(tixiHandle,tempXpath, point[0]);
-    }else{
-        std::cout << "x value not foun" << std::endl;
-    }
-    tempXpath = xpath + "/y";
-    if ( tixi::TixiCheckElement(tixiHandle, tempXpath) ){
-        tixi::TixiSaveElement(tixiHandle,tempXpath, point[1]);
-    }else{
-        std::cout << "x value not foun" << std::endl;
-    }
-    tempXpath = xpath + "/z";
-    if ( tixi::TixiCheckElement(tixiHandle, tempXpath) ){
-        tixi::TixiSaveElement(tixiHandle,tempXpath, point[2]);
-    }else{
-        std::cout << "x value not foun" << std::endl;
-    }
 
     return ;
 }
 
-void CPACSCreator::save() {
-    if( tixiHandle <= 0 ){
-        std::cerr << "tixi handle is not valid, we can not save the document" << std::endl;
+std::vector<double> AircraftTree::getPoint(std::string xpath) {
 
-    }
-    tixiSaveDocument(tixiHandle, fileName.c_str());
-    tixiCloseDocument(tixiHandle );
-    tixiHandle = tixi::TixiOpenDocument(fileName);
+    return modifier.getPoint(xpath).toStdVector();
+
 }
 
-
+void AircraftTree::setPoint(std::string xpath, const std::vector<double> &point) {
+    cpcr::Point newPoint (point);
+    modifier.setPoint(xpath, newPoint);
+}
 
 
 

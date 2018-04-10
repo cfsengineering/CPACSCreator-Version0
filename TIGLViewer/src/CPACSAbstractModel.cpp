@@ -9,7 +9,7 @@
 #include "CCPACSWingSectionElement.h"
 #include "CCPACSWing.h"
 #include "TIGLViewerWindow.h"
-#include "CPACSCreator.h"
+#include "AircraftTree.h"
 #include "CCPACSWingSegment.h"
 
 
@@ -24,86 +24,6 @@ CPACSAbstractModel::CPACSAbstractModel(CPACSCreatorAdapter* adapter, QObject* pa
 CPACSAbstractModel::~CPACSAbstractModel()
 {
 }
-//
-//void CPACSAbstractModel::initWingsFrom(tigl::CCPACSConfiguration &config){
-//
-//
-//    QString tempUid;
-//    QString tempType;
-//
-//    tigl::CCPACSWings& wings = config.GetWings();
-//    tempUid = QString("" ) ; // no UID  for wings by definition of the cpacs
-//    tempType = QString("wings");
-//    CPACSOverTreeItem* newWings = root->addChild(1, tempUid, tempType);
-//
-//
-//    for( int i = 1; i <= config.GetWingCount(); i++){  // cpacs index start at 1
-//        tigl::CCPACSWing& wing = config.GetWing(i);
-//        tempUid = QString(wing.GetUID().c_str() ) ;
-//        tempType = QString("wing");
-//        CPACSOverTreeItem* newWing = newWings->addChild(i, tempUid, tempType);
-//
-//        tigl::CCPACSWingSections& sections = wing.GetSections();
-//        tempUid = QString("" ) ;
-//        tempType = QString("sections");
-//        CPACSOverTreeItem* newSections = newWing->addChild(i, tempUid, tempType);
-//
-//
-//        for(int j = 1; j <= wing.GetSectionCount(); j++){
-//            tigl::CCPACSWingSection& section = wing.GetSection(j);
-//            tempUid = QString(section.GetUID().c_str() ) ;
-//            tempType = QString("section");
-//            CPACSOverTreeItem* newSection = newSections->addChild(j,tempUid, tempType);
-//
-//            tigl::CCPACSWingSectionElements& elements = section.GetElements();
-//            tempUid = QString("" ) ;
-//            tempType = QString("elements");
-//            CPACSOverTreeItem* newElements = newSection->addChild(i, tempUid, tempType);
-//
-//
-//            for(int k = 1; k <= section.GetSectionElementCount(); k++ ){
-//                tigl::CCPACSWingSectionElement& element = section.GetSectionElement(k);
-//                tempUid = QString(element.GetUID().c_str());
-//                tempType = QString("element");
-//                CPACSOverTreeItem * newElement = newElements->addChild(k, tempUid, tempType);
-//            }
-//        }
-//    }
-//}
-
-
-
-//
-//
-//void CPACSAbstractModel::initTree( TIGLViewerDocument &doc)
-//{
-//    // Destroy old tree if existe
-//    std::cout << "Destroy tree model: filename=" << currentFileName.toStdString() << " uid=" << currentConfigUid.toStdString() << std::endl;
-//    root = nullptr;
-//    currentFileName = QString();
-//    currentConfigUid = QString();
-//
-//    // Check if the new document is valid
-//    if(!doc.isConfigurationValid()){
-//        return;
-//    }
-//
-//    // check rotorcraft
-//    tigl::CCPACSConfiguration& config = doc.GetConfiguration();
-//    if( config.IsRotorcraft() ){
-//        std::cout << "Rotorcraft is not supported by the tree viewer" << std::endl;
-//        return;
-//    }
-//
-//    // Create the tree
-//    currentFileName = doc.getLoadedDocumentFileName();
-//    currentConfigUid = QString(config.GetUID().c_str());
-//    creator = CPACSCreator();
-//    creator.open(currentFileName.toStdString(), currentConfigUid.toStdString());
-//    root = creator.createRoot( );
-//
-//    return;
-//}
 
 
 QVariant CPACSAbstractModel::headerData(int section, Qt::Orientation orientation, int role) const  {

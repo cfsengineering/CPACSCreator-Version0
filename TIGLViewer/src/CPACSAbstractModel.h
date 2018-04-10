@@ -15,7 +15,7 @@
 #include <Quantity_Color.hxx>
 #include <QMutex>
 
-#include "CPACSCreator.h"
+#include "AircraftTree.h"
 #include "CPACSCreatorAdapter.h"
 
 

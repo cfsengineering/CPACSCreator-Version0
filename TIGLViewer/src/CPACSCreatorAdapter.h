@@ -6,7 +6,7 @@
 #define TIGL_CPACSCREATORADAPTER_H
 
 #include <QObject>
-#include "CPACSCreator.h"
+#include "AircraftTree.h"
 #include "CPACSOverTreeItem.h"
 #include "TIGLViewerDocument.h"
 #include <QMutex>
@@ -38,7 +38,7 @@ public:
 
 private:
 
-    CPACSCreator creator;
+    AircraftTree creator;
     mutable QMutex mutex;   // to enshure that the tree root is not accessed when update is done
 
 };
