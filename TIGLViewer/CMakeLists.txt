@@ -109,7 +109,7 @@ set(tv_src
     test.cpp
     CPACSAbstractModel.cpp
     CPACSOverTreeItem.cpp
-    CPACSCreator.cpp
+    AircraftTree.cpp
     CPACSCreatorAdapter.cpp
     TIGLViewerTransformationWidget.cpp
 
@@ -132,7 +132,7 @@ set(tv_hdr
     TIGLQAspectWindow.h
     test.h
     CPACSOverTreeItem.h
-    CPACSCreator.h
+    AircraftTree.h
 
 )
 
@@ -233,6 +233,9 @@ if(APPLE)
    set(MACOSX_BUNDLE_ICON_FILE ${PROGNAME}.icns )
 endif()
 
+
+
+
 add_executable(${PROGNAME} ${TYPE}
 		${tv_src_comp} 
 		${tv_hdr_MOC} 
@@ -251,6 +254,23 @@ target_link_libraries(${PROGNAME}
 	${OpenCASCADE_LIBRARIES} 
 	${EXTRA_LIBRARIES} 
 )
+
+# cpacscreatorlib ######################################################################################################
+# TODO clean building way
+find_library( LOCATION libCPACSCreatorLib.a /home/makem/JobProject/SkStage/CPACSCreatorLib/cmake-build-debug/CPACSCreatorLib/ )
+message(LIBCREATORLOCATION: ${LOCATION})
+target_link_libraries( ${PROGNAME}
+        ${LOCATION}
+)
+
+set(CPACSCreatorLibIncludeDir /home/makem/JobProject/SkStage/CPACSCreatorLib/)
+target_include_directories( ${PROGNAME} PRIVATE
+    ${CPACSCreatorLibIncludeDir}
+)
+
+
+########################################################################################################################
+
 
 if(GLOG_FOUND)
   include_directories(${GLOG_INCLUDE_DIR})

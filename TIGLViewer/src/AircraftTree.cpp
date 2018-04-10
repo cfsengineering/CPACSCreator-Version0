@@ -154,7 +154,7 @@ bool CPACSCreator::isValidWithWarning() {
         return true;
 
     }else{
-        std::cout << "Trying to performe opereation on a invalid CPACSCreator" << std::endl;
+        std::cout << "Trying to perform operation on a invalid CPACSCreator" << std::endl;
         return false;
     };
 }
