@@ -4,13 +4,13 @@
     <name>Descartes Model</name>
     <version>1.1</version>
     <cpacsVersion>3.0</cpacsVersion>
-    <creator>Descartes</creator>
+    <aircraftTree>Descartes</aircraftTree>
     <description>CPACS aircraft model designed using Descartes</description>
     <timestamp>2016-08-08T18:03:00</timestamp>
     <updates>
       <update>
         <modification>Converted to cpacs 3.0 using cpacs2to3</modification>
-        <creator>cpacs2to3</creator>
+        <aircraftTree>cpacs2to3</aircraftTree>
         <timestamp>2018-01-15T09:21:41</timestamp>
         <version>1.1</version>
         <cpacsVersion>3.0</cpacsVersion>

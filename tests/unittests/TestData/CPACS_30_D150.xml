@@ -3,14 +3,14 @@
   <header xsi:type="headerType">
     <name>VAMP D150 CPACS 2.0</name>
     <description>D150_reference_VAMP, outer geometry reshapedP2C'ed from PrADO A320-200, CPACS 2.0</description>
-    <creator>Thomas Zill, DLR, LY-ILE</creator>
+    <aircraftTree>Thomas Zill, DLR, LY-ILE</aircraftTree>
     <timestamp>2012-04-23T12:00:00</timestamp>
     <version>1.0</version>
     <cpacsVersion>3.0</cpacsVersion>
     <updates>
       <update>
         <modification>Converted to cpacs 3.0 using cpacs2to3 - does not include structure update</modification>
-        <creator>cpacs2to3</creator>
+        <aircraftTree>cpacs2to3</aircraftTree>
         <timestamp>2018-01-15T09:03:21</timestamp>
         <version>1.0</version>
         <cpacsVersion>3.0</cpacsVersion>

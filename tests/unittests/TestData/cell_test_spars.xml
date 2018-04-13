@@ -2,7 +2,7 @@
 <cpacs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.airbusds.com/cpacs/2.3">
   <header>
     <name>Descartes Model</name>
-    <creator>Descartes</creator>
+    <aircraftTree>Descartes</aircraftTree>
     <description>CPACS aircraft model designed using Descartes</description>
     <timestamp>2016-08-03T11:58:57</timestamp>
     <version>1.1</version>
@@ -10,7 +10,7 @@
     <updates>
       <update>
         <modification>Converted to cpacs 3.0 using cpacs2to3</modification>
-        <creator>cpacs2to3</creator>
+        <aircraftTree>cpacs2to3</aircraftTree>
         <timestamp>2018-01-15T09:35:36</timestamp>
         <version>1.1</version>
         <cpacsVersion>3.0</cpacsVersion>

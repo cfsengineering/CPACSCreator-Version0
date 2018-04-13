@@ -3,42 +3,42 @@
   <header>
     <name>D250</name>
     <description>D250 - aircraft geometrical model interpreted from internal data</description>
-    <creator>Erwin Moerland</creator>
+    <aircraftTree>Erwin Moerland</aircraftTree>
     <timestamp>2011-07-01T12:00:00</timestamp>
     <version>1.0</version>
     <cpacsVersion>3.0</cpacsVersion>
     <updates>
       <update>
         <modification>Extended with nongeometrical settings for all VAMP tools</modification>
-        <creator>All VAMP participants</creator>
+        <aircraftTree>All VAMP participants</aircraftTree>
         <timestamp>2011-11-23T12:00:00</timestamp>
         <version>0.2</version>
         <cpacsVersion>1.6</cpacsVersion>
       </update>
       <update>
         <modification>Added structure, secondary wing components</modification>
-        <creator>Felix Dorbath</creator>
+        <aircraftTree>Felix Dorbath</aircraftTree>
         <timestamp>2012-08-01T12:00:00</timestamp>
         <version>0.3</version>
         <cpacsVersion>2.0</cpacsVersion>
       </update>
       <update>
         <modification>Converted to CPACS 2.0</modification>
-        <creator>Felix Dorbath, Erwin Moerland</creator>
+        <aircraftTree>Felix Dorbath, Erwin Moerland</aircraftTree>
         <timestamp>2012-08-01T12:00:00</timestamp>
         <version>0.4</version>
         <cpacsVersion>2.0</cpacsVersion>
       </update>
       <update>
         <modification>Resolved issues with fuselage and wing component segments. Added HTP+VTP structure and control surfaces</modification>
-        <creator> Erwin Moerland</creator>
+        <aircraftTree> Erwin Moerland</aircraftTree>
         <timestamp>2012-11-14T11:00:00</timestamp>
         <version>0.5</version>
         <cpacsVersion>2.0</cpacsVersion>
       </update>
       <update>
         <modification>Converted to cpacs 3.0 using cpacs2to3 - does not include structure update</modification>
-        <creator>cpacs2to3</creator>
+        <aircraftTree>cpacs2to3</aircraftTree>
         <timestamp>2018-01-15T09:05:00</timestamp>
         <version>1.0</version>
         <cpacsVersion>3.0</cpacsVersion>

@@ -21480,7 +21480,7 @@ jonas.jepsen@dlr.de
 							</xsd:documentation>
 						</xsd:annotation>
 					</xsd:element>
-					<xsd:element name="creator" type="stringBaseType">
+					<xsd:element name="aircraftTree" type="stringBaseType">
 						<xsd:annotation>
 							<xsd:documentation>Creator of initial CPACS dataset
 							</xsd:documentation>
@@ -38367,7 +38367,7 @@ jonas.jepsen@dlr.de
 							</xsd:documentation>
 						</xsd:annotation>
 					</xsd:element>
-					<xsd:element name="creator" type="stringBaseType">
+					<xsd:element name="aircraftTree" type="stringBaseType">
 						<xsd:annotation>
 							<xsd:documentation>Creator of CPACS modification
 							</xsd:documentation>
