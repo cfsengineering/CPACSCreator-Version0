@@ -260,7 +260,7 @@ void TIGLViewerDocument::saveCpacsConfiguration()
         tiglGetCPACSTixiHandle(m_cpacsHandle, &tixiHandle);
         char *cfileName = strdup((const char*)loadedConfigurationFileName.toLatin1());
         tixiSaveDocument(tixiHandle, cfileName  );
-       // FIXME update creator
+       // FIXME update aircraftTree
     }
 }
 

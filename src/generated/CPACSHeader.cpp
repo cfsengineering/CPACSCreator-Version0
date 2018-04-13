@@ -54,15 +54,15 @@ namespace generated
             }
         }
 
-        // read element creator
-        if (tixi::TixiCheckElement(tixiHandle, xpath + "/creator")) {
-            m_creator = tixi::TixiGetElement<std::string>(tixiHandle, xpath + "/creator");
+        // read element aircraftTree
+        if (tixi::TixiCheckElement(tixiHandle, xpath + "/aircraftTree")) {
+            m_creator = tixi::TixiGetElement<std::string>(tixiHandle, xpath + "/aircraftTree");
             if (m_creator.empty()) {
-                LOG(WARNING) << "Required element creator is empty at xpath " << xpath;
+                LOG(WARNING) << "Required element aircraftTree is empty at xpath " << xpath;
             }
         }
         else {
-            LOG(ERROR) << "Required element creator is missing at xpath " << xpath;
+            LOG(ERROR) << "Required element aircraftTree is missing at xpath " << xpath;
         }
 
         // read element timestamp
@@ -125,9 +125,9 @@ namespace generated
             }
         }
 
-        // write element creator
-        tixi::TixiCreateElementIfNotExists(tixiHandle, xpath + "/creator");
-        tixi::TixiSaveElement(tixiHandle, xpath + "/creator", m_creator);
+        // write element aircraftTree
+        tixi::TixiCreateElementIfNotExists(tixiHandle, xpath + "/aircraftTree");
+        tixi::TixiSaveElement(tixiHandle, xpath + "/aircraftTree", m_creator);
 
         // write element timestamp
         tixi::TixiCreateElementIfNotExists(tixiHandle, xpath + "/timestamp");

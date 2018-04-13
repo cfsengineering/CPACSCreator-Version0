@@ -6,6 +6,7 @@
 #include "tixicpp.h"
 
 
+
 // create an over tree from tixi
 
 
@@ -158,6 +159,14 @@ std::vector<double> AircraftTree::getPoint(std::string xpath) {
 void AircraftTree::setPoint(std::string xpath, const std::vector<double> &point) {
     cpcr::Point newPoint (point);
     modifier.setPoint(xpath, newPoint);
+}
+
+cpcr::CPACSTransformation AircraftTree::getTransformation(std::string xpath) {
+    return modifier.getTransformation(xpath);
+}
+
+void AircraftTree::setTransformation(std::string xpath, const cpcr::CPACSTransformation& transformation) {
+    modifier.setTransformation(xpath, transformation);
 }
 
 

@@ -10,6 +10,8 @@
 
 
 #include "CPACSCreatorLib/CPACSFile.h"
+#include "CPACSCreatorLib/CPACSTransformation.h"
+
 
 /**
  * @brief Manage one aircraft
@@ -32,6 +34,12 @@ public:
 
     std::vector<double> getPoint(std::string xpath);
     void setPoint(std::string xpath, const std::vector<double>& point );
+
+    cpcr::CPACSTransformation getTransformation(std::string xpath);
+    void setTransformation(std::string xpath, const cpcr::CPACSTransformation& transformation );
+
+
+
 
     void save();
 

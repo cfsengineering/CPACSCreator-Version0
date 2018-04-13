@@ -4,6 +4,8 @@
 
 #include "CPACSCreatorAdapter.h"
 
+#include "CPACSCreatorLib/CPACSTransformation.h"
+
 
 void CPACSCreatorAdapter::prepareTransformationValues(CPACSOverTreeItem *item) {
 
@@ -13,18 +15,19 @@ void CPACSCreatorAdapter::prepareTransformationValues(CPACSOverTreeItem *item) {
     if(item->getCpacsType() != "transformation"){
         return;
     }
-    std::vector<double> scaling = creator.getPoint(item->getXPath() + "/scaling");
-    std::vector<double> rotation = creator.getPoint(item->getXPath() + "/rotation" );
-    std::vector<double> translation  = creator.getPoint(item->getXPath() + "/translation");
+
+    cpcr::CPACSTransformation transform = aircraftTree.getTransformation(item->getXPath());
+
 
     QString xpath = QString(item->getXPath().c_str());
 
-    std::cout << "Prepare transformation Values  recived: "<< scaling[0] << " " <<scaling[1]<< " " << scaling[2]  << std::endl;
+    LOG(INFO) << "Prepare Transformation Values";
 
     emit newTransformationValues(xpath,
-                                 scaling[0], scaling[1], scaling[2],
-                                 rotation[0], rotation[1], rotation[2],
-                                 translation[0], translation[1], translation[2] );
+                                 transform.getScaling().x, transform.getScaling().y, transform.getScaling().z,
+                                 transform.getRotation().x, transform.getRotation().y, transform.getRotation().z,
+                                 transform.getTransformation().x, transform.getTransformation().y, transform.getTransformation().z
+                                 );
 
 }
 
@@ -36,14 +39,13 @@ void CPACSCreatorAdapter::setTransformation(QString xpath,
 
     std::string xpathStd = xpath.toStdString();
 
-    creator.setPoint(xpathStd + "/scaling", { sx, sy, sz});
-    creator.setPoint(xpathStd + "/rotation", { rx, ry, rz});
-    creator.setPoint(xpathStd + "/translation", { tx, ty, tz});
+    cpcr::CPACSTransformation transform(sx, sy, sz, rx, ry, rz, tx, ty, tz );
+    aircraftTree.setTransformation(xpathStd, transform);
+    aircraftTree.save();
+
+    LOG(INFO) << "Set transformation Values for xPath: cccccccccccccccccccccccccccccc" + xpathStd ;
 
 
-    std::cout << "Set transformation Values for xPath: "<< xpathStd << std::endl;
-
-    creator.save();
 
 }
 
@@ -53,7 +55,7 @@ void CPACSCreatorAdapter::setTransformation(QString xpath,
 void CPACSCreatorAdapter::resetCpacsConfig(const TIGLViewerDocument& doc) {
     QMutexLocker locker(&mutex); // ensure that the tree is not accessed during the creation
 
-    creator = AircraftTree();
+    aircraftTree = AircraftTree();
 
     // Check if the new document is valid
     if(!doc.isConfigurationValid()){
@@ -67,7 +69,7 @@ void CPACSCreatorAdapter::resetCpacsConfig(const TIGLViewerDocument& doc) {
         return;
     }
 
-    creator.build(doc.getLoadedDocumentFileName().toStdString(), config.GetUID() );
+    aircraftTree.build(doc.getLoadedDocumentFileName().toStdString(), config.GetUID() );
 
     return;
 
@@ -78,6 +80,6 @@ CSharedPtr<CPACSOverTreeItem> CPACSCreatorAdapter::getRoot()const {
     QMutexLocker locker(&mutex); // ensure that the tree is not accessed during the creation
 
     CSharedPtr<CPACSOverTreeItem> root = CSharedPtr<CPACSOverTreeItem>();
-    root = creator.getRoot();
+    root = aircraftTree.getRoot();
     return root;
 }

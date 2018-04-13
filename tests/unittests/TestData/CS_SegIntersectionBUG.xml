@@ -2,14 +2,14 @@
 <cpacs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="cpacs_schema.xsd">
   <header>
     <name>Export from</name>
-    <creator>VAMPzero</creator>
+    <aircraftTree>VAMPzero</aircraftTree>
     <timestamp>2010-12-31T12:00:00</timestamp>
     <cpacsVersion>3.0</cpacsVersion>
     <version>1.0</version>
     <updates>
       <update>
         <modification>Converted to cpacs 3.0 using cpacs2to3 - does not include structure update</modification>
-        <creator>cpacs2to3</creator>
+        <aircraftTree>cpacs2to3</aircraftTree>
         <timestamp>2018-01-15T09:07:13</timestamp>
         <version>1.0</version>
         <cpacsVersion>3.0</cpacsVersion>

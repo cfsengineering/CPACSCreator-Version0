@@ -38,7 +38,7 @@ public:
 
 private:
 
-    AircraftTree creator;
+    AircraftTree aircraftTree;
     mutable QMutex mutex;   // to enshure that the tree root is not accessed when update is done
 
 };

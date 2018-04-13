@@ -3,14 +3,14 @@
   <header>
     <name>GuideCurveModel Test</name>
     <description>Simple Test Model for Guide Curve Unit Testing</description>
-    <creator>Tobias Stollenwerk</creator>
+    <aircraftTree>Tobias Stollenwerk</aircraftTree>
     <timestamp>2014-02-10T14:28:00</timestamp>
     <version>1.2</version>
     <cpacsVersion>3.0</cpacsVersion>
     <updates>
       <update>
         <modification>Converted to cpacs 3.0 using cpacs2to3 - does not include structure update</modification>
-        <creator>cpacs2to3</creator>
+        <aircraftTree>cpacs2to3</aircraftTree>
         <timestamp>2018-01-15T09:38:10</timestamp>
         <version>1.2</version>
         <cpacsVersion>3.0</cpacsVersion>
