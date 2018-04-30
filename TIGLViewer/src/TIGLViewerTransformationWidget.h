@@ -7,7 +7,6 @@
 
 #include <QWidget>
 #include <QDoubleSpinBox>
-#include "CPACSOverTreeItem.h"
 
 class TIGLViewerTransformationWidget : public QWidget
 {

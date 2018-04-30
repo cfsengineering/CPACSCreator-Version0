@@ -88,3 +88,9 @@ cpcr::CPACSTreeItem* CPACSCreatorAdapter::getRoot()const {
     cpcr::CPACSTreeItem* root = aircraftTree.getRoot();
     return root;
 }
+
+
+
+bool CPACSCreatorAdapter::isValid() {
+    return aircraftTree.isBuild();
+}

@@ -11,7 +11,7 @@
 #include <QtGui>
 
 #include "CTiglPoint.h"
-#include "test.h"
+
 
 class TIGLPointWidget: public QWidget
 {

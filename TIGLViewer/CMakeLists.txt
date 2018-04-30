@@ -106,10 +106,8 @@ set(tv_src
     TIGLViewerVTKExportDialog.cpp
     TIGLSliderDialog.cpp
     TIGLPointWidget.cpp
-    test.cpp
+
     CPACSAbstractModel.cpp
-    CPACSOverTreeItem.cpp
-    AircraftTree.cpp
     CPACSCreatorAdapter.cpp
     TIGLViewerTransformationWidget.cpp
 
@@ -130,11 +128,8 @@ set(tv_hdr
     TIGLViewerLoggerHTMLDecorator.h
     TIGLViewerScopedCommand.h
     TIGLQAspectWindow.h
-    test.h
-    CPACSOverTreeItem.h
-    AircraftTree.h
 
-)
+        )
 
 # qobject header files that have to be moced
 set(tv_hdr_qobj
@@ -160,6 +155,7 @@ set(tv_hdr_qobj
 	TIGLViewerVTKExportDialog.h
 	TIGLSliderDialog.h
     TIGLPointWidget.h
+
     CPACSAbstractModel.h
     CPACSCreatorAdapter.h
     TIGLViewerTransformationWidget.h

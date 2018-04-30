@@ -6,11 +6,9 @@
 #define TIGL_CPACSCREATORADAPTER_H
 
 #include <QObject>
-#include "AircraftTree.h"
-#include "CPACSOverTreeItem.h"
-#include "TIGLViewerDocument.h"
 #include <QMutex>
 
+#include "TIGLViewerDocument.h"
 
 #include "CPACSCreatorLib/AircraftTree.h"
 #include "CPACSCreatorLib/CPACSTreeItem.h"

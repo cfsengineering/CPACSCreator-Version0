@@ -9,7 +9,7 @@
 #include "CCPACSWingSectionElement.h"
 #include "CCPACSWing.h"
 #include "TIGLViewerWindow.h"
-#include "AircraftTree.h"
+
 #include "CCPACSWingSegment.h"
 
 
