@@ -10,7 +10,7 @@
 // create an over tree from tixi
 
 
-
+/*
 AircraftTree::AircraftTree() {
 
     fileName = "";
@@ -174,7 +174,7 @@ void AircraftTree::setTransformation(std::string xpath, const cpcr::CPACSTransfo
 
 
 
-
+*/
 
 
 

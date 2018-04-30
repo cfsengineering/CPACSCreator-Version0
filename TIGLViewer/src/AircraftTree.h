@@ -20,7 +20,7 @@
  */
 
 
-
+/*
 class AircraftTree {
 
 public:
@@ -67,5 +67,5 @@ private:
 
 
 
-
+*/
 #endif //TIGL_CPACSCREATOR_H

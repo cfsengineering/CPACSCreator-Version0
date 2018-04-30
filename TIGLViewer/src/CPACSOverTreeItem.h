@@ -16,6 +16,8 @@
 #include <QVariant>
 #include "TIGLViewerDocument.h"
 
+
+/*
 class CPACSOverTreeItem {
 
 public:
@@ -63,7 +65,7 @@ private:
 };
 
 
-
+*/
 
 
 #endif //TIGL_CPACSOVERTREEITEM_H

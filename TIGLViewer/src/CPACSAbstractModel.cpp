@@ -29,7 +29,19 @@ CPACSAbstractModel::~CPACSAbstractModel()
 QVariant CPACSAbstractModel::headerData(int section, Qt::Orientation orientation, int role) const  {
 
     if (isValid() && orientation == Qt::Horizontal && role == Qt::DisplayRole){
-        return QString((creatorAdapter->getRoot()->getDataName(section)).c_str());
+
+        if(section == 0){
+            return "index";
+        }else if (section == 1){
+            return "type";
+        }else if (section == 2){
+            return "UID";
+        }else if (section == 3){
+            return "XPath";
+        }else{
+            return "invalid";
+        }
+
     }
 
     return QVariant();
@@ -44,16 +56,16 @@ QVariant CPACSAbstractModel::data(const QModelIndex &index, int role) const
     if (role != Qt::DisplayRole)
         return QVariant();
 
-    CPACSOverTreeItem *item = getItem(index);
+    cpcr::CPACSTreeItem *item = getItem(index);
     QVariant data ;
     if(index.column() == 0){
-        data = item->getCpacsIndex();
+        data = item->getTixiIndex();
     }else if(index.column() == 1){
-        data = QString( item->getCpacsType().c_str() );
+        data = QString( item->getType().c_str() );
     }else if(index.column() == 2){
-        data = QString(item->getCpacsUid().c_str());
+        data = QString(item->getUid().c_str());
     }else if(index.column() == 3){
-        data = QString(item->getXPath().c_str());
+        data = QString(item->getXPath().toString().c_str());
     }else{
         data = QVariant();
     }
@@ -68,8 +80,8 @@ QModelIndex CPACSAbstractModel::parent(const QModelIndex& index) const
     if(!isValid())
         return QModelIndex();
 
-    CPACSOverTreeItem * childItem = getItem(index);
-    CPACSOverTreeItem* parentItem = childItem->getParent();
+    cpcr::CPACSTreeItem * childItem = getItem(index);
+    cpcr::CPACSTreeItem* parentItem = childItem->getParent();
 
     return getIndex(parentItem, 0 );
 }
@@ -81,8 +93,8 @@ int CPACSAbstractModel::rowCount(const QModelIndex& idx) const
     if(!isValid())
         return 0;
 
-    CPACSOverTreeItem*  item = getItem(idx);
-    return item->getChildren().count();
+    cpcr::CPACSTreeItem*  item = getItem(idx);
+    return item->getChildren().size();
 
 }
 
@@ -92,8 +104,8 @@ int CPACSAbstractModel::columnCount(const QModelIndex &idx ) const
     if(!isValid())
         return 0;
 
-    CPACSOverTreeItem*  item = getItem(idx);
-    return item->getDataCount();
+    cpcr::CPACSTreeItem*  item = getItem(idx);
+    return 4;   // we have for values in a tree item
 }
 
 
@@ -103,8 +115,8 @@ QModelIndex CPACSAbstractModel::index(int row, int column, const QModelIndex &pa
     if( !isValid())
         return QModelIndex();
 
-    CPACSOverTreeItem* parentItem = getItem(parent);    // return root if parent is empty or invalid
-    CPACSOverTreeItem* childItem = parentItem->getChildren().at(row);
+    cpcr::CPACSTreeItem* parentItem = getItem(parent);    // return root if parent is empty or invalid
+    cpcr::CPACSTreeItem* childItem = parentItem->getChildren()[row];
 
     if (childItem)  // case where the child is not a null pointer
         return createIndex(row, column, childItem);
@@ -112,9 +124,9 @@ QModelIndex CPACSAbstractModel::index(int row, int column, const QModelIndex &pa
         return QModelIndex();
 }
 
-QModelIndex CPACSAbstractModel::getIndex(CPACSOverTreeItem *item, int column) const
+QModelIndex CPACSAbstractModel::getIndex(cpcr::CPACSTreeItem *item, int column) const
 {
-    if( !isValid() || item == creatorAdapter->getRoot().get() || item == nullptr ){
+    if( !isValid() || item == creatorAdapter->getRoot() || item == nullptr ){
         return QModelIndex();   // We use empty index for the root
     }
 
@@ -122,23 +134,23 @@ QModelIndex CPACSAbstractModel::getIndex(CPACSOverTreeItem *item, int column) co
     return createIndex(row, column, item);
 }
 
-CPACSOverTreeItem* CPACSAbstractModel::getItem(QModelIndex index) const
+cpcr::CPACSTreeItem* CPACSAbstractModel::getItem(QModelIndex index) const
 {
     // Internal identifier is the item pointer
     if( index.isValid() ){
-        CPACSOverTreeItem* item = static_cast<CPACSOverTreeItem*>(index.internalPointer());
+        cpcr::CPACSTreeItem* item = static_cast<cpcr::CPACSTreeItem*>(index.internalPointer());
         if(item) return item;
      }
-    return creatorAdapter->getRoot().get();    // empty index is the root
+    return creatorAdapter->getRoot();    // empty index is the root
 }
 
 void CPACSAbstractModel::onItemSelectionChanged(const QItemSelection & newSelection, const QItemSelection & oldSelection)
 {
-    CPACSOverTreeItem * item = getItem(newSelection.indexes().at(0));
+    cpcr::CPACSTreeItem * item = getItem(newSelection.indexes().at(0));
 
-    std::cout << "selection changed " << item->getCpacsUid() << std::endl;
+    std::cout << "selection changed " << item->getUid() << std::endl;
 
-    if(item->getCpacsType() == "transformation"){
+    if(item->getType() == "transformation"){
         emit selectionIsATransformation(item);
     }
 
@@ -156,5 +168,5 @@ void CPACSAbstractModel::onItemSelectionChanged(const QItemSelection & newSelect
 }
 
 inline bool CPACSAbstractModel::isValid() const {
-    return creatorAdapter->getRoot() != nullptr;
+    return creatorAdapter->isValid();
 }
