@@ -264,9 +264,15 @@ target_link_libraries( ${PROGNAME}
 )
 
 set(CPACSCreatorLibIncludeDir /home/makem/JobProject/SkStage/CPACSCreatorLib/)
-target_include_directories( ${PROGNAME} PRIVATE
+target_include_directories( ${PROGNAME} PUBLIC
     ${CPACSCreatorLibIncludeDir}
 )
+
+
+SET(EIGEN_LOCATION "/home/makem/JobProject/SkStage/CPACSCreatorLib/ThirdPartyLib/eigen-eigen-5a0156e40feb/")
+message(EIGEN_LOCATION: ${EIGEN_LOCATION})
+target_include_directories(${PROGNAME}  PUBLIC ${EIGEN_LOCATION})
+
 
 
 ########################################################################################################################

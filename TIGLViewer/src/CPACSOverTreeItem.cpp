@@ -6,7 +6,7 @@
 #include <iostream>
 #include <QtGui>
 
-
+/*
 CPACSOverTreeItem::CPACSOverTreeItem(int index, std::string uid, std::string cpacsType, std::string xPath)
 {
     this->cpacsIndex = index;
@@ -78,5 +78,5 @@ std::string CPACSOverTreeItem::getDataName(int i) {
     }
 }
 
-
+*/
 

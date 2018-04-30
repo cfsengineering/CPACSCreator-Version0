@@ -54,7 +54,7 @@
 #include "CCPACSConfigurationManager.h"
 
 #include "CPACSAbstractModel.h"
-#include "CPACSOverTreeItem.h"
+#include "CPACSCreatorLib/CPACSTreeItem.h"
 
 #include <cstdlib>
 
@@ -774,7 +774,7 @@ void TIGLViewerWindow::initCreatorInterface()
     connect(selectionModel, SIGNAL(selectionChanged (const QItemSelection &, const QItemSelection &)),model,
             SLOT(onItemSelectionChanged(const QItemSelection &, const QItemSelection &)) );
 
-    connect(model,SIGNAL(selectionIsATransformation(CPACSOverTreeItem * )), adapter, SLOT(prepareTransformationValues(CPACSOverTreeItem * )));
+    connect(model,SIGNAL(selectionIsATransformation(cpcr::CPACSTreeItem * )), adapter, SLOT(prepareTransformationValues(cpcr::CPACSTreeItem * )));
 
     connect(adapter, SIGNAL(newTransformationValues( QString, double, double, double, double, double, double, double, double, double)),
             transforamtionModificator, SLOT(setSpinBoxes(QString, double, double, double, double, double, double, double, double, double )));

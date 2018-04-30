@@ -6,17 +6,16 @@
 #define TIGL_CPACSABSTRACTMODEL_H
 
 #include <QAbstractItemModel>
-
 #include <QtCore/QItemSelection>
-
-#include "CPACSOverTreeItem.h"
-#include "TIGLViewerDocument.h"
-
 #include <Quantity_Color.hxx>
 #include <QMutex>
 
-#include "AircraftTree.h"
+#include "TIGLViewerDocument.h"
 #include "CPACSCreatorAdapter.h"
+
+
+#include "CPACSCreatorLib/AircraftTree.h"
+#include "CPACSCreatorLib/CPACSTreeItem.h"
 
 
 class CPACSAbstractModel: public QAbstractItemModel {
@@ -26,7 +25,7 @@ Q_OBJECT
 
 
 signals:
-    void selectionIsATransformation(CPACSOverTreeItem * transformation);
+    void selectionIsATransformation(cpcr::CPACSTreeItem * transformation);
 
 public slots:
     void onItemSelectionChanged(const QItemSelection &, const QItemSelection &);
@@ -37,7 +36,7 @@ public:
     explicit CPACSAbstractModel( CPACSCreatorAdapter* adapter ,QObject *parent = 0);
     ~CPACSAbstractModel();
 
-    void initTree( TIGLViewerDocument& doc);
+    // void initTree( TIGLViewerDocument& doc);
 
     // get the data
     QVariant data(const QModelIndex& index, int role) const override;
@@ -64,16 +63,17 @@ protected:
 
     // return the item for the given index
     // empty index is considered as the root index!
-    CPACSOverTreeItem* getItem( QModelIndex index) const;
+    cpcr::CPACSTreeItem * getItem( QModelIndex index) const;
 
     // return a index for the item
-    QModelIndex getIndex( CPACSOverTreeItem * item, int column ) const ;
+    QModelIndex getIndex( cpcr::CPACSTreeItem * item, int column ) const ;
 
 
 private:
 
     // alternative to CPACS reader, take info form tigl instead from the xml directly
 //    void initWingsFrom(tigl::CCPACSConfiguration &config);
+
 
     CPACSCreatorAdapter* creatorAdapter;
     QString currentFileName;    // filename of the displayed tree

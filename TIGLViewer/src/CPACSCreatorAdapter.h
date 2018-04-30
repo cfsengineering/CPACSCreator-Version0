@@ -12,6 +12,9 @@
 #include <QMutex>
 
 
+#include "CPACSCreatorLib/AircraftTree.h"
+#include "CPACSCreatorLib/CPACSTreeItem.h"
+
 class CPACSCreatorAdapter : public QObject{
 
     Q_OBJECT
@@ -24,7 +27,7 @@ signals:
 
 public slots:
 
-    void prepareTransformationValues(CPACSOverTreeItem * item);
+    void prepareTransformationValues(cpcr::CPACSTreeItem * item);
     void setTransformation(QString xpath,
                            double sx, double sy, double  sz,
                            double rx, double ry, double  rz,
@@ -32,13 +35,13 @@ public slots:
 
 public:
 
-    CSharedPtr<CPACSOverTreeItem> getRoot()const;
+    cpcr::CPACSTreeItem * getRoot()const;
     void resetCpacsConfig(const TIGLViewerDocument& config);
-
+    bool isValid();
 
 private:
 
-    AircraftTree aircraftTree;
+    cpcr::AircraftTree aircraftTree;
     mutable QMutex mutex;   // to enshure that the tree root is not accessed when update is done
 
 };
