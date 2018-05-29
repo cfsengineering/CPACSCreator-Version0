@@ -10,55 +10,38 @@
 
 
 
-void CPACSCreatorAdapter::prepareTransformationValues(cpcr::CPACSTreeItem *item) {
+cpcr::CPACSTransformation CPACSCreatorAdapter::getTransformation(cpcr::CPACSTreeItem *item) {
 
-    if(item == nullptr)
-        return;
-
+    cpcr::CPACSTransformation r;
+    if (item == nullptr){
+        LOG(WARNING) << "getTansform incorrect input";
+        return r;
+    }
     if(item->getType() != "transformation"){
-        return;
+        LOG(WARNING) << "getTansform incorrect input";
+        return r;
     }
 
-    cpcr::CPACSTransformation transform = aircraftTree.getModifier()->getTransformation(item->getXPath());
-
-
-    QString xpath = QString(item->getXPath().toString().c_str());
-
-    LOG(INFO) << "Prepare Transformation Values";
-
-    emit newTransformationValues(xpath,
-                                 transform.getScaling().x, transform.getScaling().y, transform.getScaling().z,
-                                 transform.getRotation().x, transform.getRotation().y, transform.getRotation().z,
-                                 transform.getTranslation().x, transform.getTranslation().y, transform.getTranslation().z
-                                 );
-
+    r = aircraftTree.getModifier()->getTransformation(item->getXPath());
+    return r;
 }
 
-void CPACSCreatorAdapter::setTransformation(QString xpath,
-                                            double sx, double sy, double sz,
-                                            double rx, double ry, double rz,
-                                            double tx, double ty, double tz) {
 
+void CPACSCreatorAdapter::setTransformation(QString xpath, cpcr::CPACSTransformation transformation) {
 
     std::string xpathStd = xpath.toStdString();
 
-    cpcr::CPACSTransformation transform(sx, sy, sz, rx, ry, rz, tx, ty, tz );
-    aircraftTree.getModifier()->setTransformation(xpathStd, transform);
-    aircraftTree.writeToFile();
+    //aircraftTree.getModifier()->setTransformation(xpathStd, transform);
+    //aircraftTree.writeToFile();
 
     LOG(INFO) << "Set transformation Values for xPath: " + xpathStd ;
 
-
-
 }
-
 
 
 
 void CPACSCreatorAdapter::resetCpacsConfig(const TIGLViewerDocument& doc) {
     QMutexLocker locker(&mutex); // ensure that the tree is not accessed during the creation
-
-    aircraftTree = cpcr::AircraftTree();
 
     // Check if the new document is valid
     if(!doc.isConfigurationValid()){
@@ -94,3 +77,4 @@ cpcr::CPACSTreeItem* CPACSCreatorAdapter::getRoot()const {
 bool CPACSCreatorAdapter::isValid() {
     return aircraftTree.isBuild();
 }
+

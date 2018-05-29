@@ -137,6 +137,7 @@ TIGLViewerWindow::~TIGLViewerWindow()
     delete errorStream;
     delete model;
     delete adapter;
+    delete modificatorManager;
 }
 
 void TIGLViewerWindow::dragEnterEvent(QDragEnterEvent * ev)
@@ -761,11 +762,12 @@ void TIGLViewerWindow::createMenus()
 void TIGLViewerWindow::initCreatorInterface()
 {
 
-    transforamtionModificator->init();
+
     adapter = new CPACSCreatorAdapter();
 
     model = new CPACSAbstractModel(adapter);
 
+    modificatorManager = new ModificatorManager(adapter, transforamtionModificator);
 
     treeView->setModel(model);
     selectionModel = treeView->selectionModel();
@@ -774,14 +776,7 @@ void TIGLViewerWindow::initCreatorInterface()
     connect(selectionModel, SIGNAL(selectionChanged (const QItemSelection &, const QItemSelection &)),model,
             SLOT(onItemSelectionChanged(const QItemSelection &, const QItemSelection &)) );
 
-    connect(model,SIGNAL(selectionIsATransformation(cpcr::CPACSTreeItem * )), adapter, SLOT(prepareTransformationValues(cpcr::CPACSTreeItem * )));
-
-    connect(adapter, SIGNAL(newTransformationValues( QString, double, double, double, double, double, double, double, double, double)),
-            transforamtionModificator, SLOT(setSpinBoxes(QString, double, double, double, double, double, double, double, double, double )));
-
-    // when enter occurs
-    connect(transforamtionModificator, SIGNAL(valuesChanged( QString, double, double, double, double, double, double, double, double, double)),
-            adapter, SLOT(setTransformation(QString, double, double, double, double, double, double, double, double, double)));
+    connect(model,SIGNAL(selectionAsTreeItem(cpcr::CPACSTreeItem * )), modificatorManager, SLOT(dispatch(cpcr::CPACSTreeItem * )));
 
 
 }

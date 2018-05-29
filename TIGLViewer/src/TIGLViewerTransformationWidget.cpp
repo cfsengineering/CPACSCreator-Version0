@@ -25,6 +25,7 @@ void TIGLViewerTransformationWidget::init()
     boxTZ = this->findChild<QDoubleSpinBox*>("spinBoxTZ");
 
     setSpinBoxesFromInternal();
+    this->hide();
 }
 
 void TIGLViewerTransformationWidget::setSpinBoxesFromInternal()
@@ -61,10 +62,10 @@ void TIGLViewerTransformationWidget::setInternalFromSpinBoxes()
 }
 
 
-void TIGLViewerTransformationWidget::setSpinBoxes(QString xpath,
-                                                  double sx, double sy, double sz,
-                                                  double rx, double ry, double rz,
-                                                  double tx, double ty, double tz)  {
+void TIGLViewerTransformationWidget::setValues(QString xpath,
+                                               double sx, double sy, double sz,
+                                               double rx, double ry, double rz,
+                                               double tx, double ty, double tz)  {
     this->xpath = xpath;
 
     this->sx = sx;
@@ -80,6 +81,8 @@ void TIGLViewerTransformationWidget::setSpinBoxes(QString xpath,
     this->tz = tz;
 
     setSpinBoxesFromInternal();
+
+    this->setVisible(true);
 }
 
 

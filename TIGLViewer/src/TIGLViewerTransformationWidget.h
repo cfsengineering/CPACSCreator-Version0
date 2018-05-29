@@ -19,10 +19,10 @@ signals:
                       double tx, double ty, double  tz);
 
 public slots:
-    void setSpinBoxes( QString xpath,
-                    double sx, double sy, double  sz,
-                    double rx, double ry, double  rz,
-                    double tx, double ty, double  tz);
+    void setValues(QString xpath,
+                   double sx, double sy, double sz,
+                   double rx, double ry, double rz,
+                   double tx, double ty, double tz);
 
 
 public:

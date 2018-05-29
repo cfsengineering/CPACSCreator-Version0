@@ -25,7 +25,7 @@ Q_OBJECT
 
 
 signals:
-    void selectionIsATransformation(cpcr::CPACSTreeItem * transformation);
+    void selectionAsTreeItem(cpcr::CPACSTreeItem * treeItem);
 
 public slots:
     void onItemSelectionChanged(const QItemSelection &, const QItemSelection &);

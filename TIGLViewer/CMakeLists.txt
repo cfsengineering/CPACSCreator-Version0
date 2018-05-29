@@ -110,6 +110,7 @@ set(tv_src
     CPACSAbstractModel.cpp
     CPACSCreatorAdapter.cpp
     TIGLViewerTransformationWidget.cpp
+    ModificatorManager.cpp
 
 )
 	
@@ -128,6 +129,7 @@ set(tv_hdr
     TIGLViewerLoggerHTMLDecorator.h
     TIGLViewerScopedCommand.h
     TIGLQAspectWindow.h
+
 
         )
 
@@ -159,6 +161,7 @@ set(tv_hdr_qobj
     CPACSAbstractModel.h
     CPACSCreatorAdapter.h
     TIGLViewerTransformationWidget.h
+    ModificatorManager.h
 )
 
 set(tv_ui_comp

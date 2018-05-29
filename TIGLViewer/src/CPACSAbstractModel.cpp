@@ -148,11 +148,9 @@ void CPACSAbstractModel::onItemSelectionChanged(const QItemSelection & newSelect
 {
     cpcr::CPACSTreeItem * item = getItem(newSelection.indexes().at(0));
 
-    std::cout << "selection changed " << item->getUid() << std::endl;
+    DLOG(INFO) << "CPACSAbstractModel: selection changed " << item->getUid() ;
 
-    if(item->getType() == "transformation"){
-        emit selectionIsATransformation(item);
-    }
+    emit selectionAsTreeItem(item);
 
 //    Quantity_Color color = Quantity_Color( 255/255.,192/255.,203/255.  , Quantity_TOC_RGB);
 //

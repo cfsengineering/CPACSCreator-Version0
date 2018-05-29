@@ -22,6 +22,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+
 #include <QMainWindow>
 
 #include "TIGLViewerContext.h"
@@ -32,6 +33,7 @@
 
 #include "ui_TIGLViewerWindow.h"
 #include "CPACSCreatorAdapter.h"
+#include "ModificatorManager.h"
 
 class QAction;
 class QLabel;
@@ -126,6 +128,7 @@ private:
     CPACSAbstractModel* model;
     QItemSelectionModel* selectionModel;
     CPACSCreatorAdapter* adapter;
+    ModificatorManager* modificatorManager;
 
     QString currentFile;
     QString controlFileName;

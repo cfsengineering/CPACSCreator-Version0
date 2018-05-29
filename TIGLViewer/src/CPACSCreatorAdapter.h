@@ -17,21 +17,11 @@ class CPACSCreatorAdapter : public QObject{
 
     Q_OBJECT
 
-signals:
-    void newTransformationValues( QString xpath,
-                                  double sx, double sy, double  sz,
-                                  double rx, double ry, double  rz,
-                                  double tx, double ty, double  tz);
-
-public slots:
-
-    void prepareTransformationValues(cpcr::CPACSTreeItem * item);
-    void setTransformation(QString xpath,
-                           double sx, double sy, double  sz,
-                           double rx, double ry, double  rz,
-                           double tx, double ty, double  tz);
 
 public:
+
+    void setTransformation(QString xpath, cpcr::CPACSTransformation transformation);
+    cpcr::CPACSTransformation getTransformation(cpcr::CPACSTreeItem *item );
 
     cpcr::CPACSTreeItem * getRoot()const;
     void resetCpacsConfig(const TIGLViewerDocument& config);
