@@ -1,6 +1,7 @@
 /bin
 /build*
 /docs
+/qtcreator-build
 cmake-build-debug/*
 *.pyc
 .idea/*
