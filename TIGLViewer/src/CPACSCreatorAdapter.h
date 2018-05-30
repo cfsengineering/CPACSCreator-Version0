@@ -13,19 +13,29 @@
 #include "CPACSCreatorLib/AircraftTree.h"
 #include "CPACSCreatorLib/CPACSTreeItem.h"
 
+
+typedef std::string cpacsType;
+
 class CPACSCreatorAdapter : public QObject{
 
     Q_OBJECT
 
-
 public:
 
-    void setTransformation(QString xpath, cpcr::CPACSTransformation transformation);
+    void setTransformation(cpcr::CPACSTreeItem *item, cpcr::CPACSTransformation transformation);
     cpcr::CPACSTransformation getTransformation(cpcr::CPACSTreeItem *item );
+
+    double getSweepAngle(cpcr::CPACSTreeItem * item, double chordPercent);
+    void setSweepAngle(cpcr::CPACSTreeItem * item, double angle, double chordPercent);
 
     cpcr::CPACSTreeItem * getRoot()const;
     void resetCpacsConfig(const TIGLViewerDocument& config);
     bool isValid();
+
+
+protected:
+
+    bool testItem(cpcr::CPACSTreeItem * item, cpacsType type );
 
 private:
 

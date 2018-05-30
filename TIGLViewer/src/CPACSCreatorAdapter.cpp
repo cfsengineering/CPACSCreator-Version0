@@ -10,33 +10,65 @@
 
 
 
-cpcr::CPACSTransformation CPACSCreatorAdapter::getTransformation(cpcr::CPACSTreeItem *item) {
 
+
+void CPACSCreatorAdapter::setSweepAngle(cpcr::CPACSTreeItem *item, double angle, double chordPercent) {
+    if( ! testItem(item, "wing") )
+        return ;
+
+    aircraftTree.setWingSweepByTranslation(item->getUid(), angle, chordPercent);
+    aircraftTree.writeToFile();
+    return;
+}
+
+
+
+double CPACSCreatorAdapter::getSweepAngle(cpcr::CPACSTreeItem *item, double chordPercent) {
+
+    double angle = -1;
+    if( ! testItem(item, "wing") )
+        return angle;
+
+    angle = aircraftTree.getWingSweep(item->getUid(), chordPercent);
+    return angle;
+
+}
+
+cpcr::CPACSTransformation CPACSCreatorAdapter::getTransformation(cpcr::CPACSTreeItem *item) {
     cpcr::CPACSTransformation r;
-    if (item == nullptr){
-        LOG(WARNING) << "getTansform incorrect input";
+    if( ! testItem(item, "transformation") )
         return r;
-    }
-    if(item->getType() != "transformation"){
-        LOG(WARNING) << "getTansform incorrect input";
-        return r;
-    }
 
     r = aircraftTree.getModifier()->getTransformation(item->getXPath());
     return r;
 }
 
 
-void CPACSCreatorAdapter::setTransformation(QString xpath, cpcr::CPACSTransformation transformation) {
+void CPACSCreatorAdapter::setTransformation(cpcr::CPACSTreeItem *item, cpcr::CPACSTransformation transformation) {
 
-    std::string xpathStd = xpath.toStdString();
+    // TODO MODIFIER A LITTEL WIRD
+    aircraftTree.getModifier()->setTransformation(item->getXPath(), transformation);
+    aircraftTree.writeToFile();
 
-    //aircraftTree.getModifier()->setTransformation(xpathStd, transform);
-    //aircraftTree.writeToFile();
-
-    LOG(INFO) << "Set transformation Values for xPath: " + xpathStd ;
+    LOG(INFO) << "Set transformation Values for xPath: ";
 
 }
+
+
+bool CPACSCreatorAdapter::testItem(cpcr::CPACSTreeItem *item, cpacsType type) {
+
+    bool pass = true;
+    if (item == nullptr){
+        LOG(WARNING) << "Adapter receive null pointer item";
+        pass = false;
+    }
+    if(item->getType() != type)  {
+        LOG(WARNING) << "Adapter receive incorect type";
+        pass = false;
+    }
+    return pass;
+}
+
 
 
 

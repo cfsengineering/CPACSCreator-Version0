@@ -1,0 +1,35 @@
+//
+// Created by makem on 30/05/18.
+//
+
+#ifndef TIGL_MODIFICATORWIDGET_H
+#define TIGL_MODIFICATORWIDGET_H
+
+
+#include <QWidget>
+
+
+
+class ModificatorManager; // forward delcaration
+
+
+class ModificatorWidget: public QWidget {
+
+    Q_OBJECT
+
+public:
+
+    ModificatorWidget(QWidget * parent = 0);
+
+    virtual void init(ModificatorManager * associate);
+
+    virtual void apply();
+
+
+protected:
+
+    ModificatorManager * associateManager;
+};
+
+
+#endif //TIGL_MODIFICATORWIDGET_H

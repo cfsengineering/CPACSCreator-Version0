@@ -6,14 +6,32 @@
 
 
 
-ModificatorManager::ModificatorManager(CPACSCreatorAdapter *adapter, TIGLViewerTransformationWidget* transformationModificator) {
+ModificatorManager::ModificatorManager(CPACSCreatorAdapter *adapter,
+                                       QPushButton* commitButton,
+                                       TIGLViewerTransformationWidget* transformationModificator,
+                                       TIGLViewerWingWidget* wingModificator) {
     this->adapter = adapter;
     this->transformationModificator = transformationModificator;
-    this->transformationModificator->init();
+    this->transformationModificator->init(this);
+    this->wingModificator = wingModificator;
+    this->wingModificator->init(this);
+    this->commitButton = commitButton;
+    currentModificator = nullptr;
+    this->hideAll();
 }
 
 
+void ModificatorManager::reset() {
+    currentModificator = nullptr;
+    this->hideAll();
+}
 
+
+void ModificatorManager::applyCurrentModifications(){
+    if(currentModificator != nullptr)
+        currentModificator->apply();
+    LOG(WARNING) << "apply current modifications executed!";
+}
 
 void ModificatorManager::dispatch(cpcr::CPACSTreeItem *item) {
 
@@ -21,9 +39,15 @@ void ModificatorManager::dispatch(cpcr::CPACSTreeItem *item) {
         LOG(ERROR) << "MODIFICATOR MANAGER GET A NULL ITEM";
     }
     else if(item->getType() == "transformation"){
+        currentModificator = transformationModificator;
         this->setTransformationModificator(item);
     }
+    else if(item->getType() == "wing"){
+        currentModificator = wingModificator;
+        this->setWingModificator(item);
+    }
     else {
+        currentModificator = nullptr;
         hideAll();
         LOG(INFO) <<  "MODIFICATOR MANAGER: item not suported";
     }
@@ -33,19 +57,23 @@ void ModificatorManager::dispatch(cpcr::CPACSTreeItem *item) {
 void ModificatorManager::setTransformationModificator(cpcr::CPACSTreeItem * item ) {
 
     hideAll();
-
-    cpcr::CPACSTransformation tempT = adapter->getTransformation(item);
-
-    transformationModificator->setValues(QString(item->getXPath().toString().c_str()),
-                                        tempT.getScaling().x,tempT.getScaling().y,tempT.getScaling().z,
-                                        tempT.getRotation().x,tempT.getRotation().y,tempT.getRotation().z,
-                                        tempT.getTranslation().x,tempT.getTranslation().y,tempT.getTranslation().z);
+    transformationModificator->setTransformation(item);
     transformationModificator->setVisible(true);
+    commitButton->setVisible(true);
+}
 
+
+void ModificatorManager::setWingModificator(cpcr::CPACSTreeItem *item) {
+    hideAll();
+    wingModificator->setWing(item);
+    wingModificator->setVisible(true);
+    commitButton->setVisible(true);
 }
 
 
 void ModificatorManager::hideAll() {
     bool visible = false;
     transformationModificator->setVisible(visible);
+    wingModificator->setVisible(visible);
+    commitButton->setVisible(visible);
 }

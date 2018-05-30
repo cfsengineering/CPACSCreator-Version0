@@ -7,8 +7,12 @@
 
 
 #include <CPACSCreatorLib/CPACSTreeItem.h>
+#include <QPushButton>
 #include "TIGLViewerTransformationWidget.h"
 #include "CPACSCreatorAdapter.h"
+#include "TIGLViewerWingWidget.h"
+#include "ModificatorWidget.h"
+
 
 
 class ModificatorManager: public QObject {
@@ -16,16 +20,29 @@ class ModificatorManager: public QObject {
 
 public slots:
     void dispatch(cpcr::CPACSTreeItem * item ) ;
+    void applyCurrentModifications();
 
 public:
-    ModificatorManager(CPACSCreatorAdapter* adapter, TIGLViewerTransformationWidget* transformationModificator);
+    ModificatorManager(CPACSCreatorAdapter* adapter,
+                       QPushButton* commitButton,
+                       TIGLViewerTransformationWidget* transformationModificator,
+                       TIGLViewerWingWidget* wingModificator
+                       );
 
+    void reset();
     void setTransformationModificator(cpcr::CPACSTreeItem * item );
+    void setWingModificator(cpcr::CPACSTreeItem * item);
     void hideAll();
 
-private:
     CPACSCreatorAdapter* adapter;
+private:
+
     TIGLViewerTransformationWidget* transformationModificator;
+    TIGLViewerWingWidget* wingModificator;
+
+    ModificatorWidget* currentModificator;
+    QPushButton* commitButton;
+
 };
 
 

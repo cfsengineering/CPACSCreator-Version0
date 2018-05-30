@@ -64,7 +64,7 @@
      <x>0</x>
      <y>0</y>
      <width>783</width>
-     <height>20</height>
+     <height>19</height>
     </rect>
    </property>
    <widget class="QMenu" name="fileMenu">
@@ -404,6 +404,38 @@
        </property>
       </widget>
      </item>
+     <item alignment="Qt::AlignLeft">
+      <widget class="TIGLViewerWingWidget" name="wingModificator" native="true">
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <item>
+         <layout class="QHBoxLayout" name="wingLayout">
+          <item>
+           <widget class="QLabel" name="labelSweep">
+            <property name="minimumSize">
+             <size>
+              <width>80</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>80</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Sweep</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QDoubleSpinBox" name="spinBoxSweep"/>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </item>
      <item>
       <widget class="TIGLViewerTransformationWidget" name="transforamtionModificator" native="true">
        <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -666,6 +698,13 @@
          </layout>
         </item>
        </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="commitButton">
+       <property name="text">
+        <string>Commit</string>
+       </property>
       </widget>
      </item>
     </layout>
@@ -1771,6 +1810,12 @@
    <class>TIGLViewerTransformationWidget</class>
    <extends>QWidget</extends>
    <header>TIGLViewerTransformationWidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>TIGLViewerWingWidget</class>
+   <extends>QWidget</extends>
+   <header>TIGLViewerWingWidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

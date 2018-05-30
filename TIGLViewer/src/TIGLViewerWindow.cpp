@@ -767,9 +767,10 @@ void TIGLViewerWindow::initCreatorInterface()
 
     model = new CPACSAbstractModel(adapter);
 
-    modificatorManager = new ModificatorManager(adapter, transforamtionModificator);
+    modificatorManager = new ModificatorManager(adapter, commitButton, transforamtionModificator, wingModificator);
 
     treeView->setModel(model);
+
     selectionModel = treeView->selectionModel();
 
 
@@ -778,15 +779,15 @@ void TIGLViewerWindow::initCreatorInterface()
 
     connect(model,SIGNAL(selectionAsTreeItem(cpcr::CPACSTreeItem * )), modificatorManager, SLOT(dispatch(cpcr::CPACSTreeItem * )));
 
-
+    connect(commitButton, SIGNAL(pressed() ), modificatorManager, SLOT(applyCurrentModifications() ));
 }
 
 
 void TIGLViewerWindow::updateCreatorInterface()
 {
-
     adapter->resetCpacsConfig(* cpacsConfiguration);
     treeView->reset();
+    modificatorManager->reset();
 }
 
 

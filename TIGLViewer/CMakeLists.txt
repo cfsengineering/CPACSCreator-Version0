@@ -111,6 +111,8 @@ set(tv_src
     CPACSCreatorAdapter.cpp
     TIGLViewerTransformationWidget.cpp
     ModificatorManager.cpp
+    TIGLViewerWingWidget.cpp
+    ModificatorWidget.cpp
 
 )
 	
@@ -162,6 +164,8 @@ set(tv_hdr_qobj
     CPACSCreatorAdapter.h
     TIGLViewerTransformationWidget.h
     ModificatorManager.h
+    TIGLViewerWingWidget.h
+    ModificatorWidget.h
 )
 
 set(tv_ui_comp

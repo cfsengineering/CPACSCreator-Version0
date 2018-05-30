@@ -3,15 +3,25 @@
 //
 
 #include "TIGLViewerTransformationWidget.h"
+#include "CPACSCreatorLib/easylogging++.h"
+#include "ModificatorManager.h"
 #include <iostream>
 
 TIGLViewerTransformationWidget::TIGLViewerTransformationWidget(QWidget *parent):
-    QWidget(parent)
+    ModificatorWidget(parent)
 {}
 
 
-void TIGLViewerTransformationWidget::init()
+
+void TIGLViewerTransformationWidget::apply() {
+    setInternalFromSpinBoxes();
+    associateManager->adapter->setTransformation(transformationItem, transformation);
+}
+
+
+void TIGLViewerTransformationWidget::init(ModificatorManager* associate)
 {
+    ModificatorWidget::init(associate);
     boxSX = this->findChild<QDoubleSpinBox*>("spinBoxSX");
     boxSY = this->findChild<QDoubleSpinBox*>("spinBoxSY");
     boxSZ = this->findChild<QDoubleSpinBox*>("spinBoxSZ");
@@ -25,64 +35,40 @@ void TIGLViewerTransformationWidget::init()
     boxTZ = this->findChild<QDoubleSpinBox*>("spinBoxTZ");
 
     setSpinBoxesFromInternal();
-    this->hide();
 }
+
+
+void TIGLViewerTransformationWidget::setTransformation(cpcr::CPACSTreeItem* item) {
+
+    this->transformationItem = item;
+    transformation = this->associateManager->adapter->getTransformation(transformationItem);
+    setSpinBoxesFromInternal();
+}
+
+
 
 void TIGLViewerTransformationWidget::setSpinBoxesFromInternal()
 {
-    boxSX->setValue(sx);
-    boxSY->setValue(sy);
-    boxSZ->setValue(sz);
+    boxSX->setValue(transformation.getScaling().x);
+    boxSY->setValue(transformation.getScaling().y);
+    boxSZ->setValue(transformation.getScaling().z);
 
-    boxRX->setValue(rx);
-    boxRY->setValue(ry);
-    boxRZ->setValue(rz);
+    boxRX->setValue(transformation.getRotation().x);
+    boxRY->setValue(transformation.getRotation().y);
+    boxRZ->setValue(transformation.getRotation().z);
 
-    boxTX->setValue(tx);
-    boxTY->setValue(ty);
-    boxTZ->setValue(tz);
+    boxTX->setValue(transformation.getTranslation().x);
+    boxTY->setValue(transformation.getTranslation().y);
+    boxTZ->setValue(transformation.getTranslation().z);
 
 }
 
 
 void TIGLViewerTransformationWidget::setInternalFromSpinBoxes()
 {
-    sx = boxSX->value();
-    sy = boxSY->value();
-    sz = boxSZ->value();
-
-    rx = boxRX->value();
-    ry = boxRY->value();
-    rz = boxRZ->value();
-
-    tx = boxTX->value();
-    ty = boxTY->value();
-    tz = boxTZ->value();
-
-}
-
-
-void TIGLViewerTransformationWidget::setValues(QString xpath,
-                                               double sx, double sy, double sz,
-                                               double rx, double ry, double rz,
-                                               double tx, double ty, double tz)  {
-    this->xpath = xpath;
-
-    this->sx = sx;
-    this->sy = sy;
-    this->sz = sz;
-
-    this->rx = rx;
-    this->ry = ry;
-    this->rz = rz;
-
-    this->tx = tx;
-    this->ty = ty;
-    this->tz = tz;
-
-    setSpinBoxesFromInternal();
-
-    this->setVisible(true);
+    transformation.setScaling( cpcr::Point( boxSX->value(), boxSY->value(), boxSZ->value()) );
+    transformation.setRotation(cpcr::Point (boxRX->value(), boxRY->value(), boxRZ->value() ));
+    transformation.setTranslation(cpcr::Point( boxTX->value(), boxTY->value(), boxTZ->value() ));
 }
 
 
@@ -91,9 +77,7 @@ void TIGLViewerTransformationWidget::setValues(QString xpath,
 void TIGLViewerTransformationWidget::keyPressEvent(QKeyEvent *event)
 {
     std::cout << "event->key(): "  << std::endl;
-
-
     setInternalFromSpinBoxes();
 
-    emit valuesChanged(xpath, sx,sy,sz, rx,ry,rz, tx,ty,tz );
+
 }

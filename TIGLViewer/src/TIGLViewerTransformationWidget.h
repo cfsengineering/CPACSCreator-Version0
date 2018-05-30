@@ -5,33 +5,27 @@
 #ifndef TIGL_TIGLVIEWERTRANSFORMATIONWIDGET_H
 #define TIGL_TIGLVIEWERTRANSFORMATIONWIDGET_H
 
-#include <QWidget>
+#include "ModificatorWidget.h"
+#include "CPACSCreatorLib/CPACSTreeItem.h"
+#include "CPACSCreatorLib/CPACSTransformation.h"
+#include "CPACSCreatorLib/Point.h"
 #include <QDoubleSpinBox>
 
-class TIGLViewerTransformationWidget : public QWidget
+class TIGLViewerTransformationWidget : public ModificatorWidget
 {
     Q_OBJECT
-
-signals:
-   void valuesChanged( QString xpath,
-                      double sx, double sy, double  sz,
-                      double rx, double ry, double  rz,
-                      double tx, double ty, double  tz);
-
-public slots:
-    void setValues(QString xpath,
-                   double sx, double sy, double sz,
-                   double rx, double ry, double rz,
-                   double tx, double ty, double tz);
 
 
 public:
     TIGLViewerTransformationWidget(QWidget * parent = 0);
     // Initialize the linked objects
-    void init();
+    void init(ModificatorManager* associate) override ;
 
+    void setTransformation(cpcr::CPACSTreeItem* transformationItem);
     void setSpinBoxesFromInternal();
     void setInternalFromSpinBoxes();
+
+    void apply() override ;
 
 protected:
 
@@ -39,7 +33,7 @@ protected:
 
 private:
 
-    QString xpath;
+    cpcr::CPACSTreeItem * transformationItem;
 
     QDoubleSpinBox* boxSX;
     QDoubleSpinBox* boxSY;
@@ -53,7 +47,7 @@ private:
     QDoubleSpinBox* boxTY;
     QDoubleSpinBox* boxTZ;
 
-    double sx, sy, sz, rx, ry, rz, tx, ty, tz;
+    cpcr::CPACSTransformation transformation;
 
 
 };
