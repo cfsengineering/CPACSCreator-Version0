@@ -11,6 +11,7 @@
 #include "TIGLViewerWindow.h"
 
 #include "CCPACSWingSegment.h"
+#include "TIGLViewerException.h"
 
 
 CPACSAbstractModel::CPACSAbstractModel(CPACSCreatorAdapter* adapter, QObject* parent )
@@ -24,6 +25,7 @@ CPACSAbstractModel::CPACSAbstractModel(CPACSCreatorAdapter* adapter, QObject* pa
 CPACSAbstractModel::~CPACSAbstractModel()
 {
 }
+
 
 
 QVariant CPACSAbstractModel::headerData(int section, Qt::Orientation orientation, int role) const  {
@@ -136,6 +138,10 @@ QModelIndex CPACSAbstractModel::getIndex(cpcr::CPACSTreeItem *item, int column) 
 
 cpcr::CPACSTreeItem* CPACSAbstractModel::getItem(QModelIndex index) const
 {
+    if(!isValid())
+    {
+        return nullptr;
+    }
     // Internal identifier is the item pointer
     if( index.isValid() ){
         cpcr::CPACSTreeItem* item = static_cast<cpcr::CPACSTreeItem*>(index.internalPointer());
@@ -146,9 +152,12 @@ cpcr::CPACSTreeItem* CPACSAbstractModel::getItem(QModelIndex index) const
 
 void CPACSAbstractModel::onItemSelectionChanged(const QItemSelection & newSelection, const QItemSelection & oldSelection)
 {
-    cpcr::CPACSTreeItem * item = getItem(newSelection.indexes().at(0));
+    if(!isValid()){
+        throw TIGLViewerException("CPACSAbstractModel: onItemSelcetionChanged called but the model is not valid!");
+    }
 
-    DLOG(INFO) << "CPACSAbstractModel: selection changed " << item->getUid() ;
+
+    cpcr::CPACSTreeItem * item = getItem(newSelection.indexes().at(0));
 
     emit selectionAsTreeItem(item);
 
@@ -166,5 +175,19 @@ void CPACSAbstractModel::onItemSelectionChanged(const QItemSelection & newSelect
 }
 
 inline bool CPACSAbstractModel::isValid() const {
-    return creatorAdapter->isValid();
+    return (creatorAdapter != nullptr && creatorAdapter->isValid() ) ;
+}
+
+void CPACSAbstractModel::resetAdapter( CPACSCreatorAdapter* adapter  ) {
+    QAbstractItemModel::beginResetModel(); // inform that internal data are about to change
+    creatorAdapter = adapter;
+    QAbstractItemModel::endResetModel();
+
+}
+
+
+void CPACSAbstractModel::disconnectAdapter() {
+    QAbstractItemModel::beginResetModel();
+    creatorAdapter = nullptr;
+    QAbstractItemModel::endResetModel();
 }

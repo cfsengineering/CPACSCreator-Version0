@@ -113,6 +113,7 @@ set(tv_src
     ModificatorManager.cpp
     TIGLViewerWingWidget.cpp
     ModificatorWidget.cpp
+    TIGLViewerException.cpp
 
 )
 	
@@ -131,6 +132,7 @@ set(tv_hdr
     TIGLViewerLoggerHTMLDecorator.h
     TIGLViewerScopedCommand.h
     TIGLQAspectWindow.h
+    TIGLViewerException.h
 
 
         )

@@ -32,6 +32,7 @@ public:
     void resetCpacsConfig(const TIGLViewerDocument& config);
     bool isValid();
 
+    void close();
 
 protected:
 

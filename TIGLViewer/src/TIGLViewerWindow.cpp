@@ -646,7 +646,6 @@ void TIGLViewerWindow::connectConfiguration()
              this, SLOT(updateMenus()) );
 
     // Set functions
-    // connect(scaleXDoubleSpinBox,SIGNAL( valueChanged(double )), cpacsConfiguration,SLOT( setScaleWing(double)) );
 
     connect(cpacsConfiguration, SIGNAL(documentUpdated(TiglCPACSConfigurationHandle)), this, SLOT(updateCreatorInterface()) );
 
@@ -764,13 +763,10 @@ void TIGLViewerWindow::initCreatorInterface()
 
 
     adapter = new CPACSCreatorAdapter();
-
-    model = new CPACSAbstractModel(adapter);
-
     modificatorManager = new ModificatorManager(adapter, commitButton, transforamtionModificator, wingModificator);
 
+    model = new CPACSAbstractModel(adapter);
     treeView->setModel(model);
-
     selectionModel = treeView->selectionModel();
 
 
@@ -779,16 +775,26 @@ void TIGLViewerWindow::initCreatorInterface()
 
     connect(model,SIGNAL(selectionAsTreeItem(cpcr::CPACSTreeItem * )), modificatorManager, SLOT(dispatch(cpcr::CPACSTreeItem * )));
 
-    connect(commitButton, SIGNAL(pressed() ), modificatorManager, SLOT(applyCurrentModifications() ));
+    connect(commitButton, SIGNAL(pressed() ), this, SLOT(applyModifications() ));
 }
 
 
 void TIGLViewerWindow::updateCreatorInterface()
 {
-    adapter->resetCpacsConfig(* cpacsConfiguration);
-    treeView->reset();
+    model->disconnectAdapter();
+    adapter->resetCpacsConfig(*cpacsConfiguration);
+    model->resetAdapter(adapter);
     modificatorManager->reset();
 }
+
+
+void TIGLViewerWindow::applyModifications(){
+    model->disconnectAdapter();
+    modificatorManager->applyCurrentModifications();
+    model->resetAdapter(adapter);
+    modificatorManager->reset();
+}
+
 
 
 void TIGLViewerWindow::updateRecentFileActions()

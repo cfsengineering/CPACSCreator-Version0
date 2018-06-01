@@ -23,7 +23,8 @@ public slots:
     void applyCurrentModifications();
 
 public:
-    ModificatorManager(CPACSCreatorAdapter* adapter,
+    ModificatorManager(
+                       CPACSCreatorAdapter* adapter,
                        QPushButton* commitButton,
                        TIGLViewerTransformationWidget* transformationModificator,
                        TIGLViewerWingWidget* wingModificator
@@ -35,6 +36,7 @@ public:
     void hideAll();
 
     CPACSCreatorAdapter* adapter;
+
 private:
 
     TIGLViewerTransformationWidget* transformationModificator;
@@ -42,6 +44,7 @@ private:
 
     ModificatorWidget* currentModificator;
     QPushButton* commitButton;
+
 
 };
 

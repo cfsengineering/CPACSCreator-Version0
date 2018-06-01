@@ -16,7 +16,7 @@ void CPACSCreatorAdapter::setSweepAngle(cpcr::CPACSTreeItem *item, double angle,
     if( ! testItem(item, "wing") )
         return ;
 
-    aircraftTree.setWingSweepByTranslation(item->getUid(), angle, chordPercent);
+    aircraftTree.setWingSweepByShearing(item->getUid(), angle, chordPercent);
     aircraftTree.writeToFile();
     return;
 }
@@ -71,12 +71,19 @@ bool CPACSCreatorAdapter::testItem(cpcr::CPACSTreeItem *item, cpacsType type) {
 
 
 
+void CPACSCreatorAdapter::close() {
+    QMutexLocker locker(&mutex);
+    aircraftTree.close();
+}
+
+
 
 void CPACSCreatorAdapter::resetCpacsConfig(const TIGLViewerDocument& doc) {
     QMutexLocker locker(&mutex); // ensure that the tree is not accessed during the creation
 
     // Check if the new document is valid
     if(!doc.isConfigurationValid()){
+        aircraftTree.close();
         return;
     }
 

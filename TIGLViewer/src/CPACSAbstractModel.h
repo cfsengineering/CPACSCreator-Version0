@@ -10,7 +10,6 @@
 #include <Quantity_Color.hxx>
 #include <QMutex>
 
-#include "TIGLViewerDocument.h"
 #include "CPACSCreatorAdapter.h"
 
 
@@ -56,6 +55,10 @@ public:
 
     // Return true if there is a valid root
     inline bool isValid() const;
+
+    void disconnectAdapter();
+
+    void resetAdapter(CPACSCreatorAdapter* adapter );
 
 
 protected:

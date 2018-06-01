@@ -28,8 +28,9 @@ void ModificatorManager::reset() {
 
 
 void ModificatorManager::applyCurrentModifications(){
-    if(currentModificator != nullptr)
+    if(currentModificator != nullptr) {
         currentModificator->apply();
+    }
     LOG(WARNING) << "apply current modifications executed!";
 }
 

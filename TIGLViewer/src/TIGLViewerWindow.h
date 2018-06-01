@@ -102,6 +102,7 @@ private slots:
     void drawPoint();
     void drawVector();
     void updateCreatorInterface();
+    void applyModifications();
 
 private:
     void connectSignals();
