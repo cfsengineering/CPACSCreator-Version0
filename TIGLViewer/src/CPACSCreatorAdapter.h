@@ -26,9 +26,12 @@ public:
     cpcr::CPACSTransformation getTransformation(cpcr::CPACSTreeItem *item );
 
     double getSweepAngle(cpcr::CPACSTreeItem * item, double chordPercent);
-    void setSweepAngle(cpcr::CPACSTreeItem * item, double angle, double chordPercent);
 
-    double getWingAreaXY(cpcr::CPACSTreeItem * item);
+    enum SweepMethod {ByTranslation =1 , ByShearing = 2};
+    void setSweepAngle(cpcr::CPACSTreeItem * item, double angle, double chordPercent, int method);
+
+
+    double getWingArea(cpcr::CPACSTreeItem * item, TiglSymmetryAxis axis);
 
     cpcr::CPACSTreeItem * getRoot()const;
     void resetCpacsConfig(const TIGLViewerDocument& config);

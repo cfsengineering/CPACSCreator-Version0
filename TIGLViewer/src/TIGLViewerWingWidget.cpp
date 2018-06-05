@@ -13,29 +13,99 @@ TIGLViewerWingWidget::TIGLViewerWingWidget(QWidget *parent) : ModificatorWidget(
 
 void TIGLViewerWingWidget::init(ModificatorManager * associate ) {
     ModificatorWidget::init(associate);
-    spinBoxSweep = this->findChild<QDoubleSpinBox*>("spinBoxSweep");
-    spinBoxSweep->setValue(-1.0);
-    spinBoxAreaXY = this->findChild<QDoubleSpinBox*>("spinBoxAreaXY");
-    spinBoxAreaXY->setValue(-1.0);
-    spinBoxAreaT = this->findChild<QDoubleSpinBox*>("spinBoxAreaT");
-    spinBoxAreaT->setValue(69);
 
+    // Retrieve component of the sweep interface
+    btnExpendSweepDetails = this->findChild<QPushButton*>("btnExpendSweepDetails");
+    spinBoxSweep = this->findChild<QDoubleSpinBox*>("spinBoxSweep");
+    widgetSweepDetails = this->findChild<QWidget*>("widgetSweepDetails");
+    spinBoxChord = this->findChild<QDoubleSpinBox*>("spinBoxChord");
+    intSpinBoxMethod = this->findChild<QSpinBox*>("intSpinBoxMethod");
+
+    // Retrieve component of the area interface
+    btnExpendAreaDetails = this->findChild<QPushButton*>("btnExpendAreaDetails");
+    spinBoxAreaXY = this->findChild<QDoubleSpinBox*>("spinBoxAreaXY");
+    widgetAreaDetails = this->findChild<QWidget*>("widgetAreaDetails");
+    spinBoxAreaXZ = this->findChild<QDoubleSpinBox*>("spinBoxAreaXZ");
+    spinBoxAreaYZ = this->findChild<QDoubleSpinBox*>("spinBoxAreaYZ");
+    spinBoxAreaT = this->findChild<QDoubleSpinBox*>("spinBoxAreaT");
+
+
+    // set the initials values of the display interface (should be overwritten when the wingItem is set)
+    spinBoxSweep->setValue(-1.0);
+    spinBoxChord->setValue(0);
+    intSpinBoxMethod->setValue(1);
+
+    spinBoxAreaXY->setValue(-1.0);
+    spinBoxAreaXZ->setValue(-1);
+    spinBoxAreaYZ->setValue(-1);
+    spinBoxAreaT->setValue(-1);
+
+    spinBoxAreaXY->setReadOnly(true);
+    spinBoxAreaXZ->setReadOnly(true);
+    spinBoxAreaYZ->setReadOnly(true);
+    spinBoxAreaT->setReadOnly(true);
+
+
+
+    // hide the advanced options
+    widgetAreaDetails->hide();
+    widgetSweepDetails->hide();
+
+    // connect the extend buttons with their slot
+    connect(btnExpendAreaDetails, SIGNAL(clicked(bool)), this, SLOT(expendAreaDetails(bool)) );
+    connect(btnExpendSweepDetails, SIGNAL(clicked(bool)), this, SLOT(expendSweepDetails(bool)));
+
+
+}
+
+
+// inverse the visibility
+void TIGLViewerWingWidget::expendAreaDetails(bool checked) {
+    widgetAreaDetails->setVisible(! (widgetAreaDetails->isVisible() ));
+}
+
+// inverse the visibility
+void TIGLViewerWingWidget::expendSweepDetails(bool checked) {
+    widgetSweepDetails->setVisible(! (widgetSweepDetails->isVisible() ));
 }
 
 
 void TIGLViewerWingWidget::setWing(cpcr::CPACSTreeItem *wing) {
     wingItem = wing;
-    internalSweep = associateManager->adapter->getSweepAngle(wingItem, 0);
+    // set sweep
+    internalMethod = intSpinBoxMethod->value(); // retrieve the information of the interface -> when we switch from one wing to the other method and chord are conserved
+    internalChord = spinBoxChord->value();
+    internalSweep = associateManager->adapter->getSweepAngle(wingItem, internalChord);
     spinBoxSweep->setValue(internalSweep);
-    internalAreaXY = associateManager->adapter->getWingAreaXY(wingItem);
+
+    // set area
+    internalAreaXY = associateManager->adapter->getWingArea(wingItem, TIGL_X_Y_PLANE);
     spinBoxAreaXY->setValue(internalAreaXY);
+
+    internalAreaXZ = associateManager->adapter->getWingArea(wingItem, TIGL_X_Z_PLANE);
+    spinBoxAreaXZ->setValue(internalAreaXZ);
+
+    internalAreaYZ = associateManager->adapter->getWingArea(wingItem, TIGL_Y_Z_PLANE);
+    spinBoxAreaYZ->setValue(internalAreaYZ);
+
+    internalAreaT = associateManager->adapter->getWingArea(wingItem, TIGL_NO_SYMMETRY);
+    spinBoxAreaT->setValue(internalAreaT);
+
 }
 
 void TIGLViewerWingWidget::apply() {
     DLOG(WARNING) << "WING apply sweep";
-    if(internalSweep != spinBoxSweep->value()){
+
+    // check if a change of sweep, chord or method occured
+    bool sweepHasChanged = ( internalSweep != spinBoxSweep->value() ||
+                          internalChord != spinBoxChord->value() ||
+                          internalMethod != intSpinBoxMethod->value()) ;
+
+    if(sweepHasChanged){
         internalSweep = spinBoxSweep->value();
-        associateManager->adapter->setSweepAngle(wingItem, internalSweep, 0 );
+        internalMethod = intSpinBoxMethod->value();
+        internalChord = spinBoxChord->value();
+        associateManager->adapter->setSweepAngle(wingItem, internalSweep, internalChord, internalMethod );
     }
 }
 

@@ -8,16 +8,25 @@
 
 #include "CPACSCreatorLib/CPACSTreeItem.h"
 
+#include "TIGLViewerException.h"
 
 
 
-
-void CPACSCreatorAdapter::setSweepAngle(cpcr::CPACSTreeItem *item, double angle, double chordPercent) {
+void CPACSCreatorAdapter::setSweepAngle(cpcr::CPACSTreeItem *item, double angle, double chordPercent, int method) {
     if( ! testItem(item, "wing") )
         return ;
 
-    aircraftTree.setWingSweepByShearing(item->getUid(), angle, chordPercent);
-    aircraftTree.writeToFile();
+    if(method == ByTranslation){
+        aircraftTree.setWingSweepByTranslation(item->getUid(), angle, chordPercent);
+        aircraftTree.writeToFile();
+    }
+    else if( method == ByShearing){
+        aircraftTree.setWingSweepByShearing(item->getUid(), angle, chordPercent);
+        aircraftTree.writeToFile();
+    }else {
+        throw TIGLViewerException("ADAPTER: setSweepAngle: unknown method given");
+    }
+
     return;
 }
 
@@ -118,14 +127,14 @@ bool CPACSCreatorAdapter::isValid() {
 }
 
 
-double CPACSCreatorAdapter::getWingAreaXY(cpcr::CPACSTreeItem *item) {
+double CPACSCreatorAdapter::getWingArea(cpcr::CPACSTreeItem *item, TiglSymmetryAxis axis) {
     double area = -1;
     if( ! testItem(item, "wing")){
         return area;
     }
     else{
-        area = aircraftTree.getWingAreaXY(item->getUid());
+        area = aircraftTree.getWingPlanformArea(item->getUid(), axis);
     }
-
     return area;
 }
+
