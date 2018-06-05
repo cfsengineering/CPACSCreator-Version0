@@ -28,6 +28,8 @@ public:
     double getSweepAngle(cpcr::CPACSTreeItem * item, double chordPercent);
     void setSweepAngle(cpcr::CPACSTreeItem * item, double angle, double chordPercent);
 
+    double getWingAreaXY(cpcr::CPACSTreeItem * item);
+
     cpcr::CPACSTreeItem * getRoot()const;
     void resetCpacsConfig(const TIGLViewerDocument& config);
     bool isValid();

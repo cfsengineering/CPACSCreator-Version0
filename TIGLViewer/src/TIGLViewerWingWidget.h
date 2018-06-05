@@ -29,8 +29,11 @@ private:
 
     cpcr::CPACSTreeItem * wingItem;
     QDoubleSpinBox * spinBoxSweep ;
+    QDoubleSpinBox * spinBoxAreaXY;
+    QDoubleSpinBox * spinBoxAreaT;
     double internalSweep;
-
+    double internalAreaXY;
+    double internalAreaT;
 };
 
 

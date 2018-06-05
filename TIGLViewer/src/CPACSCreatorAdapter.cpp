@@ -117,3 +117,15 @@ bool CPACSCreatorAdapter::isValid() {
     return aircraftTree.isBuild();
 }
 
+
+double CPACSCreatorAdapter::getWingAreaXY(cpcr::CPACSTreeItem *item) {
+    double area = -1;
+    if( ! testItem(item, "wing")){
+        return area;
+    }
+    else{
+        area = aircraftTree.getWingAreaXY(item->getUid());
+    }
+
+    return area;
+}
