@@ -12,6 +12,27 @@
 
 
 
+
+double CPACSCreatorAdapter::getDihedralAngle(cpcr::CPACSTreeItem *item, double chordPercent) {
+
+    double angle = -1;
+    if( ! testItem(item, "wing") )
+        return angle;
+
+    angle = aircraftTree.getWingDihedral(item->getUid(), chordPercent);
+    return angle;
+}
+
+
+void CPACSCreatorAdapter::setDihedtalAngle(cpcr::CPACSTreeItem *item, double angle, double chordPercent) {
+    if( ! testItem(item, "wing") )
+        return;
+    aircraftTree.setWingDihedral(item->getUid(), angle, chordPercent);
+    aircraftTree.writeToFile();
+
+}
+
+
 void CPACSCreatorAdapter::setSweepAngle(cpcr::CPACSTreeItem *item, double angle, double chordPercent, int method) {
     if( ! testItem(item, "wing") )
         return ;

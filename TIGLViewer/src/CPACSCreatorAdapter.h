@@ -26,9 +26,11 @@ public:
     cpcr::CPACSTransformation getTransformation(cpcr::CPACSTreeItem *item );
 
     double getSweepAngle(cpcr::CPACSTreeItem * item, double chordPercent);
-
     enum SweepMethod {ByTranslation =1 , ByShearing = 2};
     void setSweepAngle(cpcr::CPACSTreeItem * item, double angle, double chordPercent, int method);
+
+    double getDihedralAngle(cpcr::CPACSTreeItem * item, double chordPercent);
+    void setDihedtalAngle(cpcr::CPACSTreeItem * item, double angle, double chordPercent);
 
 
     double getWingArea(cpcr::CPACSTreeItem * item, TiglSymmetryAxis axis);

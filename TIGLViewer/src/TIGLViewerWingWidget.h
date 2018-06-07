@@ -19,6 +19,7 @@ class TIGLViewerWingWidget : public ModificatorWidget {
 public slots:
 
     void expendAreaDetails(bool checked);
+    void expendDihedralDetails(bool checked);
     void expendSweepDetails(bool checked);
 
 public:
@@ -30,18 +31,24 @@ public:
     void apply() override ;
 
     void setWing(cpcr::CPACSTreeItem* wing);
-    void setSweepValue(double);
-
 
 private:
 
     cpcr::CPACSTreeItem * wingItem;
+
     // sweep interface
     QDoubleSpinBox * spinBoxSweep ;
     QPushButton* btnExpendSweepDetails;
     QWidget* widgetSweepDetails;
-    QDoubleSpinBox* spinBoxChord;
+    QDoubleSpinBox* spinBoxSweepChord;
     QSpinBox* intSpinBoxMethod;
+
+    // dihedral interface
+    QDoubleSpinBox * spinBoxDihedral ;
+    QPushButton* btnExpendDihedralDetails;
+    QWidget* widgetDihedralDetails;
+    QDoubleSpinBox* spinBoxDihedralChord;
+
 
     // area interface
     QPushButton* btnExpendAreaDetails;
@@ -54,8 +61,13 @@ private:
 
     // internal sweep
     double internalSweep;
-    double internalChord;
+    double internalSweepChord;
     int internalMethod;
+
+
+    // internal dihedral
+    double internalDihedral;
+    double internalDihedralChord;
 
     // internal area
     double internalAreaXY;

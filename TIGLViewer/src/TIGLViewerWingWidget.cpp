@@ -18,8 +18,14 @@ void TIGLViewerWingWidget::init(ModificatorManager * associate ) {
     btnExpendSweepDetails = this->findChild<QPushButton*>("btnExpendSweepDetails");
     spinBoxSweep = this->findChild<QDoubleSpinBox*>("spinBoxSweep");
     widgetSweepDetails = this->findChild<QWidget*>("widgetSweepDetails");
-    spinBoxChord = this->findChild<QDoubleSpinBox*>("spinBoxChord");
+    spinBoxSweepChord = this->findChild<QDoubleSpinBox*>("spinBoxSweepChord");
     intSpinBoxMethod = this->findChild<QSpinBox*>("intSpinBoxMethod");
+
+    // Retrieve component of the dihedral interface
+    btnExpendDihedralDetails = this->findChild<QPushButton*>("btnExpendDihedralDetails");
+    spinBoxDihedral = this->findChild<QDoubleSpinBox*>("spinBoxDihedral");
+    widgetDihedralDetails = this->findChild<QWidget*>("widgetDihedralDetails");
+    spinBoxDihedralChord = this->findChild<QDoubleSpinBox*>("spinBoxDihedralChord");
 
     // Retrieve component of the area interface
     btnExpendAreaDetails = this->findChild<QPushButton*>("btnExpendAreaDetails");
@@ -32,8 +38,11 @@ void TIGLViewerWingWidget::init(ModificatorManager * associate ) {
 
     // set the initials values of the display interface (should be overwritten when the wingItem is set)
     spinBoxSweep->setValue(-1.0);
-    spinBoxChord->setValue(0);
+    spinBoxSweepChord->setValue(0);
     intSpinBoxMethod->setValue(1);
+
+    spinBoxSweep->setValue(-1.0);
+    spinBoxDihedralChord->setValue(0);
 
     spinBoxAreaXY->setValue(-1.0);
     spinBoxAreaXZ->setValue(-1);
@@ -49,19 +58,26 @@ void TIGLViewerWingWidget::init(ModificatorManager * associate ) {
 
     // hide the advanced options
     widgetAreaDetails->hide();
+    widgetDihedralDetails->hide();
     widgetSweepDetails->hide();
 
     // connect the extend buttons with their slot
     connect(btnExpendAreaDetails, SIGNAL(clicked(bool)), this, SLOT(expendAreaDetails(bool)) );
+    connect(btnExpendDihedralDetails, SIGNAL(clicked(bool)), this, SLOT(expendDihedralDetails(bool)) );
     connect(btnExpendSweepDetails, SIGNAL(clicked(bool)), this, SLOT(expendSweepDetails(bool)));
 
 
 }
 
-
 // inverse the visibility
 void TIGLViewerWingWidget::expendAreaDetails(bool checked) {
     widgetAreaDetails->setVisible(! (widgetAreaDetails->isVisible() ));
+}
+
+
+// inverse the visibility
+void TIGLViewerWingWidget::expendDihedralDetails(bool checked) {
+    widgetDihedralDetails->setVisible(! (widgetDihedralDetails->isVisible() ));
 }
 
 // inverse the visibility
@@ -74,9 +90,14 @@ void TIGLViewerWingWidget::setWing(cpcr::CPACSTreeItem *wing) {
     wingItem = wing;
     // set sweep
     internalMethod = intSpinBoxMethod->value(); // retrieve the information of the interface -> when we switch from one wing to the other method and chord are conserved
-    internalChord = spinBoxChord->value();
-    internalSweep = associateManager->adapter->getSweepAngle(wingItem, internalChord);
+    internalSweepChord = spinBoxSweepChord->value();
+    internalSweep = associateManager->adapter->getSweepAngle(wingItem, internalSweepChord);
     spinBoxSweep->setValue(internalSweep);
+
+    // set dihedral
+    internalDihedralChord = spinBoxDihedralChord->value();
+    internalDihedral = associateManager->adapter->getDihedralAngle(wingItem, internalDihedralChord);
+    spinBoxDihedral->setValue(internalDihedral);
 
     // set area
     internalAreaXY = associateManager->adapter->getWingArea(wingItem, TIGL_X_Y_PLANE);
@@ -94,19 +115,31 @@ void TIGLViewerWingWidget::setWing(cpcr::CPACSTreeItem *wing) {
 }
 
 void TIGLViewerWingWidget::apply() {
+
     DLOG(WARNING) << "WING apply sweep";
 
     // check if a change of sweep, chord or method occured
-    bool sweepHasChanged = ( internalSweep != spinBoxSweep->value() ||
-                          internalChord != spinBoxChord->value() ||
-                          internalMethod != intSpinBoxMethod->value()) ;
+    bool sweepHasChanged = ( internalSweep != spinBoxSweep->value()
+                             || internalSweepChord != spinBoxSweepChord->value()
+                             || internalMethod != intSpinBoxMethod->value()) ;
+
+    bool dihedralHasChanged = (internalDihedral != spinBoxDihedral->value()
+                               || internalDihedralChord != spinBoxDihedralChord->value());
 
     if(sweepHasChanged){
         internalSweep = spinBoxSweep->value();
         internalMethod = intSpinBoxMethod->value();
-        internalChord = spinBoxChord->value();
-        associateManager->adapter->setSweepAngle(wingItem, internalSweep, internalChord, internalMethod );
+        internalSweepChord = spinBoxSweepChord->value();
+        associateManager->adapter->setSweepAngle(wingItem, internalSweep, internalSweepChord, internalMethod );
     }
+
+    if(dihedralHasChanged){
+        internalDihedral = spinBoxDihedral->value();
+        internalDihedralChord = spinBoxDihedralChord->value();
+        associateManager->adapter->setDihedtalAngle(wingItem, internalDihedral, internalDihedralChord);
+    }
+
+
 }
 
 
