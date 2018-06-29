@@ -262,19 +262,19 @@ target_link_libraries(${PROGNAME}
 
 # cpacscreatorlib ######################################################################################################
 # TODO clean building way
-find_library( LOCATION libCPACSCreatorLib.a /home/makem/JobProject/SkStage/CPACSCreatorLib/cmake-build-debug/CPACSCreatorLib/ )
+find_library( LOCATION libCPACSCreatorLib.a "/home/cfse/Stage_Malo/CPACSCreatorLib/cmake-build-debug/CPACSCreatorLib/" )
 message(LIBCREATORLOCATION: ${LOCATION})
 target_link_libraries( ${PROGNAME}
         ${LOCATION}
 )
 
-set(CPACSCreatorLibIncludeDir /home/makem/JobProject/SkStage/CPACSCreatorLib/)
+set(CPACSCreatorLibIncludeDir /home/cfse/Stage_Malo/CPACSCreatorLib/ )
 target_include_directories( ${PROGNAME} PUBLIC
     ${CPACSCreatorLibIncludeDir}
 )
 
 
-SET(EIGEN_LOCATION "/home/makem/JobProject/SkStage/CPACSCreatorLib/ThirdPartyLib/eigen-eigen-5a0156e40feb/")
+SET(EIGEN_LOCATION "/home/cfse/Stage_Malo/CPACSCreatorLib/ThirdPartyLib/eigen-eigen-5a0156e40feb/")
 message(EIGEN_LOCATION: ${EIGEN_LOCATION})
 target_include_directories(${PROGNAME}  PUBLIC ${EIGEN_LOCATION})
 

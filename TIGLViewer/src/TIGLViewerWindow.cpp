@@ -374,11 +374,16 @@ void TIGLViewerWindow::loadSettings()
     QSettings settings("DLR SC-HPC", "TiGLViewer3");
 
     bool showConsole = settings.value("show_console",QVariant(true)).toBool();
+    bool showCreator = settings.value("show_creator", QVariant(true)).toBool();
 
     restoreGeometry(settings.value("MainWindowGeom").toByteArray());
     restoreState(settings.value("MainWindowState").toByteArray());
+
     consoleDockWidget->setVisible(showConsole);
     showConsoleAction->setChecked(showConsole);
+
+    creatorDockWidget->setVisible(showCreator);
+    showCreatorAction->setChecked(showCreator);
 
     tiglViewerSettings->loadSettings();
     settingsDialog->updateEntries();
@@ -391,6 +396,9 @@ void TIGLViewerWindow::saveSettings()
 
     bool showConsole = consoleDockWidget->isVisible();
     settings.setValue("show_console", showConsole);
+
+    bool showCreator = creatorDockWidget->isVisible();
+    settings.setValue("show_creator", showCreator);
 
     settings.setValue("MainWindowGeom", saveGeometry());
     settings.setValue("MainWindowState", saveState());
@@ -713,6 +721,8 @@ void TIGLViewerWindow::connectSignals()
     connect(viewZoomOutAction, SIGNAL(triggered()), myOCC, SLOT(zoomOut()));
     connect(showConsoleAction, SIGNAL(toggled(bool)), consoleDockWidget, SLOT(setVisible(bool)));
     connect(consoleDockWidget, SIGNAL(visibilityChanged(bool)), showConsoleAction, SLOT(setChecked(bool)));
+    connect(showCreatorAction, SIGNAL(toggled(bool)), creatorDockWidget, SLOT(setVisible(bool)));
+    connect(creatorDockWidget, SIGNAL(visibilityChanged(bool)), showCreatorAction, SLOT(setChecked(bool)));
     connect(showWireframeAction, SIGNAL(toggled(bool)), myScene, SLOT(wireFrame(bool)));
 #if OCC_VERSION_HEX >= VERSION_HEX_CODE(6,7,0)
     connect(showReflectionLinesAction, SIGNAL(toggled(bool)), myScene, SLOT(setReflectionlinesEnabled(bool)));
@@ -776,11 +786,14 @@ void TIGLViewerWindow::initCreatorInterface()
     connect(model,SIGNAL(selectionAsTreeItem(cpcr::CPACSTreeItem * )), modificatorManager, SLOT(dispatch(cpcr::CPACSTreeItem * )));
 
     connect(commitButton, SIGNAL(pressed() ), this, SLOT(applyModifications() ));
+
 }
 
 
 void TIGLViewerWindow::updateCreatorInterface()
 {
+
+
     model->disconnectAdapter();
     adapter->resetCpacsConfig(*cpacsConfiguration);
     model->resetAdapter(adapter);
