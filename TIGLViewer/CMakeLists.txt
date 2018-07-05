@@ -114,6 +114,7 @@ set(tv_src
     TIGLViewerWingWidget.cpp
     ModificatorWidget.cpp
     TIGLViewerException.cpp
+    ProfilesDBManager.cpp
 
 )
 	
@@ -168,6 +169,7 @@ set(tv_hdr_qobj
     ModificatorManager.h
     TIGLViewerWingWidget.h
     ModificatorWidget.h
+    ProfilesDBManager.h
 )
 
 set(tv_ui_comp

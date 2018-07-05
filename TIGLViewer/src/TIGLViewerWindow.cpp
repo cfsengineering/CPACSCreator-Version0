@@ -138,6 +138,7 @@ TIGLViewerWindow::~TIGLViewerWindow()
     delete model;
     delete adapter;
     delete modificatorManager;
+    delete profilesDB;
 }
 
 void TIGLViewerWindow::dragEnterEvent(QDragEnterEvent * ev)
@@ -770,10 +771,10 @@ void TIGLViewerWindow::createMenus()
 
 void TIGLViewerWindow::initCreatorInterface()
 {
+    profilesDB = new ProfilesDBManager();
 
-
-    adapter = new CPACSCreatorAdapter();
-    modificatorManager = new ModificatorManager(adapter, commitButton, transforamtionModificator, wingModificator);
+    adapter = new CPACSCreatorAdapter(profilesDB);
+    modificatorManager = new ModificatorManager(adapter, commitButton, transforamtionModificator, wingModificator, profilesDB);
 
     model = new CPACSAbstractModel(adapter);
     treeView->setModel(model);
@@ -792,18 +793,18 @@ void TIGLViewerWindow::initCreatorInterface()
 
 void TIGLViewerWindow::updateCreatorInterface()
 {
-
-
     model->disconnectAdapter();
     adapter->resetCpacsConfig(*cpacsConfiguration);
+    profilesDB->setAirfoilsFromCurrentCpacsFile(adapter->getAirfoilsUid());
     model->resetAdapter(adapter);
     modificatorManager->reset();
 }
 
 
 void TIGLViewerWindow::applyModifications(){
+
     model->disconnectAdapter();
-    modificatorManager->applyCurrentModifications();
+    modificatorManager->applyCurrentModifications();    // Here updateCreatorInterface can be called because we write the primary cpacs file
     model->resetAdapter(adapter);
     modificatorManager->reset();
 }

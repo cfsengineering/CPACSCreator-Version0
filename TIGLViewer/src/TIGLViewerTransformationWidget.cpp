@@ -16,6 +16,7 @@ TIGLViewerTransformationWidget::TIGLViewerTransformationWidget(QWidget *parent):
 void TIGLViewerTransformationWidget::apply() {
     setInternalFromSpinBoxes();
     associateManager->adapter->setTransformation(transformationItem, transformation);
+    associateManager->adapter->writeToFile();
 }
 
 

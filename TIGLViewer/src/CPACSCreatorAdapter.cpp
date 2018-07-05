@@ -11,6 +11,9 @@
 #include "TIGLViewerException.h"
 
 
+CPACSCreatorAdapter::CPACSCreatorAdapter(ProfilesDBManager *profilesDBManager) {
+    profilesDB = profilesDBManager;
+}
 
 
 double CPACSCreatorAdapter::getDihedralAngle(cpcr::CPACSTreeItem *item, double chordPercent) {
@@ -24,12 +27,10 @@ double CPACSCreatorAdapter::getDihedralAngle(cpcr::CPACSTreeItem *item, double c
 }
 
 
-void CPACSCreatorAdapter::setDihedtalAngle(cpcr::CPACSTreeItem *item, double angle, double chordPercent) {
+void CPACSCreatorAdapter::setDihedralAngle(cpcr::CPACSTreeItem *item, double angle, double chordPercent) {
     if( ! testItem(item, "wing") )
         return;
     aircraftTree.setWingDihedral(item->getUid(), angle, chordPercent);
-    aircraftTree.writeToFile();
-
 }
 
 
@@ -39,11 +40,9 @@ void CPACSCreatorAdapter::setSweepAngle(cpcr::CPACSTreeItem *item, double angle,
 
     if(method == ByTranslation){
         aircraftTree.setWingSweepByTranslation(item->getUid(), angle, chordPercent);
-        aircraftTree.writeToFile();
     }
     else if( method == ByShearing){
         aircraftTree.setWingSweepByShearing(item->getUid(), angle, chordPercent);
-        aircraftTree.writeToFile();
     }else {
         throw TIGLViewerException("ADAPTER: setSweepAngle: unknown method given");
     }
@@ -78,8 +77,6 @@ void CPACSCreatorAdapter::setTransformation(cpcr::CPACSTreeItem *item, cpcr::CPA
 
     // TODO MODIFIER A LITTEL WIRD
     aircraftTree.getModifier()->setTransformation(item->getXPath(), transformation);
-    aircraftTree.writeToFile();
-
     LOG(INFO) << "Set transformation Values for xPath: ";
 
 }
@@ -159,3 +156,66 @@ double CPACSCreatorAdapter::getWingArea(cpcr::CPACSTreeItem *item, TiglSymmetryA
     return area;
 }
 
+
+QStringList CPACSCreatorAdapter::getAirfoilsUid() {
+    QStringList r;
+    std::vector<std::string> uids = aircraftTree.getModifier()->getAirfoilsUid();
+
+    for(std::string uid : uids){
+        r.push_back( QString(uid.c_str()) );
+    }
+    return r;
+
+}
+
+
+
+QString CPACSCreatorAdapter::getAirfoilValueForWing(cpcr::CPACSTreeItem *item) {
+
+    QString r = profilesDB->noneAirfoil;
+    if( ! testItem(item, "wing")){
+        return r ;
+    }
+    std::vector<std::string> uids = aircraftTree.getAllAirfoilsUIDInThisWing(item->getUid());
+
+    if(uids.size() < 1){
+        return r;
+    }
+
+    if(uids.size() >= 2 ){
+        r = profilesDB->multipleAirfoilsInUse;
+        return r;
+    }
+
+    r = uids[0].c_str() + profilesDB->suffixForInFile;
+    return r;
+}
+
+void CPACSCreatorAdapter::setAllAirfoilsInWing(cpcr::CPACSTreeItem *item, QString airfoil) {
+    if( ! testItem(item, "wing") )
+        return ;
+
+    if (! profilesDB->idIsValid(airfoil)){
+        throw TIGLViewerException("Trying to set a invalid airfoil");
+    }
+
+    if (profilesDB->idIsDBID(airfoil) ){
+        std::string path = profilesDB->getPathForDBAirfoil(airfoil).toStdString();
+        aircraftTree.setWingAirfoilsFromExternalFile(item->getUid(), path);
+    }
+    else if (profilesDB->idIsCPACSID(airfoil)) {
+        aircraftTree.setWingAirfoilsByUID(item->getUid(), profilesDB->getIdWithoutSuffix(airfoil).toStdString() );
+    } else {
+        throw  TIGLViewerException("Unexpected airfoil case");
+    }
+
+
+
+}
+
+void CPACSCreatorAdapter::writeToFile() {
+    if(isValid()){
+        aircraftTree.writeToFile();
+    }
+
+}

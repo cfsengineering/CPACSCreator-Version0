@@ -24,6 +24,8 @@
 
 
 #include <QMainWindow>
+#include <QMutex>
+
 
 #include "TIGLViewerContext.h"
 #include "TIGLViewerDocument.h"
@@ -34,6 +36,8 @@
 #include "ui_TIGLViewerWindow.h"
 #include "CPACSCreatorAdapter.h"
 #include "ModificatorManager.h"
+#include "ProfilesDBManager.h"
+
 
 class QAction;
 class QLabel;
@@ -130,6 +134,7 @@ private:
     QItemSelectionModel* selectionModel;
     CPACSCreatorAdapter* adapter;
     ModificatorManager* modificatorManager;
+    ProfilesDBManager* profilesDB;
 
     QString currentFile;
     QString controlFileName;
@@ -141,6 +146,8 @@ private:
     class TIGLViewerSettingsDialog * settingsDialog;
     class TIGLViewerSettings * tiglViewerSettings;
     class QTimer * openTimer;
+
+
 
 };
 

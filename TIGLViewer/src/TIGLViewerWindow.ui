@@ -409,6 +409,70 @@
       <widget class="TIGLViewerWingWidget" name="wingModificator" native="true">
        <layout class="QVBoxLayout" name="verticalLayout_4">
         <item>
+         <layout class="QHBoxLayout" name="aifoilLayout">
+          <item>
+           <widget class="QPushButton" name="btnExpendAirfoilDetails">
+            <property name="maximumSize">
+             <size>
+              <width>20</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>+</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="labelAirfoil">
+            <property name="minimumSize">
+             <size>
+              <width>80</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>80</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Airfoil</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="comboBoxAirfoil"/>
+          </item>
+          <item>
+           <widget class="QWidget" name="widgetAirfoilDetails" native="true">
+            <layout class="QHBoxLayout" name="horizontalLayout_7">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QPushButton" name="btnAddAifoilToDB">
+               <property name="text">
+                <string>Add an airfoil in DB</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
          <layout class="QHBoxLayout" name="sweepLayout">
           <item>
            <widget class="QPushButton" name="btnExpendSweepDetails">
@@ -491,7 +555,7 @@
              <item>
               <widget class="QLabel" name="labelChord">
                <property name="text">
-                <string>Chord</string>
+                <string>Chord Percent</string>
                </property>
               </widget>
              </item>
@@ -613,7 +677,7 @@
              <item>
               <widget class="QLabel" name="labelDihedralChord">
                <property name="text">
-                <string>Chord</string>
+                <string>Chord Percent</string>
                </property>
               </widget>
              </item>

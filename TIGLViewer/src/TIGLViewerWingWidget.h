@@ -9,6 +9,7 @@
 #include "QDoubleSpinBox"
 #include "QPushButton"
 #include "QWidget"
+#include "QComboBox"
 #include "CPACSCreatorLib/CPACSTreeItem.h"
 
 
@@ -21,6 +22,7 @@ public slots:
     void expendAreaDetails(bool checked);
     void expendDihedralDetails(bool checked);
     void expendSweepDetails(bool checked);
+    void expendAirfoilDetails(bool checked);
 
 public:
 
@@ -58,6 +60,12 @@ private:
     QDoubleSpinBox * spinBoxAreaYZ;
     QDoubleSpinBox * spinBoxAreaT;
 
+    // airfoil interface
+    QPushButton* btnExpendAirfoilDetails;
+    QWidget* widgetAirfoilDetails;
+    QComboBox* comboBoxAirfoil;
+
+
 
     // internal sweep
     double internalSweep;
@@ -74,6 +82,10 @@ private:
     double internalAreaXZ;
     double internalAreaYZ;
     double internalAreaT;
+
+    // internal airfoil
+    QString internalAirfoilUID;
+
 };
 
 

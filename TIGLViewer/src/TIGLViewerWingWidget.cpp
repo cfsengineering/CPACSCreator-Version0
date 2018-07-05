@@ -36,6 +36,12 @@ void TIGLViewerWingWidget::init(ModificatorManager * associate ) {
     spinBoxAreaT = this->findChild<QDoubleSpinBox*>("spinBoxAreaT");
 
 
+    // Retrieve component of the airfoil interface
+    btnExpendAirfoilDetails = this->findChild<QPushButton*>("btnExpendAirfoilDetails");
+    comboBoxAirfoil = this->findChild<QComboBox*>("comboBoxAirfoil");
+    widgetAirfoilDetails = this->findChild<QWidget*>("widgetAirfoilDetails");
+
+
     // set the initials values of the display interface (should be overwritten when the wingItem is set)
     spinBoxSweep->setValue(-1.0);
     spinBoxSweepChord->setValue(0);
@@ -54,17 +60,21 @@ void TIGLViewerWingWidget::init(ModificatorManager * associate ) {
     spinBoxAreaYZ->setReadOnly(true);
     spinBoxAreaT->setReadOnly(true);
 
+    comboBoxAirfoil->addItems(associate->profilesDB->getAvailableAirfoils());
 
 
     // hide the advanced options
     widgetAreaDetails->hide();
     widgetDihedralDetails->hide();
     widgetSweepDetails->hide();
+    widgetAirfoilDetails->hide();
 
     // connect the extend buttons with their slot
     connect(btnExpendAreaDetails, SIGNAL(clicked(bool)), this, SLOT(expendAreaDetails(bool)) );
     connect(btnExpendDihedralDetails, SIGNAL(clicked(bool)), this, SLOT(expendDihedralDetails(bool)) );
     connect(btnExpendSweepDetails, SIGNAL(clicked(bool)), this, SLOT(expendSweepDetails(bool)));
+    connect(btnExpendAirfoilDetails, SIGNAL(clicked(bool)), this, SLOT(expendAirfoilDetails(bool)));
+
 
 
 }
@@ -85,6 +95,9 @@ void TIGLViewerWingWidget::expendSweepDetails(bool checked) {
     widgetSweepDetails->setVisible(! (widgetSweepDetails->isVisible() ));
 }
 
+void TIGLViewerWingWidget::expendAirfoilDetails(bool checked) {
+    widgetAirfoilDetails->setVisible( ! (widgetAirfoilDetails->isVisible()));
+}
 
 void TIGLViewerWingWidget::setWing(cpcr::CPACSTreeItem *wing) {
     wingItem = wing;
@@ -112,6 +125,20 @@ void TIGLViewerWingWidget::setWing(cpcr::CPACSTreeItem *wing) {
     internalAreaT = associateManager->adapter->getWingArea(wingItem, TIGL_NO_SYMMETRY);
     spinBoxAreaT->setValue(internalAreaT);
 
+    // set wingAirfoil1
+    comboBoxAirfoil->clear();
+    comboBoxAirfoil->addItems(associateManager->profilesDB->getAvailableAirfoils());
+
+    internalAirfoilUID = associateManager->adapter->getAirfoilValueForWing(wingItem);
+    int idx = comboBoxAirfoil->findText(internalAirfoilUID);
+    if(idx == -1){  // case for combined or None
+        idx = comboBoxAirfoil->count();
+        comboBoxAirfoil->addItem(internalAirfoilUID);
+    }
+    comboBoxAirfoil->setCurrentIndex(idx);
+
+
+
 }
 
 void TIGLViewerWingWidget::apply() {
@@ -126,7 +153,9 @@ void TIGLViewerWingWidget::apply() {
     bool dihedralHasChanged = (internalDihedral != spinBoxDihedral->value()
                                || internalDihedralChord != spinBoxDihedralChord->value());
 
-    if(sweepHasChanged){
+    bool airfoilHasChanged = (internalAirfoilUID != comboBoxAirfoil->currentText() );
+
+    if(sweepHasChanged){ //TODO do not change if the change is to small
         internalSweep = spinBoxSweep->value();
         internalMethod = intSpinBoxMethod->value();
         internalSweepChord = spinBoxSweepChord->value();
@@ -136,11 +165,22 @@ void TIGLViewerWingWidget::apply() {
     if(dihedralHasChanged){
         internalDihedral = spinBoxDihedral->value();
         internalDihedralChord = spinBoxDihedralChord->value();
-        associateManager->adapter->setDihedtalAngle(wingItem, internalDihedral, internalDihedralChord);
+        associateManager->adapter->setDihedralAngle(wingItem, internalDihedral, internalDihedralChord);
+    }
+
+    if(airfoilHasChanged){
+        internalAirfoilUID = comboBoxAirfoil->currentText();
+        associateManager->adapter->setAllAirfoilsInWing(wingItem, internalAirfoilUID);
+
+    }
+
+    if(sweepHasChanged || airfoilHasChanged || dihedralHasChanged){
+        associateManager->adapter->writeToFile();   // we do this here to update all the change at once in the file
     }
 
 
 }
+
 
 
 

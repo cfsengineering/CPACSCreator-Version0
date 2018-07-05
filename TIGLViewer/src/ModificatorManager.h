@@ -12,6 +12,7 @@
 #include "CPACSCreatorAdapter.h"
 #include "TIGLViewerWingWidget.h"
 #include "ModificatorWidget.h"
+#include "ProfilesDBManager.h"
 
 
 
@@ -27,7 +28,8 @@ public:
                        CPACSCreatorAdapter* adapter,
                        QPushButton* commitButton,
                        TIGLViewerTransformationWidget* transformationModificator,
-                       TIGLViewerWingWidget* wingModificator
+                       TIGLViewerWingWidget* wingModificator,
+                       ProfilesDBManager* profilesDB
                        );
 
     void reset();
@@ -36,6 +38,7 @@ public:
     void hideAll();
 
     CPACSCreatorAdapter* adapter;
+    ProfilesDBManager* profilesDB;
 
 private:
 

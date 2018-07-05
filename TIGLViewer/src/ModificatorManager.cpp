@@ -9,8 +9,10 @@
 ModificatorManager::ModificatorManager(CPACSCreatorAdapter *adapter,
                                        QPushButton* commitButton,
                                        TIGLViewerTransformationWidget* transformationModificator,
-                                       TIGLViewerWingWidget* wingModificator) {
+                                       TIGLViewerWingWidget* wingModificator,
+                                       ProfilesDBManager* profilesDB) {
     this->adapter = adapter;
+    this->profilesDB = profilesDB;
     this->transformationModificator = transformationModificator;
     this->transformationModificator->init(this);
     this->wingModificator = wingModificator;
