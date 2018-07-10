@@ -219,3 +219,39 @@ void CPACSCreatorAdapter::writeToFile() {
     }
 
 }
+
+
+std::list<std::pair<cpcr::CPACSTreeItem*, cpcr::CPACSPositioning >>  CPACSCreatorAdapter::getPositionings(cpcr::CPACSTreeItem * item) {
+
+    std::list<std::pair<cpcr::CPACSTreeItem*, cpcr::CPACSPositioning >> positionings;
+
+    if(! testItem(item, "positionings")){
+        return positionings;
+    }
+
+    cpcr::CPACSPositioning posTemp;
+    for(cpcr::CPACSTreeItem* e : item->findAllChildrenOfTypeRecursively("positioning")){
+        posTemp = aircraftTree.getModifier()->getPositioning(e->getXPath());
+        positionings.push_back(std::pair<cpcr::CPACSTreeItem*, cpcr::CPACSPositioning >(e,posTemp));
+    }
+
+    positionings.sort(
+            [](const std::pair<cpcr::CPACSTreeItem*, cpcr::CPACSPositioning >& p1,
+               const std::pair<cpcr::CPACSTreeItem*, cpcr::CPACSPositioning >& p2)
+            {return p1.first->getTixiIndex() <= p2.first->getTixiIndex(); });
+
+    return positionings;
+
+}
+
+void CPACSCreatorAdapter::setPositioning(cpcr::CPACSTreeItem *item, cpcr::CPACSPositioning newPositioning) {
+
+    if(! isValid()){
+        return;
+    }
+
+    if(! testItem(item, "positioning")){
+        return ;
+    }
+    aircraftTree.getModifier()->setPositioning(item->getXPath(), newPositioning );
+}

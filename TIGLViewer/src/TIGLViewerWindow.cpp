@@ -774,7 +774,12 @@ void TIGLViewerWindow::initCreatorInterface()
     profilesDB = new ProfilesDBManager();
 
     adapter = new CPACSCreatorAdapter(profilesDB);
-    modificatorManager = new ModificatorManager(adapter, commitButton, transforamtionModificator, wingModificator, profilesDB);
+    modificatorManager = new ModificatorManager(adapter,
+                                                commitButton,
+                                                transforamtionModificator,
+                                                wingModificator,
+                                                profilesDB,
+                                                positioningsModificator);
 
     model = new CPACSAbstractModel(adapter);
     treeView->setModel(model);

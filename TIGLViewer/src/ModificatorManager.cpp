@@ -10,7 +10,8 @@ ModificatorManager::ModificatorManager(CPACSCreatorAdapter *adapter,
                                        QPushButton* commitButton,
                                        TIGLViewerTransformationWidget* transformationModificator,
                                        TIGLViewerWingWidget* wingModificator,
-                                       ProfilesDBManager* profilesDB) {
+                                       ProfilesDBManager* profilesDB,
+                                       TIGLViewerPositioningsWidget* positioningsModificator) {
     this->adapter = adapter;
     this->profilesDB = profilesDB;
     this->transformationModificator = transformationModificator;
@@ -18,8 +19,12 @@ ModificatorManager::ModificatorManager(CPACSCreatorAdapter *adapter,
     this->wingModificator = wingModificator;
     this->wingModificator->init(this);
     this->commitButton = commitButton;
+    this->positioningsModificator = positioningsModificator;
+    this->positioningsModificator->init(this);
     currentModificator = nullptr;
+
     this->hideAll();
+
 }
 
 
@@ -49,6 +54,10 @@ void ModificatorManager::dispatch(cpcr::CPACSTreeItem *item) {
         currentModificator = wingModificator;
         this->setWingModificator(item);
     }
+    else if (item->getType() == "positionings"){
+        currentModificator = positioningsModificator;
+        this->setPositioningsModificator(item);
+    }
     else {
         currentModificator = nullptr;
         hideAll();
@@ -74,9 +83,19 @@ void ModificatorManager::setWingModificator(cpcr::CPACSTreeItem *item) {
 }
 
 
+void ModificatorManager::setPositioningsModificator(cpcr::CPACSTreeItem *item) {
+    hideAll();
+    positioningsModificator->setPositionings(item);
+    positioningsModificator->setVisible(true);
+    commitButton->setVisible(true);
+}
+
 void ModificatorManager::hideAll() {
     bool visible = false;
     transformationModificator->setVisible(visible);
     wingModificator->setVisible(visible);
+    positioningsModificator->setVisible(visible);
     commitButton->setVisible(visible);
+
 }
+

@@ -34,6 +34,10 @@ public:
     double getDihedralAngle(cpcr::CPACSTreeItem * item, double chordPercent);
     void setDihedralAngle(cpcr::CPACSTreeItem *item, double angle, double chordPercent);
 
+    std::list<std::pair<cpcr::CPACSTreeItem*, cpcr::CPACSPositioning >> getPositionings(cpcr::CPACSTreeItem* item);
+    void setPositioning(cpcr::CPACSTreeItem* item, cpcr::CPACSPositioning );
+
+
 
     QStringList getAirfoilsUid();
     // return "Combined" if multiple airfoil is used,

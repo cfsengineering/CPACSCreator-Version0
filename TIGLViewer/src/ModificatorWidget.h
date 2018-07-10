@@ -28,6 +28,10 @@ public:
 
 protected:
 
+    // return true if the abs(a-b) < precision
+    double precision;
+    bool isApprox(double a, double b);
+
     ModificatorManager * associateManager;
 };
 

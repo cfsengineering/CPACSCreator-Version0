@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>783</width>
-    <height>607</height>
+    <height>724</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -376,6 +376,9 @@
    </widget>
   </widget>
   <widget class="QDockWidget" name="creatorDockWidget">
+   <property name="floating">
+    <bool>true</bool>
+   </property>
    <attribute name="dockWidgetArea">
     <number>2</number>
    </attribute>
@@ -1117,6 +1120,9 @@
         </item>
        </layout>
       </widget>
+     </item>
+     <item>
+      <widget class="TIGLViewerPositioningsWidget" name="positioningsModificator" native="true"/>
      </item>
      <item>
       <widget class="QPushButton" name="commitButton">
@@ -2000,6 +2006,9 @@
    </property>
   </action>
   <action name="selectAction">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="TIGLViewer.qrc">
      <normaloff>:/gfx/select.png</normaloff>:/gfx/select.png</iconset>
@@ -2248,6 +2257,12 @@
    <class>TIGLViewerWingWidget</class>
    <extends>QWidget</extends>
    <header>TIGLViewerWingWidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>TIGLViewerPositioningsWidget</class>
+   <extends>QWidget</extends>
+   <header>TIGLViewerPositioningsWidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

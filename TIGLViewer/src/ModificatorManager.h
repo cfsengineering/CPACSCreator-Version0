@@ -13,7 +13,7 @@
 #include "TIGLViewerWingWidget.h"
 #include "ModificatorWidget.h"
 #include "ProfilesDBManager.h"
-
+#include "TIGLViewerPositioningsWidget.h"
 
 
 class ModificatorManager: public QObject {
@@ -29,12 +29,14 @@ public:
                        QPushButton* commitButton,
                        TIGLViewerTransformationWidget* transformationModificator,
                        TIGLViewerWingWidget* wingModificator,
-                       ProfilesDBManager* profilesDB
+                       ProfilesDBManager* profilesDB,
+                       TIGLViewerPositioningsWidget* positioningsModificator
                        );
 
     void reset();
     void setTransformationModificator(cpcr::CPACSTreeItem * item );
     void setWingModificator(cpcr::CPACSTreeItem * item);
+    void setPositioningsModificator(cpcr::CPACSTreeItem * item);
     void hideAll();
 
     CPACSCreatorAdapter* adapter;
@@ -44,6 +46,7 @@ private:
 
     TIGLViewerTransformationWidget* transformationModificator;
     TIGLViewerWingWidget* wingModificator;
+    TIGLViewerPositioningsWidget* positioningsModificator;
 
     ModificatorWidget* currentModificator;
     QPushButton* commitButton;
