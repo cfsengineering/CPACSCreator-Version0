@@ -34,14 +34,14 @@ void CPACSCreatorAdapter::setDihedralAngle(cpcr::CPACSTreeItem *item, double ang
 }
 
 
-void CPACSCreatorAdapter::setSweepAngle(cpcr::CPACSTreeItem *item, double angle, double chordPercent, int method) {
+void CPACSCreatorAdapter::setSweepAngle(cpcr::CPACSTreeItem *item, double angle, double chordPercent, QString method) {
     if( ! testItem(item, "wing") )
         return ;
 
-    if(method == ByTranslation){
+    if(method == "Translation"){
         aircraftTree.setWingSweepByTranslation(item->getUid(), angle, chordPercent);
     }
-    else if( method == ByShearing){
+    else if( method == "Shearing"){
         aircraftTree.setWingSweepByShearing(item->getUid(), angle, chordPercent);
     }else {
         throw TIGLViewerException("ADAPTER: setSweepAngle: unknown method given");

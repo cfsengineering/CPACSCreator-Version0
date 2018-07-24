@@ -11,7 +11,7 @@
 #include "QWidget"
 #include "QComboBox"
 #include "CPACSCreatorLib/CPACSTreeItem.h"
-
+#include "QCheckBox"
 
 class TIGLViewerWingWidget : public ModificatorWidget {
 
@@ -23,6 +23,13 @@ public slots:
     void expendDihedralDetails(bool checked);
     void expendSweepDetails(bool checked);
     void expendAirfoilDetails(bool checked);
+    void expendAnchorDetails(bool checked);
+    void expendStandardizationDetails(bool checked);
+
+    void setAreaConstant(bool checked);
+    void setSpanConstant(bool checked);
+    void setARConstant(bool checked);
+
 
 public:
 
@@ -38,12 +45,21 @@ private:
 
     cpcr::CPACSTreeItem * wingItem;
 
+    // anchor interface
+    QDoubleSpinBox * spinBoxAnchorX ;
+    QDoubleSpinBox * spinBoxAnchorY ;
+    QDoubleSpinBox * spinBoxAnchorZ ;
+    QPushButton* btnExpendAnchorDetails;
+    QWidget* widgetAnchorDetails;
+    QComboBox* comboBoxAnchorOrientation;
+
+
     // sweep interface
     QDoubleSpinBox * spinBoxSweep ;
     QPushButton* btnExpendSweepDetails;
     QWidget* widgetSweepDetails;
     QDoubleSpinBox* spinBoxSweepChord;
-    QSpinBox* intSpinBoxMethod;
+    QComboBox* comboBoxSweepMethod;
 
     // dihedral interface
     QDoubleSpinBox * spinBoxDihedral ;
@@ -59,25 +75,47 @@ private:
     QDoubleSpinBox * spinBoxAreaXZ;
     QDoubleSpinBox * spinBoxAreaYZ;
     QDoubleSpinBox * spinBoxAreaT;
+    QCheckBox * checkBoxIsAreaConstant;
 
     // span interface;
     QDoubleSpinBox * spinBoxSpan;
+    QCheckBox * checkBoxIsSpanConstant;
 
     // AR interface;
     QDoubleSpinBox * spinBoxAR;
-
+    QCheckBox * checkBoxIsARConstant;
 
     // airfoil interface
     QPushButton* btnExpendAirfoilDetails;
     QWidget* widgetAirfoilDetails;
     QComboBox* comboBoxAirfoil;
 
+    // standardization interface
+    QComboBox* comboBoxGlobalStd;
+    QPushButton* btnExpendStdDetails;
+    QWidget* widgetStdDetails;
+    QCheckBox* checkBoxStdAirfoils;
+    QCheckBox* checkBoxStdPositionings;
+    QCheckBox* checkBoxStdSections;
+    QCheckBox* checkBoxStdAnchor;
+
+
+    // internal anchor
+
+    // todo
+
+    // internal standardization
+
+    // todo
+
+
+
 
 
     // internal sweep
     double internalSweep;
     double internalSweepChord;
-    int internalMethod;
+    QString internalMethod;
 
 
     // internal dihedral

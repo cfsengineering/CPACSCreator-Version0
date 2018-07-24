@@ -28,8 +28,8 @@ public:
     cpcr::CPACSTransformation getTransformation(cpcr::CPACSTreeItem *item );
 
     double getSweepAngle(cpcr::CPACSTreeItem * item, double chordPercent);
-    enum SweepMethod {ByTranslation =1 , ByShearing = 2};
-    void setSweepAngle(cpcr::CPACSTreeItem * item, double angle, double chordPercent, int method);
+
+    void setSweepAngle(cpcr::CPACSTreeItem * item, double angle, double chordPercent, QString method);
 
     double getDihedralAngle(cpcr::CPACSTreeItem * item, double chordPercent);
     void setDihedralAngle(cpcr::CPACSTreeItem *item, double angle, double chordPercent);
