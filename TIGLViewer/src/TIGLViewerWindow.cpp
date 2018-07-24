@@ -798,6 +798,7 @@ void TIGLViewerWindow::initCreatorInterface()
 
 void TIGLViewerWindow::updateCreatorInterface()
 {
+    LOG(WARNING) << "fafadas";
     model->disconnectAdapter();
     adapter->resetCpacsConfig(*cpacsConfiguration);
     profilesDB->setAirfoilsFromCurrentCpacsFile(adapter->getAirfoilsUid());

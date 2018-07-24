@@ -48,8 +48,14 @@ public:
     // set all airfoils in this wing
     void setAllAirfoilsInWing(cpcr::CPACSTreeItem *item, QString airfoil);
 
+    double getWingArea(cpcr::CPACSTreeItem * item, cpcr::PLANE plane);
 
-    double getWingArea(cpcr::CPACSTreeItem * item, TiglSymmetryAxis axis);
+    double getWingSpan(cpcr::CPACSTreeItem * item);
+
+    double getWingAR(cpcr::CPACSTreeItem * item);
+
+
+
 
     cpcr::CPACSTreeItem * getRoot()const;
     void resetCpacsConfig(const TIGLViewerDocument& config);

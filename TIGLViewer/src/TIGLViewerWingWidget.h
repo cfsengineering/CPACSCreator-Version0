@@ -60,6 +60,13 @@ private:
     QDoubleSpinBox * spinBoxAreaYZ;
     QDoubleSpinBox * spinBoxAreaT;
 
+    // span interface;
+    QDoubleSpinBox * spinBoxSpan;
+
+    // AR interface;
+    QDoubleSpinBox * spinBoxAR;
+
+
     // airfoil interface
     QPushButton* btnExpendAirfoilDetails;
     QWidget* widgetAirfoilDetails;
@@ -82,6 +89,13 @@ private:
     double internalAreaXZ;
     double internalAreaYZ;
     double internalAreaT;
+
+    // internal span
+    double internalSpan;
+
+    // internal AR
+    double internalAR;
+
 
     // internal airfoil
     QString internalAirfoilUID;

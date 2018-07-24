@@ -90,7 +90,7 @@ bool CPACSCreatorAdapter::testItem(cpcr::CPACSTreeItem *item, cpacsType type) {
         pass = false;
     }
     if(item->getType() != type)  {
-        LOG(WARNING) << "Adapter receive incorect type";
+        LOG(WARNING) << "Adapter receive incorrect type";
         pass = false;
     }
     return pass;
@@ -126,7 +126,6 @@ void CPACSCreatorAdapter::resetCpacsConfig(const TIGLViewerDocument& doc) {
     std::string rootXPath = "/cpacs/vehicles/aircraft/model[1]";
 
     aircraftTree.build(doc.getLoadedDocumentFileName().toStdString(), rootXPath );  // the build function take care to clean the old one
-
     return;
 
 }
@@ -145,13 +144,13 @@ bool CPACSCreatorAdapter::isValid() {
 }
 
 
-double CPACSCreatorAdapter::getWingArea(cpcr::CPACSTreeItem *item, TiglSymmetryAxis axis) {
+double CPACSCreatorAdapter::getWingArea(cpcr::CPACSTreeItem *item, cpcr::PLANE plane) {
     double area = -1;
     if( ! testItem(item, "wing")){
         return area;
     }
     else{
-        area = aircraftTree.getWingPlanformArea(item->getUid(), axis);
+        area = aircraftTree.getWingPlanformArea(item->getUid(), plane);
     }
     return area;
 }
@@ -254,4 +253,22 @@ void CPACSCreatorAdapter::setPositioning(cpcr::CPACSTreeItem *item, cpcr::CPACSP
         return ;
     }
     aircraftTree.getModifier()->setPositioning(item->getXPath(), newPositioning );
+}
+
+double CPACSCreatorAdapter::getWingSpan(cpcr::CPACSTreeItem *item){
+    double span = -1;
+    if( ! testItem(item, "wing")){
+        return span;
+    }
+    span = aircraftTree.getWingSpan(item->getUid());
+    return span;
+}
+
+double CPACSCreatorAdapter::getWingAR(cpcr::CPACSTreeItem *item) {
+    double aR = -1;
+    if( ! testItem(item, "wing")){
+        return aR;
+    }
+    aR = aircraftTree.getWingAR(item->getUid());
+    return aR;
 }

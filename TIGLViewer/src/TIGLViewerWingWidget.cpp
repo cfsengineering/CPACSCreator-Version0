@@ -35,6 +35,12 @@ void TIGLViewerWingWidget::init(ModificatorManager * associate ) {
     spinBoxAreaYZ = this->findChild<QDoubleSpinBox*>("spinBoxAreaYZ");
     spinBoxAreaT = this->findChild<QDoubleSpinBox*>("spinBoxAreaT");
 
+    // Retrieve component of the span interface
+    spinBoxSpan = this->findChild<QDoubleSpinBox*>("spinBoxSpan");
+
+    // Retrieve component of the span interface
+    spinBoxAR = this->findChild<QDoubleSpinBox*>("spinBoxAR");
+
 
     // Retrieve component of the airfoil interface
     btnExpendAirfoilDetails = this->findChild<QPushButton*>("btnExpendAirfoilDetails");
@@ -60,7 +66,14 @@ void TIGLViewerWingWidget::init(ModificatorManager * associate ) {
     spinBoxAreaYZ->setReadOnly(true);
     spinBoxAreaT->setReadOnly(true);
 
+
+    spinBoxAR->setValue(-1);
+
+    spinBoxSpan->setValue(-1);
+
     comboBoxAirfoil->addItems(associate->profilesDB->getAvailableAirfoils());
+
+
 
 
     // hide the advanced options
@@ -113,17 +126,26 @@ void TIGLViewerWingWidget::setWing(cpcr::CPACSTreeItem *wing) {
     spinBoxDihedral->setValue(internalDihedral);
 
     // set area
-    internalAreaXY = associateManager->adapter->getWingArea(wingItem, TIGL_X_Y_PLANE);
+    internalAreaXY = associateManager->adapter->getWingArea(wingItem, cpcr::PLANE::XY_PLANE);
     spinBoxAreaXY->setValue(internalAreaXY);
 
-    internalAreaXZ = associateManager->adapter->getWingArea(wingItem, TIGL_X_Z_PLANE);
+    internalAreaXZ = associateManager->adapter->getWingArea(wingItem, cpcr::PLANE::XZ_PLANE);
     spinBoxAreaXZ->setValue(internalAreaXZ);
 
-    internalAreaYZ = associateManager->adapter->getWingArea(wingItem, TIGL_Y_Z_PLANE);
+    internalAreaYZ = associateManager->adapter->getWingArea(wingItem, cpcr::PLANE::YZ_PLANE);
     spinBoxAreaYZ->setValue(internalAreaYZ);
 
-    internalAreaT = associateManager->adapter->getWingArea(wingItem, TIGL_NO_SYMMETRY);
+    internalAreaT = associateManager->adapter->getWingArea(wingItem, cpcr::PLANE::NO_PLANE);
     spinBoxAreaT->setValue(internalAreaT);
+
+    // set span
+    internalSpan = associateManager->adapter->getWingSpan(wingItem);
+    spinBoxSpan->setValue(internalSpan);
+
+    // set AR
+    internalAR = associateManager->adapter->getWingAR(wingItem);
+    spinBoxAR->setValue(internalAR);
+
 
     // set wingAirfoil1
     comboBoxAirfoil->clear();
@@ -155,6 +177,11 @@ void TIGLViewerWingWidget::apply() {
 
     bool airfoilHasChanged = (internalAirfoilUID != comboBoxAirfoil->currentText() );
 
+    bool spanHasChanged = (internalSpan != spinBoxSpan->value() );
+
+    bool aRHasChanged = (internalAR != spinBoxAR->value() );
+
+
     if(sweepHasChanged){ //TODO do not change if the change is to small
         internalSweep = spinBoxSweep->value();
         internalMethod = intSpinBoxMethod->value();
@@ -174,9 +201,22 @@ void TIGLViewerWingWidget::apply() {
 
     }
 
-    if(sweepHasChanged || airfoilHasChanged || dihedralHasChanged){
+    if(spanHasChanged ){
+        internalSpan = spinBoxSpan->value();
+        //associateManager->adapter->setWingSpan(wingItem, internalSpan);
+    }
+
+    if(aRHasChanged ){
+        internalAR = spinBoxAR->value();
+        //associateManager->adapter->setWingWing(wingItem, internalAR);
+    }
+
+
+    if(sweepHasChanged || airfoilHasChanged || dihedralHasChanged || spanHasChanged || aRHasChanged ){
         associateManager->adapter->writeToFile();   // we do this here to update all the change at once in the file
     }
+
+
 
 
 }
