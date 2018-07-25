@@ -13,11 +13,16 @@ ModificatorWidget::ModificatorWidget(QWidget *parent): QWidget(parent) {
 
 void ModificatorWidget::init(ModificatorManager *associate) {
     this->associateManager = associate;
-    precision = 4;
+    precision = 3;
 }
 
 void ModificatorWidget::apply() {
   DLOG(WARNING) << "ModificatorWidget: apply function should be overwrite in children classes";
+}
+
+
+void ModificatorWidget::reset() {
+    DLOG(WARNING) << "ModificatorWidget: reset function should be overwrite in children classes";
 }
 
 

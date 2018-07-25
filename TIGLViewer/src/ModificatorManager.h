@@ -22,11 +22,13 @@ class ModificatorManager: public QObject {
 public slots:
     void dispatch(cpcr::CPACSTreeItem * item ) ;
     void applyCurrentModifications();
+    // simply reset the values displayed by the current modificator from the file
+    void applyCurrentCancellation();
 
 public:
     ModificatorManager(
                        CPACSCreatorAdapter* adapter,
-                       QPushButton* commitButton,
+                       QWidget* applyInterface,
                        TIGLViewerTransformationWidget* transformationModificator,
                        TIGLViewerWingWidget* wingModificator,
                        ProfilesDBManager* profilesDB,
@@ -49,7 +51,9 @@ private:
     TIGLViewerPositioningsWidget* positioningsModificator;
 
     ModificatorWidget* currentModificator;
+    QWidget* widgetApply;
     QPushButton* commitButton;
+    QPushButton* cancelButton;
 
 
 };

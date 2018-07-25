@@ -272,3 +272,70 @@ double CPACSCreatorAdapter::getWingAR(cpcr::CPACSTreeItem *item) {
     aR = aircraftTree.getWingAR(item->getUid());
     return aR;
 }
+
+
+
+void
+CPACSCreatorAdapter::getAnchorValues(cpcr::CPACSTreeItem *item, double &x, double &y, double &z, QString &orientation) {
+
+    if( ! testItem(item, "wing")){
+        return ;
+    }
+    cpcr::CPACSTransformation wingT = getTransformation(item->getChild("transformation") ) ;
+
+    x = wingT.getTranslation().x;
+    y = wingT.getTranslation().y;
+    z = wingT.getTranslation().z;
+
+    if( wingT.getRotation() == cpcr::Point(0,0,0)){
+        orientation = "XY-Plane";
+    }else if(wingT.getRotation() == cpcr::Point(90,0,0) ){
+        orientation = "XZ-Plane";
+    }else {
+        orientation = "Custom";
+    }
+
+    if( (!( wingT.getScaling() == cpcr::Point(1,1,1)))  || orientation == "Custom"  ){
+        DLOG(INFO) << "getAnchorValues: None standard anchor detected for wing:" + item->getUid();
+    }
+
+}
+
+void
+CPACSCreatorAdapter::setAnchorValues(cpcr::CPACSTreeItem *item, double x, double y, double z, QString orientation) {
+
+    if( ! testItem(item, "wing")){
+        return ;
+    }
+    cpcr::CPACSTransformation wingT = getTransformation(item->getChild("transformation") ) ;
+    wingT.setTranslation(cpcr::Point(x,y,z));
+    if(orientation == "XY-Plane"){
+        wingT.setRotation(cpcr::Point(0,0,0));
+    }else if( orientation == "XZ-Plane"){
+        wingT.setRotation(cpcr::Point(90,0,0));
+    }else if( orientation == "Custom"){
+        LOG(WARNING) << "setAnchorValues: orientation is custom -> no change in orientation will be performed";
+    }
+
+    if( (!( wingT.getScaling() == cpcr::Point(1,1,1)))  ){
+        DLOG(INFO) << "setAnchorValues:: None standard anchor detected for wing:" + item->getUid() + ". Consider to standardize the anchor.";
+    }
+
+    setTransformation(item->getChild("transformation"), wingT);
+
+}
+
+void
+CPACSCreatorAdapter::getStdValues(cpcr::CPACSTreeItem *item, bool &stdAirfoil, bool &stdSections, bool &stdPositionings,
+                                  bool &stdAnchor) {
+
+
+    if( ! testItem(item, "wing")){
+        return ;
+    }
+
+    stdSections = aircraftTree.checkIfOneSectionOneElementForWing(item);
+    stdAirfoil = aircraftTree.checkIfAirfoilsAreStandardizedForWing(item);
+    stdPositionings = aircraftTree.checkIfPositioningsAreStandardizedForWing(item);
+    stdAnchor = aircraftTree.checkIfWingTransformationIsStandardizedForWing(item);
+}

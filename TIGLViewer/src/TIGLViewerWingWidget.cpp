@@ -61,7 +61,7 @@ void TIGLViewerWingWidget::init(ModificatorManager * associate ) {
 
     // Retrieve component of the standardization interface
     btnExpendStdDetails = this->findChild<QPushButton*>("btnExpendStandardizationDetails");
-    comboBoxGlobalStd = this->findChild<QComboBox*>("comboBoxGlobalStd");
+    comboBoxStdGlobal = this->findChild<QComboBox*>("comboBoxStdGlobal");
     checkBoxStdAirfoils = this->findChild<QCheckBox*>("checkBoxStdAirfoils");
     checkBoxStdSections = this->findChild<QCheckBox*>("checkBoxStdSections");
     checkBoxStdPositionings = this->findChild<QCheckBox*>("checkBoxStdPositionings");
@@ -101,9 +101,9 @@ void TIGLViewerWingWidget::init(ModificatorManager * associate ) {
     checkBoxIsSpanConstant->setChecked(false);
     checkBoxIsARConstant->setChecked(true);
 
-
-    comboBoxAnchorOrientation->addItem("XY Orientation");
-    comboBoxAnchorOrientation->addItem("XZ Orientation");
+    // anchor orientation
+    comboBoxAnchorOrientation->addItem("XY-Plane");
+    comboBoxAnchorOrientation->addItem("XZ-Plane");
     comboBoxAnchorOrientation->addItem("Custom");
 
 
@@ -131,7 +131,12 @@ void TIGLViewerWingWidget::init(ModificatorManager * associate ) {
     connect(checkBoxIsSpanConstant,SIGNAL(clicked(bool)), this, SLOT(setSpanConstant(bool)));
     connect(checkBoxIsARConstant,SIGNAL(clicked(bool)), this, SLOT(setARConstant(bool)));
 
-
+    // logical connection to remain std checkbox in a logical state
+    connect(checkBoxStdAirfoils,SIGNAL(clicked(bool)), this, SLOT(checkStdAirfoils(bool)));
+    connect(checkBoxStdSections,SIGNAL(clicked(bool)), this, SLOT(checkStdSections(bool)));
+    connect(checkBoxStdPositionings,SIGNAL(clicked(bool)), this, SLOT(checkStdPositionings(bool)));
+    connect(checkBoxStdAnchor,SIGNAL(clicked(bool)), this, SLOT(checkStdAnchor(bool)));
+    connect(comboBoxStdGlobal,SIGNAL(currentIndexChanged(int )), this, SLOT(setStdCheckBoxesFromComboBox(int)) );
 }
 
 // inverse the visibility
@@ -193,12 +198,87 @@ void TIGLViewerWingWidget::setARConstant(bool checked) {
 }
 
 
+void TIGLViewerWingWidget::checkStdAirfoils(bool checked) {
+    checkBoxStdAirfoils->setChecked(internalStdAirfoils || checked);
+    setStdComboBox();
+}
+
+void TIGLViewerWingWidget::checkStdSections(bool checked) {
+    checkBoxStdSections->setChecked(internalStdSections || checked);
+    setStdComboBox();
+}
+
+void TIGLViewerWingWidget::checkStdPositionings(bool checked) {
+    checkBoxStdPositionings->setChecked(internalStdPositionings || checked);
+    setStdComboBox();
+}
+
+void TIGLViewerWingWidget::checkStdAnchor(bool checked) {
+    checkBoxStdAnchor->setChecked(internalStdAnchor || checked);
+    setStdComboBox();
+}
+
+
+void TIGLViewerWingWidget::setStdCheckBoxesFromComboBox(int idx) {
+    if( comboBoxStdGlobal->currentText() == "Total"){
+        checkBoxStdAnchor->setChecked(true);
+        checkBoxStdSections->setChecked(true);
+        checkBoxStdPositionings->setChecked(true);
+        checkBoxStdAirfoils->setChecked(true);
+    }else{
+        checkBoxStdAnchor->setChecked(internalStdAnchor);
+        checkBoxStdSections->setChecked(internalStdSections);
+        checkBoxStdPositionings->setChecked(internalStdPositionings);
+        checkBoxStdAirfoils->setChecked(internalStdAirfoils);
+    }
+
+
+}
+
+void TIGLViewerWingWidget::setStdComboBox() {
+
+    int stdCount = 0;
+    if(checkBoxStdAirfoils->isChecked()) stdCount += 1;
+    if(checkBoxStdPositionings->isChecked()) stdCount += 1;
+    if(checkBoxStdSections->isChecked()) stdCount += 1;
+    if(checkBoxStdAnchor->isChecked()) stdCount += 1;
+
+    QString stdG = "";
+    if( stdCount == 0 ) {
+        stdG = "None";
+    }else if ( stdCount < 4){
+        stdG = "Partial";
+    }else if( stdCount == 4){
+        stdG = "Total";
+    }
+
+    int index = comboBoxStdGlobal->findText(stdG);
+    if ( index == -1 ) { // -1 for not found
+        comboBoxStdGlobal->addItem(stdG);
+        index = comboBoxStdGlobal->findText(stdG);
+    }
+    comboBoxStdGlobal->setCurrentIndex(index);
+
+}
 
 
 
 
 void TIGLViewerWingWidget::setWing(cpcr::CPACSTreeItem *wing) {
     wingItem = wing;
+
+    // set anchor
+    associateManager->adapter->getAnchorValues(wing, internalAnchorX, internalAnchorY, internalAnchorZ, internalAnchorOrientation);
+    spinBoxAnchorX->setValue(internalAnchorX);
+    spinBoxAnchorY->setValue(internalAnchorY);
+    spinBoxAnchorZ->setValue(internalAnchorZ);
+    int index = comboBoxAnchorOrientation->findText(internalAnchorOrientation);
+    if ( index != -1 ) { // -1 for not found
+        comboBoxAnchorOrientation->setCurrentIndex(index);
+    }else{
+        LOG(ERROR) << "TIGLViewerWingWidget::setWing: Unable to find anchor orientation";
+    }
+
     // set sweep
     internalMethod = comboBoxSweepMethod->currentText(); // retrieve the information of the interface -> when we switch from one wing to the other method and chord are conserved
     internalSweepChord = spinBoxSweepChord->value();
@@ -244,27 +324,59 @@ void TIGLViewerWingWidget::setWing(cpcr::CPACSTreeItem *wing) {
     }
     comboBoxAirfoil->setCurrentIndex(idx);
 
+    // set standarization
+    associateManager->adapter->getStdValues(wingItem, internalStdAirfoils, internalStdSections, internalStdPositionings, internalStdAnchor);
+    comboBoxStdGlobal->clear();
+    comboBoxStdGlobal->addItem("Total");
+    checkBoxStdAnchor->setChecked(internalStdAnchor);
+    checkBoxStdSections->setChecked(internalStdSections);
+    checkBoxStdPositionings->setChecked(internalStdPositionings);
+    checkBoxStdAirfoils->setChecked(internalStdAirfoils);
+    this->setStdComboBox();
 
 
 }
 
+
+void TIGLViewerWingWidget::reset() {
+    if(wingItem != nullptr){
+        this->setWing(this->wingItem);
+    }else{
+        DLOG(WARNING) << "TIGLViewerWingWidget: reset call but wing is not set!";
+    }
+
+}
+
+
 void TIGLViewerWingWidget::apply() {
 
-    DLOG(WARNING) << "WING apply sweep";
+    bool anchorHasChanged = ( (!isApprox(internalAnchorX, spinBoxAnchorX->value()))
+                              || (! isApprox(internalAnchorY, spinBoxAnchorY->value()))
+                              || (! isApprox(internalAnchorZ , spinBoxAnchorZ->value()))
+                              || internalAnchorOrientation != comboBoxAnchorOrientation->currentText() );
 
-    // check if a change of sweep, chord or method occured
-    bool sweepHasChanged = ( internalSweep != spinBoxSweep->value()
-                             || internalSweepChord != spinBoxSweepChord->value()
+    bool sweepHasChanged = ( (!isApprox(internalSweep, spinBoxSweep->value()) )
+                             ||(!isApprox(internalSweepChord, spinBoxSweepChord->value() ) )
                              || internalMethod != comboBoxSweepMethod->currentText()) ;
 
-    bool dihedralHasChanged = (internalDihedral != spinBoxDihedral->value()
-                               || internalDihedralChord != spinBoxDihedralChord->value());
+    bool dihedralHasChanged = ( (!isApprox(internalDihedral, spinBoxDihedral->value()))
+                               || (!isApprox(internalDihedralChord, spinBoxDihedralChord->value())) );
 
     bool airfoilHasChanged = (internalAirfoilUID != comboBoxAirfoil->currentText() );
 
-    bool spanHasChanged = (internalSpan != spinBoxSpan->value() );
+    bool spanHasChanged = ( ! isApprox( internalSpan, spinBoxSpan->value()) );
 
-    bool aRHasChanged = (internalAR != spinBoxAR->value() );
+    bool aRHasChanged = ( ! isApprox(internalAR, spinBoxAR->value() ) );
+
+
+    if( anchorHasChanged ){
+        internalAnchorX = spinBoxAnchorX->value();
+        internalAnchorY = spinBoxAnchorY->value();
+        internalAnchorZ = spinBoxAnchorZ->value();
+        internalAnchorOrientation = comboBoxAnchorOrientation->currentText();
+        associateManager->adapter->setAnchorValues(wingItem, internalAnchorX, internalAnchorY,
+                                                   internalAnchorZ, internalAnchorOrientation);
+    }
 
 
     if(sweepHasChanged){ //TODO do not change if the change is to small
@@ -297,7 +409,8 @@ void TIGLViewerWingWidget::apply() {
     }
 
 
-    if(sweepHasChanged || airfoilHasChanged || dihedralHasChanged || spanHasChanged || aRHasChanged ){
+    if(sweepHasChanged || airfoilHasChanged || dihedralHasChanged || spanHasChanged
+       || aRHasChanged || anchorHasChanged){
         associateManager->adapter->writeToFile();   // we do this here to update all the change at once in the file
     }
 

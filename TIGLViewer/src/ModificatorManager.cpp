@@ -7,18 +7,20 @@
 
 
 ModificatorManager::ModificatorManager(CPACSCreatorAdapter *adapter,
-                                       QPushButton* commitButton,
+                                       QWidget* widgetApply,
                                        TIGLViewerTransformationWidget* transformationModificator,
                                        TIGLViewerWingWidget* wingModificator,
                                        ProfilesDBManager* profilesDB,
                                        TIGLViewerPositioningsWidget* positioningsModificator) {
     this->adapter = adapter;
     this->profilesDB = profilesDB;
+    this->widgetApply = widgetApply;
+    this->commitButton = widgetApply->findChild<QPushButton*>("commitButton");
+    this->cancelButton = widgetApply->findChild<QPushButton*>("cancelButton");
     this->transformationModificator = transformationModificator;
     this->transformationModificator->init(this);
     this->wingModificator = wingModificator;
     this->wingModificator->init(this);
-    this->commitButton = commitButton;
     this->positioningsModificator = positioningsModificator;
     this->positioningsModificator->init(this);
     currentModificator = nullptr;
@@ -38,8 +40,16 @@ void ModificatorManager::applyCurrentModifications(){
     if(currentModificator != nullptr) {
         currentModificator->apply();
     }
-    LOG(WARNING) << "apply current modifications executed!";
 }
+
+
+
+void ModificatorManager::applyCurrentCancellation() {
+    if(currentModificator != nullptr){
+        currentModificator->reset();
+    }
+}
+
 
 void ModificatorManager::dispatch(cpcr::CPACSTreeItem *item) {
 
@@ -71,7 +81,8 @@ void ModificatorManager::setTransformationModificator(cpcr::CPACSTreeItem * item
     hideAll();
     transformationModificator->setTransformation(item);
     transformationModificator->setVisible(true);
-    commitButton->setVisible(true);
+    widgetApply->setVisible(true);
+
 }
 
 
@@ -79,7 +90,7 @@ void ModificatorManager::setWingModificator(cpcr::CPACSTreeItem *item) {
     hideAll();
     wingModificator->setWing(item);
     wingModificator->setVisible(true);
-    commitButton->setVisible(true);
+    widgetApply->setVisible(true);
 }
 
 
@@ -87,7 +98,7 @@ void ModificatorManager::setPositioningsModificator(cpcr::CPACSTreeItem *item) {
     hideAll();
     positioningsModificator->setPositionings(item);
     positioningsModificator->setVisible(true);
-    commitButton->setVisible(true);
+    widgetApply->setVisible(true);
 }
 
 void ModificatorManager::hideAll() {
@@ -95,7 +106,7 @@ void ModificatorManager::hideAll() {
     transformationModificator->setVisible(visible);
     wingModificator->setVisible(visible);
     positioningsModificator->setVisible(visible);
-    commitButton->setVisible(visible);
+    widgetApply->setVisible(visible);
 
 }
 

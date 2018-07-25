@@ -91,13 +91,13 @@ void TIGLViewerPositioningsWidget::setPositionings(cpcr::CPACSTreeItem *item) {
 
         QDoubleSpinBox *tempDihedral = new QDoubleSpinBox;
         tempDihedral->setRange(-360, 360);
-        tempSweep->setDecimals(precision);
+        tempDihedral->setDecimals(precision);
         tempDihedral->setValue(p.second.getDihedralAngle());
         dihedrals.push_back(tempDihedral);
 
         QDoubleSpinBox *tempLength = new QDoubleSpinBox;
         tempLength->setRange(-1000, 1000);
-        tempSweep->setDecimals(precision);
+        tempLength->setDecimals(precision);
         tempLength->setValue(p.second.getLength());
         lengths.push_back(tempLength);
 

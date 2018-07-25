@@ -37,6 +37,10 @@ public:
     std::list<std::pair<cpcr::CPACSTreeItem*, cpcr::CPACSPositioning >> getPositionings(cpcr::CPACSTreeItem* item);
     void setPositioning(cpcr::CPACSTreeItem* item, cpcr::CPACSPositioning );
 
+    // set the anchor values passed as argument
+    void getAnchorValues(cpcr::CPACSTreeItem* item, double& x, double& y, double& z, QString& orientation );
+
+    void setAnchorValues(cpcr::CPACSTreeItem* item, double x, double y, double z, QString orientation );
 
 
     QStringList getAirfoilsUid();
@@ -54,7 +58,7 @@ public:
 
     double getWingAR(cpcr::CPACSTreeItem * item);
 
-
+    void getStdValues(cpcr::CPACSTreeItem * item, bool& stdAirfoil, bool& stdSections, bool& stdPositionings, bool& stdAnchor);
 
 
     cpcr::CPACSTreeItem * getRoot()const;

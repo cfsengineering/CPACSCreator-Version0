@@ -30,6 +30,12 @@ public slots:
     void setSpanConstant(bool checked);
     void setARConstant(bool checked);
 
+    void checkStdAirfoils(bool checked);
+    void checkStdSections(bool checked);
+    void checkStdPositionings(bool checked);
+    void checkStdAnchor(bool checked);
+    void setStdCheckBoxesFromComboBox(int ix);
+
 
 public:
 
@@ -38,8 +44,14 @@ public:
 
     void init(ModificatorManager * associate ) override ;
     void apply() override ;
+    void reset() override ;
 
     void setWing(cpcr::CPACSTreeItem* wing);
+
+protected:
+    // set the combobox from the checkbox
+    void setStdComboBox();
+
 
 private:
 
@@ -91,7 +103,7 @@ private:
     QComboBox* comboBoxAirfoil;
 
     // standardization interface
-    QComboBox* comboBoxGlobalStd;
+    QComboBox* comboBoxStdGlobal;
     QPushButton* btnExpendStdDetails;
     QWidget* widgetStdDetails;
     QCheckBox* checkBoxStdAirfoils;
@@ -101,14 +113,17 @@ private:
 
 
     // internal anchor
-
-    // todo
+    double internalAnchorX;
+    double internalAnchorY;
+    double internalAnchorZ;
+    QString internalAnchorOrientation;
 
     // internal standardization
-
-    // todo
-
-
+    bool internalStdAirfoils;
+    bool internalStdPositionings;
+    bool internalStdSections;
+    bool internalStdAnchor;
+    QString internalStGlobal;
 
 
 

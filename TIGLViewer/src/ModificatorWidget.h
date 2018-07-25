@@ -23,6 +23,8 @@ public:
 
     virtual void init(ModificatorManager * associate);
 
+    virtual void reset();
+
     virtual void apply();
 
 

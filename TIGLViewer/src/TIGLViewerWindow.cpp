@@ -775,7 +775,7 @@ void TIGLViewerWindow::initCreatorInterface()
 
     adapter = new CPACSCreatorAdapter(profilesDB);
     modificatorManager = new ModificatorManager(adapter,
-                                                commitButton,
+                                                widgetApply,
                                                 transforamtionModificator,
                                                 wingModificator,
                                                 profilesDB,
@@ -791,18 +791,18 @@ void TIGLViewerWindow::initCreatorInterface()
 
     connect(model,SIGNAL(selectionAsTreeItem(cpcr::CPACSTreeItem * )), modificatorManager, SLOT(dispatch(cpcr::CPACSTreeItem * )));
 
-    connect(commitButton, SIGNAL(pressed() ), this, SLOT(applyModifications() ));
-
+    connect(commitButton, SIGNAL(pressed() ), this, SLOT(applyModifications() )); // not in modificatorManager because we need to disconnect the model
+    connect(cancelButton, SIGNAL(pressed() ), modificatorManager, SLOT(applyCurrentCancellation() )); // not in modificatorManager because we need to disconnect the model
 }
 
 
 void TIGLViewerWindow::updateCreatorInterface()
 {
-    LOG(WARNING) << "fafadas";
     model->disconnectAdapter();
     adapter->resetCpacsConfig(*cpacsConfiguration);
     profilesDB->setAirfoilsFromCurrentCpacsFile(adapter->getAirfoilsUid());
     model->resetAdapter(adapter);
+    treeView->hideColumn(3);
     modificatorManager->reset();
 }
 
@@ -812,6 +812,7 @@ void TIGLViewerWindow::applyModifications(){
     model->disconnectAdapter();
     modificatorManager->applyCurrentModifications();    // Here updateCreatorInterface can be called because we write the primary cpacs file
     model->resetAdapter(adapter);
+    treeView->hideColumn(3);
     modificatorManager->reset();
 }
 
