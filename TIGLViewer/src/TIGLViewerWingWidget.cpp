@@ -15,13 +15,9 @@ void TIGLViewerWingWidget::init(ModificatorManager * associate ) {
     ModificatorWidget::init(associate);
 
     // Retrieve component of the anchor interface
-    btnExpendAnchorDetails = this->findChild<QPushButton*>("btnExpendAnchorDetails");
     spinBoxAnchorX = this->findChild<QDoubleSpinBox*>("spinBoxAnchorX");
     spinBoxAnchorY = this->findChild<QDoubleSpinBox*>("spinBoxAnchorY");
     spinBoxAnchorZ = this->findChild<QDoubleSpinBox*>("spinBoxAnchorZ");
-    widgetAnchorDetails = this->findChild<QWidget*>("widgetAnchorDetails");
-    comboBoxAnchorOrientation = this->findChild<QComboBox*>("comboBoxAnchorOrientation");
-
 
     // Retrieve component of the sweep interface
     btnExpendSweepDetails = this->findChild<QPushButton*>("btnExpendSweepDetails");
@@ -102,9 +98,9 @@ void TIGLViewerWingWidget::init(ModificatorManager * associate ) {
     checkBoxIsARConstant->setChecked(true);
 
     // anchor orientation
-    comboBoxAnchorOrientation->addItem("XY-Plane");
-    comboBoxAnchorOrientation->addItem("XZ-Plane");
-    comboBoxAnchorOrientation->addItem("Custom");
+    //comboBoxAnchorOrientation->addItem("XY-Plane");
+    //comboBoxAnchorOrientation->addItem("XZ-Plane");
+    //comboBoxAnchorOrientation->addItem("Custom");
 
 
 
@@ -114,14 +110,12 @@ void TIGLViewerWingWidget::init(ModificatorManager * associate ) {
     widgetSweepDetails->hide();
     widgetAirfoilDetails->hide();
     widgetStdDetails->hide();
-    widgetAnchorDetails->hide();
 
     // connect the extend buttons with their slot
     connect(btnExpendAreaDetails, SIGNAL(clicked(bool)), this, SLOT(expendAreaDetails(bool)) );
     connect(btnExpendDihedralDetails, SIGNAL(clicked(bool)), this, SLOT(expendDihedralDetails(bool)) );
     connect(btnExpendSweepDetails, SIGNAL(clicked(bool)), this, SLOT(expendSweepDetails(bool)));
     connect(btnExpendAirfoilDetails, SIGNAL(clicked(bool)), this, SLOT(expendAirfoilDetails(bool)));
-    connect(btnExpendAnchorDetails, SIGNAL(clicked(bool)), this, SLOT(expendAnchorDetails(bool)));
     connect(btnExpendStdDetails, SIGNAL(clicked(bool)), this, SLOT(expendStandardizationDetails(bool)));
 
 
@@ -158,10 +152,6 @@ void TIGLViewerWingWidget::expendSweepDetails(bool checked) {
 
 void TIGLViewerWingWidget::expendAirfoilDetails(bool checked) {
     widgetAirfoilDetails->setVisible( ! (widgetAirfoilDetails->isVisible()));
-}
-
-void TIGLViewerWingWidget::expendAnchorDetails(bool checked) {
-    widgetAnchorDetails->setVisible(!(widgetAnchorDetails->isVisible()));
 }
 
 void TIGLViewerWingWidget::expendStandardizationDetails(bool checked) {
@@ -282,12 +272,12 @@ void TIGLViewerWingWidget::setWing(cpcr::CPACSTreeItem *wing) {
     spinBoxAnchorX->setValue(internalAnchorX);
     spinBoxAnchorY->setValue(internalAnchorY);
     spinBoxAnchorZ->setValue(internalAnchorZ);
-    int index = comboBoxAnchorOrientation->findText(internalAnchorOrientation);
-    if ( index != -1 ) { // -1 for not found
-        comboBoxAnchorOrientation->setCurrentIndex(index);
-    }else{
-        LOG(ERROR) << "TIGLViewerWingWidget::setWing: Unable to find anchor orientation";
-    }
+//    int index = comboBoxAnchorOrientation->findText(internalAnchorOrientation);
+//    if ( index != -1 ) { // -1 for not found
+//        comboBoxAnchorOrientation->setCurrentIndex(index);
+//    }else{
+//        LOG(ERROR) << "TIGLViewerWingWidget::setWing: Unable to find anchor orientation";
+//    }
 
     // set sweep
     internalMethod = comboBoxSweepMethod->currentText(); // retrieve the information of the interface -> when we switch from one wing to the other method and chord are conserved
@@ -362,8 +352,7 @@ void TIGLViewerWingWidget::apply() {
 
     bool anchorHasChanged = ( (!isApprox(internalAnchorX, spinBoxAnchorX->value()))
                               || (! isApprox(internalAnchorY, spinBoxAnchorY->value()))
-                              || (! isApprox(internalAnchorZ , spinBoxAnchorZ->value()))
-                              || internalAnchorOrientation != comboBoxAnchorOrientation->currentText() );
+                              || (! isApprox(internalAnchorZ , spinBoxAnchorZ->value())) );
 
     bool sweepHasChanged = ( (!isApprox(internalSweep, spinBoxSweep->value()) )
                              ||(!isApprox(internalSweepChord, spinBoxSweepChord->value() ) )
@@ -388,9 +377,9 @@ void TIGLViewerWingWidget::apply() {
         internalAnchorX = spinBoxAnchorX->value();
         internalAnchorY = spinBoxAnchorY->value();
         internalAnchorZ = spinBoxAnchorZ->value();
-        internalAnchorOrientation = comboBoxAnchorOrientation->currentText();
-        associateManager->adapter->setAnchorValues(wingItem, internalAnchorX, internalAnchorY,
-                                                   internalAnchorZ, internalAnchorOrientation);
+        //internalAnchorOrientation = comboBoxAnchorOrientation->currentText();
+        //associateManager->adapter->setAnchorValues(wingItem, internalAnchorX, internalAnchorY,
+                                                   //internalAnchorZ, internalAnchorOrientation);
     }
 
 

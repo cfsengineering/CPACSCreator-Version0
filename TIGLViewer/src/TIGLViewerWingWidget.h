@@ -23,7 +23,6 @@ public slots:
     void expendDihedralDetails(bool checked);
     void expendSweepDetails(bool checked);
     void expendAirfoilDetails(bool checked);
-    void expendAnchorDetails(bool checked);
     void expendStandardizationDetails(bool checked);
 
     void setAreaConstant(bool checked);
@@ -61,9 +60,6 @@ private:
     QDoubleSpinBox * spinBoxAnchorX ;
     QDoubleSpinBox * spinBoxAnchorY ;
     QDoubleSpinBox * spinBoxAnchorZ ;
-    QPushButton* btnExpendAnchorDetails;
-    QWidget* widgetAnchorDetails;
-    QComboBox* comboBoxAnchorOrientation;
 
 
     // sweep interface
