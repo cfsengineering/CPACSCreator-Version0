@@ -60,6 +60,7 @@ public:
 
     void getStdValues(cpcr::CPACSTreeItem * item, bool& stdAirfoil, bool& stdSections, bool& stdPositionings, bool& stdAnchor);
 
+    void setStdValues(cpcr::CPACSTreeItem * item, bool stdAirfoil, bool stdSections, bool stdPositionings, bool stdAnchor);
 
     cpcr::CPACSTreeItem * getRoot()const;
     void resetCpacsConfig(const TIGLViewerDocument& config);

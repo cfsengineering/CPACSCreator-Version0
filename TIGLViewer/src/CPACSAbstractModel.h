@@ -60,6 +60,9 @@ public:
 
     void resetAdapter(CPACSCreatorAdapter* adapter );
 
+    QModelIndex getIdxForUID(std::string uid );
+
+    std::string getUidForIdx(QModelIndex idx);
 
 protected:
 

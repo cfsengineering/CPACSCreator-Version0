@@ -334,8 +334,41 @@ CPACSCreatorAdapter::getStdValues(cpcr::CPACSTreeItem *item, bool &stdAirfoil, b
         return ;
     }
 
-    stdSections = aircraftTree.checkIfOneSectionOneElementForWing(item);
-    stdAirfoil = aircraftTree.checkIfAirfoilsAreStandardizedForWing(item);
-    stdPositionings = aircraftTree.checkIfPositioningsAreStandardizedForWing(item);
-    stdAnchor = aircraftTree.checkIfWingTransformationIsStandardizedForWing(item);
+    std::string wingUID = item->getUid();
+
+    stdSections = aircraftTree.checkIfOneSectionOneElementForWing(wingUID);
+    stdAirfoil = aircraftTree.checkIfAirfoilsAreStandardizedForWing(wingUID);
+    stdPositionings = aircraftTree.checkIfPositioningsAreStandardizedForWing(wingUID);
+    stdAnchor = aircraftTree.checkIfWingTransformationIsStandardizedForWing(wingUID);
+}
+
+
+void
+CPACSCreatorAdapter::setStdValues(cpcr::CPACSTreeItem *item, bool stdAirfoil, bool stdSections, bool stdPositionings,
+                                  bool stdAnchor) {
+
+    if( ! testItem(item, "wing")){
+        return ;
+    }
+    std::string wingUID = item->getUid(); // We need to work with UID because wing item may change during the stdardization process
+
+    if(stdAirfoil && (! aircraftTree.checkIfAirfoilsAreStandardizedForWing(wingUID) ) ){
+        aircraftTree.airfoilsStandardizationForWing(wingUID);
+    }
+
+    if(stdSections && (! aircraftTree.checkIfOneSectionOneElementForWing(wingUID)) ){
+        aircraftTree.oneSectionOneElementStandardizationForWing(wingUID);
+    }
+
+    if( stdAnchor && (!aircraftTree.checkIfWingTransformationIsStandardizedForWing(wingUID))){
+        aircraftTree.wingTransformationStandardization(wingUID);
+    }
+
+    if( stdPositionings && (! aircraftTree.checkIfPositioningsAreStandardizedForWing(wingUID ) )){
+        aircraftTree.positioningsStandardizationForWing(wingUID);
+    }
+
+    // The file is rewrite with the previous functions, Carefull the treeItems can be changed!
+
+
 }

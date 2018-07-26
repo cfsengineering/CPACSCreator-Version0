@@ -137,6 +137,7 @@ void TIGLViewerWingWidget::init(ModificatorManager * associate ) {
     connect(checkBoxStdPositionings,SIGNAL(clicked(bool)), this, SLOT(checkStdPositionings(bool)));
     connect(checkBoxStdAnchor,SIGNAL(clicked(bool)), this, SLOT(checkStdAnchor(bool)));
     connect(comboBoxStdGlobal,SIGNAL(currentIndexChanged(int )), this, SLOT(setStdCheckBoxesFromComboBox(int)) );
+    callFromSetStdComboBox = false;
 }
 
 // inverse the visibility
@@ -200,26 +201,34 @@ void TIGLViewerWingWidget::setARConstant(bool checked) {
 
 void TIGLViewerWingWidget::checkStdAirfoils(bool checked) {
     checkBoxStdAirfoils->setChecked(internalStdAirfoils || checked);
-    setStdComboBox();
+    setStdComboBoxFromStdCheckBoxes();
 }
 
 void TIGLViewerWingWidget::checkStdSections(bool checked) {
     checkBoxStdSections->setChecked(internalStdSections || checked);
-    setStdComboBox();
+    if( checked == false && internalStdSections == false && checkBoxStdPositionings->isChecked()){
+        checkBoxStdPositionings->setChecked(false);     // we do no allow to have section not check an positioning checked
+    }
+    setStdComboBoxFromStdCheckBoxes();
 }
 
 void TIGLViewerWingWidget::checkStdPositionings(bool checked) {
     checkBoxStdPositionings->setChecked(internalStdPositionings || checked);
-    setStdComboBox();
+    if(! checkBoxStdSections->isChecked() && checked ){
+        checkBoxStdSections->setChecked(checked);   // positioning requier section std
+    }
+    setStdComboBoxFromStdCheckBoxes();
 }
 
 void TIGLViewerWingWidget::checkStdAnchor(bool checked) {
     checkBoxStdAnchor->setChecked(internalStdAnchor || checked);
-    setStdComboBox();
+    setStdComboBoxFromStdCheckBoxes();
 }
 
 
 void TIGLViewerWingWidget::setStdCheckBoxesFromComboBox(int idx) {
+    if(callFromSetStdComboBox) return; // we ignore the signal from "setStdComboBoxFromStdCheckBoxes" because it will overrie the correct value
+
     if( comboBoxStdGlobal->currentText() == "Total"){
         checkBoxStdAnchor->setChecked(true);
         checkBoxStdSections->setChecked(true);
@@ -235,8 +244,9 @@ void TIGLViewerWingWidget::setStdCheckBoxesFromComboBox(int idx) {
 
 }
 
-void TIGLViewerWingWidget::setStdComboBox() {
+void TIGLViewerWingWidget::setStdComboBoxFromStdCheckBoxes() {
 
+    callFromSetStdComboBox = true;
     int stdCount = 0;
     if(checkBoxStdAirfoils->isChecked()) stdCount += 1;
     if(checkBoxStdPositionings->isChecked()) stdCount += 1;
@@ -258,7 +268,7 @@ void TIGLViewerWingWidget::setStdComboBox() {
         index = comboBoxStdGlobal->findText(stdG);
     }
     comboBoxStdGlobal->setCurrentIndex(index);
-
+    callFromSetStdComboBox = false;
 }
 
 
@@ -332,7 +342,7 @@ void TIGLViewerWingWidget::setWing(cpcr::CPACSTreeItem *wing) {
     checkBoxStdSections->setChecked(internalStdSections);
     checkBoxStdPositionings->setChecked(internalStdPositionings);
     checkBoxStdAirfoils->setChecked(internalStdAirfoils);
-    this->setStdComboBox();
+    this->setStdComboBoxFromStdCheckBoxes();
 
 
 }
@@ -367,6 +377,11 @@ void TIGLViewerWingWidget::apply() {
     bool spanHasChanged = ( ! isApprox( internalSpan, spinBoxSpan->value()) );
 
     bool aRHasChanged = ( ! isApprox(internalAR, spinBoxAR->value() ) );
+
+    bool stdardizationHasChanged = ( internalStdAirfoils != checkBoxStdAirfoils->isChecked()
+                                     || internalStdPositionings != checkBoxStdPositionings->isChecked()
+                                     || internalStdSections != checkBoxStdSections->isChecked()
+                                     || internalStdAnchor != checkBoxStdAnchor->isChecked() );
 
 
     if( anchorHasChanged ){
@@ -415,6 +430,17 @@ void TIGLViewerWingWidget::apply() {
     }
 
 
+    if( stdardizationHasChanged ){
+
+        internalStdAnchor = checkBoxStdAnchor->isChecked();
+        internalStdSections = checkBoxStdSections->isChecked();
+        internalStdPositionings = checkBoxStdPositionings->isChecked();
+        internalStdAirfoils = checkBoxStdAirfoils->isChecked();
+
+        associateManager->adapter->setStdValues(wingItem, internalStdAirfoils, internalStdSections,
+                                                internalStdPositionings, internalStdAnchor);
+
+    }
 
 
 }

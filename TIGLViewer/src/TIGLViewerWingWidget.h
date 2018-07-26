@@ -50,7 +50,7 @@ public:
 
 protected:
     // set the combobox from the checkbox
-    void setStdComboBox();
+    void setStdComboBoxFromStdCheckBoxes();
 
 
 private:
@@ -110,7 +110,8 @@ private:
     QCheckBox* checkBoxStdPositionings;
     QCheckBox* checkBoxStdSections;
     QCheckBox* checkBoxStdAnchor;
-
+    // use to inform the setStdCheckBoxesFromComboBox that the change is called form setStdComboBoxFromStdCheckBoxes
+    bool callFromSetStdComboBox;
 
     // internal anchor
     double internalAnchorX;

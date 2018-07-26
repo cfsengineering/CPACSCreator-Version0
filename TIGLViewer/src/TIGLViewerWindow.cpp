@@ -798,22 +798,33 @@ void TIGLViewerWindow::initCreatorInterface()
 
 void TIGLViewerWindow::updateCreatorInterface()
 {
+
+    std::string selectedUID = model->getUidForIdx(selectionModel->currentIndex());
     model->disconnectAdapter();
     adapter->resetCpacsConfig(*cpacsConfiguration);
     profilesDB->setAirfoilsFromCurrentCpacsFile(adapter->getAirfoilsUid());
     model->resetAdapter(adapter);
     treeView->hideColumn(3);
     modificatorManager->reset();
+    QModelIndex idx = model->getIdxForUID(selectedUID);
+    selectionModel->setCurrentIndex(idx,  QItemSelectionModel::Select);
 }
 
 
 void TIGLViewerWindow::applyModifications(){
-
+    std::string selectedUID = model->getUidForIdx(selectionModel->currentIndex());
+    bool blockB = watcher->blockSignals(true);  // we do not want to reopen the file during the moification
     model->disconnectAdapter();
     modificatorManager->applyCurrentModifications();    // Here updateCreatorInterface can be called because we write the primary cpacs file
     model->resetAdapter(adapter);
     treeView->hideColumn(3);
     modificatorManager->reset();
+    QModelIndex idx = model->getIdxForUID(selectedUID);
+    selectionModel->setCurrentIndex(idx,  QItemSelectionModel::Select);
+    watcher->blockSignals(blockB);
+    reopenFile();   // because we have diconnect it durring the write of the file
+
+
 }
 
 

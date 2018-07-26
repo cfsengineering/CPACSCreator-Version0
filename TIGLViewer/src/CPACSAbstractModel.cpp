@@ -126,6 +126,28 @@ QModelIndex CPACSAbstractModel::index(int row, int column, const QModelIndex &pa
         return QModelIndex();
 }
 
+
+
+QModelIndex CPACSAbstractModel::getIdxForUID(std::string uid) {
+    if( !isValid() || uid == ""){
+        return QModelIndex();
+    }else{
+        cpcr::CPACSTreeItem* item = creatorAdapter->getRoot()->getChildByUid(uid);
+        return getIndex(item, 0);
+    }
+}
+
+
+
+std::string CPACSAbstractModel::getUidForIdx(QModelIndex idx) {
+    if( !isValid() ) {
+        return "";
+    }else{
+        return getItem(idx)->getUid();
+    }
+}
+
+
 QModelIndex CPACSAbstractModel::getIndex(cpcr::CPACSTreeItem *item, int column) const
 {
     if( !isValid() || item == creatorAdapter->getRoot() || item == nullptr ){

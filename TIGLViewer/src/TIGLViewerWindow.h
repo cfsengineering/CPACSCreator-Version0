@@ -136,6 +136,7 @@ private:
     ModificatorManager* modificatorManager;
     ProfilesDBManager* profilesDB;
 
+
     QString currentFile;
     QString controlFileName;
     QFileSystemWatcher *watcher;
