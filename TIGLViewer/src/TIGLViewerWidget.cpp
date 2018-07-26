@@ -212,7 +212,7 @@ void TIGLViewerWidget::initializeOCC(const Handle(AIS_InteractiveContext)& aCont
         // Force a redraw to the new window on next paint event
         myViewResized = Standard_True;
         // Set default cursor as a cross
-        setMode( CurAction3d_Nothing );
+        setMode( CurAction3d_DynamicRotation ); // change to avoid selection bug
 
         myViewInitialized = Standard_True;
 
@@ -871,14 +871,15 @@ void TIGLViewerWidget::onRightButtonUp(  Qt::KeyboardModifiers nFlags, const QPo
 {
     myCurrentPoint = point;
     if ( nFlags & CASCADESHORTCUTKEY ) {
-        setMode( CurAction3d_Nothing );
+        setMode( CurAction3d_DynamicPanning );
     }
     else {
-        if ( myMode == CurAction3d_Nothing ) {
+        if ( myMode == CurAction3d_DynamicPanning ) {
+            setMode(CurAction3d_DynamicRotation);
 //            emit popupMenu ( this, point );
         }
         else {
-            setMode( CurAction3d_Nothing );
+            setMode( CurAction3d_DynamicPanning );
         }
     }
 }

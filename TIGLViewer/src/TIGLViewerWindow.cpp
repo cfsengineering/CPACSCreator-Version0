@@ -124,7 +124,10 @@ TIGLViewerWindow::TIGLViewerWindow()
     createMenus();
     updateMenus();
 
+
+
     loadSettings();
+
 
     statusBar()->showMessage(tr("A context menu is available by right-clicking"));
 
@@ -811,7 +814,9 @@ void TIGLViewerWindow::updateCreatorInterface()
 }
 
 
-void TIGLViewerWindow::applyModifications(){
+void TIGLViewerWindow::applyModifications()
+{
+
     std::string selectedUID = model->getUidForIdx(selectionModel->currentIndex());
     bool blockB = watcher->blockSignals(true);  // we do not want to reopen the file during the moification
     model->disconnectAdapter();
