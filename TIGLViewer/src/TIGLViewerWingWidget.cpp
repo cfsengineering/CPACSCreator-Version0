@@ -389,13 +389,6 @@ void TIGLViewerWingWidget::apply() {
 
     bool aRHasChanged = ( ! isApprox(internalAR, spinBoxAR->value() ) );
 
-    bool stdardizationHasChanged = ( internalStdAirfoils != checkBoxStdAirfoils->isChecked()
-                                     || internalStdPositionings != checkBoxStdPositionings->isChecked()
-                                     || internalStdSections != checkBoxStdSections->isChecked()
-                                     || internalStdAnchor != checkBoxStdAnchor->isChecked() );
-
-
-
 
     if( anchorHasChanged ){
         internalAnchorX = spinBoxAnchorX->value();
@@ -450,6 +443,12 @@ void TIGLViewerWingWidget::apply() {
         associateManager->adapter->writeToFile();   // we do this here to update all the change at once in the file
     }
 
+    // we reset the internal values form the file, because standardization is not guarantee by the functions above
+    associateManager->adapter->getStdValues(wingItem, internalStdAirfoils, internalStdSections, internalStdPositionings, internalStdAnchor);
+    bool stdardizationHasChanged = ( internalStdAirfoils != checkBoxStdAirfoils->isChecked()
+                                     || internalStdPositionings != checkBoxStdPositionings->isChecked()
+                                     || internalStdSections != checkBoxStdSections->isChecked()
+                                     || internalStdAnchor != checkBoxStdAnchor->isChecked() );
 
     if( stdardizationHasChanged ){
 

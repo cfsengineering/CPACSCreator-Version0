@@ -344,7 +344,7 @@ CPACSCreatorAdapter::setStdValues(cpcr::CPACSTreeItem *item, bool stdAirfoil, bo
         aircraftTree.positioningsStandardizationForWing(wingUID);
     }
 
-    // The file is rewrite with the previous functions, Carefull the treeItems can be changed!
+    // The file is rewrite with the previous functions, Careful the treeItems can be changed!
 
 
 }
