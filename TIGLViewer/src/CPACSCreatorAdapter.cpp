@@ -276,7 +276,7 @@ double CPACSCreatorAdapter::getWingAR(cpcr::CPACSTreeItem *item) {
 
 
 void
-CPACSCreatorAdapter::getAnchorValues(cpcr::CPACSTreeItem *item, double &x, double &y, double &z, QString &orientation) {
+CPACSCreatorAdapter::getAnchorValues(cpcr::CPACSTreeItem *item, double &x, double &y, double &z) {
 
     if( ! testItem(item, "wing")){
         return ;
@@ -286,40 +286,16 @@ CPACSCreatorAdapter::getAnchorValues(cpcr::CPACSTreeItem *item, double &x, doubl
     x = wingT.getTranslation().x;
     y = wingT.getTranslation().y;
     z = wingT.getTranslation().z;
-
-    if( wingT.getRotation() == cpcr::Point(0,0,0)){
-        orientation = "XY-Plane";
-    }else if(wingT.getRotation() == cpcr::Point(90,0,0) ){
-        orientation = "XZ-Plane";
-    }else {
-        orientation = "Custom";
-    }
-
-    if( (!( wingT.getScaling() == cpcr::Point(1,1,1)))  || orientation == "Custom"  ){
-        DLOG(INFO) << "getAnchorValues: None standard anchor detected for wing:" + item->getUid();
-    }
-
 }
 
 void
-CPACSCreatorAdapter::setAnchorValues(cpcr::CPACSTreeItem *item, double x, double y, double z, QString orientation) {
+CPACSCreatorAdapter::setAnchorValues(cpcr::CPACSTreeItem *item, double x, double y, double z) {
 
     if( ! testItem(item, "wing")){
         return ;
     }
     cpcr::CPACSTransformation wingT = getTransformation(item->getChild("transformation") ) ;
     wingT.setTranslation(cpcr::Point(x,y,z));
-    if(orientation == "XY-Plane"){
-        wingT.setRotation(cpcr::Point(0,0,0));
-    }else if( orientation == "XZ-Plane"){
-        wingT.setRotation(cpcr::Point(90,0,0));
-    }else if( orientation == "Custom"){
-        LOG(WARNING) << "setAnchorValues: orientation is custom -> no change in orientation will be performed";
-    }
-
-    if( (!( wingT.getScaling() == cpcr::Point(1,1,1)))  ){
-        DLOG(INFO) << "setAnchorValues:: None standard anchor detected for wing:" + item->getUid() + ". Consider to standardize the anchor.";
-    }
 
     setTransformation(item->getChild("transformation"), wingT);
 
@@ -372,3 +348,63 @@ CPACSCreatorAdapter::setStdValues(cpcr::CPACSTreeItem *item, bool stdAirfoil, bo
 
 
 }
+
+QString CPACSCreatorAdapter::getWingOrientation(cpcr::CPACSTreeItem *item) {
+
+    QString orientation = "not set";
+
+    if( ! testItem(item, "wing")){
+        return orientation ;
+    }
+
+    cpcr::CPACSTransformation wingT = getTransformation(item->getChild("transformation") ) ;
+
+    if( wingT.getRotation() == cpcr::Point(0,0,0)){
+        orientation = "horizontal";
+    }else if(wingT.getRotation() == cpcr::Point(90,0,0) ){
+        orientation = "vertical";
+    }else {
+        orientation = "custom";
+    }
+
+    return orientation;
+}
+
+
+
+void CPACSCreatorAdapter::setWingOrientation(cpcr::CPACSTreeItem *item, QString orientation) {
+
+
+    if( ! testItem(item, "wing")){
+        return  ;
+    }
+    cpcr::CPACSTransformation wingT = getTransformation(item->getChild("transformation") ) ;
+
+    if(orientation == "horizontal"){
+        wingT.setRotation(cpcr::Point(0,0,0));
+    }else if( orientation == "vertical"){
+        wingT.setRotation(cpcr::Point(90,0,0));
+    }else if( orientation == "custom"){
+        // we do nothing for custom because we do not know what the user mean
+    }
+
+    setTransformation(item->getChild("transformation"), wingT);
+
+}
+
+QString CPACSCreatorAdapter::getWingSymmetry(cpcr::CPACSTreeItem *item) {
+
+    if( ! testItem(item, "wing")){
+        return "error" ;
+    }
+    return QString(aircraftTree.getWingSymmetry(item->getUid()).c_str() );;
+}
+
+void CPACSCreatorAdapter::setWingSymmetry(cpcr::CPACSTreeItem *item, QString newSymmetry) {
+    if( ! testItem(item, "wing")){
+        return ;
+    }
+
+    aircraftTree.setWingSymmetry(item->getUid(), newSymmetry.toStdString() );
+}
+

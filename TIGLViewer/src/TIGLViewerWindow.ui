@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1141</width>
-    <height>799</height>
+    <height>830</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -475,6 +475,12 @@
             <property name="decimals">
              <number>3</number>
             </property>
+            <property name="minimum">
+             <double>-1000000.000000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>1000000.000000000000000</double>
+            </property>
            </widget>
           </item>
           <item>
@@ -495,6 +501,12 @@
             <property name="decimals">
              <number>3</number>
             </property>
+            <property name="minimum">
+             <double>-1000000.000000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>1000000.000000000000000</double>
+            </property>
            </widget>
           </item>
           <item>
@@ -514,6 +526,12 @@
            <widget class="QDoubleSpinBox" name="spinBoxAnchorZ">
             <property name="decimals">
              <number>3</number>
+            </property>
+            <property name="minimum">
+             <double>-1000000.000000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>1000000.000000000000000</double>
             </property>
            </widget>
           </item>
@@ -1201,6 +1219,9 @@
            <widget class="QDoubleSpinBox" name="spinBoxAR">
             <property name="decimals">
              <number>3</number>
+            </property>
+            <property name="minimum">
+             <double>-1000000.000000000000000</double>
             </property>
            </widget>
           </item>

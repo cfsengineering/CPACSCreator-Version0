@@ -19,6 +19,10 @@ void TIGLViewerWingWidget::init(ModificatorManager * associate ) {
     spinBoxAnchorY = this->findChild<QDoubleSpinBox*>("spinBoxAnchorY");
     spinBoxAnchorZ = this->findChild<QDoubleSpinBox*>("spinBoxAnchorZ");
 
+    // orientation interface
+    comboBoxWingOrientation = this->findChild<QComboBox*>("comboBoxWingOrientation");
+    comboBoxSymmetry = this->findChild<QComboBox*>("comboBoxSymmetry");
+
     // Retrieve component of the sweep interface
     btnExpendSweepDetails = this->findChild<QPushButton*>("btnExpendSweepDetails");
     spinBoxSweep = this->findChild<QDoubleSpinBox*>("spinBoxSweep");
@@ -91,6 +95,15 @@ void TIGLViewerWingWidget::init(ModificatorManager * associate ) {
 
     comboBoxAirfoil->addItems(associate->profilesDB->getAvailableAirfoils());
 
+    comboBoxWingOrientation->addItem("horizontal");
+    comboBoxWingOrientation->addItem("vertical");
+
+    comboBoxSymmetry->addItem("x-y-plane");
+    comboBoxSymmetry->addItem("x-z-plane");
+    comboBoxSymmetry->addItem("y-z-plane");
+    comboBoxSymmetry->addItem("no-symmetry");
+
+
 
     // alterable span area ar
     checkBoxIsAreaConstant->setChecked(false);
@@ -98,9 +111,6 @@ void TIGLViewerWingWidget::init(ModificatorManager * associate ) {
     checkBoxIsARConstant->setChecked(true);
 
     // anchor orientation
-    //comboBoxAnchorOrientation->addItem("XY-Plane");
-    //comboBoxAnchorOrientation->addItem("XZ-Plane");
-    //comboBoxAnchorOrientation->addItem("Custom");
 
 
 
@@ -268,16 +278,24 @@ void TIGLViewerWingWidget::setWing(cpcr::CPACSTreeItem *wing) {
     wingItem = wing;
 
     // set anchor
-    associateManager->adapter->getAnchorValues(wing, internalAnchorX, internalAnchorY, internalAnchorZ, internalAnchorOrientation);
+    associateManager->adapter->getAnchorValues(wing, internalAnchorX, internalAnchorY, internalAnchorZ);
     spinBoxAnchorX->setValue(internalAnchorX);
     spinBoxAnchorY->setValue(internalAnchorY);
     spinBoxAnchorZ->setValue(internalAnchorZ);
-//    int index = comboBoxAnchorOrientation->findText(internalAnchorOrientation);
-//    if ( index != -1 ) { // -1 for not found
-//        comboBoxAnchorOrientation->setCurrentIndex(index);
-//    }else{
-//        LOG(ERROR) << "TIGLViewerWingWidget::setWing: Unable to find anchor orientation";
-//    }
+
+    // set orientration & symmetry
+    internalWingOrientation = associateManager->adapter->getWingOrientation(wingItem);
+    int idx = comboBoxWingOrientation->findText(internalWingOrientation);
+    if(idx == -1){  // case for custom
+        idx = comboBoxWingOrientation->count();
+        comboBoxWingOrientation->addItem(internalWingOrientation);
+    }
+    comboBoxWingOrientation->setCurrentIndex(idx);
+
+    internalSymmetry = associateManager->adapter->getWingSymmetry(wingItem);
+    idx = comboBoxSymmetry->findText(internalSymmetry);
+    comboBoxSymmetry->setCurrentIndex(idx);
+
 
     // set sweep
     internalMethod = comboBoxSweepMethod->currentText(); // retrieve the information of the interface -> when we switch from one wing to the other method and chord are conserved
@@ -317,7 +335,7 @@ void TIGLViewerWingWidget::setWing(cpcr::CPACSTreeItem *wing) {
     comboBoxAirfoil->addItems(associateManager->profilesDB->getAvailableAirfoils());
 
     internalAirfoilUID = associateManager->adapter->getAirfoilValueForWing(wingItem);
-    int idx = comboBoxAirfoil->findText(internalAirfoilUID);
+    idx = comboBoxAirfoil->findText(internalAirfoilUID);
     if(idx == -1){  // case for combined or None
         idx = comboBoxAirfoil->count();
         comboBoxAirfoil->addItem(internalAirfoilUID);
@@ -354,6 +372,10 @@ void TIGLViewerWingWidget::apply() {
                               || (! isApprox(internalAnchorY, spinBoxAnchorY->value()))
                               || (! isApprox(internalAnchorZ , spinBoxAnchorZ->value())) );
 
+    bool orientationHasChanged = ( internalWingOrientation != comboBoxWingOrientation->currentText() );
+
+    bool symmetryHasChanged = (internalSymmetry != comboBoxSymmetry->currentText() );
+
     bool sweepHasChanged = ( (!isApprox(internalSweep, spinBoxSweep->value()) )
                              ||(!isApprox(internalSweepChord, spinBoxSweepChord->value() ) )
                              || internalMethod != comboBoxSweepMethod->currentText()) ;
@@ -373,15 +395,25 @@ void TIGLViewerWingWidget::apply() {
                                      || internalStdAnchor != checkBoxStdAnchor->isChecked() );
 
 
+
+
     if( anchorHasChanged ){
         internalAnchorX = spinBoxAnchorX->value();
         internalAnchorY = spinBoxAnchorY->value();
         internalAnchorZ = spinBoxAnchorZ->value();
-        //internalAnchorOrientation = comboBoxAnchorOrientation->currentText();
-        //associateManager->adapter->setAnchorValues(wingItem, internalAnchorX, internalAnchorY,
-                                                   //internalAnchorZ, internalAnchorOrientation);
+        associateManager->adapter->setAnchorValues(wingItem, internalAnchorX, internalAnchorY, internalAnchorZ);
     }
 
+    if( orientationHasChanged ){
+        internalWingOrientation = comboBoxWingOrientation->currentText();
+        associateManager->adapter->setWingOrientation(wingItem, internalWingOrientation);
+    }
+
+
+    if (symmetryHasChanged){
+        internalSymmetry = comboBoxSymmetry->currentText();
+        associateManager->adapter->setWingSymmetry(wingItem, internalSymmetry);
+    }
 
     if(sweepHasChanged){ //TODO do not change if the change is to small
         internalSweep = spinBoxSweep->value();
@@ -414,7 +446,7 @@ void TIGLViewerWingWidget::apply() {
 
 
     if(sweepHasChanged || airfoilHasChanged || dihedralHasChanged || spanHasChanged
-       || aRHasChanged || anchorHasChanged){
+       || aRHasChanged || anchorHasChanged || symmetryHasChanged || orientationHasChanged){
         associateManager->adapter->writeToFile();   // we do this here to update all the change at once in the file
     }
 

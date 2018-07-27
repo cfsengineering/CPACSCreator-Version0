@@ -38,10 +38,18 @@ public:
     void setPositioning(cpcr::CPACSTreeItem* item, cpcr::CPACSPositioning );
 
     // set the anchor values passed as argument
-    void getAnchorValues(cpcr::CPACSTreeItem* item, double& x, double& y, double& z, QString& orientation );
+    void getAnchorValues(cpcr::CPACSTreeItem* item, double& x, double& y, double& z);
 
-    void setAnchorValues(cpcr::CPACSTreeItem* item, double x, double y, double z, QString orientation );
+    void setAnchorValues(cpcr::CPACSTreeItem* item, double x, double y, double z );
 
+    QString getWingOrientation(cpcr::CPACSTreeItem* item);
+
+    void setWingOrientation(cpcr::CPACSTreeItem* item, QString wingOrientation );
+
+
+    QString getWingSymmetry(cpcr::CPACSTreeItem* item);
+
+    void setWingSymmetry( cpcr::CPACSTreeItem* itemt, QString newSymmetry);
 
     QStringList getAirfoilsUid();
     // return "Combined" if multiple airfoil is used,

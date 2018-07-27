@@ -61,6 +61,10 @@ private:
     QDoubleSpinBox * spinBoxAnchorY ;
     QDoubleSpinBox * spinBoxAnchorZ ;
 
+    // orientation interface
+    QComboBox * comboBoxWingOrientation;
+    QComboBox * comboBoxSymmetry;
+
 
     // sweep interface
     QDoubleSpinBox * spinBoxSweep ;
@@ -109,11 +113,16 @@ private:
     // use to inform the setStdCheckBoxesFromComboBox that the change is called form setStdComboBoxFromStdCheckBoxes
     bool callFromSetStdComboBox;
 
+    // internal values are used to keep track of the previous values to notice if a change occurs.
+
     // internal anchor
     double internalAnchorX;
     double internalAnchorY;
     double internalAnchorZ;
-    QString internalAnchorOrientation;
+
+    // internal orientation
+    QString internalWingOrientation;
+    QString internalSymmetry;
 
     // internal standardization
     bool internalStdAirfoils;
