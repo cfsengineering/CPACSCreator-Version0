@@ -16,6 +16,17 @@ namespace cpcr{
 
     enum PLANE {XY_PLANE, XZ_PLANE, YZ_PLANE, NO_PLANE, INVALID};
 
+
+    /**
+     * @brief Process and modify a CPACS aircraft.
+     *
+     * This class first build a tree structure based on the geometric data of a aircraft described in a CPACS file.
+     * Then, different functions can be call on this representation of the aircraft. For example, the wing sweep of
+     * can be changed,the area of a wing can be retrieve, the transformation element of a fuselage can be changed.
+     * It is also possible to rewrite the CPACS file such that this tree respect the Creator Standard for this particular
+     * aircraft. The result of these functions can be saved back into the input file or into another file.
+     *
+     */
     class AircraftTree: public CPACSTree {
 
 

@@ -25,16 +25,15 @@
 namespace cpcr {
 
 /**
- *  Read and write cpacs file.
  *
- *  Allow access to CPACS elements, no logic nor intelligence is implemented in this class.
- *  It can be view as a "dummy" modifier.
+ * @brief Dummy modifier for CPACS file.
  *
- *
+ * This class open a CPACS file and allow the user to read and write into the file. This class has no logic,
+ * nor intelligence implemented in it. It only helps to retrieve and write the data. In particular, it takes other
+ * CPACSCreatorType as CPACSTransformation or CPACSProfile and write it back in the file. It can also create such
+ * CPACSCreatorType from the file. The target CPACS element is always given as UniqueXPath.
  *
  */
-
-
 class CPACSFile {
 
 public:

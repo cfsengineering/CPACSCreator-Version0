@@ -13,7 +13,12 @@
 
 namespace cpcr {
 
-
+    /**
+     * @brief Reprensent a CPACS Profile
+     *
+     * This class can be view as structure that hold a CPACS profile.
+     *
+     */
     class CPACSPointsProfile {
     public:
 
