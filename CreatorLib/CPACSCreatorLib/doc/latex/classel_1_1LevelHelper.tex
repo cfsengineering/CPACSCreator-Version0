@@ -1,0 +1,102 @@
+\hypertarget{classel_1_1LevelHelper}{\section{el\-:\-:Level\-Helper Class Reference}
+\label{classel_1_1LevelHelper}\index{el\-::\-Level\-Helper@{el\-::\-Level\-Helper}}
+}
+
+
+Static class that contains helper functions for \hyperlink{namespaceel_ab0ac6091262344c52dd2d3ad099e8e36}{el\-::\-Level}.  
+
+
+
+
+{\ttfamily \#include $<$easylogging++.\-h$>$}
+
+Inheritance diagram for el\-:\-:Level\-Helper\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classel_1_1LevelHelper}
+\end{center}
+\end{figure}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classel_1_1LevelHelper_a6576fd7cd6d1d839952145115c6e4b38}{static base\-::type\-::\-Enum\-Type \hyperlink{classel_1_1LevelHelper_a6576fd7cd6d1d839952145115c6e4b38}{cast\-To\-Int} (\hyperlink{namespaceel_ab0ac6091262344c52dd2d3ad099e8e36}{Level} level)}\label{classel_1_1LevelHelper_a6576fd7cd6d1d839952145115c6e4b38}
+
+\begin{DoxyCompactList}\small\item\em Casts level to int, useful for iterating through enum. \end{DoxyCompactList}\item 
+\hypertarget{classel_1_1LevelHelper_a1279f27df29a003df5ecc3d0bf4dacbb}{static \hyperlink{namespaceel_ab0ac6091262344c52dd2d3ad099e8e36}{Level} \hyperlink{classel_1_1LevelHelper_a1279f27df29a003df5ecc3d0bf4dacbb}{cast\-From\-Int} (base\-::type\-::\-Enum\-Type l)}\label{classel_1_1LevelHelper_a1279f27df29a003df5ecc3d0bf4dacbb}
+
+\begin{DoxyCompactList}\small\item\em Casts int(ushort) to level, useful for iterating through enum. \end{DoxyCompactList}\item 
+static const char $\ast$ \hyperlink{classel_1_1LevelHelper_a53b3e226a09af6e87c2072c115b3ba1a}{convert\-To\-String} (\hyperlink{namespaceel_ab0ac6091262344c52dd2d3ad099e8e36}{Level} level)
+\begin{DoxyCompactList}\small\item\em Converts level to associated const char$\ast$. \end{DoxyCompactList}\item 
+static \hyperlink{namespaceel_ab0ac6091262344c52dd2d3ad099e8e36}{Level} \hyperlink{classel_1_1LevelHelper_a4ff401c62931609c849d580fb6ad2028}{convert\-From\-String} (const char $\ast$level\-Str)
+\begin{DoxyCompactList}\small\item\em Converts from level\-Str to Level. \end{DoxyCompactList}\item 
+static void \hyperlink{classel_1_1LevelHelper_a94449b79778145f4c58fd1da6bcaf45d}{for\-Each\-Level} (base\-::type\-::\-Enum\-Type $\ast$start\-Index, const std\-::function$<$ bool(void)$>$ \&fn)
+\begin{DoxyCompactList}\small\item\em Applies specified function to each level starting from start\-Index. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classel_1_1LevelHelper_a3ecfe43d5b242e9946bad7f61ea4d89d}{static const base\-::type\-::\-Enum\-Type \hyperlink{classel_1_1LevelHelper_a3ecfe43d5b242e9946bad7f61ea4d89d}{k\-Min\-Valid} = static\-\_\-cast$<$base\-::type\-::\-Enum\-Type$>$(\hyperlink{namespaceel_ab0ac6091262344c52dd2d3ad099e8e36add4ec0ac4e58f7c32a01244ae91150b1}{Level\-::\-Trace})}\label{classel_1_1LevelHelper_a3ecfe43d5b242e9946bad7f61ea4d89d}
+
+\begin{DoxyCompactList}\small\item\em Represents minimum valid level. Useful when iterating through enum. \end{DoxyCompactList}\item 
+\hypertarget{classel_1_1LevelHelper_aa06e80c65db5c336c4aad25872cf9a48}{static const base\-::type\-::\-Enum\-Type \hyperlink{classel_1_1LevelHelper_aa06e80c65db5c336c4aad25872cf9a48}{k\-Max\-Valid} = static\-\_\-cast$<$base\-::type\-::\-Enum\-Type$>$(\hyperlink{namespaceel_ab0ac6091262344c52dd2d3ad099e8e36a4059b0251f66a18cb56f544728796875}{Level\-::\-Info})}\label{classel_1_1LevelHelper_aa06e80c65db5c336c4aad25872cf9a48}
+
+\begin{DoxyCompactList}\small\item\em Represents maximum valid level. This is used internally and you should not need it. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Static class that contains helper functions for \hyperlink{namespaceel_ab0ac6091262344c52dd2d3ad099e8e36}{el\-::\-Level}. 
+
+\subsection{Member Function Documentation}
+\hypertarget{classel_1_1LevelHelper_a4ff401c62931609c849d580fb6ad2028}{\index{el\-::\-Level\-Helper@{el\-::\-Level\-Helper}!convert\-From\-String@{convert\-From\-String}}
+\index{convert\-From\-String@{convert\-From\-String}!el::LevelHelper@{el\-::\-Level\-Helper}}
+\subsubsection[{convert\-From\-String}]{\setlength{\rightskip}{0pt plus 5cm}static {\bf Level} el\-::\-Level\-Helper\-::convert\-From\-String (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{level\-Str}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}}\label{classel_1_1LevelHelper_a4ff401c62931609c849d580fb6ad2028}
+
+
+Converts from level\-Str to Level. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em level\-Str} & Upper case string based level. Lower case is also valid but providing upper case is recommended. \\
+\hline
+\end{DoxyParams}
+\hypertarget{classel_1_1LevelHelper_a53b3e226a09af6e87c2072c115b3ba1a}{\index{el\-::\-Level\-Helper@{el\-::\-Level\-Helper}!convert\-To\-String@{convert\-To\-String}}
+\index{convert\-To\-String@{convert\-To\-String}!el::LevelHelper@{el\-::\-Level\-Helper}}
+\subsubsection[{convert\-To\-String}]{\setlength{\rightskip}{0pt plus 5cm}static const char$\ast$ el\-::\-Level\-Helper\-::convert\-To\-String (
+\begin{DoxyParamCaption}
+\item[{{\bf Level}}]{level}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}}\label{classel_1_1LevelHelper_a53b3e226a09af6e87c2072c115b3ba1a}
+
+
+Converts level to associated const char$\ast$. 
+
+\begin{DoxyReturn}{Returns}
+Upper case string based level. 
+\end{DoxyReturn}
+\hypertarget{classel_1_1LevelHelper_a94449b79778145f4c58fd1da6bcaf45d}{\index{el\-::\-Level\-Helper@{el\-::\-Level\-Helper}!for\-Each\-Level@{for\-Each\-Level}}
+\index{for\-Each\-Level@{for\-Each\-Level}!el::LevelHelper@{el\-::\-Level\-Helper}}
+\subsubsection[{for\-Each\-Level}]{\setlength{\rightskip}{0pt plus 5cm}static void el\-::\-Level\-Helper\-::for\-Each\-Level (
+\begin{DoxyParamCaption}
+\item[{base\-::type\-::\-Enum\-Type $\ast$}]{start\-Index, }
+\item[{const std\-::function$<$ bool(void)$>$ \&}]{fn}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}}\label{classel_1_1LevelHelper_a94449b79778145f4c58fd1da6bcaf45d}
+
+
+Applies specified function to each level starting from start\-Index. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em start\-Index} & initial value to start the iteration from. This is passed as pointer and is left-\/shifted so this can be used inside function (fn) to represent current level. \\
+\hline
+{\em fn} & function to apply with each level. This bool represent whether or not to stop iterating through levels. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+/users/disk9/cfse/\-Stage\-\_\-\-Malo/\-C\-P\-A\-C\-S\-Creator\-Lib/\-C\-P\-A\-C\-S\-Creator\-Lib/easylogging++.\-h\end{DoxyCompactItemize}

@@ -3,7 +3,6 @@
 //
 
 #include "TIGLViewerWingWidget.h"
-#include "CPACSCreatorLib/easylogging++.h"
 #include "ModificatorManager.h"
 
 TIGLViewerWingWidget::TIGLViewerWingWidget(QWidget *parent) : ModificatorWidget(parent){

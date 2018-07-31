@@ -960,7 +960,8 @@ void TIGLViewerWindow::drawPoint()
     if (dialog.exec() != QDialog::Accepted) {
         return;
     }
-    
+
+
     gp_Pnt point = dialog.getPoint().Get_gp_Pnt();
     std::stringstream stream;
     stream << "(" << point.X() << ", " << point.Y() << ", " << point.Z() << ")";

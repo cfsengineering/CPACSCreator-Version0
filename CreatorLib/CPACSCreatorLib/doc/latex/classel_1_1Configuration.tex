@@ -1,0 +1,85 @@
+\hypertarget{classel_1_1Configuration}{\section{el\-:\-:Configuration Class Reference}
+\label{classel_1_1Configuration}\index{el\-::\-Configuration@{el\-::\-Configuration}}
+}
+
+
+Represents single configuration that has representing level, configuration type and a string based value.  
+
+
+
+
+{\ttfamily \#include $<$easylogging++.\-h$>$}
+
+Inheritance diagram for el\-:\-:Configuration\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classel_1_1Configuration}
+\end{center}
+\end{figure}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{classel_1_1Configuration_1_1Predicate}{Predicate}
+\begin{DoxyCompactList}\small\item\em Used to find configuration from configuration (pointers) repository. Avoid using it. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classel_1_1Configuration_a71867a89e7d44cac62e0a436f01b484d}{{\bfseries Configuration} (const \hyperlink{classel_1_1Configuration}{Configuration} \&c)}\label{classel_1_1Configuration_a71867a89e7d44cac62e0a436f01b484d}
+
+\item 
+\hypertarget{classel_1_1Configuration_a80bc5b14f61906633cf695ea62e454a2}{\hyperlink{classel_1_1Configuration}{Configuration} \& {\bfseries operator=} (const \hyperlink{classel_1_1Configuration}{Configuration} \&c)}\label{classel_1_1Configuration_a80bc5b14f61906633cf695ea62e454a2}
+
+\item 
+\hypertarget{classel_1_1Configuration_a1a00abf955e028debaaf7556a647dbf5}{\hyperlink{classel_1_1Configuration_a1a00abf955e028debaaf7556a647dbf5}{Configuration} (\hyperlink{namespaceel_ab0ac6091262344c52dd2d3ad099e8e36}{Level} \hyperlink{classel_1_1Configuration_a66a96cf46d20204c50718f8a5e3622e2}{level}, \hyperlink{namespaceel_a281f5db6d6163678bc68a8b23b59e124}{Configuration\-Type} \hyperlink{classel_1_1Configuration_aab5091dcca176e309c0a2268ff55db0d}{configuration\-Type}, const std\-::string \&\hyperlink{classel_1_1Configuration_ab31605eb195a222cf32baa4922bb9a3c}{value})}\label{classel_1_1Configuration_a1a00abf955e028debaaf7556a647dbf5}
+
+\begin{DoxyCompactList}\small\item\em Full constructor used to sets value of configuration. \end{DoxyCompactList}\item 
+\hypertarget{classel_1_1Configuration_a66a96cf46d20204c50718f8a5e3622e2}{\hyperlink{namespaceel_ab0ac6091262344c52dd2d3ad099e8e36}{Level} \hyperlink{classel_1_1Configuration_a66a96cf46d20204c50718f8a5e3622e2}{level} (void) const }\label{classel_1_1Configuration_a66a96cf46d20204c50718f8a5e3622e2}
+
+\begin{DoxyCompactList}\small\item\em Gets level of current configuration. \end{DoxyCompactList}\item 
+\hypertarget{classel_1_1Configuration_aab5091dcca176e309c0a2268ff55db0d}{\hyperlink{namespaceel_a281f5db6d6163678bc68a8b23b59e124}{Configuration\-Type} \hyperlink{classel_1_1Configuration_aab5091dcca176e309c0a2268ff55db0d}{configuration\-Type} (void) const }\label{classel_1_1Configuration_aab5091dcca176e309c0a2268ff55db0d}
+
+\begin{DoxyCompactList}\small\item\em Gets configuration type of current configuration. \end{DoxyCompactList}\item 
+\hypertarget{classel_1_1Configuration_ab31605eb195a222cf32baa4922bb9a3c}{const std\-::string \& \hyperlink{classel_1_1Configuration_ab31605eb195a222cf32baa4922bb9a3c}{value} (void) const }\label{classel_1_1Configuration_ab31605eb195a222cf32baa4922bb9a3c}
+
+\begin{DoxyCompactList}\small\item\em Gets string based configuration value. \end{DoxyCompactList}\item 
+void \hyperlink{classel_1_1Configuration_a04755de11422d7570869433ea157b705}{set\-Value} (const std\-::string \&\hyperlink{classel_1_1Configuration_ab31605eb195a222cf32baa4922bb9a3c}{value})
+\begin{DoxyCompactList}\small\item\em Set string based configuration value. \end{DoxyCompactList}\item 
+\hypertarget{classel_1_1Configuration_a82c87e1a93211a1d21da99570f47dd49}{virtual void {\bfseries log} (el\-::base\-::type\-::ostream\-\_\-t \&os) const }\label{classel_1_1Configuration_a82c87e1a93211a1d21da99570f47dd49}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Represents single configuration that has representing level, configuration type and a string based value. 
+
+String based value means any value either its boolean, integer or string itself, it will be embedded inside quotes and will be parsed later.
+
+Consider some examples below\-:
+\begin{DoxyItemize}
+\item \hyperlink{classel_1_1Configuration}{el\-::\-Configuration} conf\-Enabled\-Info(\hyperlink{namespaceel_ab0ac6091262344c52dd2d3ad099e8e36a4059b0251f66a18cb56f544728796875}{el\-::\-Level\-::\-Info}, \hyperlink{namespaceel_a281f5db6d6163678bc68a8b23b59e124a00d23a76e43b46dae9ec7aa9dcbebb32}{el\-::\-Configuration\-Type\-::\-Enabled}, \char`\"{}true\char`\"{});
+\item \hyperlink{classel_1_1Configuration}{el\-::\-Configuration} conf\-Max\-Log\-File\-Size\-Info(\hyperlink{namespaceel_ab0ac6091262344c52dd2d3ad099e8e36a4059b0251f66a18cb56f544728796875}{el\-::\-Level\-::\-Info}, \hyperlink{namespaceel_a281f5db6d6163678bc68a8b23b59e124a4b35e615142d60db6383426f051e700b}{el\-::\-Configuration\-Type\-::\-Max\-Log\-File\-Size}, \char`\"{}2048\char`\"{});
+\item \hyperlink{classel_1_1Configuration}{el\-::\-Configuration} conf\-Filename\-Info(\hyperlink{namespaceel_ab0ac6091262344c52dd2d3ad099e8e36a4059b0251f66a18cb56f544728796875}{el\-::\-Level\-::\-Info}, \hyperlink{namespaceel_a281f5db6d6163678bc68a8b23b59e124a1351017ac6423911223bc19a8cb7c653}{el\-::\-Configuration\-Type\-::\-Filename}, \char`\"{}/var/log/my.\-log\char`\"{}); 
+\end{DoxyItemize}
+
+\subsection{Member Function Documentation}
+\hypertarget{classel_1_1Configuration_a04755de11422d7570869433ea157b705}{\index{el\-::\-Configuration@{el\-::\-Configuration}!set\-Value@{set\-Value}}
+\index{set\-Value@{set\-Value}!el::Configuration@{el\-::\-Configuration}}
+\subsubsection[{set\-Value}]{\setlength{\rightskip}{0pt plus 5cm}void el\-::\-Configuration\-::set\-Value (
+\begin{DoxyParamCaption}
+\item[{const std\-::string \&}]{value}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{classel_1_1Configuration_a04755de11422d7570869433ea157b705}
+
+
+Set string based configuration value. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & Value to set. Values have to be std\-::string; For boolean values use \char`\"{}true\char`\"{}, \char`\"{}false\char`\"{}, for any integral values use them in quotes. They will be parsed when configuring \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+/users/disk9/cfse/\-Stage\-\_\-\-Malo/\-C\-P\-A\-C\-S\-Creator\-Lib/\-C\-P\-A\-C\-S\-Creator\-Lib/easylogging++.\-h\end{DoxyCompactItemize}

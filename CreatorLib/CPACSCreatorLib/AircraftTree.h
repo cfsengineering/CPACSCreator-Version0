@@ -1,0 +1,484 @@
+//
+// Created by makem on 29/04/18.
+//
+
+#ifndef CPACSCREATORLIBANDTESTS_AIRCRAFTTREE_H
+#define CPACSCREATORLIBANDTESTS_AIRCRAFTTREE_H
+
+
+#include "CPACSTree.h"
+#include "tigl.h"
+#include <map>
+
+
+namespace cpcr{
+
+
+    enum PLANE {XY_PLANE, XZ_PLANE, YZ_PLANE, NO_PLANE, INVALID};
+
+    class AircraftTree: public CPACSTree {
+
+
+    public:
+
+        AircraftTree();
+        ~AircraftTree();
+
+
+        inline TiglCPACSConfigurationHandle* getTiglHandle() { return  tiglHandle;};
+
+        void build(std::string file, UniqueXPath root) override ;
+
+        void reBuild();
+
+        void close();
+
+        void writeToFile()  ;
+
+        void writeToFile(std::string fileName) ;
+
+
+        /*
+         * HIGH LEVEL FUNCITONS FOR GEOMETRY OF THE AIRCRAFT
+         */
+
+
+        /***
+         * Represent the wing a graph.
+         * This mean that each element used in the wing is a vertex and each connection between two elements is a edge.
+         * Element that does have any connection are not in the graph.
+         * This represent basically the connection described in segments section of the cpacs.
+         * @param wing
+         * @return
+         */
+        std::map<CPACSTreeItem*, std::vector<CPACSTreeItem*> > getWingGraph(CPACSTreeItem *wing);
+
+
+        /***
+         * Return a graph from root element to tip element, goining through all elements in "wing order".
+         * If the wing graph can not be expressed in a such way a Exception is throw.
+         *
+         * @param wingGraph
+         * @return
+         */
+        std::vector<CPACSTreeItem* > formatGraph(std::map<CPACSTreeItem*, std::vector<CPACSTreeItem*> > wingGraph);
+
+
+        void completeStandardizationForWing(UID wingUID);
+
+
+        bool isWingStandardized(UID wingUID);
+
+
+        bool checkIfAirfoilsAreStandardizedForWing( UID wingUID);
+
+
+        void airfoilsStandardizationForWing(UID wingUID);
+
+        /***
+         * Check if the positionings used by the wing is standard.
+         *
+         * This mean that the translation of each elements is only given by positioning
+         * and that the positioning are define incrementally from root to tip.
+         * This implies that all positionings depend on the previous one.
+         *
+         *
+         * @param wing
+         * @return
+         */
+        bool checkIfPositioningsAreStandardizedForWing(UID wingUID);
+
+        void positioningsStandardizationForWing(UID wingUID);
+
+
+
+
+        bool checkIfOneSectionOneElementForWing(UID wingUID);
+
+        /**
+         * Create one section for each element.
+         *
+         * @remark The aircraft tree will be save in file and rebuild, all the CPACSTreeItem will change !!!!!!!!!
+         * @param wing
+         */
+        void oneSectionOneElementStandardizationForWing(UID wingUID);
+
+
+
+
+        bool checkIfWingTransformationIsStandardizedForWing(UID wingUID);
+
+
+
+
+        void wingTransformationStandardization(UID wingUID);
+
+
+
+        /***
+         * Set the wing transformation without any remarkable changes on the output.
+         * @param wing
+         * @param newTransformation
+         */
+        void setWingTransformation(UID wingUID, const CPACSTransformation& newTransformation );
+
+
+
+
+
+        /**
+         * Evaluate which transform is more adapted for the wing.
+         * 1) The origin of the transform is postionned (by translation) to the leading edge of the root element.
+         * 2) If the wing seems to be on the XZ plane (global dihedral higher than 45 degree),
+         * a transformation of 90 degree around X seems appropriate. Otherwise no rotation is perform on the wing.
+         *
+         *
+         * @param wing
+         * @return The new standardized transformation
+         */
+        CPACSTransformation determineWingTransformation(UID wingUID);
+
+
+
+
+        /*
+         * Add the profile defined in the the file in the airfoils profiles of CPACS file.
+         * If a profile with a similar UID (filename) already exist, the function add a suffix.
+         * Then all elements in the wing have there airfoilUID changed to this new airfoil UID.
+         *
+         * @param  wingUid : the wing that will use this airfoil
+         * @param filename : the file that contains the list of point to define the profile
+         * @param keepChord : if true the element transformation will be modified such that the TE and LE
+         * are at the same position, otherwise only the airfoilUID of element are updated.
+         */
+        void setWingAirfoilsFromExternalFile(UID wingUID, std::string filename, bool keepChord = true);
+
+
+
+        /**
+         *
+         * Change all the airfoil used by this wing.
+         * The airfoil must already by present in the CPACS file, if not a error is throw.
+         *
+         *
+         * @param wingUID : the wing that will use this airfoil
+         * @param airfoilUID : the airfoil UID to be used
+         * @param keepChord :  if true the element transformation will be modified such that the TE and LE
+         * are at the same position, otherwise only the airfoilUID of element are updated.
+         */
+        void setWingAirfoilsByUID(UID wingUID, UID airfoilUID, bool keepChord = true);
+
+
+
+
+        /**
+         * Return the wing airfoil uid used by the wing given as parameter.
+         * If the same airfoil is used by multiples elements, the vector will contains this uid only once;
+         * If a airfoil uid is in a element but this element is not used in any segment, the airfoil uid will not be present
+         * @param wingUID: the analyzed wing
+         * @return the list of used uid
+         *
+         */
+        std::vector<UID> getAllAirfoilsUIDInThisWing(UID wingUID);
+
+
+        double getWingDihedral(UID wingUID, double chordPercent = 0);
+
+        double getWingWorldDihedral(UID wingUID, double chordPercent = 0);
+
+
+
+        void setWingDihedral(UID wingUID, double dihedral,  double chordPercent = 0);
+
+
+        /**
+         * Set symmetry attribute of the wing.
+         * If a invalid symmetry is given an error is throw.
+         * @param wingUID
+         */
+        void setWingSymmetry(UID wingUID, std::string);
+
+
+
+        /**
+         * Retrieve the symmetry attribute of the wing.
+         * @param wingUID
+         */
+        std::string getWingSymmetry(UID wingUID);
+
+
+        /**
+         * Get the sweep angle of the wing using the given chord percent or the the leading (chord percent = 0) by default.
+         *
+         * @param wingUID
+         * @param chordPercent the percentage of the chord to use for computing the sweep angle. A percentage of 0 means
+         * taht we take the leading edge and a percent of 1 means that we take the trailing edge
+         * @return sweep angle
+         * @remark This method use tigl3 to get the position of the point on the chord.
+         *
+         */
+        double getWingSweep(UID wingUID, double chordPercent = 0);
+
+
+
+
+
+
+        /**
+         * Set the sweep angle of the wing using the leading edge or the cgiven chord percentage.
+         * This method conserve the direction and the scaling of every airfoils. But, if the some airfoils are not
+         * on the XZ-plane, the area may not be preserve.
+         *
+         *
+         * @param wingUID
+         * @param sweepAngle
+         * @param chordPercent
+         */
+        void setWingSweepByTranslation(UID wingUID, double sweepAngle, double chordPercent = 0);
+
+
+
+
+
+        /**
+         * Set the sweep angle of the wing using the leading edge or the cord percentage.
+         * Shearing -> constante area
+         * @param wingUID
+         * @param sweepAngle
+         */
+        void setWingSweepByShearing(UID wingUID, double sweepAngle, double chordPercent = 0);
+
+
+
+
+
+
+
+        /*
+         *  FUNCTIONS TO RETRIEVE 3D INFORMATIONS
+         */
+
+
+        /**
+         * @brief return the a matrix that represent all the affine transforms that is apply on the element
+         * @param elementUID
+         * @param wingItem
+         * @return an Affine 4D matrix
+         */
+        Eigen::Matrix4d getGlobalTransformMatrixOfElement( UID elementUID);
+
+
+
+        /**
+         * Get all the treeItems that can influence the position of the CPACSElement given as parameter.
+         * This means that all the Transformation and Positioning that influence this particular element are returned
+         * as a vector composed of pair of the form <TreeItem*, Matrix4d>. The Matrix4d represent the transformation
+         * in the world coordinate. The first pair of the vector is the first transformation apply on the CPACSElement
+         * and the last pair is the last transformation apply on the CPACSElement. So we get the 4 matrices:
+         *
+         * [0] Element matrix
+         * [1] Section matrix
+         * [2] Positioning matrix
+         * [3] Wing matrix
+         *
+         * @param elementTreeItem
+         * @return vector of transformations
+         */
+        std::vector<std::pair<CPACSTreeItem*,Eigen::Matrix4d>> getTransformationChainForOneElement(CPACSTreeItem *elementItem) ;
+
+
+
+        /**
+         * Get the global translation that the section get from Positionings elements.
+         * This means basically, that all the implicit references of the "fromSectionUID" of positionings are elucidate
+         * and added in the global translation.
+         * @param section element
+         * @return main positioning tree item element  and global translation matrix in world coordinate
+         */
+        std::pair<CPACSTreeItem*,Eigen::Matrix4d> getGlobalPositioningTranslationForSection(UID sectionUID);
+
+
+
+
+        /**
+        * @brief Return once all the elements UID used in this wing
+        *
+        * @param wingUID
+        * @return a vector of UID
+        *
+        * All UID contained in "fromElementUID" and "toElementUID" in the "segments" of this wing are extracted.
+        * Then a vector that contains exactly each UID once is returned.
+        *
+        */
+        std::vector<UID> getAllElementUIDsUsedInAWing( UID wingUID);
+
+
+
+
+        /**
+         * Retrieve form TIGL the chord position of every element in a wing
+         * @param wingUID
+         * @param ChordPercent (0: Leading edge, 1: trailing edge)
+         * @return
+         */
+        std::map< UID, Eigen::Vector4d> getChordPointsOfElements(UID wingUID, double ChordPercent);
+
+
+
+
+
+        /*
+         *  HELPER FUNCTIONS TO MODIFIY THE GEOMETRY
+         */
+
+
+        /**
+         * @brief Get the transform that the element UID needed to have to be at the wanted position.
+         * This transform conserve the rotation and the scaling of the original one and change only
+         * the translation component.
+         *
+         * @param elementUid uid of the element to place
+         * @param wantedOriginP the wanted origin position for the element
+         * @return CPACSTransform that the element should have to be at the wanted position
+         */
+        CPACSTransformation getTransformToPlaceElementByTranslationAt(const UID &elementUid,
+                                                                      const Eigen::Vector4d &wantedOriginP);
+
+
+
+        /**
+         * Return a new vector that has a angle of "sweepAngle" with the given origin vector.
+         * This mean that the new vector as the same y and z coordinate as the "toPlaceP" vector,
+         * but the x coordinate is such that the angle on the XY-plan is equal to "sweepAngle"
+         *
+         * @param originP
+         * @param toPlaceP
+         * @param sweep
+         * @return the new vector
+         */
+        Eigen::Vector4d computePositionToHaveSweepAngle(Eigen::Vector4d originP, Eigen::Vector4d toPlaceP,
+                                                        double sweep);
+
+
+
+
+
+
+        void createWing(UID wingUID, CPACSTransformation wingAnchor, std::vector<CPACSPositioning> positions,
+                        std::vector<double> sectionsScaling, std::vector<double> elementsTwist,
+                        std::vector<UID> elementsUID);
+
+
+
+        //
+        // Accessing tigl function
+        //
+
+        double getWingPlanformAreaByTigl(UID wingUid, TiglSymmetryAxis symmetryAxis);
+
+
+        Eigen::Vector4d computePositionToHaveDihedralAngle(Eigen::Vector4d originP, Eigen::Vector4d toPlaceP, double sweep);
+
+
+
+        /***
+         * Return the half span of the wing.
+         * The half span is the distance in Y in the wing coordinate system from the root to the wing extremity.
+         * @param wingUid
+         * @return
+         */
+        double getWingSpan(UID wingUid, double chordPercent = 0.0);
+
+
+        /**
+         * Get the area of the segment in the wing coordinate system.
+         *
+         * @param segment
+         * @return
+         */
+        double getSegmentArea(CPACSTreeItem* segment, PLANE );
+
+        /**
+         * Get the planforme area in the wing coordinate system'.
+         * @param wingUID
+         * @return
+         */
+        double getWingPlanformArea(UID wingUID,PLANE );
+
+
+        double getWingAR(UID wingUID);
+
+        void setWingSpanKeepArea(UID wingUID, double newSpan);
+
+        void setWingSpanKeepAR(UID wingUID, double newSpan);
+
+        void setWingAreaKeepSpan(UID wingUID, double newHalfSpan );
+
+        void setWingAreaKeepAR(UID wingUID, double newHalfSpan);
+
+        void setWingARKeepSpan(UID wingUID, double newHalfSpan);
+
+        void setWingARKeepArea(UID wingUID, double newHalfSpan);
+
+
+
+
+    protected:
+
+
+        void setWingAirfoilsByUIDKeepChord(CPACSTreeItem* wing, UID airfoilUID);
+
+        void setWingAirfoilsByUIDBasic(CPACSTreeItem* wing, UID airfoilUID);
+
+        // Return the root of the wing
+        // In the normal case the root is the end of the wing that is the most close of the X axis of the sing coordinate system.
+        // If the wing as a special shape with more that two ends or detached element,
+        // The root is simply the most closest element of the wing, without any care of its a end or not.
+        UID getRootOfWing( CPACSTreeItem* wing );
+
+        // The element that is more distant of the root in the Y direction
+        // The root must be contained in the second list
+        UID getExtremityInY( cpcr::UID rootUID, std::map<cpcr::UID, Eigen::Vector4d> );
+
+        // Given a the global transformation matrix of a element,
+        // this function set only the element transformation to get the correct global transformation
+        void placeElementMinimalChanges(CPACSTreeItem* element, Eigen::Matrix4d globalM);
+
+
+        // Given a the global transformation matrix of a element,
+        // this function set the global element transformation to get the correct global transformation
+        // trying to keep the creator standard.
+        // This mean that the element transformation, the section transformation and the positioning can change.
+        void placeElementRespectStd(CPACSTreeItem* element, Eigen::Matrix4d globalM);
+
+
+        /**
+         * This function set the cpacs tree such that the given element ended with a the given global matrix.
+         * If the wing seems to respect the creator standard the function will try to keep the creator standard.
+         * Otherwise it will chang has less as possible the file. This mean that the only element transformation
+         * will be changed.
+         *
+         * @remark The element becomes dependent of other element though positioning. Thus if this function is used
+         * to place multiples elements the order of the call is important.
+         *
+         * @param element
+         * @param globalM
+         */
+        void placeElement(CPACSTreeItem* element, Eigen::Matrix4d globalM);
+
+
+        void openTiglHandle(std::string modelUid);
+        void closeTiglHandle();
+
+    private:
+        // to access tigl api
+        TiglCPACSConfigurationHandle* tiglHandle;    // each time tixi (modifer) change some function this should be updated
+
+
+    };
+
+}   // end namespace cpcr
+
+
+
+#endif //CPACSCREATORLIBANDTESTS_AIRCRAFTTREE_H

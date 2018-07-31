@@ -3,7 +3,7 @@
 //
 
 #include "ModificatorWidget.h"
-#include "CPACSCreatorLib/easylogging++.h"
+#include "CTiglLogging.h"
 
 
 ModificatorWidget::ModificatorWidget(QWidget *parent): QWidget(parent) {
@@ -17,12 +17,12 @@ void ModificatorWidget::init(ModificatorManager *associate) {
 }
 
 void ModificatorWidget::apply() {
-  DLOG(WARNING) << "ModificatorWidget: apply function should be overwrite in children classes";
+    LOG(WARNING) << "ModificatorWidget: apply function should be overwrite in children classes";
 }
 
 
 void ModificatorWidget::reset() {
-    DLOG(WARNING) << "ModificatorWidget: reset function should be overwrite in children classes";
+    LOG(WARNING) << "ModificatorWidget: reset function should be overwrite in children classes";
 }
 
 

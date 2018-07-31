@@ -221,6 +221,9 @@ add_subdirectory(bindings)
 add_subdirectory(examples)
 
 
+add_subdirectory(CreatorLib)
+
+
 #create gtests, override gtest standard setting
 option(TIGL_BUILD_TESTS "Build TIGL Testsuite" OFF)
 

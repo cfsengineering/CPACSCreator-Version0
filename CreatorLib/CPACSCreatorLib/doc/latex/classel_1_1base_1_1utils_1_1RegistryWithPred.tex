@@ -1,0 +1,90 @@
+\hypertarget{classel_1_1base_1_1utils_1_1RegistryWithPred}{\section{el\-:\-:base\-:\-:utils\-:\-:Registry\-With\-Pred$<$ T\-\_\-\-Ptr, Pred $>$ Class Template Reference}
+\label{classel_1_1base_1_1utils_1_1RegistryWithPred}\index{el\-::base\-::utils\-::\-Registry\-With\-Pred$<$ T\-\_\-\-Ptr, Pred $>$@{el\-::base\-::utils\-::\-Registry\-With\-Pred$<$ T\-\_\-\-Ptr, Pred $>$}}
+}
+
+
+A pointer registry mechanism to manage memory and provide search functionalities. (predicate version)  
+
+
+
+
+{\ttfamily \#include $<$easylogging++.\-h$>$}
+
+Inheritance diagram for el\-:\-:base\-:\-:utils\-:\-:Registry\-With\-Pred$<$ T\-\_\-\-Ptr, Pred $>$\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classel_1_1base_1_1utils_1_1RegistryWithPred}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classel_1_1base_1_1utils_1_1RegistryWithPred_afc03d2d0a72f5ebf03e1e3b37bd9932d}{typedef \hyperlink{classel_1_1base_1_1utils_1_1RegistryWithPred}{Registry\-With\-Pred}\\*
+$<$ T\-\_\-\-Ptr, Pred $>$\-::iterator {\bfseries iterator}}\label{classel_1_1base_1_1utils_1_1RegistryWithPred_afc03d2d0a72f5ebf03e1e3b37bd9932d}
+
+\item 
+\hypertarget{classel_1_1base_1_1utils_1_1RegistryWithPred_ad9af7a8eeedd58a75eb70bccb334f6dc}{typedef \hyperlink{classel_1_1base_1_1utils_1_1RegistryWithPred}{Registry\-With\-Pred}\\*
+$<$ T\-\_\-\-Ptr, Pred $>$\\*
+\-::const\-\_\-iterator {\bfseries const\-\_\-iterator}}\label{classel_1_1base_1_1utils_1_1RegistryWithPred_ad9af7a8eeedd58a75eb70bccb334f6dc}
+
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classel_1_1base_1_1utils_1_1RegistryWithPred_a0e75c7daaa5fbf824b29180c7a5fd155}{\hyperlink{classel_1_1base_1_1utils_1_1RegistryWithPred_a0e75c7daaa5fbf824b29180c7a5fd155}{Registry\-With\-Pred} (const \hyperlink{classel_1_1base_1_1utils_1_1RegistryWithPred}{Registry\-With\-Pred} \&sr)}\label{classel_1_1base_1_1utils_1_1RegistryWithPred_a0e75c7daaa5fbf824b29180c7a5fd155}
+
+\begin{DoxyCompactList}\small\item\em Copy constructor that is useful for base classes. Try to avoid this constructor, use move constructor. \end{DoxyCompactList}\item 
+\hyperlink{classel_1_1base_1_1utils_1_1RegistryWithPred}{Registry\-With\-Pred} \& \hyperlink{classel_1_1base_1_1utils_1_1RegistryWithPred_adb7e568c8cb084589467b937eab86b86}{operator=} (const \hyperlink{classel_1_1base_1_1utils_1_1RegistryWithPred}{Registry\-With\-Pred} \&sr)
+\begin{DoxyCompactList}\small\item\em Assignment operator that unregisters all the existing registeries and deeply copies each of repo element. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classel_1_1base_1_1utils_1_1RegistryWithPred_a66b4eca5bb71f3fa3f0737105a00890c}{virtual void \hyperlink{classel_1_1base_1_1utils_1_1RegistryWithPred_a66b4eca5bb71f3fa3f0737105a00890c}{unregister\-All} (void) E\-L\-P\-P\-\_\-\-F\-I\-N\-A\-L}\label{classel_1_1base_1_1utils_1_1RegistryWithPred_a66b4eca5bb71f3fa3f0737105a00890c}
+
+\begin{DoxyCompactList}\small\item\em Unregisters all the pointers from current repository. \end{DoxyCompactList}\item 
+\hypertarget{classel_1_1base_1_1utils_1_1RegistryWithPred_aaf1afb5a9f8bd1d99c46ac529ea16417}{virtual void {\bfseries unregister} (T\-\_\-\-Ptr $\ast$\&ptr) E\-L\-P\-P\-\_\-\-F\-I\-N\-A\-L}\label{classel_1_1base_1_1utils_1_1RegistryWithPred_aaf1afb5a9f8bd1d99c46ac529ea16417}
+
+\item 
+\hypertarget{classel_1_1base_1_1utils_1_1RegistryWithPred_a561a5d418106a16473ff94d43a4b6b04}{virtual void {\bfseries register\-New} (T\-\_\-\-Ptr $\ast$ptr) E\-L\-P\-P\-\_\-\-F\-I\-N\-A\-L}\label{classel_1_1base_1_1utils_1_1RegistryWithPred_a561a5d418106a16473ff94d43a4b6b04}
+
+\item 
+\hypertarget{classel_1_1base_1_1utils_1_1RegistryWithPred_a811d9cc011d945bc7237e6ae1cf2f096}{{\footnotesize template$<$typename T , typename T2 $>$ }\\T\-\_\-\-Ptr $\ast$ \hyperlink{classel_1_1base_1_1utils_1_1RegistryWithPred_a811d9cc011d945bc7237e6ae1cf2f096}{get} (const T \&arg1, const T2 arg2)}\label{classel_1_1base_1_1utils_1_1RegistryWithPred_a811d9cc011d945bc7237e6ae1cf2f096}
+
+\begin{DoxyCompactList}\small\item\em Gets pointer from repository with speicifed arguments. Arguments are passed to predicate in order to validate pointer. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classel_1_1base_1_1utils_1_1RegistryWithPred_a71b45d148b62604847fe06f7addda779}{base\-::type\-::ostream\-\_\-t \& {\bfseries operator$<$$<$} (base\-::type\-::ostream\-\_\-t \&os, const \hyperlink{classel_1_1base_1_1utils_1_1RegistryWithPred}{Registry\-With\-Pred} \&sr)}\label{classel_1_1base_1_1utils_1_1RegistryWithPred_a71b45d148b62604847fe06f7addda779}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$typename T\-\_\-\-Ptr, typename Pred$>$class el\-::base\-::utils\-::\-Registry\-With\-Pred$<$ T\-\_\-\-Ptr, Pred $>$}
+
+A pointer registry mechanism to manage memory and provide search functionalities. (predicate version) 
+
+N\-O\-T\-E\-: This is thread-\/unsafe implementation of Abstract\-Registry$<$\-T\-\_\-\-Ptr, Container$>$. Any implementation of this class should be made thread-\/safe explicitly 
+
+\subsection{Member Function Documentation}
+\hypertarget{classel_1_1base_1_1utils_1_1RegistryWithPred_adb7e568c8cb084589467b937eab86b86}{\index{el\-::base\-::utils\-::\-Registry\-With\-Pred@{el\-::base\-::utils\-::\-Registry\-With\-Pred}!operator=@{operator=}}
+\index{operator=@{operator=}!el::base::utils::RegistryWithPred@{el\-::base\-::utils\-::\-Registry\-With\-Pred}}
+\subsubsection[{operator=}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T\-\_\-\-Ptr, typename Pred$>$ {\bf Registry\-With\-Pred}\& {\bf el\-::base\-::utils\-::\-Registry\-With\-Pred}$<$ T\-\_\-\-Ptr, Pred $>$\-::operator= (
+\begin{DoxyParamCaption}
+\item[{const {\bf Registry\-With\-Pred}$<$ T\-\_\-\-Ptr, Pred $>$ \&}]{sr}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{classel_1_1base_1_1utils_1_1RegistryWithPred_adb7e568c8cb084589467b937eab86b86}
+
+
+Assignment operator that unregisters all the existing registeries and deeply copies each of repo element. 
+
+\begin{DoxySeeAlso}{See Also}
+\hyperlink{classel_1_1base_1_1utils_1_1RegistryWithPred_a66b4eca5bb71f3fa3f0737105a00890c}{unregister\-All()} 
+
+deep\-Copy(const Abstract\-Registry\&) 
+\end{DoxySeeAlso}
+
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+/users/disk9/cfse/\-Stage\-\_\-\-Malo/\-C\-P\-A\-C\-S\-Creator\-Lib/\-C\-P\-A\-C\-S\-Creator\-Lib/easylogging++.\-h\end{DoxyCompactItemize}

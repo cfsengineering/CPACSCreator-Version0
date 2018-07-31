@@ -3,7 +3,8 @@
 //
 
 #include "TIGLViewerException.h"
-#include "CPACSCreatorLib/easylogging++.h"
+#include "CTiglLogging.h"
+
 
 TIGLViewerException::TIGLViewerException( const std::string& msg) : std::exception() {
     message = msg;

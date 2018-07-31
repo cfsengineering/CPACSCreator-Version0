@@ -3,7 +3,6 @@
 //
 
 #include "TIGLViewerTransformationWidget.h"
-#include "CPACSCreatorLib/easylogging++.h"
 #include "ModificatorManager.h"
 #include <iostream>
 

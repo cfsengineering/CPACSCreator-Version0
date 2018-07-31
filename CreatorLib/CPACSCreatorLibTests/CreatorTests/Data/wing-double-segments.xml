@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cpacs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.airbusds.com/cpacs/2.3">
+  <header>
+    <name>Test simplest wing model</name>
+    <creator>Malo</creator>
+    <description>simplest wing</description>
+    <timestamp>2018-03-03T11:58:57</timestamp>
+    <version>1.1</version>
+    <cpacsVersion>3.0</cpacsVersion>
+    <updates>
+    </updates>
+  </header>
+  <vehicles>
+    <aircraft>
+      <model uID="model">
+        <name>Name</name>
+        <wings>
+          <wing uID="Wing">
+            <name>Wing</name>
+            <transformation uID="Wing_transformation1">
+              <scaling uID="Wing_transformation1_scaling1">
+                <x>1</x>
+                <y>1</y>
+                <z>1</z>
+              </scaling>
+              <rotation uID="Wing_transformation1_rotation1">
+                <x>0</x>
+                <y>0</y>
+                <z>0</z>
+              </rotation>
+              <translation refType="absLocal" uID="Wing_transformation1_translation1">
+                <x>0</x>
+                <y>0</y>
+                <z>0</z>
+              </translation>
+            </transformation>
+            <sections>
+              <section uID="Wing_section1">
+                <name>Wing_section1</name>
+                <transformation uID="Wing_section1_transformation1">
+                  <scaling uID="Wing_section1_transformation1_scaling1">
+                    <x>1</x>
+                    <y>1</y>
+                    <z>1</z>
+                  </scaling>
+                  <rotation uID="Wing_section1_transformation1_rotation1">
+                    <x>0</x>
+                    <y>0</y>
+                    <z>0</z>
+                  </rotation>
+                  <translation refType="absLocal" uID="Wing_section1_transformation1_translation1">
+                    <x>0</x>
+                    <y>0</y>
+                    <z>0</z>
+                  </translation>
+                </transformation>
+                <elements>
+                  <element uID="Wing_section1_element1">
+                    <name>Wing_section1_element1</name>
+                    <airfoilUID>mdAirfoil2</airfoilUID>
+                    <transformation uID="Wing_section1_element1_transformation1">
+                      <scaling uID="Wing_section1_element1_transformation1_scaling1">
+                        <x>1</x>
+                        <y>1</y>
+                        <z>1</z>
+                      </scaling>
+                      <rotation uID="Wing_section1_element1_transformation1_rotation1">
+                        <x>0</x>
+                        <y>0</y>
+                        <z>0</z>
+                      </rotation>
+                      <translation refType="absLocal" uID="Wing_section1_element1_transformation1_translation1">
+                        <x>0</x>
+                        <y>0</y>
+                        <z>0</z>
+                      </translation>
+                    </transformation>s
+                  </element>
+                </elements>
+              </section>
+          
+	      <section uID="Wing_section2">
+                <name>Wing_section2</name>
+                <transformation uID="Wing_section2_transformation1">
+                  <scaling uID="Wing_section2_transformation1_scaling1">
+                    <x>1</x>
+                    <y>1</y>
+                    <z>1</z>
+                  </scaling>
+                  <rotation uID="Wing_section2_transformation1_rotation1">
+                    <x>0</x>
+                    <y>0</y>
+                    <z>0</z>
+                  </rotation>
+                  <translation refType="absLocal" uID="Wing_section2_transformation1_translation1">
+                    <x>-5</x>
+                    <y>10</y>
+                    <z>0</z>
+                  </translation>
+                </transformation>
+                <elements>
+                  <element uID="Wing_section2_element1">
+                    <name>Wing_section2_element1</name>
+                    <airfoilUID>mdAirfoil2</airfoilUID>
+                    <transformation uID="Wing_section2_element1_transformation1">
+                      <scaling uID="Wing_section2_element1_transformation1_scaling1">
+                        <x>1</x>
+                        <y>1</y>
+                        <z>1</z>
+                      </scaling>
+                      <rotation uID="Wing_section2_element1_transformation1_rotation1">
+                        <x>0</x>
+                        <y>0</y>
+                        <z>-45</z>
+                      </rotation>
+                      <translation refType="absLocal" uID="Wing_section2_element1_transformation1_translation1">
+                        <x>0</x>
+                        <y>0</y>
+                        <z>0</z>
+                      </translation>
+                    </transformation>
+                  </element>
+                </elements>
+              </section>
+            
+	      <section uID="Wing_section3">
+                <name>Wing_section3</name>
+                <transformation uID="Wing_section3_transformation1">
+                  <scaling uID="Wing_section3_transformation1_scaling1">
+                    <x>1</x>
+                    <y>1</y>
+                    <z>1</z>
+                  </scaling>
+                  <rotation uID="Wing_section3_transformation1_rotation1">
+                    <x>0</x>
+                    <y>0</y>
+                    <z>0</z>
+                  </rotation>
+                  <translation refType="absLocal" uID="Wing_section3_transformation1_translation1">
+                    <x>5</x>
+                    <y>10</y>
+                    <z>0</z>
+                  </translation>
+                </transformation>
+                <elements>
+                  <element uID="Wing_section3_element1">
+                    <name>Wing_section3_element1</name>
+                    <airfoilUID>mdAirfoil2</airfoilUID>
+                    <transformation uID="Wing_section3_element1_transformation1">
+                      <scaling uID="Wing_section3_element1_transformation1_scaling1">
+                        <x>1</x>
+                        <y>1</y>
+                        <z>1</z>
+                      </scaling>
+                      <rotation uID="Wing_section3_element1_transformation1_rotation1">
+                        <x>0</x>
+                        <y>0</y>
+                        <z>45</z>
+                      </rotation>
+                      <translation refType="absLocal" uID="Wing_section3_element1_transformation1_translation1">
+                        <x>0</x>
+                        <y>0</y>
+                        <z>0</z>
+                      </translation>
+                    </transformation>
+                  </element>
+                </elements>
+              </section>
+	      
+            </sections>
+            
+	    <segments>
+              <segment uID="Wing_segment1">
+                <name>Wing_segment1</name>
+                <fromElementUID>Wing_section1_element1</fromElementUID>
+                <toElementUID>Wing_section2_element1</toElementUID>
+              </segment>
+	      <segment uID="Wing_segment2">
+                <name>Wing_segment2</name>
+                <fromElementUID>Wing_section1_element1</fromElementUID>
+                <toElementUID>Wing_section3_element1</toElementUID>
+              </segment>
+	      <segment uID="Wing_segment3">
+                <name>Wing_segment2</name>
+                <fromElementUID>Wing_section3_element1</fromElementUID>
+                <toElementUID>Wing_section2_element1</toElementUID>
+              </segment>
+	    
+            </segments>
+           
+	    </wing>
+	  
+	   
+        </wings>
+      </model>
+    </aircraft>
+    <profiles>
+      <wingAirfoils>
+	
+	<!-- in mathematical order (counter-clock wise with the y escaping from you -->
+	<wingAirfoil uID="mdAirfoil2">
+          <name>mdAirfoil2</name>
+          <pointList>
+            <x mapType="vector">1;0;-1;0;1</x>
+            <y mapType="vector">0;0;0;0;0</y>
+            <z mapType="vector">0;-1;0;1;0</z>
+          </pointList>
+        </wingAirfoil>
+	
+	
+	<!-- open airfoil -->
+	<wingAirfoil uID="mdAirfoil3">
+          <name>mdAirfoil3</name>
+          <pointList>
+            <x mapType="vector">1;0;-1;0</x>
+            <y mapType="vector">0;0;0;0</y>
+            <z mapType="vector">0;-1;0;1</z>
+          </pointList>
+        </wingAirfoil>
+
+	
+	
+	<!-- concave airfoil -->
+	<wingAirfoil uID="mdAirfoil4">
+          <name>mdAirfoil4</name>
+          <pointList>
+            <x mapType="vector">1;0;-1;0;0;1</x>
+            <y mapType="vector">0;0;0;0;0;0</y>
+            <z mapType="vector">0;-1;0;1;0;0</z>
+          </pointList>
+        </wingAirfoil>
+	
+		<!-- in mathematical order (counter-clock wise with the y escaping from you -->
+	<wingAirfoil uID="mdAirfoil5">
+          <name>mdAirfoil2</name>
+          <pointList>
+            <x mapType="vector">1;0.9;0.9;1;1</x>
+            <y mapType="vector">0;0;0;0;0</y>
+            <z mapType="vector">0.1;0.1;0;0;0.1</z>
+          </pointList>
+        </wingAirfoil>
+	
+	
+	
+	
+      </wingAirfoils>
+      <structuralProfiles/>
+    </profiles>
+    <structuralElements/>
+  </vehicles>
+</cpacs>

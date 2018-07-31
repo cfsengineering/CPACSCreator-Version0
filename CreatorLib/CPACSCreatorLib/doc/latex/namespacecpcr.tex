@@ -1,0 +1,111 @@
+\hypertarget{namespacecpcr}{\section{cpcr Namespace Reference}
+\label{namespacecpcr}\index{cpcr@{cpcr}}
+}
+
+
+Structure element to hold the C\-P\-A\-C\-S tree.  
+
+
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{classcpcr_1_1AircraftTree}{Aircraft\-Tree}
+\item 
+class \hyperlink{classcpcr_1_1CPACSFile}{C\-P\-A\-C\-S\-File}
+\item 
+class \hyperlink{classcpcr_1_1CPACSPointsProfile}{C\-P\-A\-C\-S\-Points\-Profile}
+\item 
+class \hyperlink{classcpcr_1_1CPACSPositioning}{C\-P\-A\-C\-S\-Positioning}
+\item 
+class \hyperlink{classcpcr_1_1CPACSProfilesDB}{C\-P\-A\-C\-S\-Profiles\-D\-B}
+\item 
+class \hyperlink{classcpcr_1_1CPACSSegment}{C\-P\-A\-C\-S\-Segment}
+\item 
+class \hyperlink{classcpcr_1_1CPACSTransformation}{C\-P\-A\-C\-S\-Transformation}
+\item 
+class \hyperlink{classcpcr_1_1CPACSTree}{C\-P\-A\-C\-S\-Tree}
+\begin{DoxyCompactList}\small\item\em Construct and manage a tree structure over C\-P\-A\-C\-S file. \end{DoxyCompactList}\item 
+class \hyperlink{classcpcr_1_1CPACSTreeItem}{C\-P\-A\-C\-S\-Tree\-Item}
+\item 
+class \hyperlink{classcpcr_1_1LoggerSetUp}{Logger\-Set\-Up}
+\item 
+class \hyperlink{classcpcr_1_1Point}{Point}
+\item 
+class \hyperlink{classcpcr_1_1UniqueXPath}{Unique\-X\-Path}
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{namespacecpcr_a6451b9f6ef3ea260f4ab48acd86d5746}{typedef std\-::string {\bfseries U\-I\-D}}\label{namespacecpcr_a6451b9f6ef3ea260f4ab48acd86d5746}
+
+\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum {\bfseries P\-L\-A\-N\-E} \{ \\*
+{\bfseries X\-Y\-\_\-\-P\-L\-A\-N\-E}, 
+{\bfseries X\-Z\-\_\-\-P\-L\-A\-N\-E}, 
+{\bfseries Y\-Z\-\_\-\-P\-L\-A\-N\-E}, 
+{\bfseries N\-O\-\_\-\-P\-L\-A\-N\-E}, 
+\\*
+{\bfseries I\-N\-V\-A\-L\-I\-D}
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{namespacecpcr_a0825a4b414f89ce7e36a2ee8f7141ca6}{\hyperlink{classcpcr_1_1Point}{cpcr\-::\-Point} {\bfseries Line\-Line\-Strict\-Intersect} (const \hyperlink{classcpcr_1_1Point}{Point} \&p1, const \hyperlink{classcpcr_1_1Point}{Point} \&p2, const \hyperlink{classcpcr_1_1Point}{Point} \&p3, const \hyperlink{classcpcr_1_1Point}{Point} \&p4)}\label{namespacecpcr_a0825a4b414f89ce7e36a2ee8f7141ca6}
+
+\item 
+\hypertarget{namespacecpcr_abed52ba85eeeec539fa33028bd3740c6}{bool {\bfseries Line\-Line\-Intersect} (const \hyperlink{classcpcr_1_1Point}{Point} \&p1, const \hyperlink{classcpcr_1_1Point}{Point} \&p2, const \hyperlink{classcpcr_1_1Point}{Point} \&p3, const \hyperlink{classcpcr_1_1Point}{Point} \&p4, \hyperlink{classcpcr_1_1Point}{Point} \&pa, \hyperlink{classcpcr_1_1Point}{Point} \&pb, double \&mua, double \&mub)}\label{namespacecpcr_abed52ba85eeeec539fa33028bd3740c6}
+
+\item 
+\hyperlink{classcpcr_1_1CPACSTransformation}{C\-P\-A\-C\-S\-Transformation} \hyperlink{namespacecpcr_af0d181d51eb8844af908bd32826fbdb5}{Transform\-Chord} (const Eigen\-::\-Vector4d \&a, const Eigen\-::\-Vector4d \&b, const Eigen\-::\-Vector4d \&c, const Eigen\-::\-Vector4d \&a\-P, const Eigen\-::\-Vector4d \&b\-P, const Eigen\-::\-Vector4d \&c\-P)
+\item 
+\hypertarget{namespacecpcr_a59c946e6ef7e8e517d3e17852c27851e}{{\footnotesize template$<$typename T $>$ }\\std\-::string {\bfseries To\-String\-With\-Precision} (const T a\-\_\-value, const int n=6)}\label{namespacecpcr_a59c946e6ef7e8e517d3e17852c27851e}
+
+\item 
+\hypertarget{namespacecpcr_af660d73c6127f3e93babae77cb66f879}{bool {\bfseries Is\-Approx} (double x, double y, double delta=0.\-0001)}\label{namespacecpcr_af660d73c6127f3e93babae77cb66f879}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Structure element to hold the C\-P\-A\-C\-S tree. \begin{DoxyAuthor}{Author}
+Malo Drougard 
+\end{DoxyAuthor}
+
+
+\subsection{Function Documentation}
+\hypertarget{namespacecpcr_af0d181d51eb8844af908bd32826fbdb5}{\index{cpcr@{cpcr}!Transform\-Chord@{Transform\-Chord}}
+\index{Transform\-Chord@{Transform\-Chord}!cpcr@{cpcr}}
+\subsubsection[{Transform\-Chord}]{\setlength{\rightskip}{0pt plus 5cm}{\bf cpcr\-::\-C\-P\-A\-C\-S\-Transformation} cpcr\-::\-Transform\-Chord (
+\begin{DoxyParamCaption}
+\item[{const Eigen\-::\-Vector4d \&}]{a, }
+\item[{const Eigen\-::\-Vector4d \&}]{b, }
+\item[{const Eigen\-::\-Vector4d \&}]{c, }
+\item[{const Eigen\-::\-Vector4d \&}]{a\-P, }
+\item[{const Eigen\-::\-Vector4d \&}]{b\-P, }
+\item[{const Eigen\-::\-Vector4d \&}]{c\-P}
+\end{DoxyParamCaption}
+)}}\label{namespacecpcr_af0d181d51eb8844af908bd32826fbdb5}
+Return a transform that set a -\/$>$ a\-P, b -\/$>$ b\-P And try to set c -\/$>$ c\-P the returned transform guarantee to se c' to same plane as c\-P, but the scaling get be very different
+
+
+\begin{DoxyParams}{Parameters}
+{\em a} & \\
+\hline
+{\em b} & \\
+\hline
+{\em c} & \\
+\hline
+{\em a\-P} & \\
+\hline
+{\em b\-P} & \\
+\hline
+{\em c\-P} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}

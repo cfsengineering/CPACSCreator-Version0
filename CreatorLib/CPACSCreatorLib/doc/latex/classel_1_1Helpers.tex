@@ -1,0 +1,120 @@
+\hypertarget{classel_1_1Helpers}{\section{el\-:\-:Helpers Class Reference}
+\label{classel_1_1Helpers}\index{el\-::\-Helpers@{el\-::\-Helpers}}
+}
+
+
+Static helpers for developers.  
+
+
+
+
+{\ttfamily \#include $<$easylogging++.\-h$>$}
+
+Inheritance diagram for el\-:\-:Helpers\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classel_1_1Helpers}
+\end{center}
+\end{figure}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classel_1_1Helpers_af78fd39725281e3dddd7c0fbdc14f11f}{static void \hyperlink{classel_1_1Helpers_af78fd39725281e3dddd7c0fbdc14f11f}{set\-Storage} (base\-::type\-::\-Storage\-Pointer \hyperlink{classel_1_1Helpers_a13a5365de36b3af27660cf9b358829d3}{storage})}\label{classel_1_1Helpers_af78fd39725281e3dddd7c0fbdc14f11f}
+
+\begin{DoxyCompactList}\small\item\em Shares logging repository (\hyperlink{classel_1_1base_1_1Storage}{base\-::\-Storage}) \end{DoxyCompactList}\item 
+static base\-::type\-::\-Storage\-Pointer \hyperlink{classel_1_1Helpers_a13a5365de36b3af27660cf9b358829d3}{storage} ()
+\item 
+\hypertarget{classel_1_1Helpers_a68748f618a0c2840b96dc12532b09bf0}{static void \hyperlink{classel_1_1Helpers_a68748f618a0c2840b96dc12532b09bf0}{set\-Args} (int argc, char $\ast$$\ast$argv)}\label{classel_1_1Helpers_a68748f618a0c2840b96dc12532b09bf0}
+
+\begin{DoxyCompactList}\small\item\em Sets application arguments and figures out whats active for logging and whats not. \end{DoxyCompactList}\item 
+static void \hyperlink{classel_1_1Helpers_afac7a023e2c13a62d0295cf0239eb848}{set\-Args} (int argc, const char $\ast$$\ast$argv)
+\begin{DoxyCompactList}\small\item\em Sets application arguments and figures out whats active for logging and whats not. \end{DoxyCompactList}\item 
+\hypertarget{classel_1_1Helpers_a315250270334214c2749398feba08863}{static void \hyperlink{classel_1_1Helpers_a315250270334214c2749398feba08863}{set\-Thread\-Name} (const std\-::string \&name)}\label{classel_1_1Helpers_a315250270334214c2749398feba08863}
+
+\begin{DoxyCompactList}\small\item\em Sets thread name for current thread. Requires std\-::thread. \end{DoxyCompactList}\item 
+\hypertarget{classel_1_1Helpers_ae19cb3baa6d8081a9e922736a384f70b}{static std\-::string {\bfseries get\-Thread\-Name} ()}\label{classel_1_1Helpers_ae19cb3baa6d8081a9e922736a384f70b}
+
+\item 
+\hypertarget{classel_1_1Helpers_a5fd7ad6d636c28d2e706203d0c43cf8c}{static void \hyperlink{classel_1_1Helpers_a5fd7ad6d636c28d2e706203d0c43cf8c}{install\-Pre\-Roll\-Out\-Callback} (const Pre\-Roll\-Out\-Callback \&callback)}\label{classel_1_1Helpers_a5fd7ad6d636c28d2e706203d0c43cf8c}
+
+\begin{DoxyCompactList}\small\item\em Installs pre rollout callback, this callback is triggered when log file is about to be rolled out (can be useful for backing up) \end{DoxyCompactList}\item 
+\hypertarget{classel_1_1Helpers_ab829e5ed1b43bf965f5c288bc0280376}{static void \hyperlink{classel_1_1Helpers_ab829e5ed1b43bf965f5c288bc0280376}{uninstall\-Pre\-Roll\-Out\-Callback} (void)}\label{classel_1_1Helpers_ab829e5ed1b43bf965f5c288bc0280376}
+
+\begin{DoxyCompactList}\small\item\em Uninstalls pre rollout callback. \end{DoxyCompactList}\item 
+\hypertarget{classel_1_1Helpers_a3f3e84057567a8ac568a35899318544a}{{\footnotesize template$<$typename T $>$ }\\static bool \hyperlink{classel_1_1Helpers_a3f3e84057567a8ac568a35899318544a}{install\-Log\-Dispatch\-Callback} (const std\-::string \&id)}\label{classel_1_1Helpers_a3f3e84057567a8ac568a35899318544a}
+
+\begin{DoxyCompactList}\small\item\em Installs post log dispatch callback, this callback is triggered when log is dispatched. \end{DoxyCompactList}\item 
+\hypertarget{classel_1_1Helpers_ac94b44cc8d399a5842703126478300d7}{{\footnotesize template$<$typename T $>$ }\\static void \hyperlink{classel_1_1Helpers_ac94b44cc8d399a5842703126478300d7}{uninstall\-Log\-Dispatch\-Callback} (const std\-::string \&id)}\label{classel_1_1Helpers_ac94b44cc8d399a5842703126478300d7}
+
+\begin{DoxyCompactList}\small\item\em Uninstalls log dispatch callback. \end{DoxyCompactList}\item 
+\hypertarget{classel_1_1Helpers_aa01d59ca141bc75c4fdd78a34234611b}{{\footnotesize template$<$typename T $>$ }\\static T $\ast$ {\bfseries log\-Dispatch\-Callback} (const std\-::string \&id)}\label{classel_1_1Helpers_aa01d59ca141bc75c4fdd78a34234611b}
+
+\item 
+\hypertarget{classel_1_1Helpers_a8b032e32cd042ddc4fef4e814bad1082}{{\footnotesize template$<$typename T $>$ }\\static std\-::string \hyperlink{classel_1_1Helpers_a8b032e32cd042ddc4fef4e814bad1082}{convert\-Template\-To\-Std\-String} (const T \&templ)}\label{classel_1_1Helpers_a8b032e32cd042ddc4fef4e814bad1082}
+
+\begin{DoxyCompactList}\small\item\em Converts template to std\-::string -\/ useful for loggable classes to log containers within log(std\-::ostream\&) const. \end{DoxyCompactList}\item 
+\hypertarget{classel_1_1Helpers_a83bab44f77a4961f8f5231e7ce9917bb}{static const \\*
+\hyperlink{classel_1_1base_1_1utils_1_1CommandLineArgs}{el\-::base\-::utils\-::\-Command\-Line\-Args} $\ast$ \hyperlink{classel_1_1Helpers_a83bab44f77a4961f8f5231e7ce9917bb}{command\-Line\-Args} (void)}\label{classel_1_1Helpers_a83bab44f77a4961f8f5231e7ce9917bb}
+
+\begin{DoxyCompactList}\small\item\em Returns command line arguments (pointer) provided to easylogging++. \end{DoxyCompactList}\item 
+static void \hyperlink{classel_1_1Helpers_afb5fb896f3222fb8c628a51a05d72c32}{reserve\-Custom\-Format\-Specifiers} (std\-::size\-\_\-t size)
+\begin{DoxyCompactList}\small\item\em Reserve space for custom format specifiers for performance. \end{DoxyCompactList}\item 
+\hypertarget{classel_1_1Helpers_aa6de15a09db4f2a6763a6652c0ea12b1}{static void \hyperlink{classel_1_1Helpers_aa6de15a09db4f2a6763a6652c0ea12b1}{install\-Custom\-Format\-Specifier} (const \hyperlink{classel_1_1CustomFormatSpecifier}{Custom\-Format\-Specifier} \&custom\-Format\-Specifier)}\label{classel_1_1Helpers_aa6de15a09db4f2a6763a6652c0ea12b1}
+
+\begin{DoxyCompactList}\small\item\em Installs user defined format specifier and handler. \end{DoxyCompactList}\item 
+\hypertarget{classel_1_1Helpers_a23ec73819c25758d604d149ad0c6b73f}{static bool \hyperlink{classel_1_1Helpers_a23ec73819c25758d604d149ad0c6b73f}{uninstall\-Custom\-Format\-Specifier} (const char $\ast$format\-Specifier)}\label{classel_1_1Helpers_a23ec73819c25758d604d149ad0c6b73f}
+
+\begin{DoxyCompactList}\small\item\em Uninstalls user defined format specifier and handler. \end{DoxyCompactList}\item 
+\hypertarget{classel_1_1Helpers_a154ce041890564d1ae5f87184e24f13d}{static bool \hyperlink{classel_1_1Helpers_a154ce041890564d1ae5f87184e24f13d}{has\-Custom\-Format\-Specifier} (const char $\ast$format\-Specifier)}\label{classel_1_1Helpers_a154ce041890564d1ae5f87184e24f13d}
+
+\begin{DoxyCompactList}\small\item\em Returns true if custom format specifier is installed. \end{DoxyCompactList}\item 
+\hypertarget{classel_1_1Helpers_aea3fcde8a07e6f7278574e9563d8ab6b}{static void {\bfseries validate\-File\-Rolling} (\hyperlink{classel_1_1Logger}{Logger} $\ast$logger, \hyperlink{namespaceel_ab0ac6091262344c52dd2d3ad099e8e36}{Level} level)}\label{classel_1_1Helpers_aea3fcde8a07e6f7278574e9563d8ab6b}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Static helpers for developers. 
+
+\subsection{Member Function Documentation}
+\hypertarget{classel_1_1Helpers_afb5fb896f3222fb8c628a51a05d72c32}{\index{el\-::\-Helpers@{el\-::\-Helpers}!reserve\-Custom\-Format\-Specifiers@{reserve\-Custom\-Format\-Specifiers}}
+\index{reserve\-Custom\-Format\-Specifiers@{reserve\-Custom\-Format\-Specifiers}!el::Helpers@{el\-::\-Helpers}}
+\subsubsection[{reserve\-Custom\-Format\-Specifiers}]{\setlength{\rightskip}{0pt plus 5cm}static void el\-::\-Helpers\-::reserve\-Custom\-Format\-Specifiers (
+\begin{DoxyParamCaption}
+\item[{std\-::size\-\_\-t}]{size}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}}\label{classel_1_1Helpers_afb5fb896f3222fb8c628a51a05d72c32}
+
+
+Reserve space for custom format specifiers for performance. 
+
+\begin{DoxySeeAlso}{See Also}
+std\-::vector\-::reserve 
+\end{DoxySeeAlso}
+\hypertarget{classel_1_1Helpers_afac7a023e2c13a62d0295cf0239eb848}{\index{el\-::\-Helpers@{el\-::\-Helpers}!set\-Args@{set\-Args}}
+\index{set\-Args@{set\-Args}!el::Helpers@{el\-::\-Helpers}}
+\subsubsection[{set\-Args}]{\setlength{\rightskip}{0pt plus 5cm}static void el\-::\-Helpers\-::set\-Args (
+\begin{DoxyParamCaption}
+\item[{int}]{argc, }
+\item[{const char $\ast$$\ast$}]{argv}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}}\label{classel_1_1Helpers_afac7a023e2c13a62d0295cf0239eb848}
+
+
+Sets application arguments and figures out whats active for logging and whats not. 
+
+\hypertarget{classel_1_1Helpers_a13a5365de36b3af27660cf9b358829d3}{\index{el\-::\-Helpers@{el\-::\-Helpers}!storage@{storage}}
+\index{storage@{storage}!el::Helpers@{el\-::\-Helpers}}
+\subsubsection[{storage}]{\setlength{\rightskip}{0pt plus 5cm}static base\-::type\-::\-Storage\-Pointer el\-::\-Helpers\-::storage (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}}\label{classel_1_1Helpers_a13a5365de36b3af27660cf9b358829d3}
+\begin{DoxyReturn}{Returns}
+Main storage repository 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+/users/disk9/cfse/\-Stage\-\_\-\-Malo/\-C\-P\-A\-C\-S\-Creator\-Lib/\-C\-P\-A\-C\-S\-Creator\-Lib/easylogging++.\-h\end{DoxyCompactItemize}

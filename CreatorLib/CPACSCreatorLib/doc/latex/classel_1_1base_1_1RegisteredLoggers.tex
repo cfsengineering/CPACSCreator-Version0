@@ -1,0 +1,75 @@
+\hypertarget{classel_1_1base_1_1RegisteredLoggers}{\section{el\-:\-:base\-:\-:Registered\-Loggers Class Reference}
+\label{classel_1_1base_1_1RegisteredLoggers}\index{el\-::base\-::\-Registered\-Loggers@{el\-::base\-::\-Registered\-Loggers}}
+}
+
+
+\hyperlink{classel_1_1Loggers}{Loggers} repository.  
+
+
+
+
+{\ttfamily \#include $<$easylogging++.\-h$>$}
+
+Inheritance diagram for el\-:\-:base\-:\-:Registered\-Loggers\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=4.000000cm]{classel_1_1base_1_1RegisteredLoggers}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classel_1_1base_1_1RegisteredLoggers_ae52ec336770d33fef86f234e4e68dce5}{{\bfseries Registered\-Loggers} (const Log\-Builder\-Ptr \&default\-Log\-Builder)}\label{classel_1_1base_1_1RegisteredLoggers_ae52ec336770d33fef86f234e4e68dce5}
+
+\item 
+\hypertarget{classel_1_1base_1_1RegisteredLoggers_a28e1f955ad55d89a4ae91fa74545ee4f}{void {\bfseries set\-Default\-Configurations} (const \hyperlink{classel_1_1Configurations}{Configurations} \&configurations)}\label{classel_1_1base_1_1RegisteredLoggers_a28e1f955ad55d89a4ae91fa74545ee4f}
+
+\item 
+\hypertarget{classel_1_1base_1_1RegisteredLoggers_acb38f67cf5e297f4be3efa5312e09914}{\hyperlink{classel_1_1Configurations}{Configurations} $\ast$ {\bfseries default\-Configurations} (void)}\label{classel_1_1base_1_1RegisteredLoggers_acb38f67cf5e297f4be3efa5312e09914}
+
+\item 
+\hypertarget{classel_1_1base_1_1RegisteredLoggers_a8e554505cd7f66d31e91933b61d74144}{\hyperlink{classel_1_1Logger}{Logger} $\ast$ {\bfseries get} (const std\-::string \&id, bool force\-Creation=true)}\label{classel_1_1base_1_1RegisteredLoggers_a8e554505cd7f66d31e91933b61d74144}
+
+\item 
+\hypertarget{classel_1_1base_1_1RegisteredLoggers_a62000b4c52b2383ec7f480ee0fd12586}{{\footnotesize template$<$typename T $>$ }\\bool {\bfseries install\-Logger\-Registration\-Callback} (const std\-::string \&id)}\label{classel_1_1base_1_1RegisteredLoggers_a62000b4c52b2383ec7f480ee0fd12586}
+
+\item 
+\hypertarget{classel_1_1base_1_1RegisteredLoggers_ae72594329e082a58ba9e73462d6c5bb5}{{\footnotesize template$<$typename T $>$ }\\void {\bfseries uninstall\-Logger\-Registration\-Callback} (const std\-::string \&id)}\label{classel_1_1base_1_1RegisteredLoggers_ae72594329e082a58ba9e73462d6c5bb5}
+
+\item 
+\hypertarget{classel_1_1base_1_1RegisteredLoggers_ae65d8c76311c733f7191867e13ebbe99}{{\footnotesize template$<$typename T $>$ }\\T $\ast$ {\bfseries logger\-Registration\-Callback} (const std\-::string \&id)}\label{classel_1_1base_1_1RegisteredLoggers_ae65d8c76311c733f7191867e13ebbe99}
+
+\item 
+\hypertarget{classel_1_1base_1_1RegisteredLoggers_a4d17dc9673f6aa6216571e182097400a}{bool {\bfseries remove} (const std\-::string \&id)}\label{classel_1_1base_1_1RegisteredLoggers_a4d17dc9673f6aa6216571e182097400a}
+
+\item 
+\hypertarget{classel_1_1base_1_1RegisteredLoggers_a85916925e2c53d1ebf9865625132a0be}{bool {\bfseries has} (const std\-::string \&id)}\label{classel_1_1base_1_1RegisteredLoggers_a85916925e2c53d1ebf9865625132a0be}
+
+\item 
+\hypertarget{classel_1_1base_1_1RegisteredLoggers_ad8fa8f829fdb6a03e6f5a38704811e7b}{void {\bfseries unregister} (\hyperlink{classel_1_1Logger}{Logger} $\ast$\&logger)}\label{classel_1_1base_1_1RegisteredLoggers_ad8fa8f829fdb6a03e6f5a38704811e7b}
+
+\item 
+\hypertarget{classel_1_1base_1_1RegisteredLoggers_a11eb24bac74b7ae2d85b324fed707819}{base\-::\-Log\-Streams\-Reference\-Map $\ast$ {\bfseries log\-Streams\-Reference} (void)}\label{classel_1_1base_1_1RegisteredLoggers_a11eb24bac74b7ae2d85b324fed707819}
+
+\item 
+\hypertarget{classel_1_1base_1_1RegisteredLoggers_abe6fdac67d9d4c35fb48c9fd88a49c2e}{void {\bfseries flush\-All} (void)}\label{classel_1_1base_1_1RegisteredLoggers_abe6fdac67d9d4c35fb48c9fd88a49c2e}
+
+\item 
+\hypertarget{classel_1_1base_1_1RegisteredLoggers_afccc4cf83c77e97cf7377513094b61a6}{void {\bfseries set\-Default\-Log\-Builder} (Log\-Builder\-Ptr \&log\-Builder\-Ptr)}\label{classel_1_1base_1_1RegisteredLoggers_afccc4cf83c77e97cf7377513094b61a6}
+
+\end{DoxyCompactItemize}
+\subsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classel_1_1base_1_1RegisteredLoggers_acc1efd1b8a3fc5e0028dab98b02e550a}{class {\bfseries el\-::base\-::\-Storage}}\label{classel_1_1base_1_1RegisteredLoggers_acc1efd1b8a3fc5e0028dab98b02e550a}
+
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Detailed Description}
+\hyperlink{classel_1_1Loggers}{Loggers} repository. 
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+/users/disk9/cfse/\-Stage\-\_\-\-Malo/\-C\-P\-A\-C\-S\-Creator\-Lib/\-C\-P\-A\-C\-S\-Creator\-Lib/easylogging++.\-h\end{DoxyCompactItemize}
