@@ -413,6 +413,7 @@
             <z mapType="vector">0;-1;0;1;0</z>
           </pointList>
         </wingAirfoil>
+	
         <!-- in mathematical order (counter-clock wise with the y escaping from you -->
         <wingAirfoil uID="mdAirfoil2NotInOrder">
           <name>mdAirfoil2</name>
@@ -428,6 +429,14 @@
             <x mapType="vector">1;0.5;0;0.5;1</x>
             <y mapType="vector">0;0;0;0;0</y>
             <z mapType="vector">0;-0.5;0;0.5;0</z>
+          </pointList>
+        </wingAirfoil>
+	 <wingAirfoil uID="mdAirfoilFineNormalized">
+          <name>mdAirfoil2</name>
+          <pointList>
+            <x mapType="vector">1;0.5;0.2;0;0.2;0.5;1</x>
+            <y mapType="vector">0;0;0;0;0;0;0</y>
+            <z mapType="vector">0;-0.1;-0.1;0;0.1;0.1;0</z>
           </pointList>
         </wingAirfoil>
         <!-- 10 times bigger that the mdAirfoil2 -->
