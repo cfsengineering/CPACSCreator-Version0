@@ -5,8 +5,8 @@ add_library(CPACSCreatorLib)
 
 
 # Add the third party library easylogging
-target_include_directories(CPACSCreatorLib PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../ThirdPartyLib/easyloggingpp-9.96.4/src/)
-target_sources( CPACSCreatorLib PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../ThirdPartyLib/easyloggingpp-9.96.4/src/easylogging++.cc)
+target_include_directories(CPACSCreatorLib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../ThirdPartyLib/easyloggingpp-9.96.4/src/)
+target_sources( CPACSCreatorLib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../ThirdPartyLib/easyloggingpp-9.96.4/src/easylogging++.cc)
 
 
 # Add the third party header only library easylogging
@@ -46,10 +46,12 @@ target_link_libraries(CPACSCreatorLib ${TIXI_LIB_LOCATION} )
 #TODO IMPORTANT proper linkage with tigl
 target_include_directories(CPACSCreatorLib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../../src/api)
 
-unset(TIGL_LIB_LOCATION CACHE)
-find_library(TIGL_LIB_LOCATION tigl3 PATH  ${CMAKE_CURRENT_SOURCE_DIR}/../../cmake-build-debug/lib )
-message(TIGL_LIB_LOCATION: ${TIGL_LIB_LOCATION})
-target_link_libraries(CPACSCreatorLib ${TIGL_LIB_LOCATION})
+#unset(TIGL_LIB_LOCATION CACHE)
+#find_library(TIGL_LIB_LOCATION tigl3 PATH  ${CMAKE_CURRENT_SOURCE_DIR}/../../cmake-build-debug/lib )
+#message(TIGL_LIB_LOCATION: ${TIGL_LIB_LOCATION})
+#target_link_libraries(CPACSCreatorLib ${TIGL_LIB_LOCATION})
+target_link_libraries(CPACSCreatorLib tigl3)
+
 
 
 get_target_property(SOURCES_TEMP CPACSCreatorLib SOURCES)
