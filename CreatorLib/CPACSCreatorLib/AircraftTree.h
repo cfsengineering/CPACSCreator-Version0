@@ -375,12 +375,6 @@ namespace cpcr{
 
 
 
-        void createWing(UID wingUID, CPACSTransformation wingAnchor, std::vector<CPACSPositioning> positions,
-                        std::vector<double> sectionsScaling, std::vector<double> elementsTwist,
-                        std::vector<UID> elementsUID);
-
-
-
         //
         // Accessing tigl function
         //
@@ -432,6 +426,21 @@ namespace cpcr{
         void setWingARKeepArea(UID wingUID, double newHalfSpan);
 
 
+        /**
+         * Set the wing area while keeping each leading edges to the same position.
+         * This is done by scaling each chord in XY by the same factor.
+         *
+         * @param wing
+         * @param area
+         */
+        void setWingAreaKeepLeadingEdges(CPACSTreeItem* wing, double area);
+
+
+        /**
+         * Find out the scale factor in XY to apply on the chord to obtain the target area
+         * using quatric equation.
+         */
+        double findPerpendicularScaleFactor(CPACSTreeItem* wing, double targetArea);
 
 
     protected:

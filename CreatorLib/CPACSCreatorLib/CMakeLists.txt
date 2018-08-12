@@ -8,6 +8,11 @@ add_library(CPACSCreatorLib)
 target_include_directories(CPACSCreatorLib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../ThirdPartyLib/easyloggingpp-9.96.4/src/)
 target_sources( CPACSCreatorLib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../ThirdPartyLib/easyloggingpp-9.96.4/src/easylogging++.cc)
 
+# Add the third party library quartic
+target_include_directories(CPACSCreatorLib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../ThirdPartyLib/quartic/)
+target_sources( CPACSCreatorLib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../ThirdPartyLib/quartic/poly34.cpp)
+
+
 
 # Add the third party header only library easylogging
 target_include_directories(CPACSCreatorLib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../ThirdPartyLib/eigen-eigen-5a0156e40feb/)

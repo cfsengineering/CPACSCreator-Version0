@@ -23,7 +23,7 @@ class AircraftTreeTest : public  ::testing::Test {
 
 protected:
 
-    std::string DATA_DIR="/home/cfse/Stage_Malo/CPACSCreatorLib/CPACSCreatorLibTests/CreatorTests/Data/";
+    std::string DATA_DIR="/home/makem/JobProject/CreatorTotal/CreatorLib/CPACSCreatorLibTests/CreatorTests/Data/";
 
 
     std::string fileName1 = DATA_DIR + "AircraftTreeTest1.xml";
@@ -1697,6 +1697,73 @@ TEST_F(AircraftTreeTest, symmetry){
     symmetry = tree.getWingSymmetry("D150_VAMP_wing_W1");
     EXPECT_EQ(symmetry, "no-symmetry");
     tree.writeToFile();
+
+
+}
+
+
+TEST_F(AircraftTreeTest, findPerpendicularScaleFactor){
+
+    double area, scaleA, scaleC;
+    CPACSTreeItem* wing;
+
+
+    // cord are parallel -> scaleA area = scaleA chord should be result
+    setVariables("wing-simple.xml");
+    area = tree.getWingPlanformArea("Wing", XY_PLANE);
+    scaleA = 0.5;
+    wing = tree.getRoot()->getChildByUid("Wing");
+    scaleC = tree.findPerpendicularScaleFactor(wing , area * scaleA);
+    EXPECT_TRUE( IsApprox(scaleA, scaleC));
+    scaleA = 0.33;
+    scaleC = tree.findPerpendicularScaleFactor(wing , area * scaleA);
+    EXPECT_TRUE( IsApprox(scaleA, scaleC));
+
+    // chord are parallel
+    setVariables("wing-simple-shift.xml");
+    area = tree.getWingPlanformArea("Wing", XY_PLANE);
+    scaleA = 0.5;
+    wing = tree.getRoot()->getChildByUid("Wing");
+    scaleC = tree.findPerpendicularScaleFactor(wing , area * scaleA);
+    EXPECT_TRUE( IsApprox(scaleA, scaleC));
+    scaleA = 0.33;
+    scaleC = tree.findPerpendicularScaleFactor(wing , area * scaleA);
+    EXPECT_TRUE( IsApprox(scaleA, scaleC));
+
+    // chord are parallel
+    setVariables("wing-simple-two-sections.xml");
+    area = tree.getWingPlanformArea("Wing", XY_PLANE);
+    scaleA = 0.5;
+    wing = tree.getRoot()->getChildByUid("Wing");
+    scaleC = tree.findPerpendicularScaleFactor(wing , area * scaleA);
+    EXPECT_TRUE( IsApprox(scaleA, scaleC));
+    scaleA = 0.33;
+    scaleC = tree.findPerpendicularScaleFactor(wing , area * scaleA);
+    EXPECT_TRUE( IsApprox(scaleA, scaleC));
+
+
+    // chord are not parallel -> approximation
+    setVariables("wing-simple-rot30.xml");
+    area = tree.getWingPlanformArea("Wing", XY_PLANE);
+    scaleA = 0.5;
+    wing = tree.getRoot()->getChildByUid("Wing");
+    scaleC = tree.findPerpendicularScaleFactor(wing , area * scaleA);
+    EXPECT_TRUE( IsApprox(scaleA, scaleC,0.1));
+    scaleA = 0.33;
+    scaleC = tree.findPerpendicularScaleFactor(wing , area * scaleA);
+    EXPECT_TRUE( IsApprox(scaleA, scaleC,0.1));
+
+
+    // chord are not parallel
+    setVariables("wing-simple-two-sections-rot.xml");
+    area = tree.getWingPlanformArea("Wing", XY_PLANE);
+    scaleA = 0.5;
+    wing = tree.getRoot()->getChildByUid("Wing");
+    scaleC = tree.findPerpendicularScaleFactor(wing , area * scaleA);
+    EXPECT_TRUE( IsApprox(scaleA, scaleC,0.1));
+    scaleA = 0.33;
+    scaleC = tree.findPerpendicularScaleFactor(wing , area * scaleA);
+    EXPECT_TRUE( IsApprox(scaleA, scaleC,0.1));
 
 
 }

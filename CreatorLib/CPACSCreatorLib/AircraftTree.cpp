@@ -14,7 +14,7 @@
 #include "tixi.h"
 #include "CPACSProfilesDB.h"
 #include "easylogging++.h"
-
+#include "poly34.h"
 
 
 
@@ -1993,6 +1993,123 @@ void cpcr::AircraftTree::placeElement(cpcr::CPACSTreeItem *element, Eigen::Matri
     }else {
         placeElementMinimalChanges(element, globalM);
     }
+
+}
+
+double cpcr::AircraftTree::findPerpendicularScaleFactor( CPACSTreeItem* wing, double targetArea) {
+
+    // get chords
+    std::vector<cpcr::CPACSTreeItem *> graph = formatGraph(getWingGraph(wing)) ;
+
+    std::map< UID, Eigen::Vector4d>  lEsMap = getChordPointsOfElements(wing->getUid(), 0 );
+    std::map< UID, Eigen::Vector4d>  tEsMap = getChordPointsOfElements(wing->getUid(), 1 );
+
+    std::vector<Eigen::Vector3d>  LEs;
+    std::vector<Eigen::Vector3d>  TEs;
+
+    Eigen::Vector3d lXY;
+    Eigen::Vector3d tXY;
+
+    for(CPACSTreeItem* e : graph){
+        lXY = lEsMap[e->getUid()].block(0,0,3,1);
+        lXY(2) = 0;
+        LEs.push_back(lXY);
+        tXY = tEsMap[e->getUid()].block(0,0,3,1);
+        tXY(2) = 0;
+        TEs.push_back(tXY);
+    }
+
+
+    int segmentNum = LEs.size() - 1;
+    if (segmentNum < 1){
+        LOG(ERROR) << "findPerpendicularScaleFactor: input incorrect";
+        return -1;
+    }
+
+
+    // find quartic vectors
+    Eigen::Vector3d v;
+    v << 0,0,0;
+    Eigen::Vector3d w;
+    w << 0,0,0;
+    Eigen::Vector3d a,b,c,v_temp,w_temp;
+    for(int i = 0; i < segmentNum; i++){
+
+        std::vector<double> r;
+
+        a = LEs[i+1] - LEs[i];
+        b = TEs[i] - LEs[i];
+        c = TEs[i+1] - LEs[i+1];
+
+        v_temp = (c + b ).cross(a);
+        w_temp = b.cross(c);
+
+        v = v + v_temp;
+        w = w + w_temp;
+    }
+
+    double E = powf(v(0),2) + powf(v(1),2) + powf(v(2),2);
+    double F = 2*v(0)*w(0) + 2*v(1)*w(1)  + 2*v(2)*w(2)  ;
+    double G = powf(w(0),2) + powf(w(1),2) + powf(w(2),2);
+
+    // case where the chord are parallel
+    if( IsApprox(G, 0)){
+        return sqrt( powf((2*targetArea),2) / E );
+    }
+
+
+    // other cases -> solve quatric equation
+
+    double area = -powf((2*targetArea),2)/G;
+    E = E/G;
+    F = F/G;
+
+    double roots [4] = {-1,-1,-1,-1};
+    double r = SolveP4(roots, F, E, 0, area);
+
+    LOG(INFO) << "findPerpendicularScaleFactor roots" << roots[0] << ";" << roots[1] << ";" << roots[2] << ";"<< roots[3] << ";";
+
+    double d = -1;
+
+    if (r == 0){
+        LOG(ERROR) << "findPerpendicularScaleFactor: only complex factor found";
+        throw CreatorException("findPerpendicularScaleFactor: only complex factor found");
+    }
+    else if ( r == 2 ){
+        double arrayTemp [2] = {roots[0],roots[1]};
+        std::sort(arrayTemp, arrayTemp + 2);    // sort so the smaller positive  values is taken
+        if ( arrayTemp[0] > 0){
+            d = arrayTemp[0];
+        }else if ( arrayTemp[1] > 0 ) {
+            d = arrayTemp[1];
+        }else{
+            throw CreatorException("findPerpendicularScaleFactor: no positive factor found");
+        }
+    }
+    else if ( r == 4 ) {
+        std::sort(roots, roots + 4); // sort so the smaller positive  values is taken
+        if ( roots[0] > 0 ){
+            d = roots[0];
+        }else if ( roots[1] > 0 ) {
+            d = roots[1];
+        } else if (roots[2] > 0 ){
+            d = roots[2];
+        } else if (roots[3] > 0 ){
+            d = roots[3];
+        }
+        else{
+            throw CreatorException("findPerpendicularScaleFactor: no positive factor found");
+        }
+
+    }
+
+    return d;
+}
+
+void cpcr::AircraftTree::setWingAreaKeepLeadingEdges(cpcr::CPACSTreeItem *wing, double area) {
+
+
+
 
 }
 

@@ -65,7 +65,7 @@
                         <z>1</z>
                       </scaling>
                       <rotation uID="Wing_section1_element1_transformation1_rotation1">
-                        <x>10</x>
+                        <x>0</x>
                         <y>0</y>
                         <z>-0</z>
                       </rotation>
@@ -87,9 +87,9 @@
                     <z>1</z>
                   </scaling>
                   <rotation uID="Wing_section2_transformation1_rotation1">
-                    <x>10</x>
-                    <y/>
-                    <z>30</z>
+                    <x>0</x>
+                    <y>0</y>
+                    <z>0</z>
                   </rotation>
                   <translation refType="absLocal" uID="Wing_section2_transformation1_translation1">
                     <x>0</x>
@@ -110,52 +110,9 @@
                       <rotation uID="Wing_section2_element1_transformation1_rotation1">
                         <x>0</x>
                         <y>0</y>
-                        <z>-0</z>
+                        <z>30</z>
                       </rotation>
                       <translation refType="absLocal" uID="Wing_section2_element1_transformation1_translation1">
-                        <x>0</x>
-                        <y>0</y>
-                        <z>0</z>
-                      </translation>
-                    </transformation>
-                  </element>
-                </elements>
-              </section>
-              <section uID="Wing_section3">
-                <name>Wing_section3</name>
-                <transformation uID="Wing_section3_transformation1">
-                  <scaling uID="Wing_section3_transformation1_scaling1">
-                    <x>1</x>
-                    <y>1</y>
-                    <z>1</z>
-                  </scaling>
-                  <rotation uID="Wing_section3_transformation1_rotation1">
-                    <x>0</x>
-                    <y>0</y>
-                    <z>0</z>
-                  </rotation>
-                  <translation refType="absLocal" uID="Wing_section3_transformation1_translation1">
-                    <x>1</x>
-                    <y>4</y>
-                    <z>0</z>
-                  </translation>
-                </transformation>
-                <elements>
-                  <element uID="Wing_section3_element1">
-                    <name>Wing_section3_element1</name>
-                    <airfoilUID>mdAirfoil2</airfoilUID>
-                    <transformation uID="Wing_section3_element1_transformation1">
-                      <scaling uID="Wing_section3_element1_transformation1_scaling1">
-                        <x>1</x>
-                        <y>1</y>
-                        <z>1</z>
-                      </scaling>
-                      <rotation uID="Wing_section3_element1_transformation1_rotation1">
-                        <x>0</x>
-                        <y>0</y>
-                        <z>-20</z>
-                      </rotation>
-                      <translation refType="absLocal" uID="Wing_section3_element1_transformation1_translation1">
                         <x>0</x>
                         <y>0</y>
                         <z>0</z>
@@ -170,11 +127,6 @@
                 <name>Wing_segment1</name>
                 <fromElementUID>Wing_section1_element1</fromElementUID>
                 <toElementUID>Wing_section2_element1</toElementUID>
-              </segment>
-              <segment uID="Wing_segment2">
-                <name>Wing_segment2</name>
-                <fromElementUID>Wing_section2_element1</fromElementUID>
-                <toElementUID>Wing_section3_element1</toElementUID>
               </segment>
             </segments>
           </wing>

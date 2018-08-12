@@ -49,7 +49,6 @@ namespace cpcr{
 
 
 
-
     template <typename T>
     std::string ToStringWithPrecision(const T a_value, const int n = 6)
     {
