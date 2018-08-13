@@ -1916,7 +1916,219 @@ TEST_F(AircraftTreeTest, setWingSpanKeepArea) {
 
     EXPECT_TRUE(IsApprox(spanAfter, newSpan));
     EXPECT_TRUE(IsApprox(areaAfter, areaBefore));
-    
 
+
+}
+
+
+TEST_F(AircraftTreeTest, setWingSpanKeepAR) {
+
+    double arBefore, arAfter, newSpan, spanAfter;
+    std::string uid;
+
+
+    setVariables("wing-simple-two-sections-rot.xml");
+    uid = "Wing";
+    arBefore = tree.getWingAR(uid);
+    newSpan = 20;
+    tree.setWingSpanKeepAR(uid, newSpan);
+    tree.writeToFile();
+    arAfter = tree.getWingAR(uid);
+    spanAfter = tree.getWingSpan(uid);
+    EXPECT_TRUE(IsApprox(spanAfter, newSpan));
+    EXPECT_TRUE(IsApprox(arAfter, arBefore));
+
+
+    setVariables("TestCases/boxWing-withDihedral.xml");
+    uid = "D150_VAMP_W1";
+    arBefore = tree.getWingAR(uid);
+    newSpan = 13;
+    tree.setWingSpanKeepAR(uid, newSpan);
+    tree.writeToFile();
+    arAfter = tree.getWingAR(uid);
+    spanAfter = tree.getWingSpan(uid);
+    EXPECT_TRUE(IsApprox(spanAfter, newSpan));
+    EXPECT_TRUE(IsApprox(arAfter, arBefore));
+
+
+
+}
+
+TEST_F(AircraftTreeTest, setWingAreaKeepAR) {
+
+    double arBefore, arAfter, newArea, areaAfter;
+    std::string uid;
+
+
+    setVariables("wing-simple-two-sections-rot.xml");
+    uid = "Wing";
+    arBefore = tree.getWingAR(uid);
+    newArea = 13;
+    tree.setWingAreaKeepAR(uid, newArea);
+    arAfter = tree.getWingAR(uid);
+    areaAfter = tree.getWingPlanformArea(uid, XY_PLANE);
+    EXPECT_TRUE(IsApprox(arBefore, arAfter));
+    EXPECT_TRUE(IsApprox(areaAfter, newArea));
+    tree.writeToFile();
+
+    arBefore = tree.getWingAR(uid);
+    newArea = 130;
+    tree.setWingAreaKeepAR(uid, newArea);
+    arAfter = tree.getWingAR(uid);
+    areaAfter = tree.getWingPlanformArea(uid, XY_PLANE);
+    EXPECT_TRUE(IsApprox(arBefore, arAfter));
+    EXPECT_TRUE(IsApprox(areaAfter, newArea, 0.1));
+    tree.writeToFile();
+
+
+    setVariables("TestCases/boxWing-withDihedral.xml");
+    uid = "D150_VAMP_W1";
+
+    arBefore = tree.getWingAR(uid);
+    newArea = 3.3;
+    tree.setWingAreaKeepAR(uid, newArea);
+    arAfter = tree.getWingAR(uid);
+    areaAfter = tree.getWingPlanformArea(uid, XY_PLANE);
+    EXPECT_TRUE(IsApprox(arBefore, arAfter));
+    EXPECT_TRUE(IsApprox(areaAfter, newArea));
+    tree.writeToFile();
+
+    arBefore = tree.getWingAR(uid);
+    newArea = 40;
+    tree.setWingAreaKeepAR(uid, newArea);
+    arAfter = tree.getWingAR(uid);
+    areaAfter = tree.getWingPlanformArea(uid, XY_PLANE);
+    EXPECT_TRUE(IsApprox(arBefore, arAfter));
+    EXPECT_TRUE(IsApprox(areaAfter, newArea));
+    tree.writeToFile();
+
+}
+
+
+
+TEST_F(AircraftTreeTest, setWingAreaKeepSpan) {
+
+    double spanBefore, spanAfter, newArea, areaAfter;
+    std::string uid;
+
+
+    setVariables("wing-simple-two-sections-rot.xml");
+    uid = "Wing";
+    spanBefore = tree.getWingSpan(uid);
+    newArea = 12;
+    tree.setWingAreaKeepSpan(uid, newArea);
+    spanAfter = tree.getWingSpan(uid);
+    areaAfter = tree.getWingPlanformArea(uid, XY_PLANE);
+    EXPECT_TRUE(IsApprox(spanBefore, spanAfter));
+    EXPECT_TRUE(IsApprox(areaAfter, newArea));
+    tree.writeToFile();
+
+
+
+    setVariables("TestCases/boxWing-withDihedral.xml");
+    uid = "D150_VAMP_W1";
+    spanBefore = tree.getWingSpan(uid);
+    newArea = 17;
+    tree.setWingAreaKeepSpan(uid, newArea);
+    spanAfter = tree.getWingSpan(uid);
+    areaAfter = tree.getWingPlanformArea(uid, XY_PLANE);
+    EXPECT_TRUE(IsApprox(spanBefore, spanAfter));
+    EXPECT_TRUE(IsApprox(areaAfter, newArea));
+    tree.writeToFile();
+
+
+}
+
+
+
+TEST_F(AircraftTreeTest, setWingARKeepSpan) {
+
+    double spanBefore, spanAfter, newAR, arAfter;
+    std::string uid;
+
+
+    setVariables("wing-simple-two-sections-rot.xml");
+    uid = "Wing";
+
+    spanBefore = tree.getWingSpan(uid);
+    newAR = 2;
+    tree.setWingARKeepSpan(uid, newAR);
+    spanAfter = tree.getWingSpan(uid);
+    arAfter = tree.getWingAR(uid);
+    EXPECT_TRUE(IsApprox(spanBefore, spanAfter));
+    EXPECT_TRUE(IsApprox(newAR, arAfter));
+    tree.writeToFile();
+
+
+    spanBefore = tree.getWingSpan(uid);
+    newAR = 20;
+    tree.setWingARKeepSpan(uid, newAR);
+    spanAfter = tree.getWingSpan(uid);
+    arAfter = tree.getWingAR(uid);
+    EXPECT_TRUE(IsApprox(spanBefore, spanAfter));
+    EXPECT_TRUE(IsApprox(newAR, arAfter));
+    tree.writeToFile();
+
+
+
+
+    setVariables("TestCases/boxWing-withDihedral.xml");
+    uid = "D150_VAMP_W1";
+
+    spanBefore = tree.getWingSpan(uid);
+    newAR = 2;
+    tree.setWingARKeepSpan(uid, newAR);
+    spanAfter = tree.getWingSpan(uid);
+    arAfter = tree.getWingAR(uid);
+    EXPECT_TRUE(IsApprox(spanBefore, spanAfter));
+    EXPECT_TRUE(IsApprox(newAR, arAfter));
+    tree.writeToFile();
+
+
+    spanBefore = tree.getWingSpan(uid);
+    newAR = 20;
+    tree.setWingARKeepSpan(uid, newAR);
+    spanAfter = tree.getWingSpan(uid);
+    arAfter = tree.getWingAR(uid);
+    EXPECT_TRUE(IsApprox(spanBefore, spanAfter));
+    EXPECT_TRUE(IsApprox(newAR, arAfter));
+    tree.writeToFile();
+}
+
+
+
+TEST_F(AircraftTreeTest, setWingARKeepArea) {
+
+    double areaBefore, areaAfter, newAR, arAfter;
+    std::string uid;
+
+
+    setVariables("wing-simple-two-sections-rot.xml");
+    uid = "Wing";
+
+    areaBefore = tree.getWingPlanformArea(uid, XY_PLANE);
+    newAR = 2;
+    tree.setWingARKeepArea(uid, newAR);
+    areaAfter = tree.getWingPlanformArea(uid, XY_PLANE);
+    arAfter = tree.getWingAR(uid);
+    EXPECT_TRUE(IsApprox(areaBefore, areaAfter));
+    EXPECT_TRUE(IsApprox(newAR, arAfter));
+    tree.writeToFile();
+
+
+
+    setVariables("TestCases/boxWing-withDihedral.xml");
+    uid = "D150_VAMP_W1";
+
+
+
+    areaBefore = tree.getWingPlanformArea(uid, XY_PLANE);
+    newAR = 5;
+    tree.setWingARKeepArea(uid, newAR);
+    areaAfter = tree.getWingPlanformArea(uid, XY_PLANE);
+    arAfter = tree.getWingAR(uid);
+    EXPECT_TRUE(IsApprox(areaBefore, areaAfter));
+    EXPECT_TRUE(IsApprox(newAR, arAfter));
+    tree.writeToFile();
 
 }

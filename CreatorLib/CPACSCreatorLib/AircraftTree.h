@@ -417,13 +417,13 @@ namespace cpcr{
 
         void setWingSpanKeepAR(UID wingUID, double newSpan);
 
-        void setWingAreaKeepSpan(UID wingUID, double newHalfSpan );
+        void setWingAreaKeepSpan(UID wingUID, double newArea );
 
-        void setWingAreaKeepAR(UID wingUID, double newHalfSpan);
+        void setWingAreaKeepAR(UID wingUID, double newArea);
 
-        void setWingARKeepSpan(UID wingUID, double newHalfSpan);
+        void setWingARKeepSpan(UID wingUID, double AR);
 
-        void setWingARKeepArea(UID wingUID, double newHalfSpan);
+        void setWingARKeepArea(UID wingUID, double AR);
 
 
         /**
@@ -442,6 +442,7 @@ namespace cpcr{
          */
         double findChordXYScaleFactor(CPACSTreeItem *wing, double targetArea);
 
+        void scaleWingUniformly(UID wingUID, double scaleFactor);
 
     protected:
 
