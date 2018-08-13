@@ -82,7 +82,6 @@ void TIGLViewerWingWidget::init(ModificatorManager * associate ) {
     spinBoxAreaYZ->setValue(-1);
     spinBoxAreaT->setValue(-1);
 
-    spinBoxAreaXY->setReadOnly(true);
     spinBoxAreaXZ->setReadOnly(true);
     spinBoxAreaYZ->setReadOnly(true);
     spinBoxAreaT->setReadOnly(true);
@@ -171,30 +170,33 @@ void TIGLViewerWingWidget::expendStandardizationDetails(bool checked) {
 
 
 void TIGLViewerWingWidget::setAreaConstant(bool checked) {
-    if(checked){
-        checkBoxIsARConstant->setChecked(false);
-        checkBoxIsSpanConstant->setChecked(false);
-    }else{
-        checkBoxIsAreaConstant->setChecked(true); // one box should be always checked
-    }
+    checkBoxIsARConstant->setChecked(false);
+    spinBoxAR->setReadOnly(false);
+    checkBoxIsSpanConstant->setChecked(false);
+    spinBoxSpan->setReadOnly(false);
+    checkBoxIsAreaConstant->setChecked(true);
+    spinBoxAreaXY->setReadOnly(true);
+
 }
 
 void TIGLViewerWingWidget::setSpanConstant(bool checked) {
-    if(checked){
-        checkBoxIsARConstant->setChecked(false);
-        checkBoxIsAreaConstant->setChecked(false);
-    }else{
-        checkBoxIsSpanConstant->setChecked(true); // one box should be always checked
-    }
+
+    checkBoxIsARConstant->setChecked(false);
+    spinBoxAR->setReadOnly(false);
+    checkBoxIsAreaConstant->setChecked(false);
+    spinBoxAreaXY->setReadOnly(false);
+    checkBoxIsSpanConstant->setChecked(true);
+    spinBoxSpan->setReadOnly(true);
 }
 
 void TIGLViewerWingWidget::setARConstant(bool checked) {
-    if(checked){
-        checkBoxIsAreaConstant->setChecked(false);
-        checkBoxIsSpanConstant->setChecked(false);
-    }else{
-        checkBoxIsARConstant->setChecked(true); // one box should be always checked
-    }
+    checkBoxIsAreaConstant->setChecked(false);
+    spinBoxAreaXY->setReadOnly(false);
+    checkBoxIsSpanConstant->setChecked(false);
+    spinBoxSpan->setReadOnly(false);
+    checkBoxIsARConstant->setChecked(true);
+    spinBoxAR->setReadOnly(true);
+
 }
 
 
@@ -328,6 +330,9 @@ void TIGLViewerWingWidget::setWing(cpcr::CPACSTreeItem *wing) {
     internalAR = associateManager->adapter->getWingAR(wingItem);
     spinBoxAR->setValue(internalAR);
 
+    // set constant between ar, span and area
+    setARConstant(true);
+
 
     // set wingAirfoil1
     comboBoxAirfoil->clear();
@@ -359,7 +364,7 @@ void TIGLViewerWingWidget::reset() {
     if(wingItem != nullptr){
         this->setWing(this->wingItem);
     }else{
-        DLOG(WARNING) << "TIGLViewerWingWidget: reset call but wing is not set!";
+        LOG(WARNING) << "TIGLViewerWingWidget: reset call but wing is not set!";
     }
 
 }
@@ -387,6 +392,8 @@ void TIGLViewerWingWidget::apply() {
     bool spanHasChanged = ( ! isApprox( internalSpan, spinBoxSpan->value()) );
 
     bool aRHasChanged = ( ! isApprox(internalAR, spinBoxAR->value() ) );
+
+    bool areaXYHasChanged = ( ! isApprox(internalAreaXY, spinBoxAreaXY->value() ));
 
 
     if( anchorHasChanged ){
@@ -426,18 +433,51 @@ void TIGLViewerWingWidget::apply() {
 
     }
 
+    if( areaXYHasChanged){
+        internalAreaXY = spinBoxAreaXY->value();
+        if(checkBoxIsSpanConstant->isChecked()){
+            associateManager->adapter->setWingAreaKeepSpan(wingItem, internalAreaXY);
+        }
+        else if( checkBoxIsARConstant->isChecked() ){
+            associateManager->adapter->setWingAreaKeepAR(wingItem, internalAreaXY);
+        }
+        else {
+            LOG(ERROR) << "TIGLViewerWingWidget: set area called, but not correct constant checkbox set";
+        }
+
+    }
+
+
     if(spanHasChanged ){
         internalSpan = spinBoxSpan->value();
-        //associateManager->adapter->setWingSpan(wingItem, internalSpan);
+        if(checkBoxIsAreaConstant->isChecked()){
+            associateManager->adapter->setWingSpanKeepArea(wingItem, internalSpan);
+        }
+        else if(checkBoxIsARConstant->isChecked()){
+            associateManager->adapter->setWingSpanKeepAR(wingItem, internalSpan);
+        }
+        else {
+            LOG(ERROR) << "TIGLViewerWingWidget: set span called, but not correct constant checkbox set";
+        }
     }
 
     if(aRHasChanged ){
         internalAR = spinBoxAR->value();
-        //associateManager->adapter->setWingWing(wingItem, internalAR);
+        if(checkBoxIsAreaConstant->isChecked()){
+            associateManager->adapter->setWingARKeepArea(wingItem, internalAR);
+        }
+        else if(checkBoxIsSpanConstant->isChecked()){
+            associateManager->adapter->setWingARKeepSpan(wingItem, internalAR);
+        }
+        else {
+            LOG(ERROR) << "TIGLViewerWingWidget: set AR called, but not correct constant checkbox set";
+        }
     }
 
 
-    if(sweepHasChanged || airfoilHasChanged || dihedralHasChanged || spanHasChanged
+
+
+    if(sweepHasChanged || airfoilHasChanged || dihedralHasChanged || areaXYHasChanged || spanHasChanged
        || aRHasChanged || anchorHasChanged || symmetryHasChanged || orientationHasChanged){
         associateManager->adapter->writeToFile();   // we do this here to update all the change at once in the file
     }

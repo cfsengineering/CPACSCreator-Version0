@@ -408,3 +408,51 @@ void CPACSCreatorAdapter::setWingSymmetry(cpcr::CPACSTreeItem *item, QString new
     aircraftTree.setWingSymmetry(item->getUid(), newSymmetry.toStdString() );
 }
 
+void CPACSCreatorAdapter::setWingSpanKeepAR(cpcr::CPACSTreeItem *item, double newSpan) {
+
+    if( ! testItem(item, "wing")){
+        return ;
+    }
+    aircraftTree.setWingSpanKeepAR(item->getUid(), newSpan);
+}
+
+void CPACSCreatorAdapter::setWingSpanKeepArea(cpcr::CPACSTreeItem *item, double newSpan) {
+
+    if( ! testItem(item, "wing")){
+        return ;
+    }
+    aircraftTree.setWingSpanKeepArea(item->getUid(), newSpan);
+}
+
+void CPACSCreatorAdapter::setWingARKeepSpan(cpcr::CPACSTreeItem *item, double ar) {
+
+    if( ! testItem(item, "wing")){
+        return ;
+    }
+    aircraftTree.setWingARKeepSpan(item->getUid(), ar);
+}
+
+void CPACSCreatorAdapter::setWingARKeepArea(cpcr::CPACSTreeItem *item, double ar) {
+
+    if( ! testItem(item, "wing")){
+        return ;
+    }
+    aircraftTree.setWingARKeepArea(item->getUid(), ar);
+
+}
+
+void CPACSCreatorAdapter::setWingAreaKeepAR(cpcr::CPACSTreeItem *item, double newArea) {
+
+    if( ! testItem(item, "wing")){
+        return ;
+    }
+    aircraftTree.setWingAreaKeepAR(item->getUid(), newArea);
+}
+
+void CPACSCreatorAdapter::setWingAreaKeepSpan(cpcr::CPACSTreeItem *item, double newArea) {
+    if( ! testItem(item, "wing")){
+        return ;
+    }
+    aircraftTree.setWingAreaKeepSpan(item->getUid(), newArea);
+}
+

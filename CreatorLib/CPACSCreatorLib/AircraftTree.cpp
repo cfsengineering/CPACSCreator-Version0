@@ -2034,7 +2034,7 @@ double cpcr::AircraftTree::findChordXYScaleFactor(CPACSTreeItem *wing, double ta
     double G = powf(w(0),2) + powf(w(1),2) + powf(w(2),2);
 
     // case where the chord are parallel
-    if( IsApprox(G, 0)){
+    if( IsApprox(G, 0, 0.01)){
         return sqrt( powf((2*targetArea),2) / E );
     }
 

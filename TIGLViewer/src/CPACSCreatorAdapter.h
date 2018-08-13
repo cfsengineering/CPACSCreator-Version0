@@ -62,9 +62,21 @@ public:
 
     double getWingArea(cpcr::CPACSTreeItem * item, cpcr::PLANE plane);
 
+    void setWingAreaKeepAR(cpcr::CPACSTreeItem * item, double newArea);
+
+    void setWingAreaKeepSpan(cpcr::CPACSTreeItem * item, double newArea);
+
     double getWingSpan(cpcr::CPACSTreeItem * item);
 
+    void setWingSpanKeepAR(cpcr::CPACSTreeItem * item, double newSpan);
+
+    void setWingSpanKeepArea(cpcr::CPACSTreeItem * item, double newSpan);
+
     double getWingAR(cpcr::CPACSTreeItem * item);
+
+    void setWingARKeepSpan(cpcr::CPACSTreeItem * item, double ar);
+
+    void setWingARKeepArea(cpcr::CPACSTreeItem * item, double ar);
 
     void getStdValues(cpcr::CPACSTreeItem * item, bool& stdAirfoil, bool& stdSections, bool& stdPositionings, bool& stdAnchor);
 
