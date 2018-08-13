@@ -23,7 +23,7 @@ class AircraftTreeTest : public  ::testing::Test {
 
 protected:
 
-    std::string DATA_DIR="/home/makem/JobProject/CreatorTotal/CreatorLib/CPACSCreatorLibTests/CreatorTests/Data/";
+    std::string DATA_DIR="/home/cfse/Stage_Malo/CPACSCreatorTotal/CreatorLib/CPACSCreatorLibTests/CreatorTests/Data/";
 
 
     std::string fileName1 = DATA_DIR + "AircraftTreeTest1.xml";
@@ -1846,6 +1846,26 @@ TEST_F(AircraftTreeTest, setWingAreaKeepLeadingEdges) {
     tree.writeToFile();
     areaAfter = tree.getWingPlanformArea(uid, XY_PLANE);
     EXPECT_TRUE( IsApprox( areaBefore * scaleA, areaAfter) );
+
+
+
+    setVariables("TestCases/boxWing-withDihedral.xml");
+    uid = "D150_VAMP_W1";
+    areaBefore = tree.getWingPlanformArea(uid, XY_PLANE);
+    scaleA = 0.2;
+    wing = tree.getRoot()->getChildByUid(uid);
+    tree.setWingAreaKeepLeadingEdges(wing, scaleA * areaBefore);
+    tree.writeToFile();
+    areaAfter = tree.getWingPlanformArea(uid, XY_PLANE);
+    EXPECT_TRUE( IsApprox( areaBefore * scaleA, areaAfter) );
+
+    scaleA = 5;
+    wing = tree.getRoot()->getChildByUid(uid);
+    tree.setWingAreaKeepLeadingEdges(wing, scaleA * areaBefore);
+    tree.writeToFile();
+    areaAfter = tree.getWingPlanformArea(uid, XY_PLANE);
+    EXPECT_TRUE( IsApprox( areaBefore * scaleA, areaAfter) );
+
 
 
 }

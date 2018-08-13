@@ -2038,19 +2038,33 @@ double cpcr::AircraftTree::findChordXYScaleFactor(CPACSTreeItem *wing, double ta
     Eigen::Vector3d w;
     w << 0,0,0;
     Eigen::Vector3d a,b,c,v_temp,w_temp;
+    int j,h;
+
     for(int i = 0; i < segmentNum; i++){
 
-        std::vector<double> r;
+        j = i;
+        h = i + 1;
 
-        a = LEs[i+1] - LEs[i];
-        b = TEs[i] - LEs[i];
-        c = TEs[i+1] - LEs[i+1];
+        if( LEs[j](1) > LEs[h](1)    ){ // to get the area in the same direction
+            j = i + 1;
+            h = i;
+        }
+        a = LEs[h] - LEs[j];
+        b = TEs[j] - LEs[j];
+        c = TEs[h] - LEs[h];
 
         v_temp = (c + b ).cross(a);
         w_temp = b.cross(c);
 
+        // v and w should be only describe on z since a,b,c lay on the XY plane
+        if( (!IsApprox(v_temp(0),0)) && (!IsApprox(v_temp(1),0)) && (!IsApprox(w_temp(0),0)) && (!IsApprox(w_temp(1),0))  ){
+            LOG(WARNING) << "findChordXYScaleFactor: some  v or w is not only on Z";
+        }
+
         v = v + v_temp;
         w = w + w_temp;
+
+
     }
 
     double E = powf(v(0),2) + powf(v(1),2) + powf(v(2),2);

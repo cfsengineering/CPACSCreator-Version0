@@ -3643,19 +3643,19 @@
                     <airfoilUID isLink="True">D150_VAMP_W_SupCritProf1</airfoilUID>
                     <transformation uID="D150_VAMP_W1_Sec_1_Elem_1_transformation1">
                       <scaling uID="D150_VAMP_W1_Sec_1_Elem_1_transformation1_scaling1">
-                        <x>30</x>
-                        <y>30</y>
-                        <z>30</z>
+                        <x>6</x>
+                        <y>6</y>
+                        <z>6</z>
                       </scaling>
                       <rotation uID="D150_VAMP_W1_Sec_1_Elem_1_transformation1_rotation1">
-                        <x>180</x>
-                        <y>-180</y>
-                        <z>180</z>
+                        <x>0</x>
+                        <y>0</y>
+                        <z>0</z>
                       </rotation>
                       <translation refType="absGlobal" uID="D150_VAMP_W1_Sec_1_Elem_1_transformation1_translation1">
-                        <x>6.03961e-14</x>
-                        <y>2.08167e-16</y>
-                        <z>1.57772e-30</z>
+                        <x>0</x>
+                        <y>0</y>
+                        <z>0</z>
                       </translation>
                     </transformation>
                   </element>
@@ -3688,19 +3688,19 @@
                     <airfoilUID isLink="True">D150_VAMP_W_SupCritProf1</airfoilUID>
                     <transformation uID="D150_VAMP_W1_Sec_2_Elem_1_transformation1">
                       <scaling uID="D150_VAMP_W1_Sec_2_Elem_1_transformation1_scaling1">
-                        <x>9</x>
-                        <y>9</y>
-                        <z>9</z>
+                        <x>1.8</x>
+                        <y>1.8</y>
+                        <z>1.8</z>
                       </scaling>
                       <rotation uID="D150_VAMP_W1_Sec_2_Elem_1_transformation1_rotation1">
-                        <x>180</x>
-                        <y>180</y>
-                        <z>180</z>
+                        <x>0</x>
+                        <y>0</y>
+                        <z>0</z>
                       </rotation>
                       <translation refType="absGlobal" uID="D150_VAMP_W1_Sec_2_Elem_1_transformation1_translation1">
-                        <x>-1.91847e-13</x>
-                        <y>6.03961e-14</y>
-                        <z>-8.9706e-14</z>
+                        <x>0</x>
+                        <y>0</y>
+                        <z>0</z>
                       </translation>
                     </transformation>
                   </element>
@@ -3733,19 +3733,19 @@
                     <airfoilUID isLink="True">D150_VAMP_W_SupCritProf1</airfoilUID>
                     <transformation uID="D150_VAMP_W1_Sec_3_Elem_1_transformation1">
                       <scaling uID="D150_VAMP_W1_Sec_3_Elem_1_transformation1_scaling1">
-                        <x>12</x>
-                        <y>12</y>
-                        <z>12</z>
+                        <x>2.4</x>
+                        <y>2.4</y>
+                        <z>2.4</z>
                       </scaling>
                       <rotation uID="D150_VAMP_W1_Sec_3_Elem_1_transformation1_rotation1">
                         <x>0</x>
                         <y>0</y>
-                        <z>-0</z>
+                        <z>0</z>
                       </rotation>
                       <translation refType="absGlobal" uID="D150_VAMP_W1_Sec_3_Elem_1_transformation1_translation1">
-                        <x>-1.84741e-13</x>
-                        <y>-7.81597e-14</y>
-                        <z>-7.81597e-14</z>
+                        <x>0</x>
+                        <y>0</y>
+                        <z>0</z>
                       </translation>
                     </transformation>
                   </element>
@@ -3778,19 +3778,19 @@
                     <airfoilUID isLink="True">D150_VAMP_W_SupCritProf1</airfoilUID>
                     <transformation uID="D150_VAMP_W1_Sec_4_Elem_1_transformation1">
                       <scaling uID="D150_VAMP_W1_Sec_4_Elem_1_transformation1_scaling1">
-                        <x>18</x>
-                        <y>18</y>
-                        <z>18</z>
+                        <x>3.6</x>
+                        <y>3.6</y>
+                        <z>3.6</z>
                       </scaling>
                       <rotation uID="D150_VAMP_W1_Sec_4_Elem_1_transformation1_rotation1">
-                        <x>180</x>
-                        <y>180</y>
-                        <z>-180</z>
+                        <x>0</x>
+                        <y>0</y>
+                        <z>0</z>
                       </rotation>
                       <translation refType="absGlobal" uID="D150_VAMP_W1_Sec_4_Elem_1_transformation1_translation1">
-                        <x>6.03961e-13</x>
-                        <y>-2.13163e-13</y>
-                        <z>3.71259e-13</z>
+                        <x>0</x>
+                        <y>0</y>
+                        <z>0</z>
                       </translation>
                     </transformation>
                   </element>
