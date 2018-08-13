@@ -1873,42 +1873,23 @@ void cpcr::AircraftTree::setWingSpanKeepAR(cpcr::UID wingUID, double newSpan) {
         DLOG(WARNING) << "setWingSpanKeepAR: The AR is not properly keeped";
     }
 
+
+    // update tigl handle // TODO check if is the correct method to maintain tigl and aircraft sychronous
+    closeTiglHandle();
+    openTiglHandle(m_root->getUid());
+
 }
 
 
 void cpcr::AircraftTree::setWingSpanKeepArea(cpcr::UID wingUID, double newSpan) {
-//
-//    double area = getWingPlanformArea(wingUID, PLANE::XY_PLANE);
-//
-//    // uniform scaling
-//    double oldSpan = getWingSpan(wingUID);
-//    double s = newSpan/oldSpan;
-//    Eigen::Matrix4d sM = Eigen::Matrix4d::Identity();
-//
-//    sM(0,0) = 1/s;
-//    sM(1,1) = s;
-//    sM(2,2) = 1;
-//
-//    CPACSTreeItem* wing = m_root->getChildByUid(wingUID);
-//    CPACSTransformation wingT = modifier.getTransformation(wing->getXPath().toString() + "/transformation");
-//    Eigen::Matrix4d wingTM = wingT.getTransformationAsMatrix();
-//    Eigen::Matrix4d wingTMI = wingTM.inverse();
-//
-//    std::vector<UID> elementUIDs = getAllElementUIDsUsedInAWing(wingUID);
-//    std::map<UID, Eigen::Matrix4d> wingGlobals ;
-//    std::map<UID, Eigen::Matrix4d> newWingGlobals ;
-//
-//    for( UID uid : elementUIDs){
-//        wingGlobals[uid] =  wingTMI * getGlobalTransformMatrixOfElement(uid);
-//        newWingGlobals[uid] =  sM * wingGlobals[uid];
-//        placeElementRelativelyToWingMinimalChanges(m_root->getChildByUid(uid), newWingGlobals[uid]);
-//
-//    }
-//
-//    double newAR = getWingAR(wingUID);
-//    if(! IsApprox(aR, newAR) ){
-//        DLOG(WARNING) << "setWingSpanKeepAR: The AR is not properly keeped";
-//    }
+
+    double area = getWingPlanformArea(wingUID, XY_PLANE);
+
+    // first we set the span by uniform scaling
+    setWingSpanKeepAR(wingUID,newSpan);
+    // then we set the correct area
+    CPACSTreeItem* wing = m_root->getChildByUid(wingUID);
+    setWingAreaKeepLeadingEdges(wing, area);
 
 }
 
