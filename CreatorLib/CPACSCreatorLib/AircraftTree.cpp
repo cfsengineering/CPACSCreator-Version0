@@ -1996,7 +1996,7 @@ void cpcr::AircraftTree::placeElement(cpcr::CPACSTreeItem *element, Eigen::Matri
 
 }
 
-double cpcr::AircraftTree::findPerpendicularScaleFactor( CPACSTreeItem* wing, double targetArea) {
+double cpcr::AircraftTree::findChordXYScaleFactor(CPACSTreeItem *wing, double targetArea) {
 
     // get chords
     std::vector<cpcr::CPACSTreeItem *> graph = formatGraph(getWingGraph(wing)) ;
@@ -2004,17 +2004,22 @@ double cpcr::AircraftTree::findPerpendicularScaleFactor( CPACSTreeItem* wing, do
     std::map< UID, Eigen::Vector4d>  lEsMap = getChordPointsOfElements(wing->getUid(), 0 );
     std::map< UID, Eigen::Vector4d>  tEsMap = getChordPointsOfElements(wing->getUid(), 1 );
 
+    CPACSTransformation wingT = modifier.getTransformation(wing->getXPath().toString() + "/transformation");
+    Eigen::Matrix4d wingTIM = wingT.getTransformationAsMatrix().inverse();
+
     std::vector<Eigen::Vector3d>  LEs;
     std::vector<Eigen::Vector3d>  TEs;
 
     Eigen::Vector3d lXY;
     Eigen::Vector3d tXY;
 
+
+
     for(CPACSTreeItem* e : graph){
-        lXY = lEsMap[e->getUid()].block(0,0,3,1);
+        lXY = ( wingTIM *lEsMap[e->getUid()]).block(0,0,3,1);
         lXY(2) = 0;
         LEs.push_back(lXY);
-        tXY = tEsMap[e->getUid()].block(0,0,3,1);
+        tXY = ( wingTIM * tEsMap[e->getUid()]).block(0,0,3,1);
         tXY(2) = 0;
         TEs.push_back(tXY);
     }
@@ -2022,7 +2027,7 @@ double cpcr::AircraftTree::findPerpendicularScaleFactor( CPACSTreeItem* wing, do
 
     int segmentNum = LEs.size() - 1;
     if (segmentNum < 1){
-        LOG(ERROR) << "findPerpendicularScaleFactor: input incorrect";
+        LOG(ERROR) << "findChordXYScaleFactor: input incorrect";
         return -1;
     }
 
@@ -2067,13 +2072,13 @@ double cpcr::AircraftTree::findPerpendicularScaleFactor( CPACSTreeItem* wing, do
     double roots [4] = {-1,-1,-1,-1};
     double r = SolveP4(roots, F, E, 0, area);
 
-    LOG(INFO) << "findPerpendicularScaleFactor roots" << roots[0] << ";" << roots[1] << ";" << roots[2] << ";"<< roots[3] << ";";
+    LOG(INFO) << "findChordXYScaleFactor roots" << roots[0] << ";" << roots[1] << ";" << roots[2] << ";"<< roots[3] << ";";
 
     double d = -1;
 
     if (r == 0){
-        LOG(ERROR) << "findPerpendicularScaleFactor: only complex factor found";
-        throw CreatorException("findPerpendicularScaleFactor: only complex factor found");
+        LOG(ERROR) << "findChordXYScaleFactor: only complex factor found";
+        throw CreatorException("findChordXYScaleFactor: only complex factor found");
     }
     else if ( r == 2 ){
         double arrayTemp [2] = {roots[0],roots[1]};
@@ -2083,7 +2088,7 @@ double cpcr::AircraftTree::findPerpendicularScaleFactor( CPACSTreeItem* wing, do
         }else if ( arrayTemp[1] > 0 ) {
             d = arrayTemp[1];
         }else{
-            throw CreatorException("findPerpendicularScaleFactor: no positive factor found");
+            throw CreatorException("findChordXYScaleFactor: no positive factor found");
         }
     }
     else if ( r == 4 ) {
@@ -2098,7 +2103,7 @@ double cpcr::AircraftTree::findPerpendicularScaleFactor( CPACSTreeItem* wing, do
             d = roots[3];
         }
         else{
-            throw CreatorException("findPerpendicularScaleFactor: no positive factor found");
+            throw CreatorException("findChordXYScaleFactor: no positive factor found");
         }
 
     }
@@ -2108,6 +2113,79 @@ double cpcr::AircraftTree::findPerpendicularScaleFactor( CPACSTreeItem* wing, do
 
 void cpcr::AircraftTree::setWingAreaKeepLeadingEdges(cpcr::CPACSTreeItem *wing, double area) {
 
+    // get scaling
+    double f = findChordXYScaleFactor(wing, area);
+
+
+    // get chords
+    std::vector<cpcr::CPACSTreeItem *> graph = formatGraph(getWingGraph(wing)) ;
+
+    std::map< UID, Eigen::Vector4d>  lEsMap = getChordPointsOfElements(wing->getUid(), 0 );
+    std::map< UID, Eigen::Vector4d>  tEsMap = getChordPointsOfElements(wing->getUid(), 1 );
+
+    CPACSTransformation wingT = modifier.getTransformation(wing->getXPath().toString() + "/transformation");
+    Eigen::Matrix4d wingTM = wingT.getTransformationAsMatrix();
+    Eigen::Matrix4d wingTMI = wingTM.inverse();
+
+
+
+
+    Eigen::Vector4d sensor1, sensor2, sensor3, sensor1P, sensor2P, sensor3P , sensorN , newTEA;
+    CPACSTransformation tempNewTransformationE ;
+
+
+    Eigen::Vector3d lE, tE, newTE, newDelta;
+    double deltaX, deltaY, deltaZ, newDeltaX, newDeltaY, newDeltaZ, normXY, newNormXY,  ratio; // ratio between xy and  z
+    Eigen::Matrix4d globalM, globalMI, allExpectE, allExpectEI;
+    UniqueXPath tempXPath;
+    UID uid;
+    std::vector<std::pair<cpcr::CPACSTreeItem *, Eigen::Matrix4d>> chain;
+
+    // For each element find out the good transformation for element to do the shearing
+    for (CPACSTreeItem*  e :graph ) {
+        uid = e->getUid();
+        chain = getTransformationChainForOneElement(e);
+        allExpectE = chain[3].second * chain[2].second * chain[1].second;
+        allExpectEI = allExpectE.inverse();
+
+        // compute the new TE base ont the scale factor
+        lE = ( wingTMI *lEsMap[uid]).block(0,0,3,1);
+        tE = ( wingTMI *tEsMap[uid]).block(0,0,3,1);
+        deltaX = tE(0) -lE(0);
+        deltaY = tE(1) -lE(1);
+        deltaZ = tE(2) -lE(2);
+        normXY = sqrt( pow(deltaX,2) +  pow(deltaY,2) );
+        ratio = deltaZ / normXY ;
+        newDeltaX = f * deltaX;
+        newDeltaY = f * deltaY;
+        newNormXY = sqrt( pow(newDeltaX,2) +  pow(newDeltaY,2) );
+        newDeltaZ = ratio * newNormXY;
+        newDelta << newDeltaX,newDeltaY,newDeltaZ;
+        newTE = lE + newDelta;  // in wing coor
+        newTEA << newTE(0), newTE(1), newTE(2), 1;
+        newTEA = wingTM * newTEA;
+
+        globalM = getGlobalTransformMatrixOfElement(e->getUid());
+        globalMI = globalM.inverse();
+
+        sensor1 = globalMI * lEsMap[uid]; // give the point in the airfoil sys
+        sensor2 = globalMI * tEsMap[uid];
+        sensorN << 0,1,0,1 ; // sensor 1 and sensor 2 should be on the XZ-plane, because they are airfoil // todo test?
+        sensor3.block<3,1>(0,0) = sensor1.block<3,1>(0,0) +  (sensorN.block<3,1>(0,0)).cross((sensor2-sensor1).block<3,1>(0,0)); // create a vector perpendicular at s1 s2 on the XZ-plane
+        sensor3(3) = 1;  // set the augmented component;
+        sensor1P = allExpectEI * lEsMap[uid]; // Leading edge dos not change
+        sensor2P = allExpectEI * newTEA;
+        sensor3P =  sensor3;
+
+        tempNewTransformationE = TransformChord(sensor1, sensor2, sensor3, sensor1P, sensor2P, sensor3P);
+        tempXPath = UniqueXPath(e->getXPath());
+        tempXPath.addParticleAtEnd("transformation");
+        modifier.setTransformation(tempXPath,tempNewTransformationE ); // save the result in memory
+    }
+
+    // update tigl handle // TODO check if is the correct method to maintain tigl and aircraft sychronous
+    closeTiglHandle();
+    openTiglHandle(m_root->getUid());
 
 
 

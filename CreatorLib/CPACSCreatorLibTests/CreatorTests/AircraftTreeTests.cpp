@@ -1713,10 +1713,10 @@ TEST_F(AircraftTreeTest, findPerpendicularScaleFactor){
     area = tree.getWingPlanformArea("Wing", XY_PLANE);
     scaleA = 0.5;
     wing = tree.getRoot()->getChildByUid("Wing");
-    scaleC = tree.findPerpendicularScaleFactor(wing , area * scaleA);
+    scaleC = tree.findChordXYScaleFactor(wing, area * scaleA);
     EXPECT_TRUE( IsApprox(scaleA, scaleC));
     scaleA = 0.33;
-    scaleC = tree.findPerpendicularScaleFactor(wing , area * scaleA);
+    scaleC = tree.findChordXYScaleFactor(wing, area * scaleA);
     EXPECT_TRUE( IsApprox(scaleA, scaleC));
 
     // chord are parallel
@@ -1724,10 +1724,10 @@ TEST_F(AircraftTreeTest, findPerpendicularScaleFactor){
     area = tree.getWingPlanformArea("Wing", XY_PLANE);
     scaleA = 0.5;
     wing = tree.getRoot()->getChildByUid("Wing");
-    scaleC = tree.findPerpendicularScaleFactor(wing , area * scaleA);
+    scaleC = tree.findChordXYScaleFactor(wing, area * scaleA);
     EXPECT_TRUE( IsApprox(scaleA, scaleC));
     scaleA = 0.33;
-    scaleC = tree.findPerpendicularScaleFactor(wing , area * scaleA);
+    scaleC = tree.findChordXYScaleFactor(wing, area * scaleA);
     EXPECT_TRUE( IsApprox(scaleA, scaleC));
 
     // chord are parallel
@@ -1735,10 +1735,10 @@ TEST_F(AircraftTreeTest, findPerpendicularScaleFactor){
     area = tree.getWingPlanformArea("Wing", XY_PLANE);
     scaleA = 0.5;
     wing = tree.getRoot()->getChildByUid("Wing");
-    scaleC = tree.findPerpendicularScaleFactor(wing , area * scaleA);
+    scaleC = tree.findChordXYScaleFactor(wing, area * scaleA);
     EXPECT_TRUE( IsApprox(scaleA, scaleC));
     scaleA = 0.33;
-    scaleC = tree.findPerpendicularScaleFactor(wing , area * scaleA);
+    scaleC = tree.findChordXYScaleFactor(wing, area * scaleA);
     EXPECT_TRUE( IsApprox(scaleA, scaleC));
 
 
@@ -1747,10 +1747,10 @@ TEST_F(AircraftTreeTest, findPerpendicularScaleFactor){
     area = tree.getWingPlanformArea("Wing", XY_PLANE);
     scaleA = 0.5;
     wing = tree.getRoot()->getChildByUid("Wing");
-    scaleC = tree.findPerpendicularScaleFactor(wing , area * scaleA);
+    scaleC = tree.findChordXYScaleFactor(wing, area * scaleA);
     EXPECT_TRUE( IsApprox(scaleA, scaleC,0.1));
     scaleA = 0.33;
-    scaleC = tree.findPerpendicularScaleFactor(wing , area * scaleA);
+    scaleC = tree.findChordXYScaleFactor(wing, area * scaleA);
     EXPECT_TRUE( IsApprox(scaleA, scaleC,0.1));
 
 
@@ -1759,11 +1759,93 @@ TEST_F(AircraftTreeTest, findPerpendicularScaleFactor){
     area = tree.getWingPlanformArea("Wing", XY_PLANE);
     scaleA = 0.5;
     wing = tree.getRoot()->getChildByUid("Wing");
-    scaleC = tree.findPerpendicularScaleFactor(wing , area * scaleA);
+    scaleC = tree.findChordXYScaleFactor(wing, area * scaleA);
     EXPECT_TRUE( IsApprox(scaleA, scaleC,0.1));
     scaleA = 0.33;
-    scaleC = tree.findPerpendicularScaleFactor(wing , area * scaleA);
+    scaleC = tree.findChordXYScaleFactor(wing, area * scaleA);
     EXPECT_TRUE( IsApprox(scaleA, scaleC,0.1));
+
+
+}
+
+
+
+
+
+TEST_F(AircraftTreeTest, setWingAreaKeepLeadingEdges) {
+
+    double areaBefore, areaAfter,  scaleA;
+    std::string uid;
+    CPACSTreeItem *wing;
+
+    setVariables("wing-simple.xml");
+    areaBefore = tree.getWingPlanformArea("Wing", XY_PLANE);
+    scaleA = 0.5;
+    wing = tree.getRoot()->getChildByUid("Wing");
+    tree.setWingAreaKeepLeadingEdges(wing, scaleA * areaBefore);
+    tree.writeToFile();
+    areaAfter = tree.getWingPlanformArea("Wing", XY_PLANE);
+    EXPECT_EQ( areaBefore * scaleA, areaAfter);
+
+    scaleA = 1.7;
+    wing = tree.getRoot()->getChildByUid("Wing");
+    tree.setWingAreaKeepLeadingEdges(wing, scaleA * areaBefore);
+    tree.writeToFile();
+    areaAfter = tree.getWingPlanformArea("Wing", XY_PLANE);
+    EXPECT_EQ( areaBefore * scaleA, areaAfter);
+
+
+    setVariables("wing-simple-two-sections.xml");
+    areaBefore = tree.getWingPlanformArea("Wing", XY_PLANE);
+    scaleA = 0.5;
+    wing = tree.getRoot()->getChildByUid("Wing");
+    tree.setWingAreaKeepLeadingEdges(wing, scaleA * areaBefore);
+    tree.writeToFile();
+    areaAfter = tree.getWingPlanformArea("Wing", XY_PLANE);
+    EXPECT_EQ( areaBefore * scaleA, areaAfter);
+
+    scaleA = 1.7;
+    wing = tree.getRoot()->getChildByUid("Wing");
+    tree.setWingAreaKeepLeadingEdges(wing, scaleA * areaBefore);
+    tree.writeToFile();
+    areaAfter = tree.getWingPlanformArea("Wing", XY_PLANE);
+    EXPECT_TRUE( IsApprox( areaBefore * scaleA, areaAfter) );
+
+
+    setVariables("wing-simple-two-sections-rot.xml");
+    areaBefore = tree.getWingPlanformArea("Wing", XY_PLANE);
+    scaleA = 0.8;
+    wing = tree.getRoot()->getChildByUid("Wing");
+    tree.setWingAreaKeepLeadingEdges(wing, scaleA * areaBefore);
+    tree.writeToFile();
+    areaAfter = tree.getWingPlanformArea("Wing", XY_PLANE);
+    EXPECT_TRUE( IsApprox( areaBefore * scaleA, areaAfter) );
+
+    scaleA = 1.2;
+    wing = tree.getRoot()->getChildByUid("Wing");
+    tree.setWingAreaKeepLeadingEdges(wing, scaleA * areaBefore);
+    tree.writeToFile();
+    areaAfter = tree.getWingPlanformArea("Wing", XY_PLANE);
+    EXPECT_TRUE( IsApprox( areaBefore * scaleA, areaAfter) );
+
+
+
+    setVariables("TestCases/boxWing.xml");
+    uid = "D150_VAMP_W1";
+    areaBefore = tree.getWingPlanformArea(uid, XY_PLANE);
+    scaleA = 0.2;
+    wing = tree.getRoot()->getChildByUid(uid);
+    tree.setWingAreaKeepLeadingEdges(wing, scaleA * areaBefore);
+    tree.writeToFile();
+    areaAfter = tree.getWingPlanformArea(uid, XY_PLANE);
+    EXPECT_TRUE( IsApprox( areaBefore * scaleA, areaAfter) );
+
+    scaleA = 5;
+    wing = tree.getRoot()->getChildByUid(uid);
+    tree.setWingAreaKeepLeadingEdges(wing, scaleA * areaBefore);
+    tree.writeToFile();
+    areaAfter = tree.getWingPlanformArea(uid, XY_PLANE);
+    EXPECT_TRUE( IsApprox( areaBefore * scaleA, areaAfter) );
 
 
 }

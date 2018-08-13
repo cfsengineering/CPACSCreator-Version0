@@ -440,7 +440,7 @@ namespace cpcr{
          * Find out the scale factor in XY to apply on the chord to obtain the target area
          * using quatric equation.
          */
-        double findPerpendicularScaleFactor(CPACSTreeItem* wing, double targetArea);
+        double findChordXYScaleFactor(CPACSTreeItem *wing, double targetArea);
 
 
     protected:
