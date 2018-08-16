@@ -442,6 +442,12 @@ namespace cpcr{
          */
         double findChordXYScaleFactor(CPACSTreeItem *wing, double targetArea);
 
+
+        /**
+         * Scale the wing in the wing coordinate system by the scale factor
+         * @param wingUID
+         * @param scaleFactor
+         */
         void scaleWingUniformly(UID wingUID, double scaleFactor);
 
     protected:

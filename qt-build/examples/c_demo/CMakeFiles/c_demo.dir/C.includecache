@@ -1,0 +1,28 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/cfse/Stage_Malo/CPACSCreatorTotal/examples/c_demo/c_demo.c
+tigl.h
+/home/cfse/Stage_Malo/CPACSCreatorTotal/examples/c_demo/tigl.h
+tixi.h
+/home/cfse/Stage_Malo/CPACSCreatorTotal/examples/c_demo/tixi.h
+stdio.h
+-
+
+/home/cfse/Stage_Malo/CPACSCreatorTotal/src/api/tigl.h
+tixi.h
+/home/cfse/Stage_Malo/CPACSCreatorTotal/src/api/tixi.h
+stdio.h
+-
+
+/usr/include/tixi3/tixi.h
+tixi.h
+/usr/include/tixi3/tixi.h
+tixi.h
+/usr/include/tixi3/tixi.h
+
