@@ -1,4 +1,9 @@
 /*
+*
+* Modifications Copyright (C) 2018 CFS Engineering
+*
+* Changed: CPACSCreator Addition, 2018 Malo Drougard <malo.drougard@protonmail.com>
+*
 * Copyright (C) 2007-2013 German Aerospace Center (DLR/SC)
 *
 * Created: 2010-08-13 Markus Litz <Markus.Litz@dlr.de>
