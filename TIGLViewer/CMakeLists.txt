@@ -264,9 +264,7 @@ target_link_libraries(${PROGNAME}
 )
 
 # cpacscreatorlib ######################################################################################################
-# TODO clean building way
-#find_library( LOCATION libCPACSCreatorLib.a "/home/cfse/Stage_Malo/CPACSCreatorLib/cmake-build-debug/CPACSCreatorLib/" )
-#message(LIBCREATORLOCATION: ${LOCATION})
+
 target_link_libraries( ${PROGNAME}
         CPACSCreatorLib
 )

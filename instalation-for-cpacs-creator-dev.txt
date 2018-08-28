@@ -6,7 +6,7 @@ $ echo 'deb http://download.opensuse.org/repositories/home:martinsiggel/xUbuntu_
 # update packages list
 $ sudo apt-get update
 
-# install lib for opencascade (oce)
+# install lib for (oce)
 $ sudo apt-get install cmake  qt4-dev-tools liboce-dev
 
 $ sudo apt-get install oce-draw
