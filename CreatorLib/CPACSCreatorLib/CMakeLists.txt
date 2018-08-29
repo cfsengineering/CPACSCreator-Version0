@@ -44,8 +44,8 @@ unset(TIXI_LIB_LOCATION CACHE) # clear variable
 find_library(TIXI_LIB_LOCATION tixi3 )
 message(TIXI_LIB_LOCATION: ${TIXI_LIB_LOCATION})
 target_link_libraries(CPACSCreatorLib ${TIXI_LIB_LOCATION} )
-find_path(TIXI_PATH_MD: tixi.h )
-message(TIXI_PATH_MD ${TIXI_PATH_MD})
+find_path(TIXI_PATH_MD tixi.h /usr/local/include/tixi3 /usr/include/)
+message(TIXI_PATH_MD ${TIXI_PATH_MD} )
 target_include_directories(CPACSCreatorLib PRIVATE ${TIXI_PATH_MD})
 
 
