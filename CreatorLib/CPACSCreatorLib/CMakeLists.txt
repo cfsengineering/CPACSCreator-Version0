@@ -39,22 +39,19 @@ target_sources( CPACSCreatorLib
 
 
 
-
-
-#TODO IMPORTANT proper linkage with tixi !
+# TIXI link
 unset(TIXI_LIB_LOCATION CACHE) # clear variable
 find_library(TIXI_LIB_LOCATION tixi3 )
 message(TIXI_LIB_LOCATION: ${TIXI_LIB_LOCATION})
 target_link_libraries(CPACSCreatorLib ${TIXI_LIB_LOCATION} )
+find_path(TIXI_PATH_MD: tixi.h )
+message(TIXI_PATH_MD ${TIXI_PATH_MD})
+target_include_directories(CPACSCreatorLib PRIVATE ${TIXI_PATH_MD})
 
 
-#TODO IMPORTANT proper linkage with tigl
+
+# TIGL link
 target_include_directories(CPACSCreatorLib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../../src/api)
-
-#unset(TIGL_LIB_LOCATION CACHE)
-#find_library(TIGL_LIB_LOCATION tigl3 PATH  ${CMAKE_CURRENT_SOURCE_DIR}/../../cmake-build-debug/lib )
-#message(TIGL_LIB_LOCATION: ${TIGL_LIB_LOCATION})
-#target_link_libraries(CPACSCreatorLib ${TIGL_LIB_LOCATION})
 target_link_libraries(CPACSCreatorLib tigl3)
 
 
