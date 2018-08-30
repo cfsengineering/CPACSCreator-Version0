@@ -25,7 +25,14 @@ add_executable(runCPACSCreatorLibTests
 target_include_directories(runCPACSCreatorLibTests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../../ThirdPartyLib/easyloggingpp-9.96.4/src/)
 target_sources( runCPACSCreatorLibTests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../../ThirdPartyLib/easyloggingpp-9.96.4/src/easylogging++.cc)
 
-
+# TIXI link
+unset(TIXI_LIB_LOCATION CACHE) # clear variable
+find_library(TIXI_LIB_LOCATION tixi3 )
+message(TIXI_LIB_LOCATION: ${TIXI_LIB_LOCATION})
+target_link_libraries(runCPACSCreatorLibTests ${TIXI_LIB_LOCATION} )
+find_path(TIXI_PATH_MD tixi.h /usr/local/include/tixi3 /usr/include/)
+message(TIXI_PATH_MD ${TIXI_PATH_MD} )
+target_include_directories(runCPACSCreatorLibTests PRIVATE ${TIXI_PATH_MD})
 
 target_link_libraries(runCPACSCreatorLibTests CPACSCreatorLib)
 target_link_libraries(runCPACSCreatorLibTests gtest gtest_main)

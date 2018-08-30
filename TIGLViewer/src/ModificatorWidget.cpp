@@ -21,6 +21,7 @@
 
 #include "ModificatorWidget.h"
 #include "CTiglLogging.h"
+#include <cmath>
 
 
 ModificatorWidget::ModificatorWidget(QWidget *parent): QWidget(parent) {
