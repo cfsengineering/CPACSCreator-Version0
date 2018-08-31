@@ -76,7 +76,7 @@ TIGLViewerWindow::TIGLViewerWindow()
 {
     setupUi(this);
 
-    setWindowTitle(QString("TiGL Viewer %1").arg(TIGL_MAJOR_VERSION));
+    setWindowTitle(QString("CPACSCreator"));
 
     tiglViewerSettings = &TIGLViewerSettings::Instance();
     settingsDialog = new TIGLViewerSettingsDialog(*tiglViewerSettings, this);
@@ -255,7 +255,7 @@ void TIGLViewerWindow::closeConfiguration()
         delete cpacsConfiguration;
         cpacsConfiguration = NULL;
     }
-    setWindowTitle(QString("TiGL Viewer %1").arg(TIGL_MAJOR_VERSION));
+    setWindowTitle(QString("CPACSCreator"));
 }
 
 void TIGLViewerWindow::openRecentFile()
@@ -358,8 +358,7 @@ void TIGLViewerWindow::reopenFile()
 
 void TIGLViewerWindow::setCurrentFile(const QString &fileName)
 {
-    setWindowTitle(QString("%2 - TiGL Viewer %1")
-                   .arg(TIGL_MAJOR_VERSION)
+    setWindowTitle(QString("%1 - CPACSCreator ")
                    .arg(QDir::toNativeSeparators(QFileInfo(fileName).absoluteFilePath())));
 
     currentFile = fileName;
@@ -527,8 +526,8 @@ void TIGLViewerWindow::about()
     QString tiglVersion(tiglGetVersion());
     QString occtVersion = QString("%1.%2.%3").arg(OCC_VERSION_MAJOR).arg(OCC_VERSION_MINOR).arg(OCC_VERSION_MAINTENANCE);
 
-    text =  "The <b>TiGL Viewer</b> is based on the TiGL library and allows you to view CPACS geometries. ";
-    text += "TiGL Viewer uses the following Open Source libraries:<br/><br/>";
+    text =  "The <b>CPACSCreator</b> is based on the TiGL library and CPACSCreatorLib and allows you to view and edit CPACS geometries. ";
+    text += "CPACSCreator uses the following Open Source libraries:<br/><br/>";
     
     if (tiglVersion.contains("-r")) {
         QStringList list = tiglVersion.split("-r");
@@ -540,13 +539,18 @@ void TIGLViewerWindow::about()
 
     text += makeLink("TiXI", "https://github.com/dlr-sc/tixi") + ": v" + tixiVersion + "<br/>";
     text += makeLink("TiGL", "https://github.com/dlr-sc/tigl") + ": v" + tiglVersion + "<br/>";
+    text += makeLink("CPACSCreator", "https://github.com/cfsengineering/CPACSCreator.git") + ": v" + "1.0.0"+ "<br/>";
     text += makeLink("OpenCASCADE", "https://www.opencascade.com/") + ": v" + occtVersion + "<br/><br/>";
 
+
+    text += "Visit the CPACSCreator project page at " + makeLink("https://github.com/cfsengineering/CPACSCreator.git", "https://github.com/cfsengineering/CPACSCreator.git")+ "<br/><br/>";
     text += "Visit the TiGL project page at " + makeLink("http://software.dlr.de/p/tigl/", "http://software.dlr.de/p/tigl/")+ "<br/><br/>";
 
-    text += "&copy; 2017 German Aerospace Center (DLR) ";
+    text += "&copy; 2017 German Aerospace Center (DLR) <br/>";
+    text += "&copy; 2018 CFS Engineering ";
 
-    QMessageBox::about(this, tr("About TiGL Viewer"), text);
+
+    QMessageBox::about(this, tr("About CPACSCreator"), text);
 }
 
 void TIGLViewerWindow::aboutQt()

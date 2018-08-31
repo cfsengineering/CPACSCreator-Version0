@@ -287,16 +287,16 @@ endif()
 
 if (APPLE)
   set(CPACK_PACKAGE_EXECUTABLES
-    "TiGL-Viewer3" "TiGL Viewer 3"
+    "CPACSCreator" "CPACSCreator Viewer"
   )
 else(APPLE)
   set(CPACK_PACKAGE_EXECUTABLES
-    "tiglviewer-3" "TiGL Viewer 3"
+    "cpacscreator" "CPACSCreator Viewer"
   )
 endif(APPLE)
 
 include(CPack)
-cpack_add_component(viewer DISPLAY_NAME "TiGL Viewer + 3rd Party DLLs")
+cpack_add_component(viewer DISPLAY_NAME "CPACSCreator + 3rd Party DLLs")
 cpack_add_component(headers DISPLAY_NAME "Headers")
 cpack_add_component(interfaces DISPLAY_NAME "Interfaces/Bindings")
 cpack_add_component(docu DISPLAY_NAME "Documentation")

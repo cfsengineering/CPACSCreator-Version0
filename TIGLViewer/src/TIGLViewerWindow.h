@@ -57,7 +57,7 @@ class TIGLViewerWindow : public QMainWindow, private Ui::TIGLViewerWindow
     Q_OBJECT
     Q_PROPERTY(TIGLViewerWidget*  viewer READ getViewer)
     Q_PROPERTY(TIGLViewerContext* scene  READ getScene)
-    Q_CLASSINFO("Description", "TiGL Viewer Application")
+    Q_CLASSINFO("Description", "CPACSCreator Application")
 
 public:
     enum { MaxRecentFiles = 5 };
