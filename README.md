@@ -25,12 +25,12 @@ CPACSCreator framework can be divided into 3 main modules.
   - CPACSCreatorLib
   - CPACSCreator 
   
-TiGL library is the library provided by [TiGl](https://github.com/DLR-SC/tigl) project.
+TiGL library is the library provided by [TiGL](https://github.com/DLR-SC/tigl) project.
 
 CPACSCreator provides the new features in a C++ library called CPACSCreatorLib. 
-CPACSCrearorLib use [TIXI](https://github.com/DLR-SC/tixi) library, view function of the TIGL library. 
-CPACSCrearorLib use also [Eigne](http://eigen.tuxfamily.org/index.php?title=Main_Page) library to express
-the affine transformation in matrices.
+CPACSCrearorLib use [TIXI](https://github.com/DLR-SC/tixi) library and few functions of the TIGL library. 
+CPACSCrearorLib use also [Eigen](http://eigen.tuxfamily.org/index.php?title=Main_Page) library to express
+the affine transformations in matrices.
 
 CPACSCreator viewer is based on TIGLViewer and add the features of CPACSCreatorLib into a 
 user-friendly widget.    
