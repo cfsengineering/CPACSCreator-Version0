@@ -3594,7 +3594,7 @@
           </fuselage>
         </fuselages>
         <wings xsi:type="wingsType">
-          <wing symmetry="x-z-plane" uID="D150_VAMP_wing_W1" xsi:type="wingType">
+          <wing uID="D150_VAMP_wing_W1" xsi:type="wingType" symmetry="x-z-plane">
             <name>D150_wing_1</name>
             <description>Wing</description>
             <parentUID>D150_VAMP_FL1</parentUID>

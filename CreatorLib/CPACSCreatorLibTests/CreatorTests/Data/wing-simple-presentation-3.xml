@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cpacs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.airbusds.com/cpacs/2.3">
+  <header>
+    <name>Test simplest wing model</name>
+    <creator>Malo</creator>
+    <description>simplest wing</description>
+    <timestamp>2018-03-03T11:58:57</timestamp>
+    <version>1.1</version>
+    <cpacsVersion>3.0</cpacsVersion>
+    <updates>
+    </updates>
+  </header>
+  <vehicles>
+    <aircraft>
+      <model uID="model">
+        <name>Name</name>
+        <wings>
+          <wing uID="Wing">
+            <name>Wing</name>
+            <transformation uID="Wing_transformation1">
+              <scaling uID="Wing_transformation1_scaling1">
+                <x>1</x>
+                <y>1</y>
+                <z>1</z>
+              </scaling>
+              <rotation uID="Wing_transformation1_rotation1">
+                <x>0</x>
+                <y>0</y>
+                <z>0</z>
+              </rotation>
+              <translation refType="absLocal" uID="Wing_transformation1_translation1">
+                <x>0</x>
+                <y>0</y>
+                <z>0</z>
+              </translation>
+            </transformation>
+            <sections>
+              <section uID="Wing_section1">
+                <name>Wing_section1</name>
+                <transformation uID="Wing_section1_transformation1">
+                  <scaling uID="Wing_section1_transformation1_scaling1">
+                    <x>1</x>
+                    <y>1</y>
+                    <z>1</z>
+                  </scaling>
+                  <rotation uID="Wing_section1_transformation1_rotation1">
+                    <x>0</x>
+                    <y>0</y>
+                    <z>20</z>
+                  </rotation>
+                  <translation refType="absLocal" uID="Wing_section1_transformation1_translation1">
+                    <x>0</x>
+                    <y>0</y>
+                    <z>0</z>
+                  </translation>
+                </transformation>
+                <elements>
+                  <element uID="Wing_section1_element1">
+                    <name>Wing_section1_element1</name>
+                    <airfoilUID>mdAirfoilFineNormalized</airfoilUID>
+                    <transformation uID="Wing_section1_element1_transformation1">
+                      <scaling uID="Wing_section1_element1_transformation1_scaling1">
+                        <x>2</x>
+                        <y>2</y>
+                        <z>2</z>
+                      </scaling>
+                      <rotation uID="Wing_section1_element1_transformation1_rotation1">
+                        <x>0</x>
+                        <y>0</y>
+                        <z>0</z>
+                      </rotation>
+                      <translation refType="absLocal" uID="Wing_section1_element1_transformation1_translation1">
+                        <x>0</x>
+                        <y>0</y>
+                        <z>0</z>
+                      </translation>
+                    </transformation>
+                  </element>
+                </elements>
+              </section>
+            </sections>
+            <segments>
+              <segment uID="Wing_segment1">
+                <name>Wing_segment1</name>
+                <fromElementUID>Wing_section1_element1</fromElementUID>
+                <toElementUID>Wing_section1_element1</toElementUID>
+              </segment>
+            </segments>
+          </wing>
+        </wings>
+      </model>
+    </aircraft>
+    <profiles>
+      <wingAirfoils>
+        <wingAirfoil uID="mdAirfoilFineNormalized">
+          <name>mdAirfoil2</name>
+          <pointList>
+            <x mapType="vector">1;0.5;0.2;0;0.2;0.5;1</x>
+            <y mapType="vector">0;0;0;0;0;0;0</y>
+            <z mapType="vector">0;-0.1;-0.1;0;0.1;0.1;0</z>
+          </pointList>
+        </wingAirfoil>
+      </wingAirfoils>
+      <structuralProfiles/>
+    </profiles>
+    <structuralElements/>
+  </vehicles>
+</cpacs>

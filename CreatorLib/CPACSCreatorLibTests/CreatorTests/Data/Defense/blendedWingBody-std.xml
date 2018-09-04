@@ -38,9 +38,9 @@
                 <z>0</z>
               </rotation>
               <translation refType="absGlobal" uID="BWB450_Wing1_Transf_translation1">
-                <x>0</x>
+                <x>-0.000429433</x>
                 <y>0</y>
-                <z>0</z>
+                <z>-0.0270483</z>
               </translation>
             </transformation>
             <sections>
@@ -54,7 +54,7 @@
                   </scaling>
                   <rotation uID="BWB450_wingSection1ID_Rot">
                     <x>-0</x>
-                    <y>2</y>
+                    <y>1.91944</y>
                     <z>0</z>
                   </rotation>
                   <translation refType="absGlobal" uID="BWB450_wingSection1ID_Transl">
@@ -66,12 +66,12 @@
                 <elements>
                   <element uID="BWB450_wingSection1IDElement1">
                     <name>BWB450_wingSection1</name>
-                    <airfoilUID>profile_0.000</airfoilUID>
+                    <airfoilUID>profile_0.000-creatorNormalized</airfoilUID>
                     <transformation uID="BWB450_wingSection1IDElement1_transformation1">
                       <scaling uID="BWB450_wingSection1IDElement1_transformation1_scaling1">
-                        <x>26.6712</x>
-                        <y>26.6712</y>
-                        <z>26.6712</z>
+                        <x>40.9947</x>
+                        <y>40.9947</y>
+                        <z>40.9947</z>
                       </scaling>
                       <rotation uID="BWB450_wingSection1IDElement1_transformation1_rotation1">
                         <x>0</x>
@@ -96,9 +96,9 @@
                     <z>1</z>
                   </scaling>
                   <rotation uID="BWB450_wingSection2ID_Transf_rotation1">
-                    <x>34.2847</x>
-                    <y>1.66671</y>
-                    <z>-1.08105</z>
+                    <x>-0</x>
+                    <y>1.9105</y>
+                    <z>0</z>
                   </rotation>
                   <translation refType="absGlobal" uID="BWB450_wingSection2ID_Transf_translation1">
                     <x>0</x>
@@ -109,12 +109,12 @@
                 <elements>
                   <element uID="BWB450_wingSection2IDElement1">
                     <name>BWB450_wingSection2</name>
-                    <airfoilUID>profile_0.039</airfoilUID>
+                    <airfoilUID>profile_0.039-creatorNormalized</airfoilUID>
                     <transformation uID="BWB450_wingSection2IDElement1_transformation1">
                       <scaling uID="BWB450_wingSection2IDElement1_transformation1_scaling1">
-                        <x>26.2933</x>
-                        <y>26.2933</y>
-                        <z>26.2933</z>
+                        <x>40.4137</x>
+                        <y>40.4137</y>
+                        <z>40.4137</z>
                       </scaling>
                       <rotation uID="BWB450_wingSection2IDElement1_transformation1_rotation1">
                         <x>0</x>
@@ -139,9 +139,9 @@
                     <z>1</z>
                   </scaling>
                   <rotation uID="BWB450_wingSection3ID_Transf_rotation1">
-                    <x>54.8528</x>
-                    <y>1.18901</y>
-                    <z>-1.56257</z>
+                    <x>-0</x>
+                    <y>1.90145</y>
+                    <z>0</z>
                   </rotation>
                   <translation refType="absGlobal" uID="BWB450_wingSection3ID_Transf_translation1">
                     <x>0</x>
@@ -152,12 +152,12 @@
                 <elements>
                   <element uID="BWB450_wingSection3IDElement1">
                     <name>BWB450_wingSection3</name>
-                    <airfoilUID>profile_0.078</airfoilUID>
+                    <airfoilUID>profile_0.078-creatorNormalized</airfoilUID>
                     <transformation uID="BWB450_wingSection3IDElement1_transformation1">
                       <scaling uID="BWB450_wingSection3IDElement1_transformation1_scaling1">
-                        <x>24.9631</x>
-                        <y>24.9631</y>
-                        <z>24.9631</z>
+                        <x>38.3695</x>
+                        <y>38.3695</y>
+                        <z>38.3695</z>
                       </scaling>
                       <rotation uID="BWB450_wingSection3IDElement1_transformation1_rotation1">
                         <x>0</x>
@@ -182,9 +182,9 @@
                     <z>1</z>
                   </scaling>
                   <rotation uID="BWB450_wingSection4ID_Transf_rotation1">
-                    <x>66.1119</x>
-                    <y>0.868181</y>
-                    <z>-1.73951</z>
+                    <x>4.93272e-14</x>
+                    <y>1.89246</y>
+                    <z>-1.62896e-15</z>
                   </rotation>
                   <translation refType="absGlobal" uID="BWB450_wingSection4ID_Transf_translation1">
                     <x>0</x>
@@ -195,12 +195,12 @@
                 <elements>
                   <element uID="BWB450_wingSection4IDElement1">
                     <name>BWB450_wingSection4</name>
-                    <airfoilUID>profile_0.117</airfoilUID>
+                    <airfoilUID>profile_0.117-creatorNormalized</airfoilUID>
                     <transformation uID="BWB450_wingSection4IDElement1_transformation1">
                       <scaling uID="BWB450_wingSection4IDElement1_transformation1_scaling1">
-                        <x>23.085</x>
-                        <y>23.085</y>
-                        <z>23.085</z>
+                        <x>35.4827</x>
+                        <y>35.4827</y>
+                        <z>35.4827</z>
                       </scaling>
                       <rotation uID="BWB450_wingSection4IDElement1_transformation1_rotation1">
                         <x>0</x>
@@ -225,9 +225,9 @@
                     <z>1</z>
                   </scaling>
                   <rotation uID="BWB450_wingSection5ID_Transf_rotation1">
-                    <x>72.3784</x>
-                    <y>0.598717</y>
-                    <z>-1.57295</z>
+                    <x>1.51144e-13</x>
+                    <y>1.64074</y>
+                    <z>-4.32762e-15</z>
                   </rotation>
                   <translation refType="absGlobal" uID="BWB450_wingSection5ID_Transf_translation1">
                     <x>0</x>
@@ -238,12 +238,12 @@
                 <elements>
                   <element uID="BWB450_wingSection5IDElement1">
                     <name>BWB450_wingSection5</name>
-                    <airfoilUID>profile_0.156</airfoilUID>
+                    <airfoilUID>profile_0.156-creatorNormalized</airfoilUID>
                     <transformation uID="BWB450_wingSection5IDElement1_transformation1">
                       <scaling uID="BWB450_wingSection5IDElement1_transformation1_scaling1">
-                        <x>20.9915</x>
-                        <y>20.9915</y>
-                        <z>20.9915</z>
+                        <x>32.2647</x>
+                        <y>32.2647</y>
+                        <z>32.2647</z>
                       </scaling>
                       <rotation uID="BWB450_wingSection5IDElement1_transformation1_rotation1">
                         <x>0</x>
@@ -268,9 +268,9 @@
                     <z>1</z>
                   </scaling>
                   <rotation uID="BWB450_wingSection6ID_Transf_rotation1">
-                    <x>76.263</x>
-                    <y>0.432509</y>
-                    <z>-1.35999</z>
+                    <x>2.49756e-13</x>
+                    <y>1.39017</y>
+                    <z>-6.05925e-15</z>
                   </rotation>
                   <translation refType="absGlobal" uID="BWB450_wingSection6ID_Transf_translation1">
                     <x>0</x>
@@ -281,12 +281,12 @@
                 <elements>
                   <element uID="BWB450_wingSection6IDElement1">
                     <name>BWB450_wingSection6</name>
-                    <airfoilUID>profile_0.195</airfoilUID>
+                    <airfoilUID>profile_0.195-creatorNormalized</airfoilUID>
                     <transformation uID="BWB450_wingSection6IDElement1_transformation1">
                       <scaling uID="BWB450_wingSection6IDElement1_transformation1_scaling1">
-                        <x>18.7375</x>
-                        <y>18.7375</y>
-                        <z>18.7375</z>
+                        <x>28.8002</x>
+                        <y>28.8002</y>
+                        <z>28.8002</z>
                       </scaling>
                       <rotation uID="BWB450_wingSection6IDElement1_transformation1_rotation1">
                         <x>0</x>
@@ -311,9 +311,9 @@
                     <z>1</z>
                   </scaling>
                   <rotation uID="BWB450_wingSection7ID_Transf_rotation1">
-                    <x>78.8328</x>
-                    <y>0.322101</y>
-                    <z>-1.12835</z>
+                    <x>1.94059e-13</x>
+                    <y>1.14068</y>
+                    <z>-3.86319e-15</z>
                   </rotation>
                   <translation refType="absGlobal" uID="BWB450_wingSection7ID_Transf_translation1">
                     <x>0</x>
@@ -324,12 +324,12 @@
                 <elements>
                   <element uID="BWB450_wingSection7IDElement1">
                     <name>BWB450_wingSection7</name>
-                    <airfoilUID>profile_0.233</airfoilUID>
+                    <airfoilUID>profile_0.233-creatorNormalized</airfoilUID>
                     <transformation uID="BWB450_wingSection7IDElement1_transformation1">
                       <scaling uID="BWB450_wingSection7IDElement1_transformation1_scaling1">
-                        <x>16.3631</x>
-                        <y>16.3631</y>
-                        <z>16.3631</z>
+                        <x>25.1507</x>
+                        <y>25.1507</y>
+                        <z>25.1507</z>
                       </scaling>
                       <rotation uID="BWB450_wingSection7IDElement1_transformation1_rotation1">
                         <x>0</x>
@@ -354,9 +354,9 @@
                     <z>1</z>
                   </scaling>
                   <rotation uID="BWB450_wingSection8ID_Transf_rotation1">
-                    <x>80.6138</x>
-                    <y>0.24512</y>
-                    <z>-0.890201</z>
+                    <x>1.87682e-13</x>
+                    <y>0.892342</y>
+                    <z>-2.9229e-15</z>
                   </rotation>
                   <translation refType="absGlobal" uID="BWB450_wingSection8ID_Transf_translation1">
                     <x>0</x>
@@ -367,12 +367,12 @@
                 <elements>
                   <element uID="BWB450_wingSection8IDElement1">
                     <name>BWB450_wingSection8</name>
-                    <airfoilUID>profile_0.272</airfoilUID>
+                    <airfoilUID>profile_0.272-creatorNormalized</airfoilUID>
                     <transformation uID="BWB450_wingSection8IDElement1_transformation1">
                       <scaling uID="BWB450_wingSection8IDElement1_transformation1_scaling1">
-                        <x>13.7999</x>
-                        <y>13.7999</y>
-                        <z>13.7999</z>
+                        <x>21.211</x>
+                        <y>21.211</y>
+                        <z>21.211</z>
                       </scaling>
                       <rotation uID="BWB450_wingSection8IDElement1_transformation1_rotation1">
                         <x>0</x>
@@ -397,9 +397,9 @@
                     <z>1</z>
                   </scaling>
                   <rotation uID="BWB450_wingSection9ID_Transf_rotation1">
-                    <x>81.8842</x>
-                    <y>0.188193</y>
-                    <z>-0.64762</z>
+                    <x>4.89853e-13</x>
+                    <y>0.645149</y>
+                    <z>-5.59275e-15</z>
                   </rotation>
                   <translation refType="absGlobal" uID="BWB450_wingSection9ID_Transf_translation1">
                     <x>0</x>
@@ -410,12 +410,12 @@
                 <elements>
                   <element uID="BWB450_wingSection9IDElement1">
                     <name>BWB450_wingSection9</name>
-                    <airfoilUID>profile_0.311</airfoilUID>
+                    <airfoilUID>profile_0.311-creatorNormalized</airfoilUID>
                     <transformation uID="BWB450_wingSection9IDElement1_transformation1">
                       <scaling uID="BWB450_wingSection9IDElement1_transformation1_scaling1">
-                        <x>11.0906</x>
-                        <y>11.0906</y>
-                        <z>11.0906</z>
+                        <x>17.0467</x>
+                        <y>17.0467</y>
+                        <z>17.0467</z>
                       </scaling>
                       <rotation uID="BWB450_wingSection9IDElement1_transformation1_rotation1">
                         <x>0</x>
@@ -440,9 +440,9 @@
                     <z>1</z>
                   </scaling>
                   <rotation uID="BWB450_wingSection10ID_Transf_rotation1">
-                    <x>82.7827</x>
-                    <y>0.143273</y>
-                    <z>-0.404227</z>
+                    <x>4.64388e-13</x>
+                    <y>0.398988</y>
+                    <z>-3.23381e-15</z>
                   </rotation>
                   <translation refType="absGlobal" uID="BWB450_wingSection10ID_Transf_translation1">
                     <x>0</x>
@@ -453,12 +453,12 @@
                 <elements>
                   <element uID="BWB450_wingSection10IDElement1">
                     <name>BWB450_wingSection10</name>
-                    <airfoilUID>profile_0.350</airfoilUID>
+                    <airfoilUID>profile_0.350-creatorNormalized</airfoilUID>
                     <transformation uID="BWB450_wingSection10IDElement1_transformation1">
                       <scaling uID="BWB450_wingSection10IDElement1_transformation1_scaling1">
-                        <x>8.58555</x>
-                        <y>8.58555</y>
-                        <z>8.58555</z>
+                        <x>13.1963</x>
+                        <y>13.1963</y>
+                        <z>13.1963</z>
                       </scaling>
                       <rotation uID="BWB450_wingSection10IDElement1_transformation1_rotation1">
                         <x>0</x>
@@ -483,9 +483,9 @@
                     <z>1</z>
                   </scaling>
                   <rotation uID="BWB450_wingSection11ID_Transf_rotation1">
-                    <x>83.4913</x>
-                    <y>0.106253</y>
-                    <z>-0.161399</z>
+                    <x>6.6158e-13</x>
+                    <y>0.154087</y>
+                    <z>-1.7792e-15</z>
                   </rotation>
                   <translation refType="absGlobal" uID="BWB450_wingSection11ID_Transf_translation1">
                     <x>0</x>
@@ -496,12 +496,12 @@
                 <elements>
                   <element uID="BWB450_wingSection11IDElement1">
                     <name>BWB450_wingSection11</name>
-                    <airfoilUID>profile_0.389</airfoilUID>
+                    <airfoilUID>profile_0.389-creatorNormalized</airfoilUID>
                     <transformation uID="BWB450_wingSection11IDElement1_transformation1">
                       <scaling uID="BWB450_wingSection11IDElement1_transformation1_scaling1">
-                        <x>7.22108</x>
-                        <y>7.22108</y>
-                        <z>7.22108</z>
+                        <x>11.0991</x>
+                        <y>11.0991</y>
+                        <z>11.0991</z>
                       </scaling>
                       <rotation uID="BWB450_wingSection11IDElement1_transformation1_rotation1">
                         <x>0</x>
@@ -526,9 +526,9 @@
                     <z>1</z>
                   </scaling>
                   <rotation uID="BWB450_wingSection12ID_Transf_rotation1">
-                    <x>84.0552</x>
-                    <y>0.0737837</y>
-                    <z>0.081864</z>
+                    <x>6.67917e-13</x>
+                    <y>-0.0897821</y>
+                    <z>1.04662e-15</z>
                   </rotation>
                   <translation refType="absGlobal" uID="BWB450_wingSection12ID_Transf_translation1">
                     <x>0</x>
@@ -539,12 +539,12 @@
                 <elements>
                   <element uID="BWB450_wingSection12IDElement1">
                     <name>BWB450_wingSection12</name>
-                    <airfoilUID>profile_0.428</airfoilUID>
+                    <airfoilUID>profile_0.428-creatorNormalized</airfoilUID>
                     <transformation uID="BWB450_wingSection12IDElement1_transformation1">
                       <scaling uID="BWB450_wingSection12IDElement1_transformation1_scaling1">
-                        <x>6.47321</x>
-                        <y>6.47321</y>
-                        <z>6.47321</z>
+                        <x>9.9496</x>
+                        <y>9.9496</y>
+                        <z>9.9496</z>
                       </scaling>
                       <rotation uID="BWB450_wingSection12IDElement1_transformation1_rotation1">
                         <x>0</x>
@@ -569,9 +569,9 @@
                     <z>1</z>
                   </scaling>
                   <rotation uID="BWB450_wingSection13ID_Transf_rotation1">
-                    <x>90.1107</x>
-                    <y>0.0871842</y>
-                    <z>3.0811</z>
+                    <x>5.09694e-13</x>
+                    <y>-3.17933</y>
+                    <z>2.73958e-14</z>
                   </rotation>
                   <translation refType="absGlobal" uID="BWB450_wingSection13ID_Transf_translation1">
                     <x>0</x>
@@ -582,12 +582,12 @@
                 <elements>
                   <element uID="BWB450_wingSection13IDElement1">
                     <name>BWB450_wingSection13</name>
-                    <airfoilUID>profile_1.000</airfoilUID>
+                    <airfoilUID>profile_1.000-creatorNormalized</airfoilUID>
                     <transformation uID="BWB450_wingSection13IDElement1_transformation1">
                       <scaling uID="BWB450_wingSection13IDElement1_transformation1_scaling1">
-                        <x>1.42407</x>
-                        <y>1.42407</y>
-                        <z>1.42407</z>
+                        <x>2.18889</x>
+                        <y>2.18889</y>
+                        <z>2.18889</z>
                       </scaling>
                       <rotation uID="BWB450_wingSection13IDElement1_transformation1_rotation1">
                         <x>0</x>
@@ -1415,106 +1415,106 @@
             </componentSegments>
             <positionings>
               <positioning uID="BWB450_wingID_positioning_BWB450_wingSection1ID">
-                <dihedralAngle>90</dihedralAngle>
-                <length>0.00206118</length>
+                <dihedralAngle>0</dihedralAngle>
+                <length>3.53011e-15</length>
                 <name>BWB450_wingID_positioning_BWB450_wingSection1ID - auto generated by positioning standardization</name>
-                <sweepAngle>0.909572</sweepAngle>
+                <sweepAngle>0</sweepAngle>
                 <toSectionUID>BWB450_wingSection1ID</toSectionUID>
               </positioning>
               <positioning uID="BWB450_wingID_positioning_BWB450_wingSection2ID">
-                <dihedralAngle>0.775404</dihedralAngle>
+                <dihedralAngle>-0.282238</dihedralAngle>
                 <fromSectionUID>BWB450_wingSection1ID</fromSectionUID>
-                <length>1.45487</length>
+                <length>1.30349</length>
                 <name>BWB450_wingID_positioning_BWB450_wingSection2ID - auto generated by positioning standardization</name>
-                <sweepAngle>59.8351</sweepAngle>
+                <sweepAngle>18.3892</sweepAngle>
                 <toSectionUID>BWB450_wingSection2ID</toSectionUID>
               </positioning>
               <positioning uID="BWB450_wingID_positioning_BWB450_wingSection3ID">
-                <dihedralAngle>0.526385</dihedralAngle>
+                <dihedralAngle>-0.209173</dihedralAngle>
                 <fromSectionUID>BWB450_wingSection2ID</fromSectionUID>
-                <length>2.11973</length>
+                <length>2.04308</length>
                 <name>BWB450_wingID_positioning_BWB450_wingSection3ID - auto generated by positioning standardization</name>
-                <sweepAngle>69.7</sweepAngle>
+                <sweepAngle>52.741</sweepAngle>
                 <toSectionUID>BWB450_wingSection3ID</toSectionUID>
               </positioning>
               <positioning uID="BWB450_wingID_positioning_BWB450_wingSection4ID">
-                <dihedralAngle>0.622392</dihedralAngle>
+                <dihedralAngle>-0.132667</dihedralAngle>
                 <fromSectionUID>BWB450_wingSection3ID</fromSectionUID>
-                <length>2.59682</length>
+                <length>2.75345</length>
                 <name>BWB450_wingID_positioning_BWB450_wingSection4ID - auto generated by positioning standardization</name>
-                <sweepAngle>73.4579</sweepAngle>
+                <sweepAngle>63.3068</sweepAngle>
                 <toSectionUID>BWB450_wingSection4ID</toSectionUID>
               </positioning>
               <positioning uID="BWB450_wingID_positioning_BWB450_wingSection5ID">
-                <dihedralAngle>1.46809</dihedralAngle>
+                <dihedralAngle>0.675341</dihedralAngle>
                 <fromSectionUID>BWB450_wingSection4ID</fromSectionUID>
-                <length>2.63353</length>
+                <length>2.80878</length>
                 <name>BWB450_wingID_positioning_BWB450_wingSection5ID - auto generated by positioning standardization</name>
-                <sweepAngle>73.6029</sweepAngle>
+                <sweepAngle>63.8715</sweepAngle>
                 <toSectionUID>BWB450_wingSection5ID</toSectionUID>
               </positioning>
               <positioning uID="BWB450_wingID_positioning_BWB450_wingSection6ID">
-                <dihedralAngle>2.22141</dihedralAngle>
+                <dihedralAngle>1.36573</dihedralAngle>
                 <fromSectionUID>BWB450_wingSection5ID</fromSectionUID>
-                <length>2.6616</length>
+                <length>2.85184</length>
                 <name>BWB450_wingID_positioning_BWB450_wingSection6ID - auto generated by positioning standardization</name>
-                <sweepAngle>73.7398</sweepAngle>
+                <sweepAngle>64.2889</sweepAngle>
                 <toSectionUID>BWB450_wingSection6ID</toSectionUID>
               </positioning>
               <positioning uID="BWB450_wingID_positioning_BWB450_wingSection7ID">
-                <dihedralAngle>2.93813</dihedralAngle>
+                <dihedralAngle>2.04467</dihedralAngle>
                 <fromSectionUID>BWB450_wingSection6ID</fromSectionUID>
-                <length>2.68565</length>
+                <length>2.88881</length>
                 <name>BWB450_wingID_positioning_BWB450_wingSection7ID - auto generated by positioning standardization</name>
-                <sweepAngle>73.8562</sweepAngle>
+                <sweepAngle>64.6319</sweepAngle>
                 <toSectionUID>BWB450_wingSection7ID</toSectionUID>
               </positioning>
               <positioning uID="BWB450_wingID_positioning_BWB450_wingSection8ID">
-                <dihedralAngle>3.63426</dihedralAngle>
+                <dihedralAngle>2.72079</dihedralAngle>
                 <fromSectionUID>BWB450_wingSection7ID</fromSectionUID>
-                <length>2.70155</length>
+                <length>2.91346</length>
                 <name>BWB450_wingID_positioning_BWB450_wingSection8ID - auto generated by positioning standardization</name>
-                <sweepAngle>73.9236</sweepAngle>
+                <sweepAngle>64.8483</sweepAngle>
                 <toSectionUID>BWB450_wingSection8ID</toSectionUID>
               </positioning>
               <positioning uID="BWB450_wingID_positioning_BWB450_wingSection9ID">
-                <dihedralAngle>4.30838</dihedralAngle>
+                <dihedralAngle>3.38243</dihedralAngle>
                 <fromSectionUID>BWB450_wingSection8ID</fromSectionUID>
-                <length>2.71225</length>
+                <length>2.92988</length>
                 <name>BWB450_wingID_positioning_BWB450_wingSection9ID - auto generated by positioning standardization</name>
-                <sweepAngle>73.9614</sweepAngle>
+                <sweepAngle>64.9826</sweepAngle>
                 <toSectionUID>BWB450_wingSection9ID</toSectionUID>
               </positioning>
               <positioning uID="BWB450_wingID_positioning_BWB450_wingSection10ID">
-                <dihedralAngle>-4.22146</dihedralAngle>
+                <dihedralAngle>3.99921</dihedralAngle>
                 <fromSectionUID>BWB450_wingSection9ID</fromSectionUID>
-                <length>2.20586</length>
+                <length>2.16137</length>
                 <name>BWB450_wingID_positioning_BWB450_wingSection10ID - auto generated by positioning standardization</name>
-                <sweepAngle>70.1467</sweepAngle>
+                <sweepAngle>54.9942</sweepAngle>
                 <toSectionUID>BWB450_wingSection10ID</toSectionUID>
               </positioning>
               <positioning uID="BWB450_wingID_positioning_BWB450_wingSection11ID">
-                <dihedralAngle>14.3993</dihedralAngle>
+                <dihedralAngle>4.52301</dihedralAngle>
                 <fromSectionUID>BWB450_wingSection10ID</fromSectionUID>
-                <length>2.21396</length>
+                <length>2.16292</length>
                 <name>BWB450_wingID_positioning_BWB450_wingSection11ID - auto generated by positioning standardization</name>
-                <sweepAngle>69.6499</sweepAngle>
+                <sweepAngle>54.9953</sweepAngle>
                 <toSectionUID>BWB450_wingSection11ID</toSectionUID>
               </positioning>
               <positioning uID="BWB450_wingID_positioning_BWB450_wingSection12ID">
-                <dihedralAngle>6.08103</dihedralAngle>
+                <dihedralAngle>5.09528</dihedralAngle>
                 <fromSectionUID>BWB450_wingSection11ID</fromSectionUID>
-                <length>2.20755</length>
+                <length>2.16482</length>
                 <name>BWB450_wingID_positioning_BWB450_wingSection12ID - auto generated by positioning standardization</name>
-                <sweepAngle>70.1625</sweepAngle>
+                <sweepAngle>54.9968</sweepAngle>
                 <toSectionUID>BWB450_wingSection12ID</toSectionUID>
               </positioning>
               <positioning uID="BWB450_wingID_positioning_BWB450_wingSection13ID">
-                <dihedralAngle>13.9855</dihedralAngle>
+                <dihedralAngle>13.0283</dihedralAngle>
                 <fromSectionUID>BWB450_wingSection12ID</fromSectionUID>
-                <length>27.3962</length>
+                <length>25.1236</length>
                 <name>BWB450_wingID_positioning_BWB450_wingSection13ID - auto generated by positioning standardization</name>
-                <sweepAngle>65.6954</sweepAngle>
+                <sweepAngle>41.9968</sweepAngle>
                 <toSectionUID>BWB450_wingSection13ID</toSectionUID>
               </positioning>
             </positionings>
@@ -3521,6 +3521,110 @@
             <z mapType="vector">0.001886;0.001978;0.002251;0.002699;0.003313;0.004078;0.005012;0.006081;0.007279;0.008585;0.010004;0.011479;0.013078;0.014762;0.016496;0.018255;0.020080;0.021908;0.023782;0.025615;0.027423;0.029223;0.030940;0.032541;0.034029;0.035385;0.036583;0.037592;0.038411;0.039043;0.039528;0.039868;0.040066;0.040125;0.040047;0.039838;0.039543;0.039116;0.038545;0.037860;0.037024;0.036064;0.035004;0.033801;0.032476;0.031008;0.029401;0.027597;0.025661;0.023432;0.020910;0.018026;0.014722;0.011086;0.007269;0.003726;0.000822;-0.001244;-0.002497;-0.002915;-0.003328;-0.004554;-0.006518;-0.009093;-0.012017;-0.014966;-0.017826;-0.020446;-0.022813;-0.024959;-0.026936;-0.028738;-0.030386;-0.031955;-0.033314;-0.034636;-0.035785;-0.036842;-0.037732;-0.038494;-0.039120;-0.039601;-0.039905;-0.040011;-0.039934;-0.039725;-0.039283;-0.038585;-0.037618;-0.036272;-0.034620;-0.032565;-0.030233;-0.027605;-0.024763;-0.021774;-0.018731;-0.015683;-0.012713;-0.009893;-0.007301;-0.004933;-0.002816;-0.001016;0.000402;0.001462;0.002212;0.002595;0.002629;0.002391;0.002001;0.001493;0.000891;0.000268;-0.000323;-0.000828;-0.001216;-0.001460;-0.001543</z>
           </pointList>
           <description>Profile generated by UNINA</description>
+        </wingAirfoil>
+        <wingAirfoil uID="profile_0.000-creatorNormalized">
+          <name>Profile profile_0.000-creatorNormalized; should not be modified manually, change the uid if you want to make some change.</name>
+          <pointList>
+            <x mapType="vector">0.999965595279251;0.999244688165634;0.997077996374398;0.993473476272161;0.988443198086502;0.981986818756843;0.974128418280942;0.964891044324855;0.954297301669057;0.942381334926894;0.929181814864552;0.914740895889463;0.899118140381383;0.882347941813172;0.864514771026078;0.845654946963751;0.825830435511968;0.805119073110165;0.783568052097512;0.761219566249048;0.73816144210254;0.714411128065908;0.690061412685415;0.665129766864755;0.639678295682316;0.613779019797559;0.587499059724831;0.560877821560984;0.534014159897761;0.506976261324873;0.479837347551799;0.452702139565754;0.425645902649825;0.398757537853061;0.372127897003046;0.345839026007222;0.319972866730065;0.294605144550074;0.269812939148238;0.245670186812905;0.222240653767889;0.199590345242665;0.177782158223719;0.156894388907902;0.136982873866141;0.11810863382364;0.100340765381034;0.0837453595329423;0.0684166477052315;0.0544175409442478;0.0418381160413083;0.0308406307295916;0.0214968047875602;0.0139064112537931;0.00822428470152873;0.00430268927270592;0.00203504071070002;0.000833600163294544;0.000384081280077913;0.000282251676016802;0.000194433236168379;0;0.00023792906221696;0.00134300692501867;0.0040836426961012;0.00887892138031547;0.0157790932823216;0.0246906485850533;0.0353805366596221;0.047743512086046;0.0616505432976538;0.0769657463981391;0.0936129854610988;0.111481488919684;0.130496279717931;0.1505853849999;0.171670912086717;0.193681916236187;0.216547545501188;0.240199707493068;0.264563713382987;0.289573300646036;0.315152738279773;0.341229940949381;0.367729889419317;0.394576589767761;0.421694277248607;0.449003520696326;0.476427627076076;0.503887505470933;0.53130515915906;0.558598379138644;0.585690386609695;0.612501003490138;0.638953325847233;0.664962158756957;0.690457658702127;0.715364823319032;0.739599512511124;0.763100899579264;0.785802048193264;0.807617773271004;0.828516448996009;0.848403770831142;0.867247042666608;0.884994287308975;0.901571370225872;0.916985748320903;0.931159204132432;0.944072907898321;0.955691904819308;0.966003332759718;0.974979227036549;0.982590577981227;0.988840537422307;0.993714127945215;0.997204395989328;0.999301354268285;1</x>
+            <y mapType="vector">0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0</y>
+            <z mapType="vector">-0.000287950475160726;-0.000223937135812339;-1.0891619335926e-05;0.000320175011661294;0.000819245586508032;0.00124232156354162;0.00164636885842156;0.00206535493025953;0.00221824912085682;0.00220800301108074;0.00180056316604778;0.00110586987689991;-0.000187159356738798;-0.00179857401189327;-0.00410449135009727;-0.00687796334357766;-0.0101430770200217;-0.0140159413530275;-0.0183596232427561;-0.0230361825654159;-0.0281687423126269;-0.0334383282927475;-0.0389950703659542;-0.0445039944362341;-0.0498901881229768;-0.0551387527468244;-0.060163783022841;-0.0646763355117727;-0.0687795487906211;-0.0723405192613457;-0.0752013505052558;-0.0775601889674736;-0.0792281412265608;-0.0802753319968934;-0.0808068885956319;-0.0807899265108601;-0.0802655607883793;-0.0794288971176489;-0.078223044100266;-0.0766931055102369;-0.0750051703385163;-0.0731553314040856;-0.0712166768477552;-0.0689783175975341;-0.066556331695329;-0.0639358049959361;-0.061047834924786;-0.0578275146654447;-0.0541099773667641;-0.0499583112293227;-0.0453176431205816;-0.0400042019099982;-0.0342170876391808;-0.0281174399444631;-0.0218224760543861;-0.0158559861571728;-0.0106338187319643;-0.00668314530924835;-0.00420852318418705;-0.00337638334032312;-0.00253626322807714;0;0.00421764860114412;0.00996607186797595;0.0168271910896049;0.0241514196308608;0.0314056889720892;0.0382271320395613;0.04457907664915;0.0502866714753211;0.0553270980277314;0.0597825470303761;0.063556125917938;0.0668099897866198;0.0695602439897406;0.0718259896447316;0.0736833359642622;0.0751713825402417;0.0763952285701111;0.0772889700553845;0.078073711124139;0.0785625456891089;0.0789465794636608;0.079164914043369;0.0792036549608566;0.0790669090471503;0.0789217821590598;0.0784613872043521;0.0779038311410065;0.0771842254304062;0.0763046797275035;0.0751163102136902;0.0737762242115299;0.072157534958953;0.0703283503104575;0.0681497906056253;0.0657329536000504;0.0630759447546344;0.0600788827698783;0.0568648526757809;0.0534789484044467;0.04978929025362;0.0460619216250251;0.0420799759783075;0.0380594984200171;0.0340165619657957;0.0298552712323775;0.0259006144354031;0.0219977021681811;0.0182675604212533;0.0147422382128712;0.0115197532351269;0.00862514470620779;0.00605145344154463;0.00390667457768593;0.00220682910879259;0.000984926679532287;0.000249981295973607;-2.57677927748538e-19</z>
+          </pointList>
+        </wingAirfoil>
+        <wingAirfoil uID="profile_0.039-creatorNormalized">
+          <name>Profile profile_0.039-creatorNormalized; should not be modified manually, change the uid if you want to make some change.</name>
+          <pointList>
+            <x mapType="vector">0.999965517565992;0.999244636233892;0.997078017255091;0.993473613718559;0.988443488026367;0.981987285608216;0.974129070350884;0.964891874907911;0.954298280519553;0.942382425983406;0.92918296897389;0.914742029493276;0.899119144808005;0.88234870675703;0.864515199338351;0.845654928468939;0.825829851575966;0.805117824454629;0.783566059232041;0.761216761819577;0.738157755146378;0.714406510822044;0.690055837685662;0.665123238586506;0.63967083183607;0.613770662268214;0.587489874715956;0.560867900035645;0.534003587639306;0.506965163576667;0.479825821063604;0.452690300134643;0.425633837728323;0.398745330180577;0.372115620707016;0.34582672752338;0.319960606366064;0.294592980274529;0.269800931538047;0.245658380018905;0.222229089445418;0.199579062516528;0.17777120666949;0.156883799435098;0.136972698312206;0.118098887288151;0.100331509621086;0.083736624241366;0.0684084835850085;0.0544100028991871;0.0418312612654888;0.030834532549797;0.0214915429413005;0.0139020590604497;0.00822087060326182;0.00430020377247464;0.00203337041589753;0.000832551148282569;0.000383419975149138;0.000281721770864153;0.000194035972291614;0;0.000238582267234532;0.00134457691480525;0.00408632764331149;0.00888280708673761;0.0157841230239654;0.0246967199877009;0.0353875182552637;0.0477512873292455;0.0616590186684774;0.0769748287355645;0.0936226243009095;0.111491621633079;0.130506855578699;0.150596357841108;0.171682238261468;0.193693547280483;0.216559450925651;0.240211843419984;0.264576036081224;0.28958577316907;0.31516531446224;0.341242580763231;0.367742567869075;0.394589263773329;0.421706906386936;0.449016061987175;0.476440037218713;0.503899740433256;0.531317175257075;0.558610118854565;0.58570179196129;0.612512017026294;0.638963899198347;0.664972248462822;0.690467229278792;0.715373839005273;0.739607946976579;0.763108747271514;0.785809299676925;0.807624414178183;0.828522490849189;0.848409214774575;0.867251906373513;0.884998576914757;0.901575101916157;0.916988949927741;0.931161913707984;0.944075144891658;0.955693706183505;0.966004735121806;0.974980270936469;0.982591310690279;0.988841013686255;0.993714400326781;0.997204519078429;0.999301385625436;1</x>
+            <y mapType="vector">0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0</y>
+            <z mapType="vector">-0.000308944902658469;-0.000234819182520609;3.56412279105674e-06;0.000376192710600768;0.000923047579512497;0.0014171301913592;0.00189940279450074;0.00239082932807653;0.00262337559232609;0.00268598790666229;0.00235960676403573;0.00172116606526724;0.000474573997513906;-0.00112922416305783;-0.00342035905993026;-0.00620288818671574;-0.00950390821252881;-0.0134155403796366;-0.0178018589770845;-0.0225309304582403;-0.0277158915499724;-0.033054770750821;-0.0386697125396148;-0.04423874554369;-0.0496859670954596;-0.0549824898445036;-0.0600354190426302;-0.0645688173845861;-0.068678838888537;-0.0722205907031439;-0.0750701876517507;-0.0773937926736396;-0.0790395238964361;-0.0800735199116624;-0.0805959222158555;-0.0805948589689556;-0.0800984580733115;-0.0792838370998404;-0.0780981166625958;-0.0765924120199414;-0.0749178221664251;-0.07307245020585;-0.0711153941632411;-0.0688687770196095;-0.066423685660021;-0.0637902153010829;-0.0608764743121309;-0.0576445660288009;-0.0539326383208065;-0.0497947892453715;-0.0451801597094579;-0.0399130038878272;-0.0341684331163419;-0.0280956026338419;-0.0218287536848676;-0.0158636534636788;-0.0106411335600554;-0.00668727369579883;-0.00421158205567296;-0.00337842653569995;-0.00253729293501698;0;0.00421461047605668;0.00997585986741961;0.0168655496940224;0.0242270281472179;0.0314892192429596;0.0382962705382971;0.0445965463103;0.0502422115203456;0.055227467702969;0.0596265268114078;0.0633795079428102;0.0666245835886748;0.069383870756103;0.0716774817791251;0.0735755380416834;0.0751101502385469;0.0763874285879398;0.077339479742659;0.0781654195699629;0.0787013522169011;0.0791133953252287;0.0793506616862011;0.0794102684679146;0.0792843344326483;0.0791249773123144;0.0786543222938869;0.0780684883879108;0.0773085993710458;0.0763767770651402;0.0751301504737473;0.0737098389616006;0.0720019682215321;0.0700736580948198;0.0678030421357325;0.0652952290069505;0.0625483358701303;0.0594784944728447;0.0562097992975647;0.0527803547524856;0.0490682943918761;0.0453296665506274;0.0413626193560447;0.0373722030334324;0.0333654987608641;0.0292626226403164;0.0253635618059656;0.0215354389490323;0.0178752831225467;0.0144231487383464;0.0112670555355176;0.00843204708860888;0.00591616870802695;0.00382141505096187;0.00216080946345172;0.000965362679748774;0.000245090255292047;-1.71014628561663e-19</z>
+          </pointList>
+        </wingAirfoil>
+        <wingAirfoil uID="profile_0.078-creatorNormalized">
+          <name>Profile profile_0.078-creatorNormalized; should not be modified manually, change the uid if you want to make some change.</name>
+          <pointList>
+            <x mapType="vector">0.999965432642804;0.999244578698221;0.997078040972043;0.993473767809167;0.988443810725529;0.981987806805106;0.974129804040369;0.964892810871183;0.954299390262293;0.942383670975702;0.92918430186388;0.914743358313747;0.89912035831308;0.882349680021149;0.864515834371848;0.845655106631549;0.825829448209362;0.805116736443873;0.783564206645461;0.761214070079555;0.738154152415726;0.714401945450291;0.690050288577877;0.665116704554463;0.639663330547124;0.613762243454011;0.587480609647088;0.560857882930002;0.533992911255537;0.506953957307643;0.479814183976569;0.452678358334235;0.425621674216635;0.398733026085627;0.372103249909793;0.345814327918736;0.319948237182119;0.294580705414085;0.269788806038031;0.245646452539984;0.222217403677248;0.199567662430535;0.177760145802374;0.156873107807225;0.136962434536666;0.118089058486972;0.100322189015719;0.0837278325435802;0.0684002687734003;0.0544024198676517;0.0418243625992357;0.0308283865177159;0.0214862296849568;0.013897659207669;0.00821741429015576;0.00429768412418953;0.00203167825602449;0.000831489180195664;0.000382752725636407;0.000281186186644793;0.000193635030066788;0;0.000239244666257421;0.00134617336407227;0.00408906179035985;0.00888676667511388;0.0157892453548811;0.0247028896034593;0.0353945944033104;0.0477591523673406;0.0616675747130626;0.0769839810655102;0.093632337553894;0.111501828988573;0.130517517810745;0.150607426881164;0.171693677141261;0.193705312084609;0.216571505923344;0.240224150771823;0.264588544708658;0.289598445675759;0.315178101879246;0.341255439860928;0.367755468742587;0.394602164973322;0.421719759559439;0.44902882133538;0.47645265699358;0.503912170764805;0.531329368351749;0.558622012967595;0.585713323585743;0.612523123604802;0.638974530519281;0.664982364322619;0.690476794060052;0.715382815093513;0.739616311048783;0.763116499067947;0.785816436376591;0.80763092404836;0.828528394021191;0.848414513272823;0.867256626029113;0.885002729211932;0.901578706377479;0.916992033911824;0.93116452143981;0.944077292932288;0.955695432911877;0.966006077347546;0.974981271153639;0.982592011091984;0.988841470859804;0.993714660881361;0.997204634524778;0.999301414219394;1</x>
+            <y mapType="vector">0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0</y>
+            <z mapType="vector">-0.000329939224388725;-0.000246699688562186;1.70257014252813e-05;0.000431223394474654;0.00102587254206192;0.00158997461239677;0.00215148813109804;0.00271537350380755;0.0030275929383771;0.00316308743357206;0.00291779132962881;0.00233563208117203;0.00113650843766775;-0.000459639611077932;-0.00273695628729443;-0.0055295046653876;-0.00886539118935534;-0.0128157495236854;-0.0172436614607844;-0.0220262000957365;-0.0272645160840907;-0.0326726406556119;-0.0383437331214215;-0.0439738248365343;-0.0494830229964491;-0.0548264517529339;-0.0599072270196849;-0.0644614177129688;-0.0685771934985856;-0.0721016723998796;-0.0749399806365172;-0.0772272978671434;-0.0788507538766371;-0.079871501318862;-0.0803846960510607;-0.0804004790421041;-0.0799319912399883;-0.0791373622638632;-0.077973724851486;-0.0764912059335451;-0.0748299146146664;-0.0729879644275228;-0.0710134633969265;-0.0687585467112416;-0.0662893102301622;-0.0636448586011632;-0.0607033113518616;-0.0574607820288469;-0.0537544334445565;-0.0496293736446778;-0.0450407577406397;-0.0398198655453483;-0.0341188198397788;-0.0280727916826705;-0.0218330466203926;-0.0158713285313795;-0.0106474518967928;-0.00669040339977634;-0.00421264148412216;-0.00337947012236054;-0.0025373229029601;0;0.00421257164888744;0.00998764463123527;0.0169058991901238;0.0243036175468486;0.0315747161991248;0.0383653575684518;0.044613942841855;0.0501996534593143;0.0551287112566485;0.0594703496711686;0.0632046995606091;0.0664389510983353;0.0692092330324334;0.071528669111088;0.073467393005745;0.0750505266611078;0.0763791914930459;0.0773905048986529;0.0782575946727224;0.0788395753151364;0.0792805765424615;0.0795377224925492;0.0796161421291942;0.0795019662683808;0.079329324696259;0.078847355037883;0.0782341884932171;0.0774339613304392;0.0764498076872042;0.0751438695622175;0.0736432785103185;0.0718451728467084;0.0698176845367687;0.0674559605095231;0.0648581204817348;0.0620212934728653;0.0588776244344984;0.0555532174087335;0.0520811874046827;0.0483456814279111;0.0445977527712725;0.0406435644629129;0.0366831718705425;0.0327146644470977;0.028670169944351;0.0248266743949741;0.0210733127298726;0.017482117127688;0.0141021474468018;0.0110124254972602;0.00823899925761871;0.0057799186212473;0.00373617772541024;0.00211380232807475;0.000943804253400369;0.0002392006107402;1.0803599185402e-19</z>
+          </pointList>
+        </wingAirfoil>
+        <wingAirfoil uID="profile_0.117-creatorNormalized">
+          <name>Profile profile_0.117-creatorNormalized; should not be modified manually, change the uid if you want to make some change.</name>
+          <pointList>
+            <x mapType="vector">0.999965339559397;0.999244515788554;0.997078068906836;0.99347393879075;0.988444164766565;0.981988382700478;0.974130613058697;0.9648938462833;0.954300624218534;0.942385062981274;0.929185807529208;0.914744878193131;0.899121778999368;0.882350864441048;0.864516687157859;0.845655502148029;0.825829254512755;0.805115849816321;0.783562546728158;0.761211560784809;0.738150718642237;0.714397534464623;0.690044879917792;0.665110299197581;0.63965594199583;0.613753927897495;0.587471442219388;0.560847965174574;0.533982332721153;0.5069428615569;0.479802663751334;0.452666545185763;0.425609647946313;0.398720864375665;0.372091024861167;0.345802070599599;0.319935999097092;0.294568554512834;0.269776798207837;0.245634632022518;0.222205818976128;0.199556358572145;0.17774918651935;0.156862518083459;0.136952275887067;0.118079339344651;0.100312981975963;0.083719156360022;0.0683921621061992;0.054394936800256;0.0418175510902952;0.0308223059510993;0.0214809643417332;0.0138932946415513;0.00821397472117826;0.00429517606206344;0.00202999288109768;0.000830432918801064;0.000382085602172204;0.000280651777008879;0.000193232862349708;0;0.00023990033359367;0.00134775978556857;0.00409178987071201;0.00889072422289563;0.0157943593153074;0.0247090407821403;0.0354016296028888;0.0477669501315074;0.0616760446319947;0.0769930248692105;0.093641930831453;0.111511911635073;0.130528052308327;0.150618375916615;0.171705008804286;0.193716979660154;0.216583482347128;0.24023639725016;0.264601002726278;0.289611081542514;0.31519086326198;0.341268277101159;0.367768355532913;0.394615054081513;0.421732596679137;0.449041561599975;0.476465247862861;0.503924562213201;0.531341507114769;0.558633833546334;0.585724759816663;0.612534110091632;0.638985010708069;0.664992302762272;0.690486153831929;0.715391562604292;0.739624426477488;0.763123989917611;0.785823300353166;0.807637159463904;0.828534019842352;0.84841954433957;0.867261091706688;0.88500664356512;0.901582093483807;0.916994921916551;0.931166960522095;0.94407929953834;0.95569704621636;0.966007328288485;0.974982202274711;0.982592662762271;0.988841895549456;0.993714902626088;0.997204744108139;0.9993014407176;1</x>
+            <y mapType="vector">0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0</y>
+            <z mapType="vector">-0.000351933534618851;-0.000259580917811445;3.0484342724498e-05;0.000486247471899875;0.00112868578799;0.0017638007504682;0.00240254722909991;0.00303988209099788;0.00343176400128581;0.00364012867626944;0.00347590433565033;0.00295001206358324;0.00179834122745328;0.0002098265881378;-0.00205368960703687;-0.00485627595242804;-0.00822704860252603;-0.0122161535854909;-0.0166856801574881;-0.021520708016761;-0.0268134016452849;-0.0322897950130101;-0.038018062167357;-0.0437082371986451;-0.0492804370813779;-0.0546707974394738;-0.0597804447752667;-0.0643534542168158;-0.0684770109304739;-0.071982243822167;-0.0748092903626998;-0.0770613468599262;-0.0786625546589766;-0.0796700803821116;-0.0801740941572878;-0.0802057496635168;-0.079766200805502;-0.0789915892104638;-0.0778490596539975;-0.0763907506413037;-0.0747427813510928;-0.0729052756639373;-0.0709123515736905;-0.0686491563498173;-0.0661567947946609;-0.0634993809224262;-0.0605310453429875;-0.0572769117488408;-0.0535771577796422;-0.0494649014367683;-0.0449023119341488;-0.039728694553492;-0.0340701834893355;-0.0280499655141801;-0.0218393302732306;-0.0158799985254744;-0.0106547676775671;-0.0066935319484608;-0.00421570031187403;-0.00338151325733242;-0.00253935254067247;0;0.00420953286894237;0.00999743026516143;0.016945251929405;0.0243792145937753;0.0316582273546557;0.0384334673965823;0.0446303726197449;0.0501551408140399;0.05503001394417;0.0593142468353332;0.0630289819799014;0.0662534271281525;0.0690327227149264;0.0713790037923893;0.0733594162608093;0.0749890932728048;0.0763711673189651;0.0774417665152954;0.0783490305217607;0.0789770840916083;0.0794480689573814;0.0797241205473989;0.0798223795071467;0.0797189886675343;0.0795330897836741;0.0790398328295455;0.0783983611363169;0.0775588233614324;0.076522365901682;0.0751561436698588;0.0735763003206228;0.0716889867194111;0.0695613468895134;0.0671085410135512;0.0644196998104582;0.0614939640611355;0.0582764918455344;0.0548973966813379;0.0513818041380206;0.047623874556188;0.0438646661860912;0.0399243568178474;0.0359940069548387;0.0320637142751712;0.0280766181040585;0.0242887033767491;0.0206101171746313;0.0170888947991873;0.0137821015158458;0.0107577612137577;0.00804592622262548;0.00564365099739123;0.00364992916233702;0.00206578886461537;0.000923243002337013;0.000233310262532014;-2.00450677839975e-19</z>
+          </pointList>
+        </wingAirfoil>
+        <wingAirfoil uID="profile_0.156-creatorNormalized">
+          <name>Profile profile_0.156-creatorNormalized; should not be modified manually, change the uid if you want to make some change.</name>
+          <pointList>
+            <x mapType="vector">0.99996533281741;0.999244519486274;0.997078090965277;0.993473995704926;0.988444248869405;0.981988535807375;0.974130850614625;0.964894156882936;0.954301042529459;0.942385593108552;0.929186495578028;0.914745713384573;0.899122801744162;0.882352042629868;0.864518092136575;0.845657140687149;0.825831128691809;0.80511801360139;0.7835650334292;0.761214382366239;0.738153916717153;0.714401097840749;0.690048852561669;0.665114670843389;0.639660700956709;0.613759083468155;0.587477002842923;0.560853897388082;0.533988621417299;0.506949494783557;0.479809570324766;0.452673713750639;0.425617000767544;0.398728329626002;0.372098552793794;0.345809572388852;0.319943410668711;0.29457585919241;0.269783965046376;0.245641624688703;0.222212643118913;0.199563008391125;0.177755693326545;0.1568688365389;0.136958414716809;0.118085263394348;0.100318687161044;0.0837245920709698;0.0683972577320249;0.0543996436165711;0.0418218024326954;0.0308260151759881;0.0214840925058127;0.0138958372397971;0.0082159125661778;0.00429657970014138;0.00203093172972782;0.000831023462658358;0.000382458738455784;0.000280950781669872;0.000193457973794367;0;0.000239521255771386;0.00134688683772908;0.00409034905897827;0.00888868615333694;0.0157916848934531;0.0247057357566294;0.0353976803360522;0.0477623992939598;0.0616709603596941;0.0769874580137419;0.0936359958132848;0.111505671861851;0.130521580174096;0.150611744183588;0.171698273183714;0.193710182972494;0.216576655255016;0.240229581852833;0.26459417882718;0.289604286495936;0.315184075160504;0.341261499603252;0.367761604257411;0.394608332494029;0.421725867963353;0.449034858477779;0.47645855062546;0.503917868730574;0.531334811481796;0.558627156388921;0.585718077574947;0.612527436441419;0.638978349902;0.664985696559219;0.690479627598884;0.715385135965827;0.739618153650318;0.763117921397393;0.78581746832337;0.807631621542377;0.828528797019946;0.848414697985378;0.867256650783886;0.885002619579992;0.901578530566669;0.916991795597667;0.931164295129038;0.944077073166366;0.955695246302577;0.966005915706771;0.974981138802106;0.982591915810044;0.988841418335677;0.993714635051686;0.997204625127841;0.99930141152424;1</x>
+            <y mapType="vector">0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0</y>
+            <z mapType="vector">-0.000349932489952842;-0.000253558284427187;4.15719142415602e-05;0.00050844305641848;0.00115503219727726;0.00181634059685295;0.00248932251058787;0.00315493422308735;0.00359713352336223;0.00386085523052107;0.0037820262248278;0.00334156655830939;0.00230636359161952;0.000824351357299412;-0.001284630863181;-0.00392065248468046;-0.00711483150308927;-0.0108893164946719;-0.0151191980419573;-0.0197025570169444;-0.024714560660937;-0.0299132432406093;-0.0353367818147078;-0.0407282107644553;-0.0460096489181288;-0.0511072341432372;-0.0559240949480417;-0.0602303074610892;-0.0641020598928032;-0.0673714832006194;-0.0700107168077421;-0.0720899604122808;-0.0735693573430343;-0.0745020769162891;-0.0749652920790094;-0.0750101588139103;-0.0746248335848109;-0.073918460489638;-0.0728661865565972;-0.0715221524896714;-0.0699884795565095;-0.0682712935718276;-0.0663847145683154;-0.0642558918477123;-0.0618969321091365;-0.0593939510214889;-0.0565870813880906;-0.0535254486952846;-0.0500622333215617;-0.0462185552461558;-0.0419665863108939;-0.0371586365763943;-0.0318938425890382;-0.0262753942600393;-0.0204795858269204;-0.0148941340009522;-0.00999483300747656;-0.0062785596475047;-0.0039537135339601;-0.0031715230870483;-0.00238135939891843;0;0.00394452745485543;0.00938239395722462;0.0159231360118005;0.0229269575676753;0.0297577662258433;0.036095741778945;0.0418573291942824;0.0469797291856297;0.0514981874858441;0.0554619630697155;0.0589252004551823;0.0619391109273157;0.0645528371352595;0.0667785162897767;0.0686732966998519;0.0702453136998167;0.0715897019596209;0.0726495915890403;0.0735381247484776;0.0741714279399405;0.0746386454140873;0.074915914656598;0.0750263785151671;0.0749401821492053;0.0747534697559149;0.0742813933993093;0.0736530989315615;0.0728287373093816;0.0718074572846751;0.0704724161231018;0.0689147599670247;0.0670616419321385;0.0649742083899033;0.0625886219221739;0.0599840154141073;0.0571565319195855;0.0540703318996612;0.0508515307177723;0.0475152560268832;0.0439706706150362;0.0404358338407476;0.0367549261512373;0.0330990091709184;0.0294491822077321;0.0257665866758627;0.0222672075769649;0.0188881941364124;0.0156525824111421;0.0126214386795463;0.00984778732759788;0.0073616815215783;0.00516317656384399;0.00334226604616968;0.00189297861904196;0.000846327394571629;0.00021433135089787;-6.55282141506852e-19</z>
+          </pointList>
+        </wingAirfoil>
+        <wingAirfoil uID="profile_0.195-creatorNormalized">
+          <name>Profile profile_0.195-creatorNormalized; should not be modified manually, change the uid if you want to make some change.</name>
+          <pointList>
+            <x mapType="vector">0.999965338903665;0.999244528467058;0.997078110606781;0.993474029669084;0.988444287478846;0.981988613742224;0.974130981437334;0.964894330961351;0.954301297912006;0.942385939537683;0.929186987162198;0.914746352282238;0.899123639539925;0.882353069126741;0.864519391183237;0.84565873387062;0.825833039203721;0.805120302749952;0.783567750351954;0.761217552298393;0.738157585227318;0.7144052649924;0.690053562125217;0.665119915483173;0.639666462612817;0.613765365904661;0.587483805040387;0.560861172701091;0.533996341606441;0.506957631369815;0.479818035680016;0.452682484719996;0.425625983665075;0.398737445568203;0.372107737459515;0.34581873602311;0.319952480886181;0.294584812356301;0.269792756680196;0.245650219358026;0.222221035038527;0.199571191713296;0.177763683147887;0.156876591173701;0.136965930696771;0.118092503800237;0.100325643508643;0.0837312055421298;0.0684034537221761;0.0544053645615373;0.0418269795429874;0.030830546630297;0.021487931082446;0.0138989691888551;0.00821831662093419;0.0042983208175128;0.00203209694846118;0.000831756207325296;0.000382919525450918;0.000281321626596735;0.000193738956116093;0;0.000239052697082472;0.00134579977691546;0.00408854139166766;0.00888611262947923;0.0157883207388553;0.0247015990081782;0.035392778614672;0.0477567932699755;0.0616647283111551;0.0769806633780682;0.0936287600801208;0.11149806527668;0.130513681143171;0.150603627401957;0.171690002417532;0.193701806734808;0.216568209592727;0.240221109913363;0.264585671215424;0.28959578090377;0.31517556416523;0.341252988963773;0.367753113384338;0.394599868999016;0.421717403998371;0.44902643144207;0.476450153203724;0.503909498961471;0.53132647506488;0.55861887702668;0.585709849211153;0.61251927529665;0.638970268975812;0.664977740803049;0.69047182742101;0.715377519820417;0.739610776472448;0.763110831716535;0.785810697568758;0.807625230908154;0.828522805790952;0.848409164146608;0.867251597608987;0.88499805865274;0.901574499921363;0.916988272168036;0.931161293561358;0.94407457191506;0.955693222516418;0.96600432981222;0.974979947692734;0.982591080214485;0.988840880712658;0.993714333966554;0.997204491788293;0.999301377258354;1</x>
+            <y mapType="vector">0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0</y>
+            <z mapType="vector">-0.000344932174949626;-0.000247550770868267;5.16010555625786e-05;0.000523508191091602;0.00116914762431255;0.00184752043737441;0.00254458073026171;0.00322928465040849;0.00371158956554442;0.00402143006818599;0.00401873247068018;0.0036574166130085;0.00273136905752573;0.00135552374438906;-0.000600281271773179;-0.00306911551636791;-0.00608109761176309;-0.00963837706686339;-0.0136230448852452;-0.017946182263027;-0.0226719574030512;-0.0275834045593722;-0.0326957018957865;-0.0377798837584462;-0.0427640695525506;-0.0475633979528474;-0.0520839981182699;-0.0561209463842825;-0.0597404320251314;-0.0627755866769892;-0.0652295502561976;-0.0671385237691131;-0.0684996510120819;-0.0693581022507452;-0.0697830514005043;-0.0698386551623357;-0.0695040708895753;-0.0688624436355125;-0.0678999211148715;-0.0666656448079301;-0.0652457367412219;-0.0636463233892208;-0.0618705254984925;-0.0598754929233083;-0.0576533330758134;-0.0553071621011367;-0.0526631136061516;-0.0497963135357701;-0.0465689431450128;-0.042993123111372;-0.0390470261316794;-0.0346009637540353;-0.0297250734635912;-0.0245045463057498;-0.0191186780382502;-0.0139081842482702;-0.00933485819041744;-0.00586357102236535;-0.00369271928585315;-0.0029615274474484;-0.00222236250812884;0;0.00367952701787162;0.00876638503628751;0.0148971026777415;0.0214648794625714;0.027847622398654;0.0337495120366532;0.0390819957154128;0.0438102749862015;0.0479785968014403;0.051628221555418;0.0548432942937492;0.0576480276167541;0.060095564890989;0.0621960440620942;0.0640006142629085;0.065509411598843;0.0668105714999247;0.0678512247273972;0.0687165144022224;0.0693475674977375;0.0698095292053784;0.0700855376780057;0.0702057364586964;0.0701342715140428;0.0699482879433834;0.0694979383391722;0.0688883695028305;0.0680827331595582;0.0670841788105854;0.065785864469282;0.0642629371673135;0.0624545507310534;0.0604198523149641;0.0581120052228597;0.0556021430982615;0.0528854097528653;0.0499399663816368;0.0468879289838835;0.0437354259510569;0.0404076208018659;0.0370995733830052;0.0336764649264713;0.0302903575259535;0.0269163510561585;0.0235295875653005;0.020313052230045;0.0172238949046633;0.0142661519810309;0.0114998900928757;0.00896913382321468;0.0067019366325265;0.00470035409781244;0.00304437985415442;0.00172604271761525;0.000772355899818243;0.000195338478441821;-2.66979987327003e-19</z>
+          </pointList>
+        </wingAirfoil>
+        <wingAirfoil uID="profile_0.233-creatorNormalized">
+          <name>Profile profile_0.233-creatorNormalized; should not be modified manually, change the uid if you want to make some change.</name>
+          <pointList>
+            <x mapType="vector">0.99996535536328;0.999244545945848;0.997078123448046;0.993474038201328;0.988444276758165;0.981988615885157;0.974131001975554;0.964894364258451;0.954301385833804;0.942386095061508;0.929187268410186;0.914746772000496;0.899124267661945;0.882353909680962;0.864520537137978;0.845660224169074;0.825834911153233;0.805122633746084;0.783570595742152;0.761220941826851;0.738161579744894;0.714409866158241;0.690058817528136;0.665125813412272;0.639672990711345;0.613772518685272;0.587491570448124;0.560869492953885;0.534005176691421;0.506966935957521;0.479827714863082;0.452692497342039;0.425636227490007;0.398747834031813;0.372118203701492;0.345829183234309;0.319962836874997;0.294595043840284;0.269802814989728;0.245660061990962;0.222230648888576;0.199580567546395;0.17777282893094;0.15688545915795;0.136974513130919;0.118100765242404;0.100333560309198;0.0837387242010557;0.0684104946970047;0.0544118655917668;0.0418328667253515;0.0308357162774614;0.0214923278389876;0.0139025651794681;0.00822108558661765;0.00430032923810351;0.00203344216975709;0.000832602712104782;0.000383452656427022;0.000281748960306863;0.00019406042104355;0;0.000238513971582884;0.00134454368086617;0.00408643835589605;0.0088831129643012;0.0157844051579475;0.0246968024013656;0.0353871271248544;0.0477503591428994;0.0616576043798894;0.0769729211142512;0.0936205198042116;0.111489401297854;0.130504678738897;0.150594360309361;0.171680536280151;0.193692195745869;0.216558489979229;0.240211331732797;0.264575828426361;0.289585919508896;0.315165679972206;0.341243095102576;0.36774323225226;0.394590017590792;0.421707556637621;0.449016634394848;0.476440400273049;0.503899801452439;0.531316840436945;0.558609340411145;0.585700408810105;0.612509958478079;0.638961094942154;0.664968759704452;0.690463069686447;0.715369017829255;0.739602589510849;0.763103002706759;0.78580325983687;0.807618239440036;0.828516279472819;0.848403157420014;0.867246129202778;0.884993139887055;0.901570163326545;0.916984487572412;0.931158073153073;0.94407188968605;0.95569105573338;0.966002632449677;0.974978675380229;0.982590186654584;0.9888403055322;0.99371400923195;0.99720434550676;0.999301339236747;1</x>
+            <y mapType="vector">0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0</y>
+            <z mapType="vector">-0.000337932546302953;-0.000239557635434136;5.85747061623041e-05;0.000530449413314213;0.00116904364377085;0.00185735829145796;0.00256734777883953;0.00326196850512086;0.00377517785511768;0.00412191084297927;0.00418509395149756;0.00389464758043273;0.0030734586034666;0.0018024615304826;-2.50517483856267e-06;-0.0023025104976726;-0.00512867249579039;-0.00846214013662698;-0.0121960039126604;-0.0162543445396275;-0.020685329552835;-0.0253019928166587;-0.0300955118417963;-0.0348669205843083;-0.0395443378889257;-0.0440389018100443;-0.0482597408774515;-0.0520249308928325;-0.055391660310486;-0.0581950601335664;-0.0604642694228811;-0.0622074884549748;-0.0634538601066105;-0.0642405539051171;-0.0646267430256903;-0.0646925833112778;-0.0644042314758316;-0.0638248320443191;-0.0629485319768725;-0.0618214721123903;-0.0605147740189833;-0.0590325635926242;-0.0573689610817559;-0.0555101154156117;-0.0534271336625192;-0.0512381313075573;-0.0487622413841044;-0.0460905891234191;-0.0430983548304626;-0.0397886586849144;-0.0361456725270219;-0.0320547063278321;-0.0275608971179283;-0.0227354351526218;-0.0177576148008401;-0.0129211533435729;-0.00867384511227945;-0.00544756681570743;-0.00343071790479684;-0.00275152657090998;-0.00206436200983531;0;0.00341453125721719;0.00814940201304886;0.0138651476150265;0.0199939710445799;0.02592677964784;0.0313947529220065;0.0363043361441012;0.0406447297358364;0.0444711794061255;0.0478139444107364;0.0507831689155379;0.0533790647060649;0.0556607744298685;0.057632435430788;0.0593411961719928;0.0607811921657482;0.0620315582748865;0.0630464245933555;0.0638819337916273;0.0645062120407289;0.0649584040489968;0.0652306472519553;0.0653580844805248;0.0653018610389926;0.0651171215134494;0.0646910174975046;0.0641016953094978;0.0633213058936052;0.0623509980644541;0.0610979289867796;0.0596182451470097;0.0578660995348257;0.0558966386442958;0.0536790248903843;0.0512743913654728;0.048678881198457;0.0458846547205944;0.0430058274475257;0.0400435272061224;0.0369339166634818;0.0338540555225438;0.0306871240271465;0.0275671841167446;0.0244653352277546;0.0213677186574983;0.0184253198964323;0.0156172879272722;0.0129276591238425;0.0104184997916615;0.00812183448994806;0.00606671642050884;0.00425420090705943;0.00275728166791789;0.00156398741443578;0.000699331311447856;0.000176332339406929;-2.71163866865296e-19</z>
+          </pointList>
+        </wingAirfoil>
+        <wingAirfoil uID="profile_0.272-creatorNormalized">
+          <name>Profile profile_0.272-creatorNormalized; should not be modified manually, change the uid if you want to make some change.</name>
+          <pointList>
+            <x mapType="vector">0.999965383951146;0.999244571641585;0.997078132864048;0.993474024341787;0.988444219678739;0.981988538492985;0.974130911081591;0.964894256475287;0.954301300170033;0.942386051304681;0.929187329203618;0.914746962563533;0.899124667206862;0.88235454058444;0.864521499381122;0.845661573389459;0.825836702015251;0.805124946677398;0.783573498677753;0.761224474196688;0.738165804928294;0.714414795139042;0.690064498618959;0.665132238424299;0.639680139979716;0.613780381245951;0.587500125189569;0.560878672153413;0.534014931200996;0.50697720433575;0.479838393301071;0.452703525490925;0.425647504512623;0.39875926581068;0.3721297147509;0.345840683486702;0.319974246559714;0.294606324480522;0.269813914790295;0.245670932377744;0.222241273417105;0.199590928016469;0.177782927644041;0.156895247285719;0.136983972952793;0.118109861797695;0.100342264669763;0.0837469819002769;0.0684182232269354;0.0544190032071397;0.0418393343159869;0.0308414088682929;0.0214971793473985;0.0139065416564381;0.00822416017002997;0.00430256061364934;0.00203493770383132;0.000833542390708598;0.000384044459715062;0.000282225233757633;0.000194417176242226;0;0.000237918913638613;0.00134314433566336;0.00408408799178221;0.00887975086063858;0.0157800239609563;0.0246914495223647;0.0353808507965451;0.0477432454850122;0.0616497472979098;0.0769644042338536;0.0936114592533721;0.11147987749177;0.130494772252541;0.15058414971482;0.171670085625126;0.193681561728344;0.216547713845588;0.240200461692865;0.264564871599211;0.289574921513904;0.31515464207292;0.341232037576417;0.367732181869343;0.394578990969996;0.42169654248881;0.449005679186522;0.47642950874475;0.503888988541907;0.531306122923335;0.558598756551338;0.58568996892286;0.612499696755084;0.638951034576781;0.664958954843373;0.690453555788874;0.715359828583185;0.739593779495809;0.763094615673728;0.785795324468641;0.807610812571731;0.828509373344595;0.848396819597273;0.867240375176697;0.884987976589193;0.901565618755087;0.91698053461498;0.931154711603407;0.944069093494099;0.955688797047283;0.966000865577358;0.974977350027594;0.982589256253314;0.988839706365518;0.993713672292489;0.997204195424464;0.999301302142445;1</x>
+            <y mapType="vector">0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0</y>
+            <z mapType="vector">-0.000327933644709625;-0.000229579631796012;6.44899303887325e-05;0.000531260183221049;0.00115670868438891;0.00184483615682705;0.00255859778368655;0.00325495067228025;0.00378785270556969;0.00416223996063866;0.00428203988026688;0.00405617423264619;0.00333353141619264;0.00216604715405322;0.000509562064414614;-0.00161999161643233;-0.00425473014416608;-0.00736180032760552;-0.0108392912468505;-0.0146252822858864;-0.0187559385237062;-0.0230692931228938;-0.0275365210468208;-0.0319856555333771;-0.0363498135837676;-0.0405341311998363;-0.0444517349282915;-0.0479426992541793;-0.0510552098348873;-0.0536283956533643;-0.0557143934834388;-0.0572984007307945;-0.0584315579347475;-0.05914803206833;-0.059497993742042;-0.0595705963618861;-0.0593259943053085;-0.0588063300583787;-0.0580127482948978;-0.0569903877203869;-0.055794368175278;-0.0544298136344884;-0.0528798426016728;-0.0511576015392437;-0.0492171960163942;-0.0471877396793592;-0.0448823635858601;-0.0424071909502268;-0.0396503992398465;-0.0366041068905987;-0.0332614830632475;-0.0295198329279318;-0.0254042915828274;-0.0209700465115864;-0.016395387615409;-0.0119330367792459;-0.0080117916007791;-0.00503154609996774;-0.00316870894470403;-0.00254052013913367;-0.00190635768444342;0;0.00315054034819988;0.00753044611000885;0.0128282746855647;0.0185132408951693;0.0239952533539639;0.0290304886443929;0.0335243852838122;0.0374861404971717;0.0409759962208423;0.0440192078076134;0.0467449170883946;0.0491343327728619;0.0512475953325561;0.0530878400313257;0.0546952131282579;0.05605984810612;0.0572538778301728;0.0582344303947575;0.0590366464596792;0.0596486501278749;0.0600865840812087;0.0603525835910595;0.0604857892871104;0.0604413443105901;0.0602603911550989;0.059859078892493;0.0592945517748615;0.0585439584146961;0.0576094453572456;0.0564081673037708;0.0549822686193195;0.0532978998781977;0.0514052053852087;0.0492893449664694;0.0470024497588737;0.0445396607234493;0.0419041356717847;0.0392059883931955;0.0364383448319441;0.0335513650777174;0.0307011080830532;0.0277877512249718;0.0249303556136205;0.0220950192119121;0.0192788810868348;0.0166059271517498;0.0140693040196811;0.0116390476171341;0.00937722324145519;0.00730685514615956;0.00545499573931519;0.00382469948870207;0.00248096026789812;0.00140880637453691;0.000630250795794249;0.000159312216025481;-2.99448480730934e-19</z>
+          </pointList>
+        </wingAirfoil>
+        <wingAirfoil uID="profile_0.311-creatorNormalized">
+          <name>Profile profile_0.311-creatorNormalized; should not be modified manually, change the uid if you want to make some change.</name>
+          <pointList>
+            <x mapType="vector">0.999965423806402;0.999244602952938;0.99707813676198;0.993473986745176;0.988444116214754;0.981988384262314;0.974130712022376;0.964894009656935;0.954301046419585;0.942385814740549;0.929187169764862;0.914746919036055;0.899124827875855;0.882354947273821;0.86452225830551;0.84566274789651;0.825838362521794;0.805127185787199;0.783576385705419;0.761228057126723;0.738170151824953;0.714419925872273;0.690070457274346;0.66513901857315;0.63968771911181;0.613788745019091;0.587509242200961;0.560888468397887;0.534025346023206;0.506988160053959;0.479849783685112;0.452715280194313;0.425659515441915;0.398771437534452;0.372141968944054;0.345852933390111;0.319986410789103;0.294618356663018;0.2698257612961;0.24568254179547;0.222252626321613;0.199601999749671;0.177793711026108;0.156905693698462;0.136994057153953;0.118119553897105;0.100351525626965;0.0837557559209615;0.068426436236123;0.0544265862392446;0.0418462107588692;0.0308474733026167;0.0215023605315165;0.0139107948515577;0.00822745670728494;0.0043049537334417;0.00203654190745696;0.000834552110738198;0.000384681044287142;0.000282734039275138;0.0001947997412341;0;0.000237279615133579;0.00134163904985112;0.00408155293879855;0.00887611601570493;0.0157752957974931;0.0246856867122151;0.0353741166241219;0.0477356357142801;0.0616413657093184;0.0769553387183251;0.0936018188168208;0.111469742771253;0.130484224591496;0.150573264806666;0.171658928039245;0.193670189191291;0.216536165903242;0.240188792795566;0.264553092379177;0.289563076118972;0.315142746403443;0.341220111081622;0.367720253053737;0.394567085039296;0.421684657006249;0.448993861566381;0.476417768824761;0.50387735008228;0.531294605912146;0.558587406988439;0.585678806946417;0.612488760624505;0.638940354597587;0.664948585830355;0.690443533526335;0.715350190916773;0.73958458057872;0.763085891448317;0.785787103888164;0.807603145323742;0.82850226486739;0.84839031498158;0.867234486226664;0.884982705785611;0.901560988842069;0.916976512852582;0.931151294860171;0.944066254485379;0.955686505444127;0.965999075281638;0.974976008123182;0.982588315161749;0.98883909885413;0.993713330030889;0.997204043513075;0.999301263163906;1</x>
+            <y mapType="vector">0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0</y>
+            <z mapType="vector">-0.000314935465823854;-0.000218616748936881;6.83467363386299e-05;0.000524940504494309;0.00113114274275603;0.0018099540169839;0.00251833072367616;0.00320723113340327;0.00375061408259583;0.00414441738135527;0.00430957024104934;0.00414099657417772;0.00351058752263709;0.00244628066136626;0.000937920515618853;-0.00102155874241564;-0.00346127035833345;-0.00633535740856094;-0.00955190657821461;-0.0130589951085615;-0.0168827838467043;-0.0208833049311265;-0.0250177288658966;-0.0291370878556374;-0.0331814957999914;-0.0370490852070441;-0.0406599792733107;-0.0438732504041665;-0.0467310794589046;-0.0490775920225307;-0.050981921176459;-0.0524092593257183;-0.053432743182286;-0.0540805354085464;-0.0543948022239587;-0.054471692981332;-0.0542673580623118;-0.0538059363689478;-0.0530925687728968;-0.0521723903619243;-0.0510845179680967;-0.0498370723112527;-0.0484031688785023;-0.0468189501436676;-0.0450245190265156;-0.043154986163687;-0.0410234791979806;-0.0387481180408632;-0.0362240754820102;-0.0334404668909503;-0.0303944569878608;-0.0269963428907722;-0.0232532563067475;-0.0192073799250587;-0.0150329961137899;-0.0109448342859951;-0.00734969747290076;-0.00461450877232756;-0.00290569234354167;-0.00233050808125955;-0.0017483494901285;0;0.00288555423608736;0.00690951716247012;0.0117864836121875;0.0170226886169368;0.0220540429925186;0.0266587185584424;0.0307421423980083;0.034331506460617;0.0374930463285666;0.0402440107541025;0.0427285377574142;0.0449118307234057;0.0468560264448918;0.0485612566803771;0.0500626639110325;0.0513463781682673;0.0524765289102814;0.0534172408402208;0.0541806511183416;0.0547728804791804;0.0551950679938097;0.0554513453913391;0.0555868495895133;0.055553720019498;0.0553790955612963;0.0550041212168487;0.0544669376153002;0.0537516894425917;0.052858519437103;0.0517165781788984;0.0503550063632626;0.0487489505722549;0.0469455513688809;0.0449429643160732;0.042784317196378;0.0404657472876331;0.0379994082199081;0.0354884108650061;0.032921877912373;0.0302599652041967;0.0276387303003715;0.0249773458142004;0.0223798713707197;0.0198064024228026;0.0172650743301217;0.0148528735699855;0.0125789428146346;0.0103993171570231;0.00837606019079648;0.00652419559545222;0.00486777443403684;0.00341284973185507;0.00221541558743459;0.0012594995680452;0.000564114343913696;0.000142278119297575;-2.83741975259777e-19</z>
+          </pointList>
+        </wingAirfoil>
+        <wingAirfoil uID="profile_0.350-creatorNormalized">
+          <name>Profile profile_0.350-creatorNormalized; should not be modified manually, change the uid if you want to make some change.</name>
+          <pointList>
+            <x mapType="vector">0.999965471347551;0.999244638666693;0.997078137126593;0.993473927884816;0.988443973833477;0.981988163904808;0.974130416831116;0.964893637247972;0.954300639878947;0.942385398037657;0.929186803905083;0.914746654439935;0.899124758813841;0.88235512736301;0.86452279650584;0.845663721911929;0.825839852014143;0.805129286747934;0.783579170343614;0.761231581836761;0.738174487105235;0.714425094059887;0.690076502529546;0.665145932765927;0.639695484818211;0.613797336235637;0.587518624054433;0.560898557792054;0.534036078566443;0.506999445052369;0.479861513929529;0.452727374363571;0.42567186715315;0.398783951117096;0.372154563904255;0.345865526870742;0.319998927582713;0.294630746107166;0.269837964266973;0.245694511016918;0.22226433477565;0.199613419207211;0.177804825568104;0.156916456339973;0.137004438059356;0.118129523475399;0.100361040012001;0.0837647668274736;0.0684348654478542;0.0544343689219597;0.0418532730840997;0.0308537107692728;0.0215077008584799;0.0139151862255371;0.00823086782499749;0.00430743465421899;0.00203820695622006;0.000835598305019442;0.000385339433578284;0.000283263967451446;0.000195197216713205;0;0.000236622648551845;0.00134008146312719;0.00407891789162546;0.00887233208149386;0.0157703769497353;0.0246797040872813;0.0353671511931416;0.0477277860069234;0.0616327363801622;0.0769460209093647;0.0935919151596919;0.111459331771123;0.130473382344531;0.150562063865741;0.171647431541576;0.193658454143065;0.216524230901786;0.240176709411679;0.264540879627969;0.28955078080536;0.315130387039362;0.341207714708582;0.367707847206207;0.394554700449395;0.421672296134125;0.448981573117624;0.476405570732785;0.503865271911344;0.531282671918793;0.558575667322151;0.585667288639409;0.612477509994511;0.638929404216976;0.664937989540799;0.690433328167861;0.715340411816368;0.73957528163195;0.763077102005382;0.78577885049416;0.8075954712871;0.828495176169312;0.848383845926288;0.867228641223816;0.884977486623358;0.9015564108586;0.916972544340338;0.931147924645591;0.944063456708471;0.955684248319568;0.96599731191215;0.974974688233793;0.982587389831495;0.988838501306992;0.993712991033259;0.997203890793698;0.999301223578138;1</x>
+            <y mapType="vector">0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0</y>
+            <z mapType="vector">-0.000299937926234027;-0.000206667471299496;7.11509596419771e-05;0.000511503419125392;0.00109336890065598;0.00175374785204442;0.00244659828873359;0.00311788004601164;0.00366255332168013;0.00406555828102649;0.00426582660140893;0.00414828505508217;0.00360482863089668;0.00264139734486963;0.00127884119439543;-0.000507903110118291;-0.00274794466732227;-0.00538442139485103;-0.00833541673564885;-0.011556005054758;-0.0150653413594011;-0.0187454564590017;-0.0225395147159007;-0.0263225469892784;-0.0300376629890826;-0.033583990367822;-0.0368836477996168;-0.0398177048865678;-0.0424193359291689;-0.0445416618549799;-0.0462658107858146;-0.0475409681971302;-0.0484572656727283;-0.0490378599543796;-0.0493179112245183;-0.0493985633296198;-0.0492299611894836;-0.0488232387124321;-0.0481885315768764;-0.047365969959043;-0.0463846664835436;-0.0452537374431125;-0.0439382941543;-0.0424934737386324;-0.0408473754347969;-0.039140105789464;-0.0371857877703901;-0.0351095368457695;-0.032819519389707;-0.030296846605023;-0.0275436771457387;-0.0244842971548976;-0.0211078336452789;-0.0174464626874649;-0.0136694563421501;-0.00995355419307862;-0.00668456662059733;-0.00419645637398625;-0.00264266878274627;-0.00211849092041094;-0.00158933777534196;0;0.00262257234398123;0.00628861228193138;0.0107397659086934;0.0155232959853564;0.0201021164169719;0.0242783925681238;0.027959535874303;0.0311837311783451;0.0340232053929402;0.0364881982123439;0.0387348425142034;0.0407133343447501;0.0424868054797047;0.0440533828678732;0.045444203801377;0.0466413935797715;0.0477010769766122;0.0485933740878109;0.0493124171795472;0.0498803224521503;0.0502822239987536;0.050527248689974;0.0506625284152618;0.0506401975023177;0.0504723898523561;0.0501242449896137;0.0496178985072041;0.0489434897516613;0.0480981562567821;0.047023043006339;0.0457352856289862;0.0442200252697786;0.0425183973867759;0.0406405517622325;0.0386216115559938;0.0364567090271316;0.0341689921025145;0.0318515676628939;0.0294915539203631;0.027057100955717;0.0246682643313562;0.022257210250791;0.0199149962455374;0.0175987142962258;0.0153244947496773;0.013166324739029;0.0111453416274833;0.00920757929550578;0.00741409901381655;0.00577192365140428;0.00430410240823419;0.00301768636098163;0.00196066987951625;0.00111507953649022;0.000498927544820531;0.000125231441905975;-3.25787565795848e-19</z>
+          </pointList>
+        </wingAirfoil>
+        <wingAirfoil uID="profile_0.389-creatorNormalized">
+          <name>Profile profile_0.389-creatorNormalized; should not be modified manually, change the uid if you want to make some change.</name>
+          <pointList>
+            <x mapType="vector">0.999965529842357;0.999244682057165;0.997078132032871;0.993473851257365;0.988443791103543;0.981987879590185;0.974130029506975;0.964893145280496;0.95430008279185;0.942384806656142;0.929186237930936;0.914746170430761;0.899124458111059;0.882355082326753;0.864523112806895;0.845664487369274;0.825841158720658;0.805131233465318;0.783581833484229;0.761235020429029;0.738178775287321;0.714430260319715;0.690082588724373;0.665152931131813;0.639703379189305;0.613806094783333;0.587528201332811;0.560908869318608;0.534047051195811;0.507010979185356;0.479873500458325;0.452739721435329;0.425684469186064;0.39879671464744;0.372167408654979;0.34587837655678;0.320011706516103;0.294643403037925;0.269850437140782;0.245706749731943;0.222276310244392;0.199625099815381;0.17781618664963;0.156927454711811;0.137015035865574;0.118139695338514;0.100370735652005;0.0837739404134337;0.0684434479238901;0.054442291234473;0.0418604647110369;0.0308600743864653;0.0215131582725825;0.0139196805355463;0.0082343672619604;0.00430997839835483;0.00203991370625649;0.000836669962046763;0.000386014944153857;0.000283805764247263;0.000195603185037279;0;0.00023594734522788;0.00133847908935804;0.00407620163767966;0.00886842245271109;0.0157653008486168;0.0246735445111675;0.03535999767098;0.0477197497633289;0.0616239188444345;0.0769365192312538;0.0935818192778623;0.111448719300391;0.130462323595886;0.150550629306141;0.17163567881128;0.19364643911462;0.216511992724233;0.240164298253122;0.264528322731816;0.289538121850663;0.31511765092912;0.341194935566677;0.367695051602686;0.394541920876965;0.421659547254446;0.448968904488795;0.476393004821655;0.503852840420493;0.531270408467917;0.558563624148632;0.585655499704281;0.612466025635151;0.638918262728362;0.664927243367759;0.69042301490099;0.715330569468312;0.739565956186588;0.763068319433198;0.785770631206197;0.807587855256172;0.82848816254695;0.848377464996897;0.867222886705149;0.884972362740126;0.901551925410849;0.916968665064725;0.931144632451786;0.944060727262359;0.955682046825471;0.965995592903535;0.974973404188596;0.982586489247828;0.988837920042047;0.993712661519666;0.997203745533957;0.99930118721878;1</x>
+            <y mapType="vector">0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0</y>
+            <z mapType="vector">-0.000280941173191413;-0.000191734830824371;7.18909194132961e-05;0.000492922801303966;0.00104234092432897;0.00167714558098371;0.00234529694941753;0.00298975691577279;0.00352448756345619;0.00392843211992914;0.00415452561960114;0.00407969859190454;0.00361685118971733;0.00275492657247873;0.00153578216603259;-7.76420412879991e-05;-0.0021134496458998;-0.00450777165373433;-0.00718768723850365;-0.0101162669591304;-0.0133046580511988;-0.0166558896322167;-0.0201021178450532;-0.0235413718412273;-0.0269187557817398;-0.0301373908531039;-0.0331233897154723;-0.035774818347966;-0.0381198422843327;-0.0400195763008511;-0.0415651419791993;-0.0426927155228207;-0.0435054217797304;-0.0440204096186814;-0.0442668311747638;-0.044348823007064;-0.044213522742617;-0.043858057624455;-0.043299556433548;-0.0425731428064801;-0.0416969237556541;-0.0406820096890522;-0.0394875063464261;-0.0381825438290123;-0.0366882164171733;-0.0351446252714956;-0.033370887127933;-0.0314961115918057;-0.0294374565819983;-0.0271750276954157;-0.024711975570024;-0.0219845718262356;-0.0189699371471997;-0.0156892387882614;-0.0123057351078561;-0.00896317905112264;-0.00602039073398134;-0.0037793854679746;-0.00237963667046983;-0.00190746746097951;-0.00143132171444489;0;0.00235859558976173;0.00566573672305752;0.00968813768590778;0.0140130982084213;0.0181385363322341;0.0218896089280526;0.0251727066730721;0.0280410049748763;0.0305647193009772;0.0327520772584979;0.0347632049817089;0.0365382886907364;0.0381394535124864;0.0395648199872616;0.0408395185155959;0.0419436680862498;0.0429263872186308;0.0437627899135646;0.0444330018557395;0.0449701333034888;0.045347311663098;0.045579657359232;0.0457122956344346;0.0456983540310358;0.045539959758057;0.0452212451689051;0.0447493391125721;0.0441193738676406;0.0433294800183046;0.0423287951779945;0.0411244481957023;0.0397105730307946;0.0381232983349994;0.0363817662675373;0.0345140938166805;0.0325154065650838;0.0304148449299639;0.0282985104392271;0.0261495153652994;0.0239460021462926;0.0217900236558018;0.0196287376086448;0.0175361987428606;0.0154734943707956;0.0134597482378693;0.0115489482588886;0.00977122480037651;0.00806661007612251;0.00649316228096504;0.0050519031698668;0.00376587945787046;0.00264013965644051;0.00171767845113581;0.000977521094531701;0.000438679175259454;0.000110169371918275;-6.01677115500659e-19</z>
+          </pointList>
+        </wingAirfoil>
+        <wingAirfoil uID="profile_0.428-creatorNormalized">
+          <name>Profile profile_0.428-creatorNormalized; should not be modified manually, change the uid if you want to make some change.</name>
+          <pointList>
+            <x mapType="vector">0.999965591236761;0.999244725950772;0.997078122283707;0.993473755112186;0.988443577349235;0.981987543552329;0.974129565815454;0.964892557806038;0.954299408119767;0.9423840742286;0.929185505737299;0.914745503367816;0.899123958610955;0.882354832072642;0.864523215656196;0.845665037047977;0.825842251972206;0.805132969614211;0.783584291524522;0.761238259740569;0.738182867426339;0.714435241397762;0.690088493877302;0.665159756381841;0.639711103726357;0.613814687443466;0.587537612088559;0.560919009036497;0.534057844741534;0.507022320905589;0.479885286626986;0.452751850916759;0.425696845623502;0.398809246667928;0.372180017421967;0.345890995956962;0.320024264793699;0.294655845379335;0.269862705877129;0.245718795665903;0.222288098662673;0.199636600338527;0.177827366100085;0.1569382732191;0.137025452960691;0.118149688687339;0.100380251041783;0.0837829374570785;0.0684518617162176;0.0544500594531312;0.0418675191179445;0.0308663258489758;0.0215185293249091;0.0139241085294137;0.00823782114641981;0.0043124910557282;0.00204159870305455;0.000837729493115096;0.000386681745047081;0.000284338976092414;0.000196003951679703;0;0.000235282899998463;0.00133689371910104;0.00407350939540215;0.00886454273272914;0.0157602678884403;0.0246674441474144;0.0353529335522265;0.0477118323666981;0.0616152495454503;0.0769271891003897;0.0935719085074427;0.111438301928277;0.130451463866067;0.150539390084654;0.171624112427234;0.193634600012471;0.216499919112013;0.24015203569119;0.264515903224651;0.289525587951768;0.315105033951742;0.341182268328088;0.367682362079225;0.394529243614521;0.421646904022687;0.448956342246719;0.476380554082735;0.503840535339764;0.531258284954346;0.558551734508547;0.585643886066421;0.612454738577419;0.638907344249068;0.664916742804671;0.690412967602765;0.715321014426557;0.739556933961779;0.763059848826935;0.785762731248835;0.807580556704452;0.828481461727935;0.848371382679767;0.867217416925962;0.884967500555873;0.901547674788779;0.9169649959909;0.931141522644155;0.944058151450277;0.955679970386291;0.965993973268183;0.974972193183359;0.982585639720931;0.988837367705958;0.993712349029566;0.997203604107732;0.999301151808811;1</x>
+            <y mapType="vector">0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0</y>
+            <z mapType="vector">-0.000260945037687854;-0.000176815778301746;7.05783000682309e-05;0.000465224764840145;0.000977105005873726;0.00157721921037666;0.00220953013224666;0.0028190020859096;0.00333459948907837;0.00372926923860683;0.00397095042870794;0.00393257806591037;0.00354505857662233;0.00278333884478679;0.00170628529592556;0.000267841815578558;-0.00156008856848617;-0.00370762853287134;-0.00610985214541035;-0.0087398253937119;-0.0116016861465125;-0.014614461565424;-0.0177062978447144;-0.0207932221653617;-0.0238273319902112;-0.0267117407682608;-0.0293795539199271;-0.0317468330998278;-0.0338347333037768;-0.0355143619194114;-0.0368818327168136;-0.0378673106811439;-0.0385779126454415;-0.0390287779744168;-0.0392430491151038;-0.039323853895249;-0.0392183211496471;-0.0389125700594292;-0.0384267211532249;-0.0377928901812478;-0.037021177365895;-0.0361206860699862;-0.0350495152846177;-0.0338857867309874;-0.0325455887024346;-0.0311670158941095;-0.0295771775446723;-0.0279051762422903;-0.0260781597546703;-0.0240732269502553;-0.0218975188123826;-0.0194962895474472;-0.0168376521848434;-0.0139347633390122;-0.0109418648982768;-0.00797172578658118;-0.00535617776045665;-0.0033612992769186;-0.00211659746390463;-0.00169743876942046;-0.0012733020449841;0;0.00209562292920399;0.00504088492400247;0.00863158228444827;0.0124940592853007;0.0161652389992628;0.0194912681499484;0.022383512419074;0.0249031359461376;0.0271193404266006;0.0290343389573239;0.0308122495703706;0.0323852466398918;0.0338134473023327;0.0350939643998798;0.0362469200281464;0.0372524255720782;0.0381525920163834;0.0389255260579677;0.0395413454142653;0.0400421532350666;0.0403920688435223;0.0406082049527101;0.0407356787959067;0.040728609760817;0.0405811169769286;0.0402923242424024;0.0398593522343434;0.0392793247638235;0.0385513640620203;0.0376315989056295;0.0365211499459341;0.035219142548079;0.0337586971567731;0.0321649468042379;0.0304590010437623;0.0286379774184839;0.0267340073484525;0.0248251859161445;0.0228936182256602;0.0209234375738938;0.0190016935426982;0.017087533693206;0.0152430093356397;0.0134272022178201;0.0116662281286935;0.00999607586697879;0.00845386741854694;0.00697363298214549;0.00561142704069652;0.0043632699908088;0.00325020557245939;0.00227827918944054;0.00148248591486111;0.000844849369673192;0.00037838043884143;9.50947147367342e-05;1.29705228770765e-19</z>
+          </pointList>
+        </wingAirfoil>
+        <wingAirfoil uID="profile_1.000-creatorNormalized">
+          <name>Profile profile_1.000-creatorNormalized; should not be modified manually, change the uid if you want to make some change.</name>
+          <pointList>
+            <x mapType="vector">0.999955267890094;0.99923453762287;0.997068331226663;0.993464595382047;0.988435245414966;0.981980184297146;0.974123242680476;0.964887254360585;0.954294990534214;0.942380375613615;0.929182302642611;0.914742395448427;0.89912041219755;0.882350296081898;0.864517224335578;0.845657046224584;0.825831685774858;0.805119345356641;0.783567230897811;0.761217426327406;0.73815791791154;0.714405949551326;0.690054745319662;0.665121564767382;0.639668560406363;0.613768022328063;0.587487159314375;0.560865227482659;0.534001165998105;0.506963368295519;0.479824529763149;0.452689877438277;0.425634065992281;0.39874605350798;0.37211676674116;0.345827888436119;0.319961577088689;0.294593878599488;0.269801726177343;0.245659018643081;0.222229726944217;0.199579825130617;0.177772434400918;0.156885318933157;0.13697473148021;0.118101245528054;0.100334401605083;0.0837397887780133;0.0684116404957807;0.054413021618025;0.04183391212338;0.0308364725338886;0.0214928020144079;0.0139028584959952;0.00822116721857759;0.00430037339661589;0.00203346439060505;0.000832628253784908;0.000383471815384313;0.000281765903435885;0.000194075448055553;0;0.00023846326408932;0.00134453748737928;0.00408658920131526;0.00888347018162739;0.0157847556000305;0.0246969741180262;0.0353868535151405;0.0477495767767931;0.0616563616489109;0.0769712100078411;0.0936186268231624;0.111487410179926;0.130502742649651;0.150592612705921;0.171679087153707;0.193691101243741;0.216557790543193;0.240211080871571;0.264575888755132;0.289586330912394;0.315166314493575;0.341243878051367;0.367744166597958;0.394591040334401;0.421708481529578;0.449017485013537;0.476441042458788;0.503900145565437;0.531316789149734;0.558608849145235;0.58569931722445;0.612508197621058;0.638958588425674;0.664965572189569;0.69045920934745;0.715364491544235;0.739597523227005;0.763097539983181;0.785797489528086;0.807612322955328;0.828510313011554;0.848397326406047;0.867240560780588;0.884987888524887;0.901565388908505;0.916980171382916;0.931154359092088;0.944068739461946;0.955688491382197;0.966000599382477;0.974977129577923;0.982589101148304;0.988839620470337;0.993713631411974;0.997204181018956;0.999301297598748;1</x>
+            <y mapType="vector">0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0</y>
+            <z mapType="vector">-0.0034288462731109;-0.00334359072839667;-0.00309281150549343;-0.00269353340941217;-0.00217279362697434;-0.00156159173048315;-0.000914002093581518;-0.000283095973764736;0.000258055647405319;0.000685346682942652;0.000964655534106489;0.000975852398836828;0.000641750542819496;-5.57562037115272e-05;-0.00105993467243167;-0.00241889687909543;-0.00415683654912911;-0.00620899871497143;-0.00850953139458457;-0.0110315664181391;-0.0137793791655465;-0.016675023922;-0.0196467927656795;-0.0226117400507617;-0.0255210605098299;-0.0282819807819637;-0.030827711497808;-0.0330763758565173;-0.0350472834604402;-0.0366146488841694;-0.0378756992753616;-0.0387577642853247;-0.0393710771422473;-0.0397289162318151;-0.0398545660616356;-0.0398492818936775;-0.0396623210870033;-0.0392789217243295;-0.038720324521637;-0.0380187606533102;-0.0371834303116142;-0.036222539962499;-0.0350972873305255;-0.0338829155165987;-0.0324986009151294;-0.0310805325763725;-0.0294559288533085;-0.0277559945148971;-0.0259060248106526;-0.0238852172167956;-0.0216998533455328;-0.0192984409652672;-0.0166492058734816;-0.0137654608852489;-0.0107986890586379;-0.00786242871901653;-0.00528034362216811;-0.00331259287606284;-0.00208519192601445;-0.0016718752397768;-0.00125360244174265;0;0.002065245349002;0.00496577173457757;0.00850017497509998;0.0123021455297494;0.0159165300488517;0.0191926217005238;0.0220431509758937;0.0245264457189058;0.0267119087404039;0.0285999657128126;0.0303518522906343;0.0319029167944696;0.0333113931699339;0.0345735068282031;0.0357105016152024;0.0367016000467069;0.0375900237555048;0.0383519859089283;0.0389607216253099;0.0394534369704963;0.0398003702341542;0.0400137466067128;0.0401398001993476;0.0401337695086753;0.0399898924932424;0.0397064164462418;0.0392805824147743;0.0387096377058294;0.0379918264826554;0.0370874059525516;0.0359936171626188;0.0347117104946041;0.0332729265265215;0.0317035309449229;0.0300227425837721;0.0282277962302816;0.0263519543444821;0.0244704068182254;0.0225663635923227;0.0206240909327861;0.0187306877975226;0.0168434489945531;0.015025476942849;0.0132359349651772;0.011500054332499;0.00985281265232086;0.00833345352222768;0.00687403734933471;0.00553167289528214;0.00430140091832917;0.00320430876718603;0.0022464871274573;0.00146192614022328;0.000832673002988509;0.000373749418412995;9.41865617696702e-05;-1.1379920733586e-18</z>
+          </pointList>
         </wingAirfoil>
       </wingAirfoils>
     </profiles>
