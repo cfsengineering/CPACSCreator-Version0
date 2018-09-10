@@ -46,7 +46,7 @@
                   <rotation uID="Wing_section1_transformation1_rotation1">
                     <x>0</x>
                     <y>0</y>
-                    <z>20</z>
+                    <z>0</z>
                   </rotation>
                   <translation refType="absLocal" uID="Wing_section1_transformation1_translation1">
                     <x>0</x>
@@ -60,9 +60,9 @@
                     <airfoilUID>mdAirfoilFineNormalized</airfoilUID>
                     <transformation uID="Wing_section1_element1_transformation1">
                       <scaling uID="Wing_section1_element1_transformation1_scaling1">
-                        <x>2</x>
-                        <y>2</y>
-                        <z>2</z>
+                        <x>3</x>
+                        <y>3</y>
+                        <z>3</z>
                       </scaling>
                       <rotation uID="Wing_section1_element1_transformation1_rotation1">
                         <x>0</x>
@@ -126,18 +126,10 @@
               <segment uID="Wing_segment1">
                 <name>Wing_segment1</name>
                 <fromElementUID>Wing_section1_element1</fromElementUID>
-                <toElementUID>Wing_section2_element1</toElementUID>
+                <toElementUID>Wing_section1_element1</toElementUID>
               </segment>
             </segments>
-            <positionings>
-              <positioning uID="positioning1">
-                <name>Position1</name>
-                <length>3</length>
-                <sweepAngle>20</sweepAngle>
-                <dihedralAngle>0</dihedralAngle>
-                <toSectionUID>Wing_section1</toSectionUID>
-              </positioning>
-            </positionings>
+          
           </wing>
         </wings>
       </model>
