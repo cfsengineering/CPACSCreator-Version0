@@ -40,11 +40,8 @@ class AircraftTreeTest : public  ::testing::Test {
 
 protected:
 
-    std::string DATA_DIR="/home/cfse/Stage_Malo/CPACSCreatorTotal/CreatorLib/CPACSCreatorLibTests/CreatorTests/Data/";
+    std::string DATA_DIR="./Data/";
 
-
-    std::string fileName1 = DATA_DIR + "AircraftTreeTest1.xml";
-    std::string fileName1b = DATA_DIR + "AircraftTreeTest1b-doubleModel.xml";
     std::string fileName2 = DATA_DIR + "AircraftTreeTest2-getWingSweep2.xml";
     std::string fileName2b = DATA_DIR + "AircraftTreeTest2-getWingSweep2-withPositioning.xml";
     std::string fileName3 = DATA_DIR + "AircraftTreeTest3.xml";
@@ -57,17 +54,68 @@ protected:
     std::string fileName9 = DATA_DIR + "AircraftTreeTest9-getWingSweep.xml";
 
 
-
-
     std::string currentFile = "not set";
-    AircraftTree tree ;
-    CPACSTreeItem* root;
-    TiglCPACSConfigurationHandle* tiglHandle = tree.getTiglHandle();
-    UniqueXPath rootXPath = UniqueXPath("/cpacs/vehicles/aircraft/model[1]");
     std::string outFileName = DATA_DIR + "AircraftTreeTest-out.xml";
 
+    UniqueXPath rootXPath = UniqueXPath("not set");
+
+    AircraftTree tree ;
+    CPACSTreeItem* root;
+
+    // To use directly the tigl and tixi library for testing
+    // Be careful the handler need to be up-to-date with the tested file
+    TixiDocumentHandle tixiHandle;
+    TiglCPACSConfigurationHandle* tiglHandle;
+
+
+    // Used to test the area. Can check if the area value has changed
+    // First need to backup the area values with "backupReferenceAreaValues",
+    // Then compare it with the actual values with "checkCurrentAreasWithBackup"
     double tempArea, bAreaXY, bAreaXZ, bAreaYZ,bArea, aAreaXY, aAreaXZ,aAreaYZ,aArea;
+
+
+
+
+    // Used to check if chords of the wing has changed.
+    // Same principle as for area,
+    // first need to back up the chord values with "backupChordPointsOfWing"
+    // then the value can be checked with "checkCurrentChordPointsWithBackup"
+    std::vector<cpcr::UID> UIDs;
+    std::map<cpcr::UID, Eigen::Vector4d> lEsB;
+    std::map<cpcr::UID, Eigen::Vector4d> tEsB;
+    std::map<cpcr::UID, Eigen::Vector4d> lEsA;
+    std::map<cpcr::UID, Eigen::Vector4d> tEsA;
+
+
+
+
+    void setVariables(std::string fileName){
+        rootXPath = UniqueXPath("/cpacs/vehicles/aircraft/model[1]");
+        currentFile = DATA_DIR + fileName;
+        tree.build(currentFile, rootXPath);
+        root = tree.getRoot();
+        tree.writeToFile(outFileName);  // for visual test
+        setTixiAndTiglHandlers();
+    }
+
+
+    void setVariablesSpecialRootXPath(std::string fileName, UniqueXPath specialRootXPath ){
+        rootXPath = specialRootXPath;
+        currentFile = DATA_DIR + fileName;
+        tree.build(currentFile, rootXPath);
+        root = tree.getRoot();
+        tree.writeToFile(outFileName);  // for visual test
+        setTixiAndTiglHandlers();
+    }
+
+
+    void setTixiAndTiglHandlers(){
+        tixiHandle = tixi::TixiOpenDocument(outFileName);
+        tiglOpenCPACSConfiguration(tixiHandle, tree.getRoot()->getUid().c_str(), tiglHandle);
+    }
+
     void backupReferenceAreaValues() {
+        setTixiAndTiglHandlers(); // to be sure that the tigl is up-to-date
         // backup before area
         tiglWingGetReferenceArea(*tiglHandle,1, TIGL_X_Y_PLANE,&bAreaXY);
         // tiglWingGetReferenceArea(*tiglHandle,1, TIGL_X_Z_PLANE,&bAreaXZ);
@@ -76,6 +124,7 @@ protected:
     }
 
     void checkCurrentAreasWithBackup(){
+        setTixiAndTiglHandlers(); // to be sure that the tigl is up-to-date
         tiglWingGetReferenceArea(*tiglHandle,1, TIGL_X_Y_PLANE,&aAreaXY);
         //tiglWingGetReferenceArea(*tiglHandle,1, TIGL_X_Z_PLANE,&aAreaXZ);
         tiglWingGetReferenceArea(*tiglHandle,1, TIGL_Y_Z_PLANE,&aAreaYZ);
@@ -89,13 +138,6 @@ protected:
     }
 
 
-
-    // used to check if chords of the wing has changed
-    std::vector<cpcr::UID> UIDs;
-    std::map<cpcr::UID, Eigen::Vector4d> lEsB;
-    std::map<cpcr::UID, Eigen::Vector4d> tEsB;
-    std::map<cpcr::UID, Eigen::Vector4d> lEsA;
-    std::map<cpcr::UID, Eigen::Vector4d> tEsA;
 
     void backupChordPointsOfWing(std::string wingUID) {
 
@@ -122,17 +164,11 @@ protected:
 
 
 
-
-    void setVariables(std::string fileName){
-        currentFile = DATA_DIR + fileName;
-        tree.build(currentFile, rootXPath);
-        root = tree.getRoot();
-        tree.writeToFile(outFileName);  // for visual test
-    }
-
 };
 
 TEST_F(AircraftTreeTest, buildAndClose ){
+
+    // For this test, we do not use the "setVariables" function because we want to to test the functions used inside it.
 
     AircraftTree aircraftTree ;
     EXPECT_TRUE(aircraftTree.getRoot() == nullptr);
@@ -164,22 +200,18 @@ TEST_F(AircraftTreeTest, buildAndClose ){
     EXPECT_TRUE(aircraftTree.getRoot() == nullptr);
     EXPECT_TRUE(aircraftTree.isBuild() == false);
 
-
 }
 
 
 
 TEST_F(AircraftTreeTest, build){
 
+
     // initial state ( aircraftTree is construct each time by the gtest lib)
-    tiglHandle =  tree.getTiglHandle();
+    // For this test, we do not use the "setVariables" function because we want to to test the functions used inside it.
 
-    EXPECT_FALSE( tree.isBuild());
-    EXPECT_EQ( (int) *(tiglHandle) , 0);
-
-    // construct the tree
-    tree.build(fileName1, UniqueXPath("/cpacs/vehicles/aircraft/model[1]"));
-    root = tree.getRoot();
+    // Call build and set root, tixi and tigl handlers, outfile , currentfile
+    setVariables("AircraftTreeTest1.xml");
 
 
     // check result
@@ -204,11 +236,10 @@ TEST_F(AircraftTreeTest, build){
     EXPECT_EQ(fuselage->getUid(), "SimpleFuselage");
 
 
-    // double model check & tigl updat
+    // construct a tree with the second aircraft of the file
 
-    // construct an other tree with the object
-    tree.build(fileName1b, UniqueXPath("/cpacs/vehicles/aircraft/model[2]"));
-    root = tree.getRoot();
+    UniqueXPath specialRoot = UniqueXPath("/cpacs/vehicles/aircraft/model[2]");
+    setVariablesSpecialRootXPath("AircraftTreeTest1b-doubleModel.xml", specialRoot);
 
     EXPECT_EQ(root->getUid(), "Cpacs2Test");
     tiglIsCPACSConfigurationHandleValid(*(tiglHandle), &isValid );
@@ -219,9 +250,9 @@ TEST_F(AircraftTreeTest, build){
     EXPECT_EQ(root->findAllChildrenOfTypeRecursively("wing").size(),0);
 
 
-    // construct an other tree with the object
-    tree.build(fileName1b, UniqueXPath("/cpacs/vehicles/aircraft/model[1]"));
-    root = tree.getRoot();
+    // construct a tree with the second aircraft of the file
+    specialRoot = UniqueXPath("/cpacs/vehicles/aircraft/model[1]");
+    setVariablesSpecialRootXPath("AircraftTreeTest1b-doubleModel.xml", specialRoot);
 
     EXPECT_EQ(root->getUid(), "mDsave");
     tiglIsCPACSConfigurationHandleValid(*(tiglHandle), &isValid );
@@ -233,12 +264,11 @@ TEST_F(AircraftTreeTest, build){
 
 
     // incorrect xpath (not a model)
-    EXPECT_THROW(tree.build(fileName1,UniqueXPath("/cpacs/vehicles/aircraft")), CreatorException);
+    EXPECT_THROW(tree.build(DATA_DIR + "AircraftTreeTest1.xml",UniqueXPath("/cpacs/vehicles/aircraft")), CreatorException);
     EXPECT_EQ(tree.isBuild(), false);
     tiglIsCPACSConfigurationHandleValid(*(tiglHandle), &isValid );
     EXPECT_EQ( isValid, TIGL_FALSE);
 
-    // TODO INCORRECT INVALID XPATH BEHAVIOR
 
 }
 
@@ -489,25 +519,16 @@ TEST_F(AircraftTreeTest, getGlobalTransformMatrixOfElement){
 
 TEST_F(AircraftTreeTest, writeToFile){
 
-    tree.build(fileName5, UniqueXPath("/cpacs/vehicles/aircraft/model[1]") );
-    root = tree.getRoot();
-    tiglHandle = tree.getTiglHandle();
-
-    TiglCPACSConfigurationHandle tiglHandleBackUp = *tiglHandle;
-
-    tree.setWingSweepByShearing("D150_VAMP_wing_W1", 40);
-    tree.writeToFile(DATA_DIR +"out-AircraftTreeTest5-setWingSweep2-D150.xml");
-
-    EXPECT_EQ(tree.isBuild(), true);
-    EXPECT_EQ(tree.getFilename(), DATA_DIR +"out-AircraftTreeTest5-setWingSweep2-D150.xml");
-    EXPECT_FALSE( *tiglHandle == tiglHandleBackUp);
-    tiglHandleBackUp = *tiglHandle;
+    setVariables("AircraftTreeTest5-setWingSweep2-D150.xml");
 
     tree.writeToFile();
     EXPECT_EQ(tree.isBuild(), true);
-    EXPECT_EQ(tree.getFilename(), DATA_DIR +"out-AircraftTreeTest5-setWingSweep2-D150.xml");
-    EXPECT_FALSE( *tiglHandle == tiglHandleBackUp);
+    EXPECT_EQ(tree.getFilename(), outFileName);
 
+
+    tree.writeToFile( DATA_DIR + "test-write.xml");
+    EXPECT_EQ(tree.isBuild(), true);
+    EXPECT_EQ(tree.getFilename(), DATA_DIR + "test-write.xml");
 
 }
 

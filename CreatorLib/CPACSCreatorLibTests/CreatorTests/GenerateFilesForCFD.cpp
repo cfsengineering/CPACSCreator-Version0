@@ -33,7 +33,6 @@ TEST(GenerateFile, wingSweep){
     std::string baseFile = "D150_AGILE_Hangar_3_orignal.xml";
     AircraftTree tree ;
     CPACSTreeItem* root;
-    TiglCPACSConfigurationHandle* tiglHandle = tree.getTiglHandle();
     UniqueXPath rootXPath = UniqueXPath("/cpacs/vehicles/aircraft/model[1]");
     std::string outFileName =  "notSet.xml";
 
@@ -59,7 +58,6 @@ TEST(GenerateFile, wingDihedral){
     std::string baseFile = "D150_AGILE_Hangar_3_orignal.xml";
     AircraftTree tree ;
     CPACSTreeItem* root;
-    TiglCPACSConfigurationHandle* tiglHandle = tree.getTiglHandle();
     UniqueXPath rootXPath = UniqueXPath("/cpacs/vehicles/aircraft/model[1]");
     std::string outFileName =  "notSet.xml";
 
