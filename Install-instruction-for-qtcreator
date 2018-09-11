@@ -1,8 +1,0 @@
-
-Remove the qt path from the LD directory:
-For me to remove (:/opt/Qt5.6.2/Tools/QtCreator/lib/Qt/lib:)
-
-Copy the share folder of a previouse working build in the parent directory of the executable directory
-
-
-
