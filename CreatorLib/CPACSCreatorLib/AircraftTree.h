@@ -15,9 +15,8 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-//
-// Created by makem on 29/04/18.
-//
+
+
 
 #ifndef CPACSCREATORLIBANDTESTS_AIRCRAFTTREE_H
 #define CPACSCREATORLIBANDTESTS_AIRCRAFTTREE_H
@@ -35,7 +34,7 @@ namespace cpcr{
 
 
     /**
-     * @brief Process and modify a CPACS aircraft.
+     * @brief Process and modify an aircraft stored in a CPACS file.
      *
      * This class first build a tree structure based on the geometric data of a aircraft described in a CPACS file.
      * Then, different functions can be call on this representation of the aircraft. For example, the wing sweep of
@@ -49,11 +48,11 @@ namespace cpcr{
 
     public:
 
+        /**
+         * Build a
+         */
         AircraftTree();
         ~AircraftTree();
-
-
-        inline TiglCPACSConfigurationHandle* getTiglHandle() { return  tiglHandle;};
 
         void build(std::string file, UniqueXPath root) override ;
 
@@ -518,6 +517,9 @@ namespace cpcr{
         // to access tigl api
         TiglCPACSConfigurationHandle* tiglHandle;    // each time tixi (modifer) change some function this should be updated
 
+
+
+        inline TiglCPACSConfigurationHandle* getTiglHandle() { return  tiglHandle;};
 
     };
 

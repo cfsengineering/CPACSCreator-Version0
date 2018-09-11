@@ -39,6 +39,7 @@ target_sources( CPACSCreatorLib
 
 
 
+
 # TIXI link
 unset(TIXI_LIB_LOCATION CACHE) # clear variable
 find_library(TIXI_LIB_LOCATION tixi3 )

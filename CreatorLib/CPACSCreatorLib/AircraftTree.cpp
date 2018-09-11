@@ -414,7 +414,7 @@ cpcr::AircraftTree::AircraftTree(): CPACSTree() {
 }
 
 cpcr::AircraftTree::~AircraftTree(){
-    closeTiglHandle();
+    close();
     delete tiglHandle;
 }
 

@@ -27,20 +27,26 @@ target_sources( runCPACSCreatorLibTests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../.
 
 # Copy the data file to execution folder (relative path usage)
 add_custom_command(
-        TARGET runCPACSCreatorLibTests POST_BUILD
+        TARGET runCPACSCreatorLibTests
+        POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_CURRENT_SOURCE_DIR}/Data $<TARGET_FILE_DIR:runCPACSCreatorLibTests>/Data
+        ${CMAKE_CURRENT_SOURCE_DIR}/Data
+        "$<TARGET_FILE_DIR:runCPACSCreatorLibTests>/Data"
 )
 
-add_custom_target(
-        TARGET runCPACSCreatorLibTests POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E echo "suppper $<TARGET_FILE:runCPACSCreatorLibTests>"
-        VERBATIM
+
+# Copy config log file to the executable folder
+add_custom_command(
+        TARGET  runCPACSCreatorLibTests
+        POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy
+        ${CMAKE_SOURCE_DIR}/CreatorLib/CPACSCreatorLib/logger.conf
+        $<TARGET_FILE_DIR:runCPACSCreatorLibTests>
 )
 
-message(asfsdsdfa  $<TARGET_FILE_DIR:runCPACSCreatorLibTests>)
-message(ss   ${CMAKE_SOURCE_DIR}/Data )
-message(dd ${CMAKE_COMMAND})
+
+
+
 
 # TIXI link
 unset(TIXI_LIB_LOCATION CACHE) # clear variable
