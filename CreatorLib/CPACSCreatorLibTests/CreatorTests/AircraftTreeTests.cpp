@@ -36,22 +36,21 @@
 
 using namespace cpcr;
 
+
+/***
+ * This class tests the AircraftTree class.
+ * Generally, there is one test per public functions.
+ * The cpacs files used for testing in folder "CreatorTests/Data".
+ * If the file is modified, the result is store in "AircraftTreeTest-out.xml".
+ * So you can follow the progression of the test in CPACSViewer by opening the "AircraftTreeTest-out.xml" file
+ * (You need to run the test step by step, with a debugger).
+ *
+ */
 class AircraftTreeTest : public  ::testing::Test {
 
 protected:
 
     std::string DATA_DIR="./Data/";
-
-    std::string fileName2 = DATA_DIR + "AircraftTreeTest2-getWingSweep2.xml";
-    std::string fileName2b = DATA_DIR + "AircraftTreeTest2-getWingSweep2-withPositioning.xml";
-    std::string fileName3 = DATA_DIR + "AircraftTreeTest3.xml";
-    std::string fileName4 = DATA_DIR + "AircraftTreeTest4-composeTransformRecursively.xml";
-    std::string fileName5 = DATA_DIR + "AircraftTreeTest5-setWingSweep2-D150.xml";
-    std::string fileName5b = DATA_DIR + "AircraftTreeTest5-setWingSweep2-withPositioning.xml";
-    std::string fileName7 = DATA_DIR + "AircraftTreeTest7-getGlobalTransformMatrixOfElement.xml";
-    std::string fileName6 = DATA_DIR + "AircraftTreeTest6-positionings.xml";
-    std::string fileName8  = DATA_DIR + "Aircraft-unusal-segments-ordering.xml";
-    std::string fileName9 = DATA_DIR + "AircraftTreeTest9-getWingSweep.xml";
 
 
     std::string currentFile = "not set";
@@ -65,7 +64,7 @@ protected:
     // To use directly the tigl and tixi library for testing
     // Be careful the handler need to be up-to-date with the tested file
     TixiDocumentHandle tixiHandle;
-    TiglCPACSConfigurationHandle* tiglHandle;
+    TiglCPACSConfigurationHandle tiglHandle;
 
 
     // Used to test the area. Can check if the area value has changed
@@ -110,24 +109,25 @@ protected:
 
 
     void setTixiAndTiglHandlers(){
+        // Open document
         tixiHandle = tixi::TixiOpenDocument(outFileName);
-        tiglOpenCPACSConfiguration(tixiHandle, tree.getRoot()->getUid().c_str(), tiglHandle);
+        tiglOpenCPACSConfiguration(tixiHandle, tree.getRoot()->getUid().c_str(), &tiglHandle);
     }
 
     void backupReferenceAreaValues() {
         setTixiAndTiglHandlers(); // to be sure that the tigl is up-to-date
         // backup before area
-        tiglWingGetReferenceArea(*tiglHandle,1, TIGL_X_Y_PLANE,&bAreaXY);
+        tiglWingGetReferenceArea(tiglHandle,1, TIGL_X_Y_PLANE,&bAreaXY);
         // tiglWingGetReferenceArea(*tiglHandle,1, TIGL_X_Z_PLANE,&bAreaXZ);
-        tiglWingGetReferenceArea(*tiglHandle,1, TIGL_Y_Z_PLANE,&bAreaYZ);
+        tiglWingGetReferenceArea(tiglHandle,1, TIGL_Y_Z_PLANE,&bAreaYZ);
         // tiglWingGetReferenceArea(*tiglHandle,1, TIGL_NO_SYMMETRY,&bArea);
     }
 
     void checkCurrentAreasWithBackup(){
         setTixiAndTiglHandlers(); // to be sure that the tigl is up-to-date
-        tiglWingGetReferenceArea(*tiglHandle,1, TIGL_X_Y_PLANE,&aAreaXY);
+        tiglWingGetReferenceArea(tiglHandle,1, TIGL_X_Y_PLANE,&aAreaXY);
         //tiglWingGetReferenceArea(*tiglHandle,1, TIGL_X_Z_PLANE,&aAreaXZ);
-        tiglWingGetReferenceArea(*tiglHandle,1, TIGL_Y_Z_PLANE,&aAreaYZ);
+        tiglWingGetReferenceArea(tiglHandle,1, TIGL_Y_Z_PLANE,&aAreaYZ);
         //tiglWingGetReferenceArea(*tiglHandle,1, TIGL_NO_SYMMETRY,&aArea);
 
         EXPECT_TRUE(fabs( bAreaXY - aAreaXY) <= 0.001 );
@@ -178,6 +178,7 @@ TEST_F(AircraftTreeTest, buildAndClose ){
     EXPECT_TRUE(aircraftTree.isBuild() == false);
 
     std::string tempFilename = DATA_DIR + "D150_AGILE_Hangar_3.xml";
+    rootXPath = UniqueXPath("/cpacs/vehicles/aircraft/model[1]");
     aircraftTree.build(tempFilename, rootXPath);
 
     EXPECT_TRUE(aircraftTree.getRoot() != nullptr);
@@ -219,7 +220,7 @@ TEST_F(AircraftTreeTest, build){
     EXPECT_EQ( root->getType(), "model");
     EXPECT_TRUE( tree.isBuild() );
     TiglBoolean isValid;
-    tiglIsCPACSConfigurationHandleValid(*(tiglHandle), &isValid );
+    tiglIsCPACSConfigurationHandleValid(tiglHandle, &isValid );
     EXPECT_EQ( isValid, TIGL_TRUE);
 
     EXPECT_EQ( root->getChildren().size(), 3);
@@ -242,10 +243,10 @@ TEST_F(AircraftTreeTest, build){
     setVariablesSpecialRootXPath("AircraftTreeTest1b-doubleModel.xml", specialRoot);
 
     EXPECT_EQ(root->getUid(), "Cpacs2Test");
-    tiglIsCPACSConfigurationHandleValid(*(tiglHandle), &isValid );
+    tiglIsCPACSConfigurationHandleValid(tiglHandle, &isValid );
     EXPECT_EQ( isValid, TIGL_TRUE);
     int count  = 0;
-    tiglGetWingCount(*(tiglHandle), &count);
+    tiglGetWingCount(tiglHandle, &count);
     EXPECT_EQ(count, 0);
     EXPECT_EQ(root->findAllChildrenOfTypeRecursively("wing").size(),0);
 
@@ -255,10 +256,10 @@ TEST_F(AircraftTreeTest, build){
     setVariablesSpecialRootXPath("AircraftTreeTest1b-doubleModel.xml", specialRoot);
 
     EXPECT_EQ(root->getUid(), "mDsave");
-    tiglIsCPACSConfigurationHandleValid(*(tiglHandle), &isValid );
+    tiglIsCPACSConfigurationHandleValid(tiglHandle, &isValid );
     EXPECT_EQ( isValid, TIGL_TRUE);
     count  = 0;
-    tiglGetWingCount(*(tiglHandle), &count);
+    tiglGetWingCount(tiglHandle, &count);
     EXPECT_EQ(count, 3);
     EXPECT_EQ(root->findAllChildrenOfTypeRecursively("wing").size(),3);
 
@@ -266,9 +267,6 @@ TEST_F(AircraftTreeTest, build){
     // incorrect xpath (not a model)
     EXPECT_THROW(tree.build(DATA_DIR + "AircraftTreeTest1.xml",UniqueXPath("/cpacs/vehicles/aircraft")), CreatorException);
     EXPECT_EQ(tree.isBuild(), false);
-    tiglIsCPACSConfigurationHandleValid(*(tiglHandle), &isValid );
-    EXPECT_EQ( isValid, TIGL_FALSE);
-
 
 }
 
@@ -277,8 +275,7 @@ TEST_F(AircraftTreeTest, build){
 TEST_F(AircraftTreeTest, getTransformToPlaceElementAt ){
 
 
-    tree.build(fileName3, UniqueXPath("/cpacs/vehicles/aircraft/model[1]") );
-    root = tree.getRoot();
+    setVariables("AircraftTreeTest3.xml");
 
     Eigen::Vector4d wantedP ;
     wantedP << 30,14,3, 1;
@@ -306,46 +303,10 @@ TEST_F(AircraftTreeTest, getTransformToPlaceElementAt ){
 
 
 
-TEST_F(AircraftTreeTest, determinePositionBySweepAngle ){
-
-    tree.build(fileName2, UniqueXPath("/cpacs/vehicles/aircraft/model[1]") );
-    root = tree.getRoot();
-
-    Eigen::Vector4d a,b,c, r, e ;
-    a << 0,0,0,1;
-    b << 10,4,0,1;
-    c << 0,4,0,1;
-    e << 3,4,0,1; // the expected value
-
-    double angle = RadianToDegree( (acos(0.8)) );
-    r = tree.computePositionToHaveSweepAngle(a, b, angle);
-    EXPECT_TRUE( e.isApprox(r) );
-
-    a << 3,3,3,1;
-    b << 13,7,3,1;
-    e << 6,7,3,1; // the expected value
-
-    angle = RadianToDegree( (acos(0.8)) );
-    r = tree.computePositionToHaveSweepAngle(a, b, angle);
-    EXPECT_TRUE( e.isApprox(r) );
-
-    a << 3,3,3,1;
-    b << 13,3.866025403,-1,1;
-    e << 3.5,3.866025403,-1,1; // the expected value
-    angle = 30 ;
-    r = tree.computePositionToHaveSweepAngle(a, b, angle);
-    EXPECT_TRUE( e.isApprox(r, 0.0001) );
-
-
-}
-
-
-
 TEST_F(AircraftTreeTest, getTransformationChainForOneElement){
 
 
-    tree.build(fileName6, UniqueXPath("/cpacs/vehicles/aircraft/model[1]") );
-    root = tree.getRoot();
+    setVariables("AircraftTreeTest6-positionings.xml");
 
     CPACSTransformation identity, expected;
 
@@ -463,9 +424,8 @@ TEST_F(AircraftTreeTest, getTransformationChainForOneElement){
 
 TEST_F(AircraftTreeTest, getGlobalTransformMatrixOfElement){
 
-    tree.build(fileName7, UniqueXPath("/cpacs/vehicles/aircraft/model[1]") );
-    root = tree.getRoot();
 
+    setVariables("AircraftTreeTest7-getGlobalTransformMatrixOfElement.xml");
 
     Eigen::Vector4d o, r ,e;
 
@@ -533,6 +493,39 @@ TEST_F(AircraftTreeTest, writeToFile){
 }
 
 
+TEST_F(AircraftTreeTest, determinePositionBySweepAngle ){
+
+    setVariables("AircraftTreeTest2-getWingSweep2.xml");
+
+    Eigen::Vector4d a,b,c, r, e ;
+    a << 0,0,0,1;
+    b << 10,4,0,1;
+    c << 0,4,0,1;
+    e << 3,4,0,1; // the expected value
+
+    double angle = RadianToDegree( (acos(0.8)) );
+    r = tree.computePositionToHaveSweepAngle(a, b, angle);
+    EXPECT_TRUE( e.isApprox(r) );
+
+    a << 3,3,3,1;
+    b << 13,7,3,1;
+    e << 6,7,3,1; // the expected value
+
+    angle = RadianToDegree( (acos(0.8)) );
+    r = tree.computePositionToHaveSweepAngle(a, b, angle);
+    EXPECT_TRUE( e.isApprox(r) );
+
+    a << 3,3,3,1;
+    b << 13,3.866025403,-1,1;
+    e << 3.5,3.866025403,-1,1; // the expected value
+    angle = 30 ;
+    r = tree.computePositionToHaveSweepAngle(a, b, angle);
+    EXPECT_TRUE( e.isApprox(r, 0.0001) );
+
+
+}
+
+
 
 TEST_F(AircraftTreeTest, getWingSweep){
 
@@ -575,9 +568,8 @@ TEST_F(AircraftTreeTest, setWingSweepByTranslation){
     //  TEST leading edge set wing sweep (chordPercent = 0)
     //
 
-    tree.build(fileName5, UniqueXPath("/cpacs/vehicles/aircraft/model[1]") );
-    root = tree.getRoot();
-    tree.writeToFile(outFileName);
+
+    setVariables("AircraftTreeTest5-setWingSweep2-D150.xml");
 
 
     // set to 40
@@ -615,10 +607,8 @@ TEST_F(AircraftTreeTest, setWingSweepByTranslation){
     //
     // fileName9 is the same file as fileName2 but with centered airfoil
     // -> so getWingSweepOfOrigin( x ) is more or less  equivalent to getWingSweep(x, 0.5)
-    tree.build(fileName9, UniqueXPath("/cpacs/vehicles/aircraft/model[1]") );
-    root = tree.getRoot();
 
-    tree.writeToFile(outFileName);
+    setVariables( "AircraftTreeTest9-getWingSweep.xml");
 
     before = tree.getWingSweep("D150_VAMP_wing_W1",0.5);
 
@@ -634,11 +624,7 @@ TEST_F(AircraftTreeTest, setWingSweepByTranslation){
     tree.writeToFile(outFileName);
 
     //
-
-    currentFile = DATA_DIR + "wing-simple.xml";
-    tree.build(currentFile, rootXPath );
-    root = tree.getRoot();
-    tree.writeToFile(outFileName);
+    setVariables( "wing-simple.xml");
 
     before = tree.getWingSweep("Wing");
     EXPECT_TRUE( before > -0.1 && before < 0.1 );
@@ -683,11 +669,7 @@ TEST_F(AircraftTreeTest, setWingSweepByShearingSimpleWing){
      * WING SIMPLE
      */
 
-    currentFile = DATA_DIR + "wing-simple.xml";
-    tree.build(currentFile, rootXPath );
-    root = tree.getRoot();
-
-    tree.writeToFile(outFileName);  // to follow the process with tiglviewer
+    setVariables("wing-simple.xml");
 
     // Test the value before the modification
     double before = tree.getWingSweep("Wing",0);
@@ -717,10 +699,7 @@ TEST_F(AircraftTreeTest, setWingSweepByShearingSimpleWing){
      */
 
     // create the tree
-    currentFile = DATA_DIR + "wing-simple-rotations-2.xml";
-    tree.build(currentFile, rootXPath );
-    root = tree.getRoot();
-    tree.writeToFile(outFileName);
+    setVariables( "wing-simple-rotations-2.xml");
     // check the values before
     before = tree.getWingSweep("Wing",0.5);
     EXPECT_TRUE( before > -0.1 && before < 0.1);
@@ -737,11 +716,7 @@ TEST_F(AircraftTreeTest, setWingSweepByShearingSimpleWing){
     /*
      * WING SIMPLE ONE KICK
      */
-
-    currentFile = DATA_DIR + "wing-one-kick.xml";
-    tree.build(currentFile, UniqueXPath("/cpacs/vehicles/aircraft/model[1]") );
-    root = tree.getRoot();
-    tree.writeToFile(outFileName);  // for visual test
+    setVariables( "wing-one-kick.xml");
     before = tree.getWingSweep("Wing",0);
     backupReferenceAreaValues();
     EXPECT_TRUE( before > 26.56 && before < 26.9);
@@ -756,10 +731,7 @@ TEST_F(AircraftTreeTest, setWingSweepByShearingSimpleWing){
      * WING SIMPLE ONE KICK + ROTATIONS
      */
 
-    currentFile = DATA_DIR + "wing-one-kick-rotations-scales.xml";
-    tree.build(currentFile, UniqueXPath("/cpacs/vehicles/aircraft/model[1]") );
-    root = tree.getRoot();
-    tree.writeToFile(outFileName);  // for visual test
+    setVariables("wing-one-kick-rotations-scales.xml");
     before = tree.getWingSweep("Wing",0.5);
     backupReferenceAreaValues();
     EXPECT_TRUE( before > 26.56 && before < 26.9);
@@ -828,9 +800,6 @@ TEST_F(AircraftTreeTest, setWingSweepByShearingSimpleWing){
     after = tree.getWingSweep(wingUID, 1);
     EXPECT_TRUE(after > 22.9 && after < 23.1);
     checkCurrentAreasWithBackup();
-
-
-
 
 
 }
@@ -1115,8 +1084,7 @@ TEST_F(AircraftTreeTest, setWingAirfoils)
 
 TEST_F(AircraftTreeTest, getAirfoilsUID)
 {
-    std::string filename = "AircraftTreeTest-getAirfoils.xml";
-    setVariables(filename);
+    setVariables("AircraftTreeTest-getAirfoils.xml");
 
     std::vector<UID> r = tree.getAllAirfoilsUIDInThisWing("Wing");
     std::vector<UID> e;
@@ -1131,8 +1099,8 @@ TEST_F(AircraftTreeTest, getAirfoilsUID)
 
 TEST_F(AircraftTreeTest, getWingGraph)
 {
-    std::string filename = "wing-simple-1.xml";
-    setVariables(filename);
+
+    setVariables("wing-simple-1.xml");
 
     // Test basic case
 
@@ -1148,11 +1116,8 @@ TEST_F(AircraftTreeTest, getWingGraph)
     EXPECT_EQ(r[e2][0], e1);
     EXPECT_EQ(r[e2].size(), 1);
 
-    // Test cyclic cae
-
-    filename = "wing-double-segments.xml";
-    setVariables(filename);
-
+    // Test cyclic case
+    setVariables("wing-double-segments.xml");
 
     wing = tree.getRoot()->getChildByUid("Wing");
     r = tree.getWingGraph(wing);
@@ -1176,8 +1141,7 @@ TEST_F(AircraftTreeTest, getWingGraph)
 
     // Test use case
 
-    filename = "BWB_DoE_102_modWP4.4_CS_v3.xml";
-    setVariables(filename);
+    setVariables("BWB_DoE_102_modWP4.4_CS_v3.xml");
 
     wing = tree.getRoot()->getChildByUid("BWB450_wingID");
     r = tree.getWingGraph(wing);
@@ -1198,8 +1162,7 @@ TEST_F(AircraftTreeTest, getWingGraph)
 
 TEST_F(AircraftTreeTest, formatWingGraph)
 {
-    std::string filename = "wing-simple-1.xml";
-    setVariables(filename);
+    setVariables("wing-simple-1.xml");
 
     // Test basic case
 
@@ -1220,8 +1183,7 @@ TEST_F(AircraftTreeTest, formatWingGraph)
 
     // Test cyclic case
 
-    filename = "wing-double-segments.xml";
-    setVariables(filename);
+    setVariables("wing-double-segments.xml");
 
 
     wing = tree.getRoot()->getChildByUid("Wing");
@@ -1233,8 +1195,7 @@ TEST_F(AircraftTreeTest, formatWingGraph)
 
     // Test use case
 
-    filename = "BWB_DoE_102_modWP4.4_CS_v3.xml";
-    setVariables(filename);
+    setVariables("BWB_DoE_102_modWP4.4_CS_v3.xml");
 
     wing = tree.getRoot()->getChildByUid("BWB450_wingID");
     graph = tree.getWingGraph(wing);
@@ -1250,8 +1211,7 @@ TEST_F(AircraftTreeTest, formatWingGraph)
 
 TEST_F(AircraftTreeTest, airfoilWingNormalization ){
 
-    std::string filename = "wing-one-kick-rotations-scales-dihedral-multiple-airfoils.xml";
-    setVariables(filename);
+    setVariables("wing-one-kick-rotations-scales-dihedral-multiple-airfoils.xml");
     std::string wingUID = "Wing";
 
     std::vector<cpcr::UID> UIDs = tree.getAllElementUIDsUsedInAWing(wingUID);
@@ -1277,8 +1237,7 @@ TEST_F(AircraftTreeTest, airfoilWingNormalization ){
 
 
 
-    filename = "wing-one-kick-multiple-airfoils.xml";
-    setVariables(filename);
+    setVariables("wing-one-kick-multiple-airfoils.xml");
     wingUID = "Wing";
 
 
@@ -1304,8 +1263,7 @@ TEST_F(AircraftTreeTest, airfoilWingNormalization ){
 
 
 
-    filename = "BWB_DoE_102_modWP4.4_CS_v3.xml";
-    setVariables(filename);
+    setVariables("BWB_DoE_102_modWP4.4_CS_v3.xml");
     wingUID = "BWB450_wingID";
 
     UIDs = tree.getAllElementUIDsUsedInAWing(wingUID);
@@ -1335,8 +1293,7 @@ TEST_F(AircraftTreeTest, airfoilWingNormalization ){
 
 TEST_F(AircraftTreeTest, setWingTransformation ) {
 
-    std::string  filename = "TestCases/d150.xml";
-    setVariables(filename);
+    setVariables("TestCases/d150.xml");
     std::string wingUID = "D150_VAMP_wing_W1";
 
     std::vector<cpcr::UID> UIDs = tree.getAllElementUIDsUsedInAWing(wingUID);
@@ -1411,8 +1368,8 @@ TEST_F(AircraftTreeTest, setWingTransformation ) {
 
     // Blended wing
 
-    filename = "BWB_DoE_102_modWP4.4_CS_v3.xml";
-    setVariables(filename);
+
+    setVariables( "BWB_DoE_102_modWP4.4_CS_v3.xml");
 
     wingUID = "BWB450_wingID";
 
@@ -1449,9 +1406,7 @@ TEST_F(AircraftTreeTest, setWingTransformation ) {
 TEST_F(AircraftTreeTest, oneElementOneSection ) {
 
 
-
-    std::string  filename = "wing-one-kick-double-elements-in-section.xml";
-    setVariables(filename);
+    setVariables("wing-one-kick-double-elements-in-section.xml");
 
     std::string wingUID = "Wing";
 
@@ -1476,9 +1431,7 @@ TEST_F(AircraftTreeTest, oneElementOneSection ) {
 
 
 
-
-    filename = "BWB_DoE_102_modWP4.4_CS_v3.xml";
-    setVariables(filename);
+    setVariables("BWB_DoE_102_modWP4.4_CS_v3.xml");
 
     wingUID = "BWB450_wingID";
 
@@ -1499,9 +1452,8 @@ TEST_F(AircraftTreeTest, positioningsStandardization  ) {
     std::string wingUID;
 
 
-    filename = "wing-one-kick-rotations-scales-dihedral-2.xml";
     wingUID = "Wing";
-    setVariables(filename);
+    setVariables("wing-one-kick-rotations-scales-dihedral-2.xml");
 
 
     backupChordPointsOfWing(wingUID);
@@ -1515,10 +1467,8 @@ TEST_F(AircraftTreeTest, positioningsStandardization  ) {
 
 
 
-
-    filename = "BWB_DoE_102_modWP4.4_CS_v3.xml";
     wingUID = "BWB450_wingID";
-    setVariables(filename);
+    setVariables( "BWB_DoE_102_modWP4.4_CS_v3.xml");
 
     EXPECT_TRUE(tree.checkIfPositioningsAreStandardizedForWing(wingUID));
 
@@ -1538,9 +1488,8 @@ TEST_F(AircraftTreeTest, completeNormalization  ) {
 
     // TEST CASE: BlendedWingBody
 
-    filename = "TestCases/blendedWingBody.xml";
     wingUID = "BWB450_wingID";
-    setVariables(filename);
+    setVariables("TestCases/blendedWingBody.xml");
 
 
     backupChordPointsOfWing(wingUID);
@@ -1552,9 +1501,8 @@ TEST_F(AircraftTreeTest, completeNormalization  ) {
 
     // TEST CASE : BoxWing
 
-    filename = "TestCases/boxWing.xml";
     wingUID = "D150_VAMP_W1";
-    setVariables(filename);
+    setVariables("TestCases/boxWing.xml");
 
     backupChordPointsOfWing(wingUID);
     EXPECT_FALSE(tree.isWingStandardized(wingUID));
@@ -1565,9 +1513,8 @@ TEST_F(AircraftTreeTest, completeNormalization  ) {
 
     // TEST CASE: crm (strange format)
 
-    filename = "TestCases/crm.xml";
     wingUID = "NASA_CRM_wing1";
-    setVariables(filename);
+    setVariables("TestCases/crm.xml");
 
     backupChordPointsOfWing(wingUID);
     EXPECT_FALSE(tree.isWingStandardized(wingUID));
@@ -1580,9 +1527,8 @@ TEST_F(AircraftTreeTest, completeNormalization  ) {
 
     // TEST CASE: d150
 
-    filename = "TestCases/d150.xml";
     wingUID = "D150_VAMP_wing_W1";
-    setVariables(filename);
+    setVariables("TestCases/d150.xml");
 
     backupChordPointsOfWing(wingUID);
     EXPECT_FALSE(tree.isWingStandardized(wingUID));
@@ -1596,9 +1542,8 @@ TEST_F(AircraftTreeTest, completeNormalization  ) {
 
     // TEST CASE: tp
 
-    filename = "TestCases/tp.xml";
     wingUID = "wing";
-    setVariables(filename);
+    setVariables("TestCases/tp.xml");
 
     backupChordPointsOfWing(wingUID);
     EXPECT_FALSE(tree.isWingStandardized(wingUID));
@@ -1635,25 +1580,25 @@ TEST_F(AircraftTreeTest, area){
 
     // If there is no wing transformation and only one segment the area should be the same as in tigl
 
-    tiglWingGetReferenceArea(*tiglHandle,1, TIGL_X_Y_PLANE,&tempArea);
+    tiglWingGetReferenceArea(tiglHandle,1, TIGL_X_Y_PLANE,&tempArea);
     myArea = tree.getSegmentArea(segment, PLANE::XY_PLANE);
     EXPECT_EQ(tempArea, 2);
     EXPECT_EQ(tempArea, myArea);
 
 
-    tiglWingGetReferenceArea(*tiglHandle,1, TIGL_X_Z_PLANE,&tempArea);
+    tiglWingGetReferenceArea(tiglHandle,1, TIGL_X_Z_PLANE,&tempArea);
     myArea = tree.getSegmentArea(segment, PLANE::XZ_PLANE);
     EXPECT_EQ(tempArea, 0);
     EXPECT_EQ(tempArea, myArea);
 
 
-    tiglWingGetReferenceArea(*tiglHandle,1, TIGL_Y_Z_PLANE,&tempArea);
+    tiglWingGetReferenceArea(tiglHandle,1, TIGL_Y_Z_PLANE,&tempArea);
     myArea = tree.getSegmentArea(segment, PLANE::YZ_PLANE);
     EXPECT_EQ(tempArea, 0);
     EXPECT_EQ(tempArea, myArea);
 
 
-    tiglWingGetReferenceArea(*tiglHandle,1, TIGL_NO_SYMMETRY,&tempArea);
+    tiglWingGetReferenceArea(tiglHandle,1, TIGL_NO_SYMMETRY,&tempArea);
     myArea = tree.getSegmentArea(segment, PLANE::NO_PLANE);
     EXPECT_EQ(tempArea, 2);
     EXPECT_EQ(tempArea, myArea);
@@ -1663,20 +1608,20 @@ TEST_F(AircraftTreeTest, area){
     setVariables("TestCases/blendedWingBody.xml");
     std::string wingUID = "BWB450_wingID";
 
-    tiglWingGetReferenceArea(*tiglHandle,1, TIGL_X_Y_PLANE,&tempArea);
+    tiglWingGetReferenceArea(tiglHandle,1, TIGL_X_Y_PLANE,&tempArea);
     myArea = tree.getWingPlanformArea(wingUID, PLANE::XY_PLANE);
     EXPECT_EQ(tempArea, myArea);
 
-    tiglWingGetReferenceArea(*tiglHandle,1, TIGL_X_Z_PLANE,&tempArea);
+    tiglWingGetReferenceArea(tiglHandle,1, TIGL_X_Z_PLANE,&tempArea);
     myArea = tree.getWingPlanformArea(wingUID, PLANE::XZ_PLANE);
     EXPECT_TRUE(mthf::CompareDoubleEpsilon(tempArea, myArea));
 
-    tiglWingGetReferenceArea(*tiglHandle,1, TIGL_Y_Z_PLANE,&tempArea);
+    tiglWingGetReferenceArea(tiglHandle,1, TIGL_Y_Z_PLANE,&tempArea);
     myArea = tree.getWingPlanformArea(wingUID, PLANE::YZ_PLANE);
     EXPECT_EQ(tempArea, myArea);
 
 
-    tiglWingGetReferenceArea(*tiglHandle,1, TIGL_NO_SYMMETRY,&tempArea);
+    tiglWingGetReferenceArea(tiglHandle,1, TIGL_NO_SYMMETRY,&tempArea);
     myArea = tree.getWingPlanformArea(wingUID, PLANE::NO_PLANE);
     EXPECT_EQ(tempArea, myArea);
 
@@ -1687,21 +1632,21 @@ TEST_F(AircraftTreeTest, area){
     wingUID = "D150_VAMP_vtp_SL1";
 
 
-    tiglWingGetReferenceArea(*tiglHandle,3, TIGL_X_Y_PLANE,&tempArea);
+    tiglWingGetReferenceArea(tiglHandle,3, TIGL_X_Y_PLANE,&tempArea);
     myArea = tree.getWingPlanformArea(wingUID, PLANE::XZ_PLANE);
     EXPECT_TRUE(mthf::CompareDoubleEpsilon(tempArea, myArea));
 
-    tiglWingGetReferenceArea(*tiglHandle,3, TIGL_X_Z_PLANE,&tempArea);
+    tiglWingGetReferenceArea(tiglHandle,3, TIGL_X_Z_PLANE,&tempArea);
     myArea = tree.getWingPlanformArea(wingUID, PLANE::XY_PLANE);
     EXPECT_EQ(tempArea, myArea);
 
 
-    tiglWingGetReferenceArea(*tiglHandle,3, TIGL_Y_Z_PLANE,&tempArea);
+    tiglWingGetReferenceArea(tiglHandle,3, TIGL_Y_Z_PLANE,&tempArea);
     myArea = tree.getWingPlanformArea(wingUID, PLANE::YZ_PLANE);
     EXPECT_EQ(tempArea, myArea);
 
 
-    tiglWingGetReferenceArea(*tiglHandle,3, TIGL_NO_SYMMETRY,&tempArea);
+    tiglWingGetReferenceArea(tiglHandle,3, TIGL_NO_SYMMETRY,&tempArea);
     myArea = tree.getWingPlanformArea(wingUID, PLANE::NO_PLANE);
     EXPECT_EQ(tempArea, myArea);
 
@@ -1738,6 +1683,8 @@ TEST_F(AircraftTreeTest, symmetry){
 
 
 }
+
+
 
 
 TEST_F(AircraftTreeTest, findPerpendicularScaleFactor){
@@ -1805,7 +1752,6 @@ TEST_F(AircraftTreeTest, findPerpendicularScaleFactor){
 
 
 }
-
 
 
 
@@ -1959,6 +1905,7 @@ TEST_F(AircraftTreeTest, setWingSpanKeepArea) {
 }
 
 
+
 TEST_F(AircraftTreeTest, setWingSpanKeepAR) {
 
     double arBefore, arAfter, newSpan, spanAfter;
@@ -1991,6 +1938,9 @@ TEST_F(AircraftTreeTest, setWingSpanKeepAR) {
 
 
 }
+
+
+
 
 TEST_F(AircraftTreeTest, setWingAreaKeepAR) {
 

@@ -3626,14 +3626,14 @@
                     <z>1</z>
                   </scaling>
                   <rotation uID="D150_VAMP_W1_Sec_1_transformation1_rotation1">
-                    <x>2.5</x>
-                    <y>0</y>
+                    <x>0</x>
+                    <y>0.0</y>
                     <z>0</z>
                   </rotation>
                   <translation refType="absLocal" uID="D150_VAMP_W1_Sec_1_transformation1_translation1">
-                    <x>0</x>
+                    <x>-0.0</x>
                     <y>0</y>
-                    <z>0</z>
+                    <z>0.0</z>
                   </translation>
                 </transformation>
                 <elements>
@@ -3643,12 +3643,12 @@
                     <airfoilUID isLink="True">D150_VAMP_W_SupCritProf1</airfoilUID>
                     <transformation uID="D150_VAMP_W1_Sec_1_Elem_1_transformation1">
                       <scaling uID="D150_VAMP_W1_Sec_1_Elem_1_transformation1_scaling1">
-                        <x>6</x>
-                        <y>6</y>
-                        <z>6</z>
+                        <x>6.0</x>
+                        <y>6.0</y>
+                        <z>6.0</z>
                       </scaling>
                       <rotation uID="D150_VAMP_W1_Sec_1_Elem_1_transformation1_rotation1">
-                        <x>0</x>
+                        <x>2.5</x>
                         <y>0</y>
                         <z>0</z>
                       </rotation>
@@ -3671,14 +3671,14 @@
                     <z>1</z>
                   </scaling>
                   <rotation uID="D150_VAMP_W1_Sec_2_transformation1_rotation1">
-                    <x>47.5</x>
-                    <y>0</y>
+                    <x>0</x>
+                    <y>0.0</y>
                     <z>0</z>
                   </rotation>
                   <translation refType="absGlobal" uID="D150_VAMP_W1_Sec_2_transformation1_translation1">
-                    <x>0</x>
+                    <x>-0.0</x>
                     <y>0</y>
-                    <z>0</z>
+                    <z>0.0</z>
                   </translation>
                 </transformation>
                 <elements>
@@ -3693,7 +3693,7 @@
                         <z>1.8</z>
                       </scaling>
                       <rotation uID="D150_VAMP_W1_Sec_2_Elem_1_transformation1_rotation1">
-                        <x>0</x>
+                        <x>47.5</x>
                         <y>0</y>
                         <z>0</z>
                       </rotation>
@@ -3716,14 +3716,14 @@
                     <z>1</z>
                   </scaling>
                   <rotation uID="D150_VAMP_W1_Sec_3_transformation1_rotation1">
-                    <x>135</x>
-                    <y>0</y>
-                    <z>-0</z>
+                    <x>0</x>
+                    <y>0.0</y>
+                    <z>0</z>
                   </rotation>
                   <translation refType="absGlobal" uID="D150_VAMP_W1_Sec_3_transformation1_translation1">
-                    <x>0</x>
+                    <x>-0.0</x>
                     <y>0</y>
-                    <z>0</z>
+                    <z>0.0</z>
                   </translation>
                 </transformation>
                 <elements>
@@ -3738,7 +3738,7 @@
                         <z>2.4</z>
                       </scaling>
                       <rotation uID="D150_VAMP_W1_Sec_3_Elem_1_transformation1_rotation1">
-                        <x>0</x>
+                        <x>135.0</x>
                         <y>0</y>
                         <z>0</z>
                       </rotation>
@@ -3762,13 +3762,13 @@
                   </scaling>
                   <rotation uID="D150_VAMP_W1_Sec_4_transformation1_rotation1">
                     <x>0</x>
-                    <y>180</y>
-                    <z>-180</z>
+                    <y>0.0</y>
+                    <z>0</z>
                   </rotation>
                   <translation refType="absGlobal" uID="D150_VAMP_W1_Sec_4_transformation1_translation1">
-                    <x>5</x>
+                    <x>-0.0</x>
                     <y>0</y>
-                    <z>0</z>
+                    <z>0.0</z>
                   </translation>
                 </transformation>
                 <elements>
@@ -3783,7 +3783,7 @@
                         <z>3.6</z>
                       </scaling>
                       <rotation uID="D150_VAMP_W1_Sec_4_Elem_1_transformation1_rotation1">
-                        <x>0</x>
+                        <x>180.0</x>
                         <y>0</y>
                         <z>0</z>
                       </rotation>
@@ -3797,6 +3797,43 @@
                 </elements>
               </section>
             </sections>
+            <positionings>
+              <positioning uID="D150_VAMP_W1_Pos_1">
+                <name>Positioning_1</name>
+                <description>created by The Initiator</description>
+                <length>0</length>
+                <sweepAngle>0.0</sweepAngle>
+                <dihedralAngle>0.0</dihedralAngle>
+                <toSectionUID isLink="True">D150_VAMP_W1_Sec_1</toSectionUID>
+              </positioning>
+              <positioning uID="D150_VAMP_W1_Pos_2">
+                <name>Positioning_2</name>
+                <description>created by The Initiator</description>
+                <length>20.2790401476</length>
+                <sweepAngle>27.0</sweepAngle>
+                <dihedralAngle>5.0</dihedralAngle>
+                <fromSectionUID isLink="True">D150_VAMP_W1_Sec_1</fromSectionUID>
+                <toSectionUID isLink="True">D150_VAMP_W1_Sec_2</toSectionUID>
+              </positioning>
+              <positioning uID="D150_VAMP_W1_Pos_3">
+                <name>Positioning_5</name>
+                <description>created by The Initiator</description>
+                <length>4.0</length>
+                <sweepAngle>27.0</sweepAngle>
+                <dihedralAngle>90.0</dihedralAngle>
+                <fromSectionUID isLink="True">D150_VAMP_W1_Sec_2</fromSectionUID>
+                <toSectionUID isLink="True">D150_VAMP_W1_Sec_3</toSectionUID>
+              </positioning>
+              <positioning uID="D150_VAMP_W1_Pos_4">
+                <name>Positioning_9</name>
+                <description>created by The Initiator</description>
+                <length>20.1652200934</length>
+                <sweepAngle>26.7948918643</sweepAngle>
+                <dihedralAngle>180.0</dihedralAngle>
+                <fromSectionUID isLink="True">D150_VAMP_W1_Sec_3</fromSectionUID>
+                <toSectionUID isLink="True">D150_VAMP_W1_Sec_4</toSectionUID>
+              </positioning>
+            </positionings>
             <segments>
               <segment uID="D150_VAMP_W1_Seg_1">
                 <name>Segment_1</name>
@@ -3986,39 +4023,6 @@
                 </wingWingAttachments>
               </componentSegment>
             </componentSegments>
-            <positionings>
-              <positioning uID="D150_VAMP_W1_positioning_D150_VAMP_W1_Sec_1">
-                <dihedralAngle>0</dihedralAngle>
-                <length>0</length>
-                <name>D150_VAMP_W1_positioning_D150_VAMP_W1_Sec_1 - auto generated by positioning standardization</name>
-                <sweepAngle>0</sweepAngle>
-                <toSectionUID>D150_VAMP_W1_Sec_1</toSectionUID>
-              </positioning>
-              <positioning uID="D150_VAMP_W1_positioning_D150_VAMP_W1_Sec_2">
-                <dihedralAngle>5</dihedralAngle>
-                <fromSectionUID>D150_VAMP_W1_Sec_1</fromSectionUID>
-                <length>18.3504</length>
-                <name>D150_VAMP_W1_positioning_D150_VAMP_W1_Sec_2 - auto generated by positioning standardization</name>
-                <sweepAngle>10.0504</sweepAngle>
-                <toSectionUID>D150_VAMP_W1_Sec_2</toSectionUID>
-              </positioning>
-              <positioning uID="D150_VAMP_W1_positioning_D150_VAMP_W1_Sec_3">
-                <dihedralAngle>90</dihedralAngle>
-                <fromSectionUID>D150_VAMP_W1_Sec_2</fromSectionUID>
-                <length>4</length>
-                <name>D150_VAMP_W1_positioning_D150_VAMP_W1_Sec_3 - auto generated by positioning standardization</name>
-                <sweepAngle>27</sweepAngle>
-                <toSectionUID>D150_VAMP_W1_Sec_3</toSectionUID>
-              </positioning>
-              <positioning uID="D150_VAMP_W1_positioning_D150_VAMP_W1_Sec_4">
-                <dihedralAngle>0</dihedralAngle>
-                <fromSectionUID>D150_VAMP_W1_Sec_3</fromSectionUID>
-                <length>19.4914</length>
-                <name>D150_VAMP_W1_positioning_D150_VAMP_W1_Sec_4 - auto generated by positioning standardization</name>
-                <sweepAngle>140.017</sweepAngle>
-                <toSectionUID>D150_VAMP_W1_Sec_4</toSectionUID>
-              </positioning>
-            </positionings>
           </wing>
           <wing uID="D150_VAMP_SL1" xsi:type="wingType">
             <name>Seitenleitwerk</name>
