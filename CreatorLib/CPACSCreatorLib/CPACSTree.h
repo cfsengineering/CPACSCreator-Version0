@@ -57,6 +57,10 @@ namespace  cpcr {
         virtual void build(std::string file, UniqueXPath root);
         inline bool isBuild(){return m_isBuild;}
 
+        virtual void writeToFile();
+
+        virtual void writeToFile(std::string fileName) ;
+
         inline CPACSTreeItem * getRoot() const  {return m_root;}
 
         inline std::string getFilename() const {return fileName; };

@@ -48,21 +48,57 @@ namespace cpcr{
 
     public:
 
-        /**
-         * Build a
+
+        /*
+         * FUNCTIONS FOR THE CREATION OF AIRCRAFT TREE AND ITS MANAGEMENT
+         */
+
+
+        /***
+         * Create a empty aircraft tree.
          */
         AircraftTree();
+
+        /**
+         * Destroy the aircraft tree.
+         * The memory of the TreeItem instances are free. Thus, if some other function tries to access the aircraft
+         * tree after is destruction, it can result in a segmentation fault error.
+         */
         ~AircraftTree();
 
+        /**
+         * Construct the aircraft tree.
+         * The aircraft tree structure is build from the file starting at the XPath given as the root.
+         * The CPACSTreeItem are create and some memory is allocate for them.
+         * This function use the parent function build.
+         *
+         * @param file : the cpacs file used to build the tree
+         * @param root : the root node of the tree expressed as XPath
+         */
         void build(std::string file, UniqueXPath root) override ;
 
+        /***
+         * Rebuild the aircraft tree with the same file and root.
+         * Can be needed after some functions that modify the tree or if the file data has changed.
+         *
+         * @remark The root and TreeItem item would be modified
+         *
+         */
         void reBuild();
 
+        /**
+         * Destroy the aircraft tree and free memory but keeps this object.
+         */
         void close();
 
-        void writeToFile()  ;
+        void writeToFile() override ;
 
-        void writeToFile(std::string fileName) ;
+        /**
+         * Write the aircraft tree to the CPACS file.
+         * @remark It's the same function as in CPACSTree class, but take care of TIGL handler
+         * @param fileName
+         */
+        void writeToFile(std::string fileName) override ;
 
 
         /*

@@ -347,19 +347,17 @@ double cpcr::AircraftTree::getWingSweep(cpcr::UID wingUID, double chordPercent) 
 }
 
 
-
 void cpcr::AircraftTree::writeToFile() {
-    writeToFile( getFilename());
+    CPACSTree::writeToFile();
 }
+
 
 
 void cpcr::AircraftTree::writeToFile(std::string newFile) {
 
     closeTiglHandle();
 
-    // TODO : IMPORTANT check if we need to reconstruct the tree!
-    modifier.save(newFile);
-    this->fileName = newFile;
+    CPACSTree::writeToFile(newFile);
     // reopen the tigl handler
     openTiglHandle(m_root->getUid());
 
@@ -399,7 +397,7 @@ void cpcr::AircraftTree::build(std::string file, cpcr::UniqueXPath root) {
     // check that the root is of the correct type
     if( m_root->getType() != "model"){
         clean();
-        throw CreatorException("The given xPath do not lead to a aircraft model!");
+        throw CreatorException("AircraftTree: The root seems not to be an aircraft model!");
     }
 
     // get the tigl acces
@@ -2251,7 +2249,6 @@ void cpcr::AircraftTree::setWingARKeepArea(cpcr::UID wingUID, double AR) {
     setWingSpanKeepArea(wingUID, newSpan);
 
 }
-
 
 
 

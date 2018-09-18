@@ -25,7 +25,7 @@
 CreatorException::CreatorException( const std::string& msg, int errNum) : std::exception() {
     message = msg;
     errNumber = errNum;
-    LOG(ERROR) << "CreatorException with message: \"" << msg << "\" was created.";
+   // LOG(ERROR) << "CreatorException with message: \"" << msg << "\" was created.";
 
 }
 

@@ -58,11 +58,10 @@ namespace cpcr {
         try {
             tixiHandle = tixi::TixiOpenDocument(fileName);
         } catch (tixi::TixiError error) {
-            LOG(WARNING) << error.what();
+            LOG(ERROR) << error.what();
             tixiHandle = -1;
-            return;
+            throw CreatorException("CPACSFile: TIXI can not open the file \"" + inFileName + "\". Make sure this filename and path are correct.");
         }
-
 
         return;
     }
@@ -183,7 +182,7 @@ namespace cpcr {
 
         int ret = tixiSaveDocument(tixiHandle, savingFileName.c_str());
         if( ret > 0){
-            throw CreatorException("Impossible to save file with the name: " + savingFileName );
+            throw CreatorException("CPACSFile: Impossible to save file with the name: " + savingFileName );
         }
 
         // TODO: optimization avoid close-open?

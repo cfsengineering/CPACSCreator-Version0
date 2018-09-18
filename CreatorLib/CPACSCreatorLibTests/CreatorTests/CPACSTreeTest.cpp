@@ -33,12 +33,17 @@ using namespace cpcr;
 class CPACSTreeTest: public ::testing::Test{
 
 protected:
-    std::string DATA_DIR="/home/makem/JobProject/SkStage/CPACSCreatorLib/CPACSCreatorLibTests/CreatorTests/Data/";
-    std::string fileName = DATA_DIR + "CPACSTreeTest.xml";
 
 
-    CPACSTree tree;
-    CPACSTreeItem* root ;
+    std::string DATA_DIR="./Data/";
+
+    std::string currentFile = "not set";
+    std::string outFileName = DATA_DIR + "TreeTest-out.xml";
+
+    UniqueXPath rootXPath = UniqueXPath("not set");
+    CPACSTree tree ;
+    CPACSTreeItem* root;
+
     CPACSFile* modifer;
 
     virtual void SetUp(){
@@ -54,11 +59,15 @@ protected:
 TEST_F(CPACSTreeTest, build){
 
     // CHECK NO EXCEPTIONS BEHAVIOR
+
     // initial state
     EXPECT_FALSE( tree.isBuild());
 
     // construct the tree
-    tree.build(fileName, UniqueXPath("/cpacs/vehicles/aircraft/model[1]"));
+    currentFile = DATA_DIR + "CPACSTreeTest.xml";
+    rootXPath = UniqueXPath("/cpacs/vehicles/aircraft/model[1]");
+    tree.build( currentFile, rootXPath );
+
     root = tree.getRoot();
 
     // check result
@@ -78,16 +87,32 @@ TEST_F(CPACSTreeTest, build){
 
     CPACSTreeItem* fuselage = root->getChild("./fuselages/fuselage");
     EXPECT_EQ(fuselage->getUid(), "SimpleFuselage");
+
+    // CHECK EXCEPTIONS BEHAVIOR
+
+    // Wrong root Xpath
+    currentFile = DATA_DIR + "CPACSTreeTest.xml";
+    rootXPath = UniqueXPath("/cpacs/vehicles/aircraft/fasafd");
+    EXPECT_THROW(tree.build( currentFile, rootXPath ), CreatorException );
+
+    // Wrong file
+    currentFile = DATA_DIR + "CPACSTreefasdfaTest.xml";
+    rootXPath = UniqueXPath("/cpacs/vehicles/aircraft/model[1]");
+    EXPECT_THROW(tree.build(currentFile, rootXPath ), CreatorException );
+
+
 }
 
 
 
 TEST_F(CPACSTreeTest, writeToFile){
 
-    // TODO determine where to wrtie the file and how to access the modifier
-    /*
+
     // construct the tree
-    tree.build(fileName, UniqueXPath("/cpacs/vehicles/aircraft/model[1]"));
+    currentFile = DATA_DIR + "CPACSTreeTest.xml";
+    rootXPath = UniqueXPath("/cpacs/vehicles/aircraft/model[1]");
+
+    tree.build( currentFile, rootXPath);
     root = tree.getRoot();
     modifer = tree.getModifier();
 
@@ -101,7 +126,7 @@ TEST_F(CPACSTreeTest, writeToFile){
 
     // check if the file is correctly modified
     CPACSFile checker;
-    checker.open(fileName);
+    checker.open(currentFile);
     CPACSTransformation rT = checker.getTransformation(wingT->getXPath());
     EXPECT_TRUE( rT == newT) ;
     checker.close();
@@ -114,7 +139,7 @@ TEST_F(CPACSTreeTest, writeToFile){
     // write to a other file
     newT =  CPACSTransformation(5.1,5.2,5.3, 2.1,2.2,2.3, 3.1,3.2,3.3);
     modifer->setTransformation(wingT->getXPath(), newT);
-    std::string otherFileName = DATA_DIR + "out-CPACSTreeTest-writeToFile.xml";
+    std::string otherFileName = outFileName;
     tree.writeToFile(otherFileName);
 
     EXPECT_EQ(tree.getFilename(), otherFileName);
@@ -123,18 +148,14 @@ TEST_F(CPACSTreeTest, writeToFile){
     EXPECT_TRUE( rT == newT) ;
     checker.close();
 
-    // delete the other file name
-    remove(otherFileName.c_str());
-
 
     // if a invalid file is given
     newT =  CPACSTransformation(6.1,6.2,6.3, 2.1,2.2,2.3, 3.1,3.2,3.3);
     modifer->setTransformation(wingT->getXPath(), newT);
-    otherFileName =  "./fsafdsa/out-CPACSTreeTest-writeToFile.xml";
+    otherFileName =  DATA_DIR + "fsafdsa/out-CPACSTresasdeTest-writeToFile.xml";
     EXPECT_THROW( tree.writeToFile(otherFileName), CreatorException ) ;
-    EXPECT_EQ(tree.getFilename(), DATA_DIR + "out-CPACSTreeTest-writeToFile.xml" ); // the tree should have the same file name has before
-*/
-
-
+    EXPECT_EQ(tree.getFilename(), outFileName ); // the tree should have the same file name has before
+    rT =  modifer->getTransformation(wingT->getXPath());
+    EXPECT_TRUE(rT == newT);
 
 }

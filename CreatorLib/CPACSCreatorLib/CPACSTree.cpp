@@ -30,6 +30,8 @@
 #include "Eigen/Dense"
 #include "Helper.h"
 
+#include "easylogging++.h"
+#include "CreatorException.h"
 
 // create an over tree from tixi
 
@@ -68,8 +70,7 @@ namespace cpcr {
 
 
         if (!tixi::TixiCheckElement(tixiHandle, rootXPath.toString())) {
-            std::cerr << "UniqueXPath: " << rootXPath.toString() << " not found in the document " << std::endl;
-            return;
+            throw CreatorException("CPACSTree: The given unique xpath \"" + rootXPath.toString() + "\" seems not to be valid");
         }
 
         std::string rootType = rootXPath.getLastElementType();
@@ -145,6 +146,23 @@ namespace cpcr {
         delete m_root;
         m_root = nullptr;
         modifier.close();
+    }
+
+    void CPACSTree::writeToFile() {
+        modifier.save(getFilename());
+    }
+
+    void CPACSTree::writeToFile(std::string newFile) {
+        std::string backupFileName = getFilename();
+        try {
+            modifier.save(newFile);
+            this->fileName = newFile;
+        }catch( CreatorException &e){
+            this->fileName = backupFileName;
+            e.addToMessage(" -- CPACSTree: No file was modified and the cpacs tree filename stay unchanged.");
+            throw e;
+        }
+
     }
 
 
