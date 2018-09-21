@@ -28,9 +28,9 @@
 #include "CPACSTransformation.h"
 #include "CPACSPositioning.h"
 #include "UniqueXPath.h"
+#include "CreatorException.h"
 
-
-static std::string DATA_DIR="/home/cfse/Stage_Malo/CPACSCreatorLib/CPACSCreatorLibTests/CreatorTests/Data/";
+static std::string DATA_DIR="./Data/";
 
 
 using namespace cpcr;
@@ -81,26 +81,23 @@ TEST_F(CPACSFileTest, openclose) {
 
 
     // open non-existent file
-    cpacsFile.open(nonExistentFile);
+    EXPECT_THROW(cpacsFile.open(nonExistentFile), CreatorException);
     EXPECT_TRUE( ! cpacsFile.isValid() );
     // closing a non correctly opened file
     cpacsFile.close();
     EXPECT_TRUE( ! cpacsFile.isValid() );
 
+    // TODO : check how we want to manage the case where the cpacs file is no valid, open with warning?
+    // open non-correct cpacs file
+//    EXPECT_THROW(cpacsFile.open(nonValidCpacsFile), CreatorException);
+//    EXPECT_TRUE( ! cpacsFile.isValid() );
+//    // closing a non correctly opened file
+//    cpacsFile.close();
+//    EXPECT_TRUE( ! cpacsFile.isValid() );
 
-    // TODO
-    /*
-    // open non-existent file
-    cpacsFile.open(nonValidCpacsFile);
-    EXPECT_TRUE( ! cpacsFile.isValid() );
-    // closing a non correctly opened file
-    cpacsFile.close();
-    EXPECT_TRUE( ! cpacsFile.isValid() );
-    */
 
 
 }
-
 
 
 
@@ -133,8 +130,6 @@ TEST_F(CPACSFileTest, getPoint) {
 
 
 }
-
-
 
 
 
@@ -194,6 +189,7 @@ TEST_F(CPACSFileTest, setPoint) {
 }
 
 
+
 TEST_F(CPACSFileTest, getSetTransformation ){
 
     cpcr::CPACSTransformation defaultT ;
@@ -244,8 +240,6 @@ TEST_F(CPACSFileTest, getSetTransformation ){
     cpacsFile.close();
 
 }
-
-
 
 
 
@@ -358,12 +352,10 @@ TEST_F(CPACSFileTest, getUid){
 
 
 
-
-
 TEST_F(CPACSFileTest, wingAirfoilExist){
 
 
-    std::string fileName = DATA_DIR + "airfoils.xml";
+    std::string fileName = DATA_DIR + "CPACSFileTest-airfoils.xml";
 
     cpacsFile.open(fileName);
     EXPECT_TRUE(cpacsFile.wingAirfoilExist("mdAirfoil2"));
@@ -376,8 +368,8 @@ TEST_F(CPACSFileTest, wingAirfoilExist){
 TEST_F(CPACSFileTest, addWingAirfoil){
 
 
-    std::string fileName = DATA_DIR + "airfoils.xml";
-    std::string outFileName = DATA_DIR + "airfoils-out.xml";
+    std::string fileName = DATA_DIR + "CPACSFileTest-airfoils.xml";
+    std::string outFileName = DATA_DIR + "CPACSFileTest-airfoils-out.xml";
     CPACSPointsProfile profile1;
 
     cpacsFile.open(fileName);
@@ -412,7 +404,7 @@ TEST_F(CPACSFileTest, addWingAirfoil){
 
 TEST_F(CPACSFileTest, getAirfoilUids) {
 
-    std::string fileName = DATA_DIR + "airfoils.xml";
+    std::string fileName = DATA_DIR + "CPACSFileTest-airfoils.xml";
     cpacsFile.open(fileName);
     std::vector<std::string> r = cpacsFile.getAirfoilsUid();
     std::vector<std::string> e;
@@ -428,7 +420,7 @@ TEST_F(CPACSFileTest, getAirfoilUids) {
 
 TEST_F(CPACSFileTest, testIsPointsList) {
 
-    std::string fileName = DATA_DIR + "airfoils.xml";
+    std::string fileName = DATA_DIR + "CPACSFileTest-airfoils.xml";
     cpacsFile.open(fileName);
 
     EXPECT_TRUE( cpacsFile.isWingAirfoilPointList("mdAirfoil2") );
@@ -544,6 +536,7 @@ TEST_F(CPACSFileTest, create ){
     x.setXPath(baseXpath + "wings/wing[1]/sections/section");
     cpacsFile.createEmptySection(x , "sect-uid");
     cpacsFile.save();
+    x.setXPath(baseXpath + "wings/wing[1]/sections/section[@uID=\"sect-uid\"]");
     EXPECT_EQ("sect-uid",  cpacsFile.getUid(x,""));
 
 
@@ -576,7 +569,7 @@ TEST_F(CPACSFileTest, removePositionings ) {
 
 TEST_F(CPACSFileTest, makeUIDUnique) {
 
-    std::string fileName = DATA_DIR + "airfoils.xml";
+    std::string fileName = DATA_DIR + "CPACSFileTest-airfoils.xml";
     cpacsFile.open(fileName);
 
     std::string in, out;
