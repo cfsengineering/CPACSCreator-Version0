@@ -32,7 +32,7 @@ using namespace cpcr;
 class  CPACSTreeItemTest : public testing::Test{
 
 protected:
-    std::string DATA_DIR="/home/makem/JobProject/SkStage/CPACSCreatorLib/CPACSCreatorLibTests/CreatorTests/Data/";
+    std::string DATA_DIR="./Data/";
     std::string fileName = DATA_DIR + "CPACSTreeItemTest.xml";
     CPACSTree tree;
     CPACSTreeItem* root ;

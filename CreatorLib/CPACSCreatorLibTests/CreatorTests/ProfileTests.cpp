@@ -30,7 +30,7 @@ class CPACSProfileTest :   public ::testing::Test {
 protected:
 
 
-    std::string DATA_DIR="/home/cfse/Stage_Malo/CPACSCreatorLib/CPACSCreatorLibTests/CreatorTests/Data/";
+    std::string DATA_DIR="./Data/";
 
 
     virtual void SetUp() {

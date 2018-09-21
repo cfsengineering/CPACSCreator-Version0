@@ -87,7 +87,8 @@ void cpcr::CPACSProfilesDB::createAssociateNormalizedProfiles() {
 
     for(std::string uid : airfoilUIDs){
 
-        if( isPoints[uid] && (! isNormalized[uid] ) && (normalizedVersion[uid] == "")  ){ // We support only point list profile
+        // TODO: Maybe and normalization for profile not on XZ-plane
+        if( isPoints[uid] && (! isNormalized[uid] ) && (normalizedVersion[uid] == "") &&  pointsProfiles[uid].isOnXZPlane() ){ // We support only point list profile
 
             newProfile = CPACSPointsProfile(pointsProfiles[uid]);
             newUID =  newProfile.getUID() + "-creatorNormalized";

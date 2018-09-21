@@ -195,7 +195,6 @@ TEST_F(AircraftTreeTest, buildAndClose ){
     EXPECT_TRUE(aircraftTree.getRoot() != nullptr);
     EXPECT_TRUE(aircraftTree.isBuild() != false);
     EXPECT_TRUE(aircraftTree.getRoot()->getUid() == "D150_VAMP");
-    EXPECT_TRUE(aircraftTree.getRoot() != backupRoot);
 
     aircraftTree.close();
     EXPECT_TRUE(aircraftTree.getRoot() == nullptr);

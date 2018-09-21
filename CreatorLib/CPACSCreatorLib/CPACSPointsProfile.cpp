@@ -215,6 +215,7 @@ namespace cpcr {
     Eigen::Matrix4d CPACSPointsProfile::normalize() {
 
         // TODO find why there is sometimes big "approximationo error" ??
+        // TODO: Maybe and normalization for profile not on XZ-plane
 
         if( ! isOnXZPlane() ){
             throw CreatorException("Only XZ profile can be normalized");

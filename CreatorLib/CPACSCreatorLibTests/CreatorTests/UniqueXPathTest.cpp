@@ -227,13 +227,7 @@ TEST_F(UniqueXPathTest, popLast){
     xpath.setXPath("g/j/hh/");
     r = xpath.popLast();
     EXPECT_TRUE( r == "hh");
-    EXPECT_TRUE(xpath == "g/j/");
-
-
-    xpath.setXPath("g/j/hh");
-    r = xpath.popLast();
-    EXPECT_TRUE( r == "hh");
-    EXPECT_TRUE(xpath == "g/j/");
+    EXPECT_TRUE(xpath == "g/j");
 
 }
 

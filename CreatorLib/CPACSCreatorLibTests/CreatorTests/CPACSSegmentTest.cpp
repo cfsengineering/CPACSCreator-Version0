@@ -29,8 +29,6 @@
 
 class CPACSSegmentTest : public ::testing::Test {
 
-
-
 };
 
 
@@ -48,14 +46,14 @@ TEST_F(CPACSSegmentTest, all){
     segment.setFromElementUID("from");
 
     EXPECT_EQ(segment.getName() , "malo");
-    EXPECT_EQ(segment.getFromElementUID() , "23");
-    EXPECT_EQ(segment.getToElementUID() , "from");
+    EXPECT_EQ(segment.getFromElementUID() , "from");
+    EXPECT_EQ(segment.getToElementUID() , "23");
 
     cpcr::CPACSSegment segment2("hel", "l", "o");
 
-    EXPECT_EQ(segment.getName() , "hel");
-    EXPECT_EQ(segment.getFromElementUID() , "l");
-    EXPECT_EQ(segment.getToElementUID() , "o");
+    EXPECT_EQ(segment2.getName() , "hel");
+    EXPECT_EQ(segment2.getFromElementUID() , "l");
+    EXPECT_EQ(segment2.getToElementUID() , "o");
 
 }
 

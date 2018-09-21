@@ -28,7 +28,7 @@
 
 class CPACSProfilesDBTest : public ::testing::Test {
 public:
-    std::string DATA_DIR="/home/cfse/Stage_Malo/CPACSCreatorLib/CPACSCreatorLibTests/CreatorTests/Data/";
+    std::string DATA_DIR="./Data/";
 
 
 
@@ -40,9 +40,10 @@ TEST_F(CPACSProfilesDBTest, base){
     cpcr::CPACSProfilesDB db;
     cpcr::CPACSFile file;
 
-    file.open(DATA_DIR + "airfoils.xml");
-    file.save(DATA_DIR + "airfoils-out.xml");
+    file.open(DATA_DIR + "CPACSProfilesDBTest-airfoils.xml");
+    file.save(DATA_DIR + "CPACSProfilesDBTest-airfoils-out.xml");
 
+    // check if the airfoils are correctly register
     db.init(&file);
     db.airfoilUIDs.size();
     std::vector<std::string> e;
@@ -67,40 +68,33 @@ TEST_F(CPACSProfilesDBTest, base){
     EXPECT_EQ(db.normalizedVersion["mdAirfoil2Normalized"], "mdAirfoil2Normalized");
     EXPECT_EQ(db.normalizedVersion["mdAirfoil6"], "");
 
+
+    // normalize the airfoils that are not normalized
     db.createAssociateNormalizedProfiles();
+    // check the result of normalization
     e.push_back("mdAirfoil2-creatorNormalized");
     e.push_back("mdAirfoil6-creatorNormalized");
-    e.push_back("mdAirfoilShifted-creatorNormalized");
     e.push_back("mdAirfoil3-creatorNormalized");
     e.push_back("mdAirfoil4-creatorNormalized");
-
     EXPECT_EQ(db.airfoilUIDs,e);
-
-
     EXPECT_TRUE(db.isPoints["mdAirfoil2-creatorNormalized"]);
     EXPECT_TRUE(db.isPoints["mdAirfoil4-creatorNormalized"]);
-
     EXPECT_TRUE(db.isNormalized["mdAirfoil2-creatorNormalized"]);
-    EXPECT_TRUE(db.isNormalized["mdAirfoilShifted-creatorNormalized"]);
-
     EXPECT_EQ(db.normalizedVersion["mdAirfoil2"], "mdAirfoil2-creatorNormalized");
     EXPECT_EQ(db.normalizedVersion["mdAirfoil6"], "mdAirfoil6-creatorNormalized");
 
-    file.open(DATA_DIR + "airfoils-out.xml");
+
+    // reopen the file with the normalized airfoil and create a new db
+    file.open(DATA_DIR + "CPACSProfilesDBTest-airfoils-out.xml");
     db.init(&file);
-    db.createAssociateNormalizedProfiles(); //
-
+    // rerun the normalization process and check
+    db.createAssociateNormalizedProfiles();
     EXPECT_EQ(db.airfoilUIDs,e);
-
     EXPECT_TRUE(db.isPoints["mdAirfoil2-creatorNormalized"]);
     EXPECT_TRUE(db.isPoints["mdAirfoil4-creatorNormalized"]);
-
     EXPECT_TRUE(db.isNormalized["mdAirfoil2-creatorNormalized"]);
-    EXPECT_TRUE(db.isNormalized["mdAirfoilShifted-creatorNormalized"]);
-
     EXPECT_EQ(db.normalizedVersion["mdAirfoil2"], "mdAirfoil2-creatorNormalized");
     EXPECT_EQ(db.normalizedVersion["mdAirfoil6"], "mdAirfoil6-creatorNormalized");
-
-
+    EXPECT_EQ(db.normalizedVersion["mdAirfoilShifted"], "");
 
 }

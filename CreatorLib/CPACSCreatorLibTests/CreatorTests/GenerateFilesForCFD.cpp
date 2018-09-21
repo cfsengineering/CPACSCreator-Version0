@@ -28,7 +28,7 @@ using namespace cpcr;
 TEST(GenerateFile, wingSweep){
 
 
-    std::string DATA_DIR="/home/makem/JobProject/SkStage/CPACSCreatorLib/CPACSCreatorLibTests/CreatorTests/Data/GeneratedCFDInputs/";
+    std::string DATA_DIR="./Data/GeneratedCFDInputs/";
 
     std::string baseFile = "D150_AGILE_Hangar_3_orignal.xml";
     AircraftTree tree ;
@@ -53,7 +53,7 @@ TEST(GenerateFile, wingSweep){
 TEST(GenerateFile, wingDihedral){
 
 
-    std::string DATA_DIR="/home/makem/JobProject/SkStage/CPACSCreatorLib/CPACSCreatorLibTests/CreatorTests/Data/GeneratedCFDInputs/";
+    std::string DATA_DIR="./Data/GeneratedCFDInputs/";
 
     std::string baseFile = "D150_AGILE_Hangar_3_orignal.xml";
     AircraftTree tree ;
