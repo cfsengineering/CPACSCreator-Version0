@@ -29,8 +29,11 @@
 #include <QLabel>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <QScrollBar>
+#include <QScrollArea>
+#include <QSpacerItem>
 
-class TIGLViewerPositioningsWidget : public ModificatorWidget {
+class TIGLViewerPositioningsWidget : public ModificatorWidget  {
 
     Q_OBJECT
 
@@ -45,29 +48,30 @@ public:
     void setPositionings(cpcr::CPACSTreeItem* positionings);
 
 protected:
-    void setDisplay();
     void clean();
 
 
 private:
 
+    // Here we stock the values of the cpacs files, we use them to detect changes
     std::list<std::pair<cpcr::CPACSTreeItem*, cpcr::CPACSPositioning >> internals;
+
+    // These vectors contains the spinBoxes with the values that are displayed and can be modify
     std::vector<QDoubleSpinBox*> sweeps;
     std::vector<QDoubleSpinBox*> dihedrals;
     std::vector<QDoubleSpinBox*> lengths;
-    std::vector<QLabel*> labels;
+    std::vector<QLabel*> labelsIndex;
 
+    // to manage the display we use a scroll area where the content is retrieve in the init function
+    QWidget * content;
     std::vector<QLabel*> header;
+    QHBoxLayout* headerLayout;
+    QSpacerItem* spacer ; // to have header attached to layoutPerPositionings
+    QVBoxLayout *globalLayout ;  // where the layout per positioning will be set
+    std::vector<QHBoxLayout*> layoutPerPositioning;   // We create in  runtime one layout per positioning
 
-
-    QHBoxLayout *globalLayout ;
-    QVBoxLayout *sweepLayout ;
-    QVBoxLayout *dihedralLayout ;
-    QVBoxLayout *lengthLayout ;
-    QVBoxLayout *labelLayout ;
 
     int precision; // set the precision of the qdoublespinbox and is use to detect false change
-
 
 };
 

@@ -31,30 +31,27 @@ TIGLViewerPositioningsWidget::TIGLViewerPositioningsWidget(QWidget *parent) : Mo
 void TIGLViewerPositioningsWidget::init(ModificatorManager *associate) {
     ModificatorWidget::init(associate);
 
-    precision = 4; // 4 decimal after the
-    globalLayout = new QHBoxLayout;
 
-    labelLayout = new QVBoxLayout;
-    sweepLayout = new QVBoxLayout;
-    dihedralLayout = new QVBoxLayout;
-    lengthLayout = new QVBoxLayout;
+    precision = 4; // 4 decimal after the ,
 
-    header.push_back(new QLabel("Tixi Index"));
+    // find the content of the scroll area
+    content = this->findChild<QWidget*>("positioningsModificatorContent");
+    globalLayout = new QVBoxLayout; // were the layout per positioning will be set
+
+    // create the header and the spacer
+    header.push_back(new QLabel("Tixi Idx"));
     header.push_back(new QLabel("Sweep"));
     header.push_back(new QLabel("Dihedral"));
     header.push_back(new QLabel("Length"));
+    headerLayout = new QHBoxLayout();
+    for( QLabel* h : header){
+        headerLayout->addWidget(h);
+    }
+    spacer = new QSpacerItem(100,200,QSizePolicy::Expanding,QSizePolicy::Expanding);
+    globalLayout->addSpacerItem(spacer);
+    globalLayout->addLayout(headerLayout);
 
-    labelLayout->addWidget(header[0]);
-    sweepLayout->addWidget(header[1]);
-    dihedralLayout->addWidget(header[2]);
-    lengthLayout->addWidget(header[3]);
-
-    globalLayout->addLayout(labelLayout);
-    globalLayout->addLayout(sweepLayout);
-    globalLayout->addLayout(dihedralLayout);
-    globalLayout->addLayout(lengthLayout);
-
-    this->setLayout(globalLayout);
+    this->content->setLayout(globalLayout);
 
 
 
@@ -95,8 +92,10 @@ void TIGLViewerPositioningsWidget::setPositionings(cpcr::CPACSTreeItem *item) {
 
     clean();
 
+    // get all the positionings
     this->internals = associateManager->adapter->getPositionings(item);
 
+    // creation of the spin boxes
     int count = 1;
     for(std::pair<cpcr::CPACSTreeItem*,cpcr::CPACSPositioning> p: internals){
 
@@ -120,51 +119,53 @@ void TIGLViewerPositioningsWidget::setPositionings(cpcr::CPACSTreeItem *item) {
 
         QLabel *tempLabel = new QLabel;
         tempLabel->setText( std::to_string(p.first->getTixiIndex()).c_str()  );
-        labels.push_back(tempLabel);
+        labelsIndex.push_back(tempLabel);
         count++;
     }
 
+    // creation of the layouts
+    for(int i = 0; i < sweeps.size(); i++){
+        QHBoxLayout* tempLayout = new QHBoxLayout();
+        tempLayout->addWidget(labelsIndex[i]);
+        tempLayout->addWidget(sweeps[i]);
+        tempLayout->addWidget(dihedrals[i]);
+        tempLayout->addWidget(lengths[i]);
+        layoutPerPositioning.push_back(tempLayout);
+        globalLayout->addLayout(tempLayout);
+    }
 
-
-    setDisplay();
 }
 
 
 void TIGLViewerPositioningsWidget::clean() {
 
-    for(int i = 0; i < sweeps.size(); i++){
+    for(int i = 0; i < layoutPerPositioning.size(); i++){
 
-        sweepLayout->removeWidget(sweeps[i]);
+
+        layoutPerPositioning[i]->removeWidget(sweeps[i]);
         delete sweeps[i];
 
-        dihedralLayout->removeWidget(dihedrals[i]);
+        layoutPerPositioning[i]->removeWidget(dihedrals[i]);
         delete  dihedrals[i];
 
-        lengthLayout->removeWidget(lengths[i]);
+        layoutPerPositioning[i]->removeWidget(lengths[i]);
         delete lengths[i];
 
-        labelLayout->removeWidget(labels[i]);
-        delete labels[i];
+        layoutPerPositioning[i]->removeWidget(labelsIndex[i]);
+        delete labelsIndex[i];
+
+        delete  layoutPerPositioning[i];
     }
+
+    layoutPerPositioning.clear();
 
     sweeps.clear();
     dihedrals.clear();
     lengths.clear();
-    labels.clear();
+    labelsIndex.clear();
 
     internals.clear();
 }
 
 
 
-void TIGLViewerPositioningsWidget::setDisplay() {
-
-
-    for(int i = 0; i < sweeps.size(); i++){
-        labelLayout->addWidget(labels[i]);
-        sweepLayout->addWidget(sweeps[i]);
-        dihedralLayout->addWidget(dihedrals[i]);
-        lengthLayout->addWidget(lengths[i]);
-    }
-
-}

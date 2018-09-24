@@ -1,5 +1,6 @@
 /bin
 /build*
+/Build-Qt
 /docs
 /qtcreator-build
 cmake-build-debug/*
