@@ -114,7 +114,7 @@ protected:
 private:
 
     cpcr::AircraftTree aircraftTree;
-    mutable QMutex mutex;   // to enshure that the tree root is not accessed when update is done
+    // mutable QMutex mutex;   // to enshure that the tree root is not accessed when update is done
 
     ProfilesDBManager* profilesDB;  // used to adapt airfoil values
 

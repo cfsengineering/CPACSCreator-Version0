@@ -116,14 +116,14 @@ bool CPACSCreatorAdapter::testItem(cpcr::CPACSTreeItem *item, cpacsType type) {
 
 
 void CPACSCreatorAdapter::close() {
-    QMutexLocker locker(&mutex);
+    //QMutexLocker locker(&mutex);
     aircraftTree.close();
 }
 
 
 
 void CPACSCreatorAdapter::resetCpacsConfig(const TIGLViewerDocument& doc) {
-    QMutexLocker locker(&mutex); // ensure that the tree is not accessed during the creation
+    //QMutexLocker locker(&mutex); // ensure that the tree is not accessed during the creation
 
     // Check if the new document is valid
     if(!doc.isConfigurationValid()){
@@ -149,7 +149,7 @@ void CPACSCreatorAdapter::resetCpacsConfig(const TIGLViewerDocument& doc) {
 
 cpcr::CPACSTreeItem* CPACSCreatorAdapter::getRoot()const {
 
-    QMutexLocker locker(&mutex); // ensure that the tree is not accessed during the creation
+    //QMutexLocker locker(&mutex); // ensure that the tree is not accessed during the creation
     cpcr::CPACSTreeItem* root = aircraftTree.getRoot();
     return root;
 }

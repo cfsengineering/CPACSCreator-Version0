@@ -296,7 +296,7 @@ void TIGLViewerWindow::openFile(const QString& fileName)
             
             connectConfiguration();
             updateMenus();
-            updateCreatorInterface();
+
             success = true;
         }
         else {
@@ -327,6 +327,11 @@ void TIGLViewerWindow::openFile(const QString& fileName)
         watcher = new QFileSystemWatcher();
         watcher->addPath(fileInfo.absoluteFilePath());
         QObject::connect(watcher, SIGNAL(fileChanged(QString)), openTimer, SLOT(start()));
+
+        if (fileType.toLower() == tr("xml")) {
+            updateCreatorInterface();
+        }
+
         myLastFolder = fileInfo.absolutePath();
         if (success) {
             setCurrentFile(fileName);
@@ -812,6 +817,7 @@ void TIGLViewerWindow::updateCreatorInterface()
 {
 
     std::string selectedUID = model->getUidForIdx(selectionModel->currentIndex());
+    bool blockB = watcher->blockSignals(true);  // we do not want to reopen the file during the moification
     model->disconnectAdapter();
     adapter->resetCpacsConfig(*cpacsConfiguration);
     profilesDB->setAirfoilsFromCurrentCpacsFile(adapter->getAirfoilsUid());
@@ -820,6 +826,7 @@ void TIGLViewerWindow::updateCreatorInterface()
     modificatorManager->reset();
     QModelIndex idx = model->getIdxForUID(selectedUID);
     selectionModel->setCurrentIndex(idx,  QItemSelectionModel::Select);
+    watcher->blockSignals(blockB);
 }
 
 
@@ -835,9 +842,8 @@ void TIGLViewerWindow::applyModifications()
     modificatorManager->reset();
     QModelIndex idx = model->getIdxForUID(selectedUID);
     selectionModel->setCurrentIndex(idx,  QItemSelectionModel::Select);
-    watcher->blockSignals(blockB);
     reopenFile();   // because we have diconnect it durring the write of the file
-
+    watcher->blockSignals(blockB);
 
 }
 
