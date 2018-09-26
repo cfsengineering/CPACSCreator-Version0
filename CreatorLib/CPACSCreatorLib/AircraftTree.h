@@ -106,6 +106,20 @@ namespace cpcr{
          */
 
 
+        /*
+         * FUSELAGE FUNCTIONS
+         */
+
+        double getFuselageLength(UID fuselage);
+
+
+
+        /*
+         * WING FUNCTIONS
+         */
+
+
+
         /***
          * Represent the wing or the fuselage as a graph.
          * This mean that each element used in the wing (or fuselage) is a vertex and each connection between two elements is a edge.
@@ -569,6 +583,8 @@ namespace cpcr{
 
         void openTiglHandle(std::string modelUid);
         void closeTiglHandle();
+
+
 
     private:
         // to access tigl api

@@ -214,7 +214,6 @@
             </segments>
           </fuselage>
 	  
-	  
 	<fuselage uID="FuselageUnconventionalOrdering">
             <name>name</name>
             <description>description</description>
@@ -396,6 +395,190 @@
               </segment>
             </segments>
           </fuselage>
+	  
+	  <fuselage uID="SimpleFuselage3">
+            <name>name</name>
+            <description>description</description>
+            <transformation uID="SimpleFuselage3_transformation1">
+              <scaling uID="SimpleFuselage3_transformation1_scaling1">
+                <x>2.0</x>
+                <y>0.5</y>
+                <z>0.5</z>
+              </scaling>
+              <rotation uID="SimpleFuselage3_transformation1_rotation1">
+                <x>0.0</x>
+                <y>0.0</y>
+                <z>40.0</z>
+              </rotation>
+              <translation refType="absLocal" uID="SimpleFuselage3_transformation1_translation1">
+                <x>0.0</x>
+                <y>10.0</y>
+                <z>0.0</z>
+              </translation>
+            </transformation>
+            <sections>
+              <section uID="D150_Fuselage_3Section1ID">
+                <name>D150_Fuselage_3Section1</name>
+                <transformation uID="D150_Fuselage_3Section1ID_transformation1">
+                  <scaling uID="D150_Fuselage_3Section1ID_transformation1_scaling1">
+                    <x>1.0</x>
+                    <y>1.0</y>
+                    <z>1.0</z>
+                  </scaling>
+                  <rotation uID="D150_Fuselage_3Section1ID_transformation1_rotation1">
+                    <x>0.0</x>
+                    <y>0.0</y>
+                    <z>0.0</z>
+                  </rotation>
+                  <translation refType="absLocal" uID="D150_Fuselage_3Section1ID_transformation1_translation1">
+                    <x>0</x>
+                    <y>0</y>
+                    <z>0</z>
+                  </translation>
+                </transformation>
+                <elements>
+                  <element uID="D150_Fuselage_3Section1IDElement1">
+                    <name>D150_Fuselage_3Section1</name>
+                    <profileUID>fuselageCircleProfileuID</profileUID>
+                    <transformation uID="D150_Fuselage_3Section1IDElement1_transformation1">
+                      <scaling uID="D150_Fuselage_3Section1IDElement1_transformation1_scaling1">
+                        <x>1.0</x>
+                        <y>1.0</y>
+                        <z>1.0</z>
+                      </scaling>
+                      <rotation uID="D150_Fuselage_3Section1IDElement1_transformation1_rotation1">
+                        <x>0</x>
+                        <y>0</y>
+                        <z>0</z>
+                      </rotation>
+                      <translation refType="absLocal" uID="D150_Fuselage_3Section1IDElement1_transformation1_translation1">
+                        <x>0</x>
+                        <y>0</y>
+                        <z>0</z>
+                      </translation>
+                    </transformation>
+                  </element>
+                </elements>
+              </section>
+              <section uID="D150_Fuselage_3Section2ID">
+                <name>D150_Fuselage_3Section2</name>
+                <transformation uID="D150_Fuselage_3Section2ID_transformation1">
+                  <scaling uID="D150_Fuselage_3Section2ID_transformation1_scaling1">
+                    <x>1.0</x>
+                    <y>1.0</y>
+                    <z>1.0</z>
+                  </scaling>
+                  <rotation uID="D150_Fuselage_3Section2ID_transformation1_rotation1">
+                    <x>0.0</x>
+                    <y>0.0</y>
+                    <z>0.0</z>
+                  </rotation>
+                  <translation refType="absLocal" uID="D150_Fuselage_3Section2ID_transformation1_translation1">
+                    <x>0.5</x>
+                    <y>0</y>
+                    <z>0</z>
+                  </translation>
+                </transformation>
+                <elements>
+                  <element uID="D150_Fuselage_3Section2IDElement1">
+                    <name>D150_Fuselage_3Section2</name>
+                    <profileUID>fuselageCircleProfileuID</profileUID>
+                    <transformation uID="D150_Fuselage_3Section2IDElement1_transformation1">
+                      <scaling uID="D150_Fuselage_3Section2IDElement1_transformation1_scaling1">
+                        <x>1</x>
+                        <y>1</y>
+                        <z>1</z>
+                      </scaling>
+                      <rotation uID="D150_Fuselage_3Section2IDElement1_transformation1_rotation1">
+                        <x>0</x>
+                        <y>0</y>
+                        <z>0</z>
+                      </rotation>
+                      <translation refType="absLocal" uID="D150_Fuselage_3Section2IDElement1_transformation1_translation1">
+                        <x>0</x>
+                        <y>0</y>
+                        <z>0</z>
+                      </translation>
+                    </transformation>
+                  </element>
+                </elements>
+              </section>
+              <section uID="D150_Fuselage_3Section3ID">
+                <name>D150_Fuselage_3Section3</name>
+                <transformation uID="D150_Fuselage_3Section3ID_transformation1">
+                  <scaling uID="D150_Fuselage_3Section3ID_transformation1_scaling1">
+                    <x>1.0</x>
+                    <y>1.0</y>
+                    <z>1.0</z>
+                  </scaling>
+                  <rotation uID="D150_Fuselage_3Section3ID_transformation1_rotation1">
+                    <x>0.0</x>
+                    <y>0.0</y>
+                    <z>0.0</z>
+                  </rotation>
+                  <translation refType="absLocal" uID="D150_Fuselage_3Section3ID_transformation1_translation1">
+                    <x>0</x>
+                    <y>0</y>
+                    <z>0</z>
+                  </translation>
+                </transformation>
+                <elements>
+                  <element uID="D150_Fuselage_3Section3IDElement1">
+                    <name>D150_Fuselage_3Section3</name>
+                    <profileUID>fuselageCircleProfileuID</profileUID>
+                    <transformation uID="D150_Fuselage_3Section3IDElement1_transformation1">
+                      <scaling uID="D150_Fuselage_3Section3IDElement1_transformation1_scaling1">
+                        <x>1</x>
+                        <y>1</y>
+                        <z>1</z>
+                      </scaling>
+                      <rotation uID="D150_Fuselage_3Section3IDElement1_transformation1_rotation1">
+                        <x>0</x>
+                        <y>0</y>
+                        <z>0</z>
+                      </rotation>
+                      <translation refType="absLocal" uID="D150_Fuselage_3Section3IDElement1_transformation1_translation1">
+                        <x>0</x>
+                        <y>0</y>
+                        <z>0</z>
+                      </translation>
+                    </transformation>
+                  </element>
+                </elements>
+              </section>
+            </sections>
+            <positionings>
+              <positioning uID="D150_Fuselage_3Positioning1ID">
+                <name>D150_Fuselage_3Positioning1</name>
+                <length>-0.5</length>
+                <sweepAngle>90</sweepAngle>
+                <dihedralAngle>0</dihedralAngle>
+                <toSectionUID>D150_Fuselage_3Section1ID</toSectionUID>
+              </positioning>
+              <positioning uID="D150_Fuselage_3Positioning3ID">
+                <name>D150_Fuselage_3Positioning3</name>
+                <length>2</length>
+                <sweepAngle>90</sweepAngle>
+                <dihedralAngle>0</dihedralAngle>
+                <fromSectionUID>D150_Fuselage_3Section1ID</fromSectionUID>
+                <toSectionUID>D150_Fuselage_3Section3ID</toSectionUID>
+              </positioning>
+            </positionings>
+            <segments>
+             
+              <segment uID="segmentD150_Fuselage_3Segment3ID">
+                <name>D150_Fuselage_3Segment3</name>
+                <fromElementUID>D150_Fuselage_3Section2IDElement1</fromElementUID>
+                <toElementUID>D150_Fuselage_3Section3IDElement1</toElementUID>
+              </segment>
+	       <segment uID="segmentD150_Fuselage_3Segment2ID">
+                <name>D150_Fuselage_3Segment2</name>
+                <fromElementUID>D150_Fuselage_3Section1IDElement1</fromElementUID>
+                <toElementUID>D150_Fuselage_3Section2IDElement1</toElementUID>
+              </segment>
+            </segments>
+          </fuselage>
+	    
 	  
         </fuselages>
         <wings>

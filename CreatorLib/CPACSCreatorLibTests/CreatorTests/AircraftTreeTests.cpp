@@ -2288,3 +2288,28 @@ TEST_F(AircraftTreeTest, setWingARKeepArea) {
     tree.writeToFile();
 
 }
+
+
+
+
+TEST_F(AircraftTreeTest, getFuselageLength) {
+
+    setVariables("simple-aircraft-two-fuselages.cpacs.xml");
+
+    double r = tree.getFuselageLength("SimpleFuselage");
+    EXPECT_EQ(r, 2);
+
+    r = tree.getFuselageLength("FuselageUnconventionalOrdering");
+    EXPECT_EQ(r, 2.5);
+
+
+    r = tree.getFuselageLength("SimpleFuselage3");
+    EXPECT_DOUBLE_EQ(r, 2); // 2 only because we evaluate the length in fuselage coordinate system
+
+    setVariables("TestCases/crm.xml");
+    r = tree.getFuselageLength("NASA_CRM_fuselage1");
+    EXPECT_TRUE(r > 60*20);
+    EXPECT_TRUE(r < 63*20);
+
+
+}

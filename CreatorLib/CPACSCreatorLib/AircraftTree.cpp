@@ -207,7 +207,7 @@ cpcr::AircraftTree::getTransformationChainForOneElement(cpcr::CPACSTreeItem *ele
     // get the transformation from the section
     CPACSTreeItem* sectionItem = elementItem->getParentOfType("section");
     if(sectionItem == nullptr ){
-        throw CreatorException("structure is not respected");
+        throw CreatorException("getTransformationChainForOneElement: Impossible to to find a parent of type \"section\".");
     }
     CPACSTreeItem* sectionTItem = sectionItem->getChild(UniqueXPath("transformation")) ;
     CPACSTransformation sectionT = modifier.getTransformation(sectionTItem->getXPath().toString());
@@ -2375,6 +2375,42 @@ void cpcr::AircraftTree::setWingARKeepArea(cpcr::UID wingUID, double AR) {
 
     setWingSpanKeepArea(wingUID, newSpan);
 
+}
+
+double cpcr::AircraftTree::getFuselageLength(cpcr::UID fuselageUID) {
+
+    // Check the input
+    CPACSTreeItem* fuselage = getRoot()->getChildByUid(fuselageUID);
+    if( fuselage == nullptr){
+        throw CreatorException("getFuselageLength: fuselageUID: \""+ fuselageUID + "\" not found.");
+    }
+    if(fuselage->getType() != "fuselage"){
+        throw CreatorException("getFuselageLength: the given input UID: \"" + fuselageUID + "\" seems not to be a fuselage.");
+    }
+
+    // Get the noise and the end
+    std::map<cpcr::CPACSTreeItem *, std::vector<cpcr::CPACSTreeItem *> > graph = getWingOrFuselageGraph(fuselage);
+    std::vector<cpcr::CPACSTreeItem *> graphF = formatWingOrFuselageGraph(graph);
+
+    cpcr::CPACSTreeItem * fuselageNoise = graphF.front();
+    cpcr::CPACSTreeItem * fuselageTail = graphF.back();
+
+    // Get fuselage point in world coordinate
+    std::map<cpcr::UID, Eigen::Vector4d> centerPoints = getCenterPointsOfElementsInFuselage(fuselageUID);
+    Eigen::Vector4d fuselageNoiseP = centerPoints[fuselageNoise->getUid()];
+    Eigen::Vector4d fuselageTailP = centerPoints[fuselageTail->getUid()];
+
+    // Transform it in the fuselage coordinate system
+    CPACSTransformation fuselageT =  modifier.getTransformation(fuselage->getXPath().toString() + "/transformation");
+    Eigen::Matrix4d fuselageTMI = fuselageT.getTransformationAsMatrix().inverse();
+    fuselageNoiseP = fuselageTMI * fuselageNoiseP;
+    fuselageTailP = fuselageTMI * fuselageTailP;
+
+    // compute the delta
+    Eigen::Vector4d delta = fuselageTailP - fuselageNoiseP;
+    double length = delta.norm() ;
+
+    return length;
 }
 
 
