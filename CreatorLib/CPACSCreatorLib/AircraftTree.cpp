@@ -213,12 +213,18 @@ cpcr::AircraftTree::getTransformationChainForOneElement(cpcr::CPACSTreeItem *ele
     CPACSTransformation sectionT = modifier.getTransformation(sectionTItem->getXPath().toString());
 
     // get the transformation from the wing
-    CPACSTreeItem* wingItem = elementItem->getParentOfType("wing");
-    if(wingItem == nullptr ){
-        throw CreatorException("structure is not respected");
+    CPACSTreeItem* parentItem = nullptr;
+    if( elementItem->hasParentOfType("wing") ){
+        parentItem = elementItem->getParentOfType("wing");
     }
-    CPACSTreeItem* wingTItem = wingItem->getChild(UniqueXPath("transformation")) ;
-    CPACSTransformation wingT = modifier.getTransformation(wingTItem->getXPath().toString());
+    else if( elementItem->hasParentOfType("fuselage")){
+        parentItem = elementItem->getParentOfType("fuselage");
+    }
+    else {
+        throw CreatorException("getTransformationChainForOneElement: Impossible to to find a parent of type \"wing\" or \"fuselage\".");
+    }
+    CPACSTreeItem* parentTItem = parentItem->getChild(UniqueXPath("transformation")) ;
+    CPACSTransformation parentT = modifier.getTransformation(parentTItem->getXPath().toString());
 
 
     // get the positioning global translation
@@ -232,7 +238,7 @@ cpcr::AircraftTree::getTransformationChainForOneElement(cpcr::CPACSTreeItem *ele
     chain.push_back(std::pair<cpcr::CPACSTreeItem *, Eigen::Matrix4d>(elementTItem, elementT.getTransformationAsMatrix()) );
     chain.push_back(std::pair<cpcr::CPACSTreeItem *, Eigen::Matrix4d>(sectionTItem, sectionT.getTransformationAsMatrix()) );
     chain.push_back(positioningPair );
-    chain.push_back(std::pair<cpcr::CPACSTreeItem *, Eigen::Matrix4d>(wingTItem, wingT.getTransformationAsMatrix()) );
+    chain.push_back(std::pair<cpcr::CPACSTreeItem *, Eigen::Matrix4d>(parentTItem, parentT.getTransformationAsMatrix()) );
 
     return chain;
 }
@@ -242,8 +248,21 @@ cpcr::AircraftTree::getTransformationChainForOneElement(cpcr::CPACSTreeItem *ele
 std::pair<cpcr::CPACSTreeItem*,Eigen::Matrix4d> cpcr::AircraftTree::getGlobalPositioningTranslationForSection(cpcr::UID sectionUID) {
 
     CPACSTreeItem * sectionItem = m_root->getChildByUid(sectionUID);
-    CPACSTreeItem * wingItem = sectionItem->getParentOfType("wing");
-    CPACSTreeItem * positioningsItem = wingItem->getChild("positionings", false); // We do not enable warnings because this can be a normal case if the positionigs is not present
+
+    CPACSTreeItem * parentItem = nullptr;
+    if( sectionItem->hasParentOfType("wing") ){
+        parentItem = sectionItem->getParentOfType("wing");
+    }
+    else if( sectionItem->hasParentOfType("fuselage")){
+        parentItem = sectionItem->getParentOfType("fuselage");
+    }
+    else {
+        throw CreatorException("getGlobalPositioningTranslationForSection: Impossible to to find a parent of type \"wing\" or \"fuselage\".");
+    }
+
+
+
+    CPACSTreeItem * positioningsItem = parentItem->getChild("positionings", false); // We do not enable warnings because this can be a normal case if the positionigs is not present
 
     if(positioningsItem == nullptr){    // this can happend if no positioning is used in this wing
         return  std::pair<CPACSTreeItem*,Eigen::Matrix4d> (nullptr, Eigen::Matrix4d::Identity() );

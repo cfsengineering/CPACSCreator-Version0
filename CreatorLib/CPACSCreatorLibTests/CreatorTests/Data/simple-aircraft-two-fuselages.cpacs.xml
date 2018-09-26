@@ -47,7 +47,7 @@
               </rotation>
               <translation refType="absLocal" uID="SimpleFuselage_transformation1_translation1">
                 <x>0.0</x>
-                <y>3.0</y>
+                <y>0.0</y>
                 <z>0.0</z>
               </translation>
             </transformation>
@@ -231,7 +231,7 @@
               </rotation>
               <translation refType="absLocal" uID="FuselageUnconventionalOrdering_transformation1_translation1">
                 <x>0.0</x>
-                <y>0.0</y>
+                <y>3.0</y>
                 <z>0.0</z>
               </translation>
             </transformation>
@@ -357,7 +357,7 @@
                         <z>0</z>
                       </rotation>
                       <translation refType="absLocal" uID="D150_Fuselage_2Section3IDElement1_transformation1_translation1">
-                        <x>0</x>
+                        <x>0.5</x>
                         <y>0</y>
                         <z>0</z>
                       </translation>

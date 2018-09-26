@@ -337,17 +337,21 @@ namespace cpcr{
         /**
          * Get all the treeItems that can influence the position of the CPACSElement given as parameter.
          * This means that all the Transformation and Positioning that influence this particular element are returned
-         * as a vector composed of pair of the form <TreeItem*, Matrix4d>. The Matrix4d represent the transformation
+         * as a vector composed of pair of the form <TreeItemTransformation*, Matrix4d>. The Matrix4d represent the transformation
          * in the world coordinate. The first pair of the vector is the first transformation apply on the CPACSElement
          * and the last pair is the last transformation apply on the CPACSElement. So we get the 4 matrices:
+         * This method support element in Wing and Fuselage.
          *
+         * The return vector contains the item in the following order:
          * [0] Element matrix
          * [1] Section matrix
          * [2] Positioning matrix
          * [3] Wing matrix
          *
+         *
          * @param elementTreeItem
-         * @return vector of transformations
+         * @return vector of transformation
+         * @remark If element has no postionning attached to if the positioning pair is <nullptr,Identiy>
          */
         std::vector<std::pair<CPACSTreeItem*,Eigen::Matrix4d>> getTransformationChainForOneElement(CPACSTreeItem *elementItem) ;
 
@@ -357,6 +361,8 @@ namespace cpcr{
          * Get the global translation that the section get from Positionings elements.
          * This means basically, that all the implicit references of the "fromSectionUID" of positionings are elucidate
          * and added in the global translation.
+         * This method works for element in wing or fuselage
+         *
          * @param section element
          * @return main positioning tree item element  and global translation matrix in world coordinate
          */

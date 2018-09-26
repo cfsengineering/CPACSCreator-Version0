@@ -454,6 +454,58 @@ TEST_F(AircraftTreeTest, getTransformationChainForOneElement){
     EXPECT_EQ(r[0].first->getUid(), "Wing2_section3_element1_transformation1");
     EXPECT_TRUE(r[0].second.isApprox( identity.getTransformationAsMatrix()) );
 
+
+    /*
+     * FUSELAGE CASE
+     */
+    setVariables("simple-aircraft-two-fuselages.cpacs.xml");
+
+    element = root->getChildByUid("D150_Fuselage_1Section1IDElement1");
+    r = tree.getTransformationChainForOneElement(element);
+
+    EXPECT_EQ(r.size(), 4);
+
+    expected = CPACSTransformation(1,0.5,0.5,0,0,0,0,0,0);
+    EXPECT_EQ(r[3].first->getUid(), "SimpleFuselage_transformation1");
+    EXPECT_TRUE(r[3].second.isApprox( expected.getTransformationAsMatrix(), 0.001) );
+
+    expected = CPACSTransformation(1,1,1,0,0,0,-0.5,0,0);
+    EXPECT_EQ(r[2].first->getUid(), "D150_Fuselage_1Positioning1ID");
+    EXPECT_TRUE(r[2].second.isApprox( expected.getTransformationAsMatrix(), 0.02) );
+
+    EXPECT_EQ(r[1].first->getUid(), "D150_Fuselage_1Section1ID_transformation1");
+    EXPECT_TRUE(r[1].second.isApprox( identity.getTransformationAsMatrix()) );
+
+    EXPECT_EQ(r[0].first->getUid(), "D150_Fuselage_1Section1IDElement1_transformation1");
+    EXPECT_TRUE(r[0].second.isApprox( identity.getTransformationAsMatrix()) );
+
+
+
+    element = root->getChildByUid("D150_Fuselage_2Section3IDElement1");
+    r = tree.getTransformationChainForOneElement(element);
+
+    EXPECT_EQ(r.size(), 4);
+
+    expected = CPACSTransformation(1,0.5,0.5,0,0,0,0,3,0);
+    EXPECT_EQ(r[3].first->getUid(), "FuselageUnconventionalOrdering_transformation1");
+    EXPECT_TRUE(r[3].second.isApprox( expected.getTransformationAsMatrix(), 0.001) );
+
+    expected = CPACSTransformation(1,1,1,0,0,0,1.5,0,0);
+    EXPECT_EQ(r[2].first->getUid(), "D150_Fuselage_2Positioning3ID");
+    EXPECT_TRUE(r[2].second.isApprox( expected.getTransformationAsMatrix(), 0.02) );
+
+    EXPECT_EQ(r[1].first->getUid(), "D150_Fuselage_2Section3ID_transformation1");
+    EXPECT_TRUE(r[1].second.isApprox( identity.getTransformationAsMatrix()) );
+
+    expected = CPACSTransformation(1,1,1,0,0,0,0.5,0,0);
+    EXPECT_EQ(r[0].first->getUid(), "D150_Fuselage_2Section3IDElement1_transformation1");
+    EXPECT_TRUE(r[0].second.isApprox( expected.getTransformationAsMatrix()) );
+
+
+
+
+
+
 }
 
 
