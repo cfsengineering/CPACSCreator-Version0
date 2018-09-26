@@ -65,6 +65,7 @@ namespace cpcr {
         CPACSTreeItem * getChild(std::string xpathString, bool warnings = true);
         CPACSTreeItem * getChildByUid(std::string uid);
 
+        bool hasParentOfType(std::string type);
         CPACSTreeItem * getParentOfType(std::string type);
 
         

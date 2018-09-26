@@ -315,8 +315,8 @@ double cpcr::AircraftTree::getWingSweep(cpcr::UID wingUID, double chordPercent) 
 
 
     std::vector<UID> elementUIDs = getAllElementUIDsUsedInAWing(wingUID);
-    std::map<UID, Eigen::Vector4d> chordPoints = getChordPointsOfElements(wingUID, chordPercent);
-    std::map<UID, Eigen::Vector4d> chordPointsM = getChordPointsOfElements(wingUID, 0.5);
+    std::map<UID, Eigen::Vector4d> chordPoints = getChordPointsOfElementsInWing(wingUID, chordPercent);
+    std::map<UID, Eigen::Vector4d> chordPointsM = getChordPointsOfElementsInWing(wingUID, 0.5);
 
     CPACSTransformation wingT = modifier.getTransformation(wing->getXPath().toString() + "/transformation");
     Eigen::Matrix4d wingTM = wingT.getTransformationAsMatrix();
@@ -424,8 +424,8 @@ void cpcr::AircraftTree::setWingSweepByTranslation(cpcr::UID wingUID, double swe
 
 
     std::vector<UID> elementUIDs = getAllElementUIDsUsedInAWing(wingUID);   // element UIDs used in this wing
-    std::map<UID, Eigen::Vector4d> chordPoints = getChordPointsOfElements(wingUID, chordPercent);     // get for each element the associated chord Point
-    std::map<UID, Eigen::Vector4d> chordPointsM = getChordPointsOfElements(wingUID, 0.5);
+    std::map<UID, Eigen::Vector4d> chordPoints = getChordPointsOfElementsInWing(wingUID, chordPercent);     // get for each element the associated chord Point
+    std::map<UID, Eigen::Vector4d> chordPointsM = getChordPointsOfElementsInWing(wingUID, 0.5);
     std::map< UID, Eigen::Matrix4d> globalMatrices;
     Eigen::Vector4d neutral, rootO, rootCP, oldTipO, oldTipCP, newTipO, newTipCP ;  // O stay for origin and CP for chord point
 
@@ -527,10 +527,10 @@ void cpcr::AircraftTree::setWingSweepByShearing(cpcr::UID wingUID, double sweepA
     bool enableTest = true; // If true check at the end if all chord are correctly placed
 
     std::vector<UID> elementUIDs = getAllElementUIDsUsedInAWing(wingUID);
-    std::map<UID, Eigen::Vector4d> chordPoints = getChordPointsOfElements(wingUID, chordPercent);
-    std::map<UID, Eigen::Vector4d> chordPointsM = getChordPointsOfElements(wingUID, 0.5);
-    std::map<UID, Eigen::Vector4d> chordPointsLE = getChordPointsOfElements(wingUID, 0);
-    std::map<UID, Eigen::Vector4d> chordPointsTE = getChordPointsOfElements(wingUID, 1);
+    std::map<UID, Eigen::Vector4d> chordPoints = getChordPointsOfElementsInWing(wingUID, chordPercent);
+    std::map<UID, Eigen::Vector4d> chordPointsM = getChordPointsOfElementsInWing(wingUID, 0.5);
+    std::map<UID, Eigen::Vector4d> chordPointsLE = getChordPointsOfElementsInWing(wingUID, 0);
+    std::map<UID, Eigen::Vector4d> chordPointsTE = getChordPointsOfElementsInWing(wingUID, 1);
 
     Eigen::Vector4d neutral, rootCP, oldTipCP, newTipCP;  // O stay for origin, and CP for chord point
 
@@ -616,7 +616,7 @@ void cpcr::AircraftTree::setWingSweepByShearing(cpcr::UID wingUID, double sweepA
 
     // Check results
     if(enableTest){
-        std::map<UID, Eigen::Vector4d> newChordPoints = getChordPointsOfElements(wingUID, chordPercent);
+        std::map<UID, Eigen::Vector4d> newChordPoints = getChordPointsOfElementsInWing(wingUID, chordPercent);
         Eigen::Vector4d testResult, testExpected;
 
 
@@ -643,7 +643,8 @@ void cpcr::AircraftTree::close() {
 
 
 
-std::map<cpcr::UID, Eigen::Vector4d> cpcr::AircraftTree::getChordPointsOfElements(cpcr::UID wingUID, double chordPercent) {
+std::map<cpcr::UID, Eigen::Vector4d> cpcr::AircraftTree::getChordPointsOfElementsInWing(cpcr::UID wingUID,
+                                                                                        double chordPercent) {
 
     std::map<cpcr::UID, Eigen::Vector4d>  elementsChordPoints;
 
@@ -713,6 +714,71 @@ std::map<cpcr::UID, Eigen::Vector4d> cpcr::AircraftTree::getChordPointsOfElement
 
 
 
+std::map<cpcr::UID, Eigen::Vector4d>
+cpcr::AircraftTree::getCenterPointsOfElementsInFuselage(cpcr::UID fuselageUID) {
+
+    std::map<cpcr::UID, Eigen::Vector4d>  elementsCenters;
+
+    // get all segment Items
+    CPACSTreeItem* fuselageItem = m_root->getChildByUid(fuselageUID);
+    std::vector<CPACSTreeItem *> segmentItems = fuselageItem->findAllChildrenOfTypeRecursively("segment");
+
+
+    // prepare loop
+    CPACSTreeItem * tempFromItem;
+    CPACSTreeItem * tempToItem;
+
+    std::string tempFromUid;
+    std::string tempToUid;
+
+    Eigen::Vector4d fromLE;
+    double fromLEX; // for tigl
+    double fromLEY;
+    double fromLEZ;
+
+    Eigen::Vector4d toLE;
+    double toLEX;
+    double toLEY;
+    double toLEZ;
+
+
+
+    TiglReturnCode returnTigl;
+
+    // Loop over all segment and call tigl to get the chord point
+    for(auto s : segmentItems){
+
+        // get reference element
+        tempFromItem = s->getChild("fromElementUID");
+        tempToItem = s->getChild("toElementUID");
+
+        // retrive uid values
+        tempFromUid = modifier.retrieve<std::string>(tempFromItem->getXPath(), "", true);
+        tempToUid = modifier.retrieve<std::string>(tempToItem->getXPath(), "", true);
+
+        // get chord points
+        returnTigl =  tiglFuselageGetSectionCenter(*tiglHandle, s->getUid().c_str() ,0 ,&fromLEX, &fromLEY, &fromLEZ );
+        if ( returnTigl != TIGL_SUCCESS ){
+            DLOG(ERROR) << "SOMETHING GO WORNG WITH TIGL";
+        }
+        returnTigl =   tiglFuselageGetSectionCenter(*tiglHandle,s->getUid().c_str(), 1,&toLEX, &toLEY, &toLEZ );
+        if ( returnTigl != TIGL_SUCCESS ){
+            DLOG(ERROR) << "SOMETHING GO WORNG WITH TIGL";
+        }
+
+        // create vector point
+        fromLE << fromLEX, fromLEY, fromLEZ, 1; // 1 at the end because it's a point and not a vector
+        toLE << toLEX, toLEY, toLEZ, 1;
+
+        // Insert in the map. If the element already exist is overwritten, otherwise is created.
+        // Remark that the element have the same position whatever in witch segment the element is used
+        elementsCenters[tempFromUid] = fromLE;
+        elementsCenters[tempToUid] = toLE;
+    }
+
+    return elementsCenters;
+
+}
 
 
 double cpcr::AircraftTree::getWingPlanformAreaByTigl(cpcr::UID wingUid, TiglSymmetryAxis symmetry) {
@@ -745,8 +811,8 @@ double cpcr::AircraftTree::getWingDihedral(UID wingUID,  double chordPercent) {
     CPACSTreeItem* wing =  m_root->getChildByUid(wingUID);
 
     std::vector<UID> elementUIDs = getAllElementUIDsUsedInAWing(wingUID);
-    std::map<UID, Eigen::Vector4d> chordPoints = getChordPointsOfElements(wingUID, chordPercent);
-    std::map<UID, Eigen::Vector4d> chordPointsM = getChordPointsOfElements(wingUID, 0.5);
+    std::map<UID, Eigen::Vector4d> chordPoints = getChordPointsOfElementsInWing(wingUID, chordPercent);
+    std::map<UID, Eigen::Vector4d> chordPointsM = getChordPointsOfElementsInWing(wingUID, 0.5);
 
     CPACSTransformation wingT = modifier.getTransformation(wing->getXPath().toString() + "/transformation");
     Eigen::Matrix4d wingTM = wingT.getTransformationAsMatrix();
@@ -780,8 +846,8 @@ double cpcr::AircraftTree::getWingWorldDihedral(cpcr::UID wingUID, double chordP
     CPACSTreeItem* wing =  m_root->getChildByUid(wingUID);
 
     std::vector<UID> elementUIDs = getAllElementUIDsUsedInAWing(wingUID);
-    std::map<UID, Eigen::Vector4d> chordPoints = getChordPointsOfElements(wingUID, chordPercent);
-    std::map<UID, Eigen::Vector4d> chordPointsM = getChordPointsOfElements(wingUID, 0.5);
+    std::map<UID, Eigen::Vector4d> chordPoints = getChordPointsOfElementsInWing(wingUID, chordPercent);
+    std::map<UID, Eigen::Vector4d> chordPointsM = getChordPointsOfElementsInWing(wingUID, 0.5);
 
 
     UID rootUID = getRootOfWing(wing);
@@ -811,9 +877,9 @@ void cpcr::AircraftTree::setWingDihedral(UID wingUID, double dihedral, double ch
     // element UIDs used in this wing
     std::vector<UID> elementUIDs = getAllElementUIDsUsedInAWing(wingUID);
     // get for each element the associated chord Point
-    std::map<UID, Eigen::Vector4d> chordPoints = getChordPointsOfElements(wingUID, chordPercent );
+    std::map<UID, Eigen::Vector4d> chordPoints = getChordPointsOfElementsInWing(wingUID, chordPercent);
     // get for each element the middle chord point (used to determine the extremity)
-    std::map<UID, Eigen::Vector4d> chordPointsM = getChordPointsOfElements(wingUID, 0.5);
+    std::map<UID, Eigen::Vector4d> chordPointsM = getChordPointsOfElementsInWing(wingUID, 0.5);
 
     // wingUID -> globalTransformation map
     std::map< UID, Eigen::Matrix4d> globalMatrices;
@@ -972,9 +1038,9 @@ void cpcr::AircraftTree::setWingAirfoilsByUIDKeepChord(CPACSTreeItem* wing, UID 
     // element Uids used in this wing , only the elements used in a segment!!!
     std::vector<UID> elementUIDs = getAllElementUIDsUsedInAWing(wing->getUid());
     // get for each element the associated chord Point
-    std::map<UID, Eigen::Vector4d> lEPoints = getChordPointsOfElements(wing->getUid(), 0 );
+    std::map<UID, Eigen::Vector4d> lEPoints = getChordPointsOfElementsInWing(wing->getUid(), 0);
     // get for each element the associated chord Point
-    std::map<UID, Eigen::Vector4d> tEPoints = getChordPointsOfElements(wing->getUid(), 1 );
+    std::map<UID, Eigen::Vector4d> tEPoints = getChordPointsOfElementsInWing(wing->getUid(), 1);
 
 
     // UPDATE THE LINK
@@ -1054,12 +1120,18 @@ void cpcr::AircraftTree::setWingAirfoilsByUIDBasic(CPACSTreeItem* wing, UID airf
 
 
 //
-std::map<cpcr::CPACSTreeItem *, std::vector<cpcr::CPACSTreeItem *> > cpcr::AircraftTree::getWingGraph(
-        cpcr::CPACSTreeItem *wing) {
+std::map<cpcr::CPACSTreeItem *, std::vector<cpcr::CPACSTreeItem *> > cpcr::AircraftTree::getWingOrFuselageGraph(
+        cpcr::CPACSTreeItem *wingOrFuselage) {
+
+    std::string inType = wingOrFuselage->getType();
+
+    if( inType != "wing" && inType != "fuselage"){
+        throw  CreatorException("getWingOrFuselageGraph: call with invalid input, the input must be a wing or a fuselage. The current input is: \""  + inType + "\"");
+    }
 
     std::map<CPACSTreeItem *, std::vector<CPACSTreeItem *>> graph;
 
-    std::vector<CPACSTreeItem *> segments = wing->findAllChildrenOfTypeRecursively("segment");
+    std::vector<CPACSTreeItem *> segments = wingOrFuselage->findAllChildrenOfTypeRecursively("segment");
 
     UID tempFromUID;
     UID tempToUID;
@@ -1069,10 +1141,10 @@ std::map<cpcr::CPACSTreeItem *, std::vector<cpcr::CPACSTreeItem *> > cpcr::Aircr
 
         tempFromUID = modifier.retrieve<std::string>(s->getChild("fromElementUID")->getXPath(), "", true);
         tempToUID = modifier.retrieve<std::string>(s->getChild("toElementUID")->getXPath(), "", true);
-        tempFrom = wing->getChildByUid(tempFromUID);
-        tempTo = wing->getChildByUid(tempToUID);
+        tempFrom = wingOrFuselage->getChildByUid(tempFromUID);
+        tempTo = wingOrFuselage->getChildByUid(tempToUID);
         if(tempFrom == nullptr || tempTo == nullptr){
-            throw CreatorException("AircraftTree::getWingGraph: element was not found!");
+            throw CreatorException("AircraftTree::getWingOrFuselageGraph: element was not found!");
         }
 
         if( graph.count(tempFrom) == 0){
@@ -1103,12 +1175,14 @@ std::map<cpcr::CPACSTreeItem *, std::vector<cpcr::CPACSTreeItem *> > cpcr::Aircr
 
 
 
-
-
 std::vector<cpcr::CPACSTreeItem *>
-cpcr::AircraftTree::formatGraph(std::map<CPACSTreeItem *, std::vector<CPACSTreeItem *> > wingGraph) {
+cpcr::AircraftTree::formatWingOrFuselageGraph(std::map<CPACSTreeItem *, std::vector<CPACSTreeItem *> > wingGraph) {
+
+
 
     std::vector<CPACSTreeItem *> r; // a order list starting at the root and going to the tip
+
+    std::string type = "undefine"; // use to determine if the graph is a wing or a fuselage
 
     CPACSTreeItem* root = nullptr;
     CPACSTreeItem* tip = nullptr;
@@ -1122,40 +1196,74 @@ cpcr::AircraftTree::formatGraph(std::map<CPACSTreeItem *, std::vector<CPACSTreeI
                 tip = p.first;
             }
             else{
-                throw CreatorException("AircrafTree:formatGraph: none standard detected (multiple ends)");
+                throw CreatorException("AircrafTree:formatWingOrFuselageGraph: none standard detected (multiple ends)");
             }
         } else if( p.second.size() < 1){
-            throw CreatorException("AircraftTree:formatGraph: none standard graph detected (unconnected)");
+            throw CreatorException("AircraftTree:formatWingOrFuselageGraph: none standard graph detected (unconnected)");
         } else if( p.second.size() > 2){
-            throw CreatorException("AircraftTree:formatGraph: none standard graph detected (multiple branches)");
+            throw CreatorException("AircraftTree:formatWingOrFuselageGraph: none standard graph detected (multiple branches)");
         }
     }
 
     if( tip == nullptr || root == nullptr) {
-        throw CreatorException("AircraftTree::formatGraph: unexpected number of end");
+        throw CreatorException("AircraftTree::formatWingOrFuselageGraph: unexpected number of end");
     }
 
-    // now there should be exactly 2 extremities and all others elements have 2 vertices
-    // We set the root as the closest extremity of the x axis in the wing coordinates system
 
-    CPACSTreeItem* wing = root->getParentOfType("wing");
-    std::map<cpcr::UID, Eigen::Vector4d>  chordPoints = getChordPointsOfElements(wing->getUid(), 0.5);
-    CPACSTransformation wingT = modifier.getTransformation(wing->getXPath().toString() + "/transformation");
-    Eigen::Matrix4d wingTMI = wingT.getTransformationAsMatrix().inverse();
 
-    Eigen::Vector4d rootP = wingTMI * chordPoints[root->getUid()] ;
-    Eigen::Vector4d tipP =  wingTMI * chordPoints[tip->getUid()] ;
+    // Now there should be exactly 2 extremities (root,tip)  and all others elements have 2 vertices
+    // Now, we find which extremity should be the root and which should be the tip
 
-    double dRoot = pow(rootP(1),2) + pow(rootP(2),2); // distance in YZ plan
-    double dTip = pow(tipP(1),2) + pow(tipP(2),2); // distance in YZ plan
+    if ( root->hasParentOfType("wing")){
+        // For wing, we set the root as the closest extremity of the x axis in the wing coordinates system (distance in the YZ plane)
+        // If the two extremities have the same distance in YZ plane, we choose the the extremity with the smallest x coordinate
+        type = "wing";
+        CPACSTreeItem* wing = root->getParentOfType("wing");
+        std::map<cpcr::UID, Eigen::Vector4d>  chordPoints = getChordPointsOfElementsInWing(wing->getUid(), 0.5);
+        CPACSTransformation wingT = modifier.getTransformation(wing->getXPath().toString() + "/transformation");
+        Eigen::Matrix4d wingTMI = wingT.getTransformationAsMatrix().inverse();
 
-    CPACSTreeItem* temp = nullptr ;
-    if ( dRoot > dTip){
-        temp = root;
-        root = tip;
-        tip = temp;
+        Eigen::Vector4d rootP = wingTMI * chordPoints[root->getUid()] ;
+        Eigen::Vector4d tipP =  wingTMI * chordPoints[tip->getUid()] ;
+
+        double dRoot = pow(rootP(1),2) + pow(rootP(2),2); // distance in YZ plan
+        double dTip = pow(tipP(1),2) + pow(tipP(2),2); // distance in YZ plan
+
+        CPACSTreeItem* temp = nullptr ;
+        if ( dRoot > dTip){
+            temp = root;
+            root = tip;
+            tip = temp;
+        } else if( dRoot == dTip && tipP(0) < rootP(0)){ // euqlity case
+            temp = root;
+            root = tip;
+            tip = temp;
+        }
+
+    }else if ( root->hasParentOfType("fuselage") ){
+        // For fuselage, we choose the extremity which the smallest x coordinate
+        type = "fuselage";
+
+        CPACSTreeItem* fuselage = root->getParentOfType("fuselage");
+        std::map<cpcr::UID, Eigen::Vector4d>  centers = getCenterPointsOfElementsInFuselage(fuselage->getUid());
+        CPACSTransformation fuselageT = modifier.getTransformation(fuselage->getXPath().toString() + "/transformation");
+        Eigen::Matrix4d fuselageTMI = fuselageT.getTransformationAsMatrix().inverse();
+
+        Eigen::Vector4d rootP = fuselageTMI * centers[root->getUid()] ;
+        Eigen::Vector4d tipP =  fuselageTMI * centers[tip->getUid()] ;
+
+        CPACSTreeItem* temp = nullptr ;
+        if( tipP(0) < rootP(0)){
+            temp = root;
+            root = tip;
+            tip = temp;
+        }
+
+
     }
 
+
+    // Now we have determine the root and we go though the graph starting from the root.
 
     CPACSTreeItem* current = nullptr;
     CPACSTreeItem* next, *nextA, *nextB;
@@ -1185,10 +1293,10 @@ cpcr::AircraftTree::formatGraph(std::map<CPACSTreeItem *, std::vector<CPACSTreeI
                 next = nextB;
             }
             else{
-                throw CreatorException("AircraftTree::formatGraph: unexpected graph");
+                throw CreatorException("AircraftTree::formatWingOrFuselageGraph: unexpected graph");
             }
         }else {
-            throw CreatorException("AircraftTree::formatGraph: unexpected graph");
+            throw CreatorException("AircraftTree::formatWingOrFuselageGraph: unexpected graph");
         }
     }
 
@@ -1344,9 +1452,9 @@ cpcr::CPACSTransformation cpcr::AircraftTree::determineWingTransformation(UID wi
         newTransformation.setRotation(Point(90,0,0));
     }
 
-    std::vector<cpcr::CPACSTreeItem *> elementsInGraphOrder = formatGraph( getWingGraph(wing) );
+    std::vector<cpcr::CPACSTreeItem *> elementsInGraphOrder = formatWingOrFuselageGraph(getWingOrFuselageGraph(wing));
     CPACSTreeItem * root = elementsInGraphOrder[0];
-    std::map< UID, Eigen::Vector4d> lEs = getChordPointsOfElements(wing->getUid(), 0);
+    std::map< UID, Eigen::Vector4d> lEs = getChordPointsOfElementsInWing(wing->getUid(), 0);
 
     newTransformation.setTranslation(Point( lEs[root->getUid()](0)  ,lEs[root->getUid()](1), lEs[root->getUid()](2)) );
 
@@ -1468,7 +1576,7 @@ bool cpcr::AircraftTree::checkIfPositioningsAreStandardizedForWing(UID wingUID) 
 
     try{
         CPACSTreeItem* wing = m_root->getChildByUid(wingUID);
-        graph = formatGraph( getWingGraph(wing) ) ;
+        graph = formatWingOrFuselageGraph(getWingOrFuselageGraph(wing)) ;
     }catch (CreatorException e){
         return false;
     }
@@ -1542,7 +1650,7 @@ void cpcr::AircraftTree::positioningsStandardizationForWing(UID wingUID) {
     }
 
     try{
-        graph = formatGraph( getWingGraph(wing) ) ;
+        graph = formatWingOrFuselageGraph(getWingOrFuselageGraph(wing)) ;
     }catch (CreatorException e){
         throw CreatorException("positioningsStandardizationForWing: required that the wing can be expressed into a standard graph!");
     }
@@ -1704,13 +1812,13 @@ cpcr::UID cpcr::AircraftTree::getRootOfWing(cpcr::CPACSTreeItem *wing) {
     UID rootUID = "";
     try {
 
-        rootUID = formatGraph( getWingGraph(wing) )[0]->getUid() ; // Here is the core of the expected case
+        rootUID = formatWingOrFuselageGraph(getWingOrFuselageGraph(wing))[0]->getUid() ; // Here is the core of the expected case
 
     }catch (CreatorException &e){
 
         LOG(WARNING) << "The wing can not be represented as a standard graph";
         // in this case we return the element the closest element of the x asis of the wing coordinates system
-        std::map<cpcr::UID, Eigen::Vector4d>  chordPoints = getChordPointsOfElements(wing->getUid(), 0.5);
+        std::map<cpcr::UID, Eigen::Vector4d>  chordPoints = getChordPointsOfElementsInWing(wing->getUid(), 0.5);
 
         CPACSTransformation wingT = modifier.getTransformation(wing->getXPath().toString() + "/transformation");
         Eigen::Matrix4d wingTMI = wingT.getTransformationAsMatrix().inverse();
@@ -1760,8 +1868,8 @@ double cpcr::AircraftTree::getWingSpan(cpcr::UID wingUID, double chordPercent) {
 
 
     std::vector<UID> elementUIDs = getAllElementUIDsUsedInAWing(wingUID);
-    std::map<UID, Eigen::Vector4d> chordPoints = getChordPointsOfElements(wingUID, chordPercent);
-    std::map<UID, Eigen::Vector4d> chordPointsM = getChordPointsOfElements(wingUID, 0.5);
+    std::map<UID, Eigen::Vector4d> chordPoints = getChordPointsOfElementsInWing(wingUID, chordPercent);
+    std::map<UID, Eigen::Vector4d> chordPointsM = getChordPointsOfElementsInWing(wingUID, 0.5);
 
     CPACSTransformation wingT = modifier.getTransformation(wing->getXPath().toString() + "/transformation");
     Eigen::Matrix4d wingTM = wingT.getTransformationAsMatrix();
@@ -1794,8 +1902,8 @@ double cpcr::AircraftTree::getSegmentArea(cpcr::CPACSTreeItem *segmentItem, PLAN
     Eigen::Matrix4d wingTMI = wingTM.inverse();
 
     std::vector<UID> elementUIDs = getAllElementUIDsUsedInAWing(wing->getUid());
-    std::map<cpcr::UID, Eigen::Vector4d> LEPoints = getChordPointsOfElements(wing->getUid(), 0);
-    std::map<cpcr::UID, Eigen::Vector4d> TEPoints = getChordPointsOfElements(wing->getUid(), 1);
+    std::map<cpcr::UID, Eigen::Vector4d> LEPoints = getChordPointsOfElementsInWing(wing->getUid(), 0);
+    std::map<cpcr::UID, Eigen::Vector4d> TEPoints = getChordPointsOfElementsInWing(wing->getUid(), 1);
 
     CPACSSegment segment = modifier.getSegment(segmentItem->getXPath());
 
@@ -1976,10 +2084,10 @@ void cpcr::AircraftTree::placeElement(cpcr::CPACSTreeItem *element, Eigen::Matri
 double cpcr::AircraftTree::findChordXYScaleFactor(CPACSTreeItem *wing, double targetArea) {
 
     // get chords
-    std::vector<cpcr::CPACSTreeItem *> graph = formatGraph(getWingGraph(wing)) ;
+    std::vector<cpcr::CPACSTreeItem *> graph = formatWingOrFuselageGraph(getWingOrFuselageGraph(wing)) ;
 
-    std::map< UID, Eigen::Vector4d>  lEsMap = getChordPointsOfElements(wing->getUid(), 0 );
-    std::map< UID, Eigen::Vector4d>  tEsMap = getChordPointsOfElements(wing->getUid(), 1 );
+    std::map< UID, Eigen::Vector4d>  lEsMap = getChordPointsOfElementsInWing(wing->getUid(), 0);
+    std::map< UID, Eigen::Vector4d>  tEsMap = getChordPointsOfElementsInWing(wing->getUid(), 1);
 
     CPACSTransformation wingT = modifier.getTransformation(wing->getXPath().toString() + "/transformation");
     Eigen::Matrix4d wingTIM = wingT.getTransformationAsMatrix().inverse();
@@ -2109,10 +2217,10 @@ void cpcr::AircraftTree::setWingAreaKeepLeadingEdges(cpcr::CPACSTreeItem *wing, 
 
 
     // get chords
-    std::vector<cpcr::CPACSTreeItem *> graph = formatGraph(getWingGraph(wing)) ;
+    std::vector<cpcr::CPACSTreeItem *> graph = formatWingOrFuselageGraph(getWingOrFuselageGraph(wing)) ;
 
-    std::map< UID, Eigen::Vector4d>  lEsMap = getChordPointsOfElements(wing->getUid(), 0 );
-    std::map< UID, Eigen::Vector4d>  tEsMap = getChordPointsOfElements(wing->getUid(), 1 );
+    std::map< UID, Eigen::Vector4d>  lEsMap = getChordPointsOfElementsInWing(wing->getUid(), 0);
+    std::map< UID, Eigen::Vector4d>  tEsMap = getChordPointsOfElementsInWing(wing->getUid(), 1);
 
     CPACSTransformation wingT = modifier.getTransformation(wing->getXPath().toString() + "/transformation");
     Eigen::Matrix4d wingTM = wingT.getTransformationAsMatrix();
@@ -2249,6 +2357,7 @@ void cpcr::AircraftTree::setWingARKeepArea(cpcr::UID wingUID, double AR) {
     setWingSpanKeepArea(wingUID, newSpan);
 
 }
+
 
 
 

@@ -144,15 +144,15 @@ protected:
         CPACSTreeItem *wing = tree.getRoot()->getChildByUid(wingUID);
 
         UIDs = tree.getAllElementUIDsUsedInAWing(wing->getUid());
-        lEsB = tree.getChordPointsOfElements(wing->getUid(), 0);
-        tEsB = tree.getChordPointsOfElements(wing->getUid(), 1);
+        lEsB = tree.getChordPointsOfElementsInWing(wing->getUid(), 0);
+        tEsB = tree.getChordPointsOfElementsInWing(wing->getUid(), 1);
     }
 
     void checkCurrentChordPointsWithBackup(std::string wingUID){
 
         CPACSTreeItem *wing = tree.getRoot()->getChildByUid(wingUID);
-        lEsA = tree.getChordPointsOfElements(wing->getUid(), 0);
-        tEsA = tree.getChordPointsOfElements(wing->getUid(), 1);
+        lEsA = tree.getChordPointsOfElementsInWing(wing->getUid(), 0);
+        tEsA = tree.getChordPointsOfElementsInWing(wing->getUid(), 1);
 
         for(UID u: UIDs )
         {
@@ -269,6 +269,42 @@ TEST_F(AircraftTreeTest, build){
 
 }
 
+
+TEST_F(AircraftTreeTest, getChordPointsOfElementsInWing){
+
+    setVariables("simple-aircraft.cpacs.xml");
+
+    CPACSTreeItem* wing = tree.getRoot()->getChildByUid("Wing");
+
+    std::map< UID, Eigen::Vector4d> chords = tree.getChordPointsOfElementsInWing(wing->getUid(), 0.5);
+    Eigen::Vector4d expected;
+    expected << 0.5,0,0,1;
+    EXPECT_EQ(chords["Cpacs2Test_Wing_Sec1_El1"], expected);
+    expected << 0.5,1,0,1;
+    EXPECT_EQ(chords["Cpacs2Test_Wing_Sec2_El1"], expected);
+    expected << 0.75,2,0,1;
+    EXPECT_EQ(chords["Cpacs2Test_Wing_Sec3_El1"], expected);
+
+
+}
+
+TEST_F(AircraftTreeTest, getCenterPointsOfElementsInFuselage){
+
+    setVariables("simple-aircraft.cpacs.xml");
+
+
+    CPACSTreeItem* fusleage = tree.getRoot()->getChildByUid("SimpleFuselage");
+    Eigen::Vector4d expected;
+
+    std::map< UID, Eigen::Vector4d> centers = tree.getCenterPointsOfElementsInFuselage(fusleage->getUid());
+    expected << -0.5,0,0,1;
+    EXPECT_TRUE(centers["D150_Fuselage_1Section1IDElement1"].isApprox(expected, 0.01) );
+    expected << 0.5,0,0,1;
+    EXPECT_TRUE(centers["D150_Fuselage_1Section2IDElement1"].isApprox(expected, 0.01) );
+    expected << 1.5,0,0,1;
+    EXPECT_TRUE(centers["D150_Fuselage_1Section3IDElement1"].isApprox(expected, 0.01) );
+
+}
 
 
 
@@ -419,6 +455,8 @@ TEST_F(AircraftTreeTest, getTransformationChainForOneElement){
     EXPECT_TRUE(r[0].second.isApprox( identity.getTransformationAsMatrix()) );
 
 }
+
+
 
 
 
@@ -683,7 +721,7 @@ TEST_F(AircraftTreeTest, setWingSweepByShearingSimpleWing){
     // check the values after
     double after = tree.getWingSweep("Wing", 0);
     EXPECT_TRUE(after > 59.9 && after < 70.1);
-    std::map<cpcr::UID, Eigen::Vector4d>  chordPoints = tree.getChordPointsOfElements("Wing", 0);
+    std::map<cpcr::UID, Eigen::Vector4d>  chordPoints = tree.getChordPointsOfElementsInWing("Wing", 0);
     Eigen::Vector4d chord1E, chord2E  ;
     chord1E << -1, 0, 0,1;
     chord2E << 0.73205081, 1, 0,1;
@@ -1097,15 +1135,23 @@ TEST_F(AircraftTreeTest, getAirfoilsUID)
 
 
 
-TEST_F(AircraftTreeTest, getWingGraph)
+TEST_F(AircraftTreeTest, getWingOrFuselageGraph)
 {
 
+
+    /**
+     * Test Wing graph
+     */
+
     setVariables("wing-simple-1.xml");
+
+    // Test invalid input
+    EXPECT_THROW(tree.getWingOrFuselageGraph(tree.getRoot()), CreatorException) ;
 
     // Test basic case
 
     CPACSTreeItem* wing = tree.getRoot()->getChildByUid("Wing");
-    std::map<cpcr::CPACSTreeItem *, std::vector<cpcr::CPACSTreeItem *> >  r = tree.getWingGraph(wing);
+    std::map<cpcr::CPACSTreeItem *, std::vector<cpcr::CPACSTreeItem *> >  r = tree.getWingOrFuselageGraph(wing);
 
     EXPECT_EQ(r.size(), 2);
 
@@ -1120,7 +1166,7 @@ TEST_F(AircraftTreeTest, getWingGraph)
     setVariables("wing-double-segments.xml");
 
     wing = tree.getRoot()->getChildByUid("Wing");
-    r = tree.getWingGraph(wing);
+    r = tree.getWingOrFuselageGraph(wing);
 
     EXPECT_EQ(r.size(), 3);
 
@@ -1144,7 +1190,7 @@ TEST_F(AircraftTreeTest, getWingGraph)
     setVariables("BWB_DoE_102_modWP4.4_CS_v3.xml");
 
     wing = tree.getRoot()->getChildByUid("BWB450_wingID");
-    r = tree.getWingGraph(wing);
+    r = tree.getWingOrFuselageGraph(wing);
 
     EXPECT_EQ(r.size(), 13);
 
@@ -1156,20 +1202,52 @@ TEST_F(AircraftTreeTest, getWingGraph)
 
 
 
+    /**
+     * Test Fuselage graph
+     */
+
+
+    setVariables("simple-aircraft.cpacs.xml");
+
+    // Test basic case
+    CPACSTreeItem* fuselage = tree.getRoot()->getChildByUid("SimpleFuselage");
+    r = tree.getWingOrFuselageGraph(fuselage);
+
+    EXPECT_EQ(r.size(), 3);
+
+    e1 = tree.getRoot()->getChildByUid("D150_Fuselage_1Section1IDElement1");
+    e2 = tree.getRoot()->getChildByUid("D150_Fuselage_1Section2IDElement1");
+    e3 = tree.getRoot()->getChildByUid("D150_Fuselage_1Section3IDElement1");
+    EXPECT_EQ(r[e1][0], e2);
+    EXPECT_EQ(r[e1].size(), 1);
+    EXPECT_EQ(r[e2][0], e1);
+    EXPECT_EQ(r[e2][1], e3);
+    EXPECT_EQ(r[e2].size(), 2);
+    EXPECT_EQ(r[e3][0], e2);
+    EXPECT_EQ(r[e3].size(), 1);
+
+
+
+
+
 }
 
 
 
-TEST_F(AircraftTreeTest, formatWingGraph)
+TEST_F(AircraftTreeTest, formatWingOrFuselalgeGraph)
 {
+
+    /*
+     *  TEST WING GRAPH
+     */
     setVariables("wing-simple-1.xml");
 
     // Test basic case
 
     CPACSTreeItem* wing = tree.getRoot()->getChildByUid("Wing");
-    std::map<cpcr::CPACSTreeItem *, std::vector<cpcr::CPACSTreeItem *> >  graph = tree.getWingGraph(wing);
+    std::map<cpcr::CPACSTreeItem *, std::vector<cpcr::CPACSTreeItem *> >  graph = tree.getWingOrFuselageGraph(wing);
 
-    std::vector<cpcr::CPACSTreeItem *> formatedGraph = tree.formatGraph(graph);
+    std::vector<cpcr::CPACSTreeItem *> formatedGraph = tree.formatWingOrFuselageGraph(graph);
 
     EXPECT_EQ(formatedGraph.size(), 2);
 
@@ -1187,9 +1265,9 @@ TEST_F(AircraftTreeTest, formatWingGraph)
 
 
     wing = tree.getRoot()->getChildByUid("Wing");
-    graph = tree.getWingGraph(wing);
+    graph = tree.getWingOrFuselageGraph(wing);
 
-    EXPECT_THROW( tree.formatGraph(graph), CreatorException );
+    EXPECT_THROW(tree.formatWingOrFuselageGraph(graph), CreatorException );
 
 
 
@@ -1198,15 +1276,53 @@ TEST_F(AircraftTreeTest, formatWingGraph)
     setVariables("BWB_DoE_102_modWP4.4_CS_v3.xml");
 
     wing = tree.getRoot()->getChildByUid("BWB450_wingID");
-    graph = tree.getWingGraph(wing);
-    formatedGraph = tree.formatGraph(graph);
+    graph = tree.getWingOrFuselageGraph(wing);
+    formatedGraph = tree.formatWingOrFuselageGraph(graph);
 
     EXPECT_EQ( formatedGraph.size() , 13);
     EXPECT_EQ( formatedGraph[0]->getUid(), "BWB450_wingSection1IDElement1");
     EXPECT_EQ( formatedGraph[6]->getUid(), "BWB450_wingSection7IDElement1");
     EXPECT_EQ( formatedGraph[12]->getUid(), "BWB450_wingSection13IDElement1");
 
+
+
+
+    /*
+     *  TEST FUSELAGE GRAPH
+     */
+
+
+    setVariables("simple-aircraft.cpacs.xml");
+
+    CPACSTreeItem* fuselage = tree.getRoot()->getChildByUid("SimpleFuselage");
+    graph = tree.getWingOrFuselageGraph(fuselage);
+    formatedGraph = tree.formatWingOrFuselageGraph(graph);
+
+    EXPECT_EQ( formatedGraph.size() , 3);
+    EXPECT_EQ( formatedGraph[0]->getUid(), "D150_Fuselage_1Section1IDElement1");
+    EXPECT_EQ( formatedGraph[1]->getUid(), "D150_Fuselage_1Section2IDElement1");
+    EXPECT_EQ( formatedGraph[2]->getUid(), "D150_Fuselage_1Section3IDElement1");
+
+
+    setVariables("simple-aircraft-two-fuselages.cpacs.xml");
+
+    fuselage = tree.getRoot()->getChildByUid("FuselageUnconventionalOrdering");
+    graph = tree.getWingOrFuselageGraph(fuselage);
+    formatedGraph = tree.formatWingOrFuselageGraph(graph);
+
+    EXPECT_EQ( formatedGraph.size() , 3);
+    EXPECT_EQ( formatedGraph[0]->getUid(), "D150_Fuselage_2Section1IDElement1");
+    EXPECT_EQ( formatedGraph[1]->getUid(), "D150_Fuselage_2Section2IDElement1");
+    EXPECT_EQ( formatedGraph[2]->getUid(), "D150_Fuselage_2Section3IDElement1");
+
+
 }
+
+
+
+
+
+
 
 
 TEST_F(AircraftTreeTest, airfoilWingNormalization ){
@@ -1215,15 +1331,15 @@ TEST_F(AircraftTreeTest, airfoilWingNormalization ){
     std::string wingUID = "Wing";
 
     std::vector<cpcr::UID> UIDs = tree.getAllElementUIDsUsedInAWing(wingUID);
-    std::map<cpcr::UID, Eigen::Vector4d> lEsB = tree.getChordPointsOfElements(wingUID, 0);
-    std::map<cpcr::UID, Eigen::Vector4d> tEsB = tree.getChordPointsOfElements(wingUID, 0);
+    std::map<cpcr::UID, Eigen::Vector4d> lEsB = tree.getChordPointsOfElementsInWing(wingUID, 0);
+    std::map<cpcr::UID, Eigen::Vector4d> tEsB = tree.getChordPointsOfElementsInWing(wingUID, 0);
     std::vector<std::string> airfoilUIDsB = tree.getAllAirfoilsUIDInThisWing(wingUID);
 
     tree.airfoilsStandardizationForWing(wingUID);
     tree.writeToFile();
 
-    std::map<cpcr::UID, Eigen::Vector4d> lEsA = tree.getChordPointsOfElements(wingUID, 0);
-    std::map<cpcr::UID, Eigen::Vector4d> tEsA = tree.getChordPointsOfElements(wingUID, 0);
+    std::map<cpcr::UID, Eigen::Vector4d> lEsA = tree.getChordPointsOfElementsInWing(wingUID, 0);
+    std::map<cpcr::UID, Eigen::Vector4d> tEsA = tree.getChordPointsOfElementsInWing(wingUID, 0);
     std::vector<std::string> airfoilUIDsA = tree.getAllAirfoilsUIDInThisWing(wingUID);
 
     for(UID u: UIDs )
@@ -1242,15 +1358,15 @@ TEST_F(AircraftTreeTest, airfoilWingNormalization ){
 
 
     UIDs = tree.getAllElementUIDsUsedInAWing(wingUID);
-    lEsB = tree.getChordPointsOfElements(wingUID, 0);
-    tEsB = tree.getChordPointsOfElements(wingUID, 0);
+    lEsB = tree.getChordPointsOfElementsInWing(wingUID, 0);
+    tEsB = tree.getChordPointsOfElementsInWing(wingUID, 0);
     airfoilUIDsB = tree.getAllAirfoilsUIDInThisWing(wingUID);
 
     tree.airfoilsStandardizationForWing(wingUID);
     tree.writeToFile();
 
-    lEsA = tree.getChordPointsOfElements(wingUID, 0);
-    tEsA = tree.getChordPointsOfElements(wingUID, 0);
+    lEsA = tree.getChordPointsOfElementsInWing(wingUID, 0);
+    tEsA = tree.getChordPointsOfElementsInWing(wingUID, 0);
     tree.getAllAirfoilsUIDInThisWing(wingUID);
 
     for(UID u: UIDs )
@@ -1267,15 +1383,15 @@ TEST_F(AircraftTreeTest, airfoilWingNormalization ){
     wingUID = "BWB450_wingID";
 
     UIDs = tree.getAllElementUIDsUsedInAWing(wingUID);
-    lEsB = tree.getChordPointsOfElements(wingUID, 0);
-    tEsB = tree.getChordPointsOfElements(wingUID, 0);
+    lEsB = tree.getChordPointsOfElementsInWing(wingUID, 0);
+    tEsB = tree.getChordPointsOfElementsInWing(wingUID, 0);
     airfoilUIDsB = tree.getAllAirfoilsUIDInThisWing(wingUID);
 
     tree.airfoilsStandardizationForWing(wingUID);
     tree.writeToFile();
 
-    lEsA = tree.getChordPointsOfElements(wingUID, 0);
-    tEsA = tree.getChordPointsOfElements(wingUID, 0);
+    lEsA = tree.getChordPointsOfElementsInWing(wingUID, 0);
+    tEsA = tree.getChordPointsOfElementsInWing(wingUID, 0);
     tree.getAllAirfoilsUIDInThisWing(wingUID);
 
     for(UID u: UIDs )
@@ -1297,8 +1413,8 @@ TEST_F(AircraftTreeTest, setWingTransformation ) {
     std::string wingUID = "D150_VAMP_wing_W1";
 
     std::vector<cpcr::UID> UIDs = tree.getAllElementUIDsUsedInAWing(wingUID);
-    std::map<cpcr::UID, Eigen::Vector4d> lEsB = tree.getChordPointsOfElements(wingUID, 0);
-    std::map<cpcr::UID, Eigen::Vector4d> tEsB = tree.getChordPointsOfElements(wingUID, 1);
+    std::map<cpcr::UID, Eigen::Vector4d> lEsB = tree.getChordPointsOfElementsInWing(wingUID, 0);
+    std::map<cpcr::UID, Eigen::Vector4d> tEsB = tree.getChordPointsOfElementsInWing(wingUID, 1);
 
 
     CPACSTransformation trans;
@@ -1309,8 +1425,8 @@ TEST_F(AircraftTreeTest, setWingTransformation ) {
     tree.setWingTransformation(wingUID, trans);
     tree.writeToFile();
 
-    std::map<cpcr::UID, Eigen::Vector4d>  lEsA = tree.getChordPointsOfElements(wingUID, 0);
-    std::map<cpcr::UID, Eigen::Vector4d>  tEsA = tree.getChordPointsOfElements(wingUID, 1);
+    std::map<cpcr::UID, Eigen::Vector4d>  lEsA = tree.getChordPointsOfElementsInWing(wingUID, 0);
+    std::map<cpcr::UID, Eigen::Vector4d>  tEsA = tree.getChordPointsOfElementsInWing(wingUID, 1);
 
     for(UID u: UIDs )
     {
@@ -1328,8 +1444,8 @@ TEST_F(AircraftTreeTest, setWingTransformation ) {
     tree.setWingTransformation(wingUID, dT);
     tree.writeToFile();
 
-    lEsA = tree.getChordPointsOfElements(wingUID, 0);
-    tEsA = tree.getChordPointsOfElements(wingUID, 1);
+    lEsA = tree.getChordPointsOfElementsInWing(wingUID, 0);
+    tEsA = tree.getChordPointsOfElementsInWing(wingUID, 1);
 
     for(UID u: UIDs )
     {
@@ -1342,8 +1458,8 @@ TEST_F(AircraftTreeTest, setWingTransformation ) {
     wingUID = "D150_VAMP_vtp_SL1";
 
     UIDs = tree.getAllElementUIDsUsedInAWing(wingUID);
-    lEsB = tree.getChordPointsOfElements(wingUID, 0);
-    tEsB = tree.getChordPointsOfElements(wingUID, 1);
+    lEsB = tree.getChordPointsOfElementsInWing(wingUID, 0);
+    tEsB = tree.getChordPointsOfElementsInWing(wingUID, 1);
 
 
     dT = tree.determineWingTransformation(wingUID);
@@ -1355,8 +1471,8 @@ TEST_F(AircraftTreeTest, setWingTransformation ) {
     tree.setWingTransformation(wingUID, dT);
     tree.writeToFile();
 
-    lEsA = tree.getChordPointsOfElements(wingUID, 0);
-    tEsA = tree.getChordPointsOfElements(wingUID, 1);
+    lEsA = tree.getChordPointsOfElementsInWing(wingUID, 0);
+    tEsA = tree.getChordPointsOfElementsInWing(wingUID, 1);
 
     for(UID u: UIDs )
     {
@@ -1375,8 +1491,8 @@ TEST_F(AircraftTreeTest, setWingTransformation ) {
 
 
     UIDs = tree.getAllElementUIDsUsedInAWing(wingUID);
-    lEsB = tree.getChordPointsOfElements(wingUID, 0);
-    tEsB = tree.getChordPointsOfElements(wingUID, 1);
+    lEsB = tree.getChordPointsOfElementsInWing(wingUID, 0);
+    tEsB = tree.getChordPointsOfElementsInWing(wingUID, 1);
 
 
     trans;
@@ -1387,8 +1503,8 @@ TEST_F(AircraftTreeTest, setWingTransformation ) {
     tree.setWingTransformation(wingUID, trans);
     tree.writeToFile();
 
-    lEsA = tree.getChordPointsOfElements(wingUID, 0);
-    tEsA = tree.getChordPointsOfElements(wingUID, 1);
+    lEsA = tree.getChordPointsOfElementsInWing(wingUID, 0);
+    tEsA = tree.getChordPointsOfElementsInWing(wingUID, 1);
     tree.getAllAirfoilsUIDInThisWing(wingUID);
 
     for(UID u: UIDs )
@@ -1411,8 +1527,8 @@ TEST_F(AircraftTreeTest, oneElementOneSection ) {
     std::string wingUID = "Wing";
 
     std::vector<cpcr::UID> UIDs = tree.getAllElementUIDsUsedInAWing(wingUID);
-    std::map<cpcr::UID, Eigen::Vector4d> lEsB = tree.getChordPointsOfElements(wingUID, 0);
-    std::map<cpcr::UID, Eigen::Vector4d> tEsB = tree.getChordPointsOfElements(wingUID, 1);
+    std::map<cpcr::UID, Eigen::Vector4d> lEsB = tree.getChordPointsOfElementsInWing(wingUID, 0);
+    std::map<cpcr::UID, Eigen::Vector4d> tEsB = tree.getChordPointsOfElementsInWing(wingUID, 1);
 
     EXPECT_FALSE( tree.checkIfOneSectionOneElementForWing(wingUID));
     tree.oneSectionOneElementStandardizationForWing(wingUID);
@@ -1420,8 +1536,8 @@ TEST_F(AircraftTreeTest, oneElementOneSection ) {
 
     tree.writeToFile();
 
-    std::map<cpcr::UID, Eigen::Vector4d>  lEsA = tree.getChordPointsOfElements(wingUID, 0);
-    std::map<cpcr::UID, Eigen::Vector4d>  tEsA = tree.getChordPointsOfElements(wingUID, 1);
+    std::map<cpcr::UID, Eigen::Vector4d>  lEsA = tree.getChordPointsOfElementsInWing(wingUID, 0);
+    std::map<cpcr::UID, Eigen::Vector4d>  tEsA = tree.getChordPointsOfElementsInWing(wingUID, 1);
 
     for(UID u: UIDs )
     {

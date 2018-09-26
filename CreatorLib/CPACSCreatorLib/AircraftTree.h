@@ -107,24 +107,26 @@ namespace cpcr{
 
 
         /***
-         * Represent the wing a graph.
-         * This mean that each element used in the wing is a vertex and each connection between two elements is a edge.
+         * Represent the wing or the fuselage as a graph.
+         * This mean that each element used in the wing (or fuselage) is a vertex and each connection between two elements is a edge.
          * Element that does have any connection are not in the graph.
          * This represent basically the connection described in segments section of the cpacs.
          * @param wing
-         * @return
+         * @return A map where the first item is a element of the wing, and the second item is the element connected to the first element
+         * @remark There is not guarantee on the order of the map
          */
-        std::map<CPACSTreeItem*, std::vector<CPACSTreeItem*> > getWingGraph(CPACSTreeItem *wing);
+        std::map<CPACSTreeItem*, std::vector<CPACSTreeItem*> > getWingOrFuselageGraph(CPACSTreeItem *wingOrFuselage);
 
 
         /***
-         * Return a graph from root element to tip element, goining through all elements in "wing order".
+         * Return a graph from root element to tip element, going through all elements in "wing order".
          * If the wing graph can not be expressed in a such way a Exception is throw.
          *
          * @param wingGraph
          * @return
          */
-        std::vector<CPACSTreeItem* > formatGraph(std::map<CPACSTreeItem*, std::vector<CPACSTreeItem*> > wingGraph);
+        std::vector<CPACSTreeItem* > formatWingOrFuselageGraph(
+                std::map<CPACSTreeItem *, std::vector<CPACSTreeItem *> > wingGraph);
 
 
         void completeStandardizationForWing(UID wingUID);
@@ -384,9 +386,17 @@ namespace cpcr{
          * @param ChordPercent (0: Leading edge, 1: trailing edge)
          * @return
          */
-        std::map< UID, Eigen::Vector4d> getChordPointsOfElements(UID wingUID, double ChordPercent);
+        std::map< UID, Eigen::Vector4d> getChordPointsOfElementsInWing(UID wingUID, double ChordPercent);
 
 
+
+        /**
+         * Retrieve form TIGL the center position of every element in a fuselage
+         * @param fuselageUID
+         * @param ChordPercent (0: Leading edge, 1: trailing edge)
+         * @return
+         */
+        std::map< UID, Eigen::Vector4d> getCenterPointsOfElementsInFuselage(UID fuselageUID);
 
 
 
@@ -501,6 +511,11 @@ namespace cpcr{
          * @param scaleFactor
          */
         void scaleWingUniformly(UID wingUID, double scaleFactor);
+
+
+
+
+
 
     protected:
 

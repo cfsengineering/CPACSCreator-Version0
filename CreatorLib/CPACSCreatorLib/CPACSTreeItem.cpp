@@ -209,6 +209,13 @@ namespace cpcr {
         return parent->getParentOfType(type);
     }
 
+    bool CPACSTreeItem::hasParentOfType(std::string type) {
+        if (getParentOfType(type) != nullptr){
+            return true;
+        }
+        return false;
+    }
+
 
 }
 
