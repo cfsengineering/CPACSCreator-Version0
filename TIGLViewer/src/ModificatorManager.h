@@ -31,7 +31,7 @@
 #include "ModificatorWidget.h"
 #include "ProfilesDBManager.h"
 #include "TIGLViewerPositioningsWidget.h"
-
+#include "TIGLViewerFuselageWidget.h"
 
 class ModificatorManager: public QObject {
     Q_OBJECT
@@ -49,13 +49,15 @@ public:
                        TIGLViewerTransformationWidget* transformationModificator,
                        TIGLViewerWingWidget* wingModificator,
                        ProfilesDBManager* profilesDB,
-                       TIGLViewerPositioningsWidget* positioningsModificator
+                       TIGLViewerPositioningsWidget* positioningsModificator,
+                       TIGLViewerFuselageWidget * fuselageModificator
                        );
 
     void reset();
     void setTransformationModificator(cpcr::CPACSTreeItem * item );
     void setWingModificator(cpcr::CPACSTreeItem * item);
     void setPositioningsModificator(cpcr::CPACSTreeItem * item);
+    void setFuselageModificator(cpcr::CPACSTreeItem *pItem);
     void hideAll();
 
     CPACSCreatorAdapter* adapter;
@@ -66,6 +68,7 @@ private:
     TIGLViewerTransformationWidget* transformationModificator;
     TIGLViewerWingWidget* wingModificator;
     TIGLViewerPositioningsWidget* positioningsModificator;
+    TIGLViewerFuselageWidget * fuselageModificator;
 
     ModificatorWidget* currentModificator;
     QWidget* widgetApply;

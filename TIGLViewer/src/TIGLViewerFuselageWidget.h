@@ -2,27 +2,27 @@
 // Created by cfse on 9/26/18.
 //
 
-#ifndef TIGL_TIGLIVIEWERFUSELAGEWIDGET_H
-#define TIGL_TIGLIVIEWERFUSELAGEWIDGET_H
+#ifndef TIGL_TIGLVIEWERFUSELAGEWIDGET_H
+#define TIGL_TIGLVIEWERFUSELAGEWIDGET_H
 
 #include "ModificatorWidget.h"
-#include "Crea"
+#include "CPACSCreatorLib/CPACSTreeItem.h"
 #include <QDoubleSpinBox>
 
-class TIGLIViewerFuselageWidget : public ModificatorWidget {
+class TIGLViewerFuselageWidget : public ModificatorWidget {
 
 Q_OBJECT
 
 
 public:
-    TIGLIViewerFuselageWidget(QWidget * parent = 0);
+    TIGLViewerFuselageWidget(QWidget * parent = 0);
     // Initialize the linked objects
     void init(ModificatorManager* associate) override ;
 
     void apply() override ;
     void reset() override ;
 
-    void setFuselage(cpcr::CPACSTreeItem* fuselageItem)
+    void setFuselage(cpcr::CPACSTreeItem* fuselageItem);
 
 
 private:
@@ -38,4 +38,4 @@ private:
 };
 
 
-#endif //TIGL_TIGLIVIEWERFUSELAGEWIDGET_H
+#endif //TIGL_TIGLVIEWERFUSELAGEWIDGET_H

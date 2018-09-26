@@ -28,7 +28,8 @@ ModificatorManager::ModificatorManager(CPACSCreatorAdapter *adapter,
                                        TIGLViewerTransformationWidget* transformationModificator,
                                        TIGLViewerWingWidget* wingModificator,
                                        ProfilesDBManager* profilesDB,
-                                       TIGLViewerPositioningsWidget* positioningsModificator) {
+                                       TIGLViewerPositioningsWidget* positioningsModificator,
+                                       TIGLViewerFuselageWidget * fuselageModificator) {
     this->adapter = adapter;
     this->profilesDB = profilesDB;
     this->widgetApply = widgetApply;
@@ -40,6 +41,8 @@ ModificatorManager::ModificatorManager(CPACSCreatorAdapter *adapter,
     this->wingModificator->init(this);
     this->positioningsModificator = positioningsModificator;
     this->positioningsModificator->init(this);
+    this->fuselageModificator = fuselageModificator;
+    this->fuselageModificator->init(this);
     currentModificator = nullptr;
 
     this->hideAll();
@@ -85,6 +88,10 @@ void ModificatorManager::dispatch(cpcr::CPACSTreeItem *item) {
         currentModificator = positioningsModificator;
         this->setPositioningsModificator(item);
     }
+    else if (item->getType() == "fuselage"){
+        currentModificator = fuselageModificator;
+        this->setFuselageModificator(item);
+    }
     else {
         currentModificator = nullptr;
         hideAll();
@@ -92,6 +99,12 @@ void ModificatorManager::dispatch(cpcr::CPACSTreeItem *item) {
     }
 }
 
+void ModificatorManager::setFuselageModificator(cpcr::CPACSTreeItem *item) {
+    hideAll();
+    fuselageModificator->setFuselage(item);
+    fuselageModificator->setVisible(true);
+    widgetApply->setVisible(true);
+}
 
 void ModificatorManager::setTransformationModificator(cpcr::CPACSTreeItem * item ) {
 
@@ -123,6 +136,7 @@ void ModificatorManager::hideAll() {
     transformationModificator->setVisible(visible);
     wingModificator->setVisible(visible);
     positioningsModificator->setVisible(visible);
+    fuselageModificator->setVisible(visible);
     widgetApply->setVisible(visible);
 
 }

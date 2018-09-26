@@ -796,7 +796,8 @@ void TIGLViewerWindow::initCreatorInterface()
                                                 transforamtionModificator,
                                                 wingModificator,
                                                 profilesDB,
-                                                positioningsModificator);
+                                                positioningsModificator,
+                                                fuselageModificator);
 
     model = new CPACSAbstractModel(adapter);
     treeView->setModel(model);

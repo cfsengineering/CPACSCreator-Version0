@@ -116,6 +116,7 @@ set(tv_src
     TIGLViewerException.cpp
     ProfilesDBManager.cpp
     TIGLViewerPositioningsWidget.cpp
+    TIGLViewerFuselageWidget.cpp
 )
 	
 # normal header files
@@ -171,6 +172,8 @@ set(tv_hdr_qobj
     ModificatorWidget.h
     ProfilesDBManager.h
     TIGLViewerPositioningsWidget.h
+    TIGLViewerFuselageWidget.h
+
 )
 
 set(tv_ui_comp

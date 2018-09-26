@@ -38,17 +38,23 @@ public:
 
     ModificatorWidget(QWidget * parent = 0);
 
+    // init the associate manager and the coorespendance between GUI interface and the object
     virtual void init(ModificatorManager * associate);
 
+    // reset the dispay value from the value of cpacs file (called when cancel button is pressed)
     virtual void reset();
 
+    // should check if modification was perform , if yes -> apply it on the cpacs file
+    // modification check generally if some modification has occur with isApprox to not have false positif
+    // call when commit button is pressed
     virtual void apply();
 
 
 protected:
 
-    // return true if the abs(a-b) < precision
+
     double precision;
+    // return true if the abs(a-b) < precision
     bool isApprox(double a, double b);
 
     ModificatorManager * associateManager;

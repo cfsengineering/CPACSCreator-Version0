@@ -473,3 +473,11 @@ void CPACSCreatorAdapter::setWingAreaKeepSpan(cpcr::CPACSTreeItem *item, double 
     aircraftTree.setWingAreaKeepSpan(item->getUid(), newArea);
 }
 
+double CPACSCreatorAdapter::getFuselageLength(cpcr::CPACSTreeItem *item) {
+    if( ! testItem(item, "fuselage")){
+        return -1;
+    }
+    return aircraftTree.getFuselageLength(item->getUid());
+}
+
+

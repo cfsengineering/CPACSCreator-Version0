@@ -99,6 +99,9 @@ public:
 
     void setStdValues(cpcr::CPACSTreeItem * item, bool stdAirfoil, bool stdSections, bool stdPositionings, bool stdAnchor);
 
+
+    double getFuselageLength(cpcr::CPACSTreeItem * item);
+
     cpcr::CPACSTreeItem * getRoot()const;
     void resetCpacsConfig(const TIGLViewerDocument& config);
     bool isValid();
