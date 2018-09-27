@@ -2306,6 +2306,11 @@ TEST_F(AircraftTreeTest, getFuselageLength) {
     r = tree.getFuselageLength("SimpleFuselage3");
     EXPECT_DOUBLE_EQ(r, 2); // 2 only because we evaluate the length in fuselage coordinate system
 
+    r = tree.getFuselageLength("SimpleFuselage4"); // this fuselage use shiffted profiles
+    EXPECT_DOUBLE_EQ(r, 2); // 2 only because we evaluate the length in fuselage coordinate system
+
+
+
     setVariables("TestCases/crm.xml");
     r = tree.getFuselageLength("NASA_CRM_fuselage1");
     EXPECT_TRUE(r > 60*20);
@@ -2329,9 +2334,16 @@ TEST_F(AircraftTreeTest, setFuselageLength) {
     setVariables("simple-aircraft-two-fuselages.cpacs.xml");
 
     double newLength, r;
-    cpcr::UID fuselageUID = "SimpleFuselage";
+    cpcr::UID fuselageUID;
 
+    fuselageUID = "SimpleFuselage";
     newLength = 3;
+    tree.setFuselageLength(fuselageUID, newLength);
+    r = tree.getFuselageLength(fuselageUID);
+    EXPECT_DOUBLE_EQ(r, newLength);
+
+    fuselageUID = "SimpleFuselage4";
+    newLength = 5;
     tree.setFuselageLength(fuselageUID, newLength);
     r = tree.getFuselageLength(fuselageUID);
     EXPECT_DOUBLE_EQ(r, newLength);

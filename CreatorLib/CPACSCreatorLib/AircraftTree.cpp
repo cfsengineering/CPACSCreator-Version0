@@ -2412,7 +2412,31 @@ double cpcr::AircraftTree::getFuselageLength(cpcr::UID fuselageUID) {
 }
 
 
+
 void cpcr::AircraftTree::setFuselageLength(cpcr::UID fuselageUID, double newLength){
+    /*
+     * This function follow basically these steps:
+     *
+     * 1) The noise and tail are retrieve from the graph
+     *
+     * 2) Computation the affine transformation needed to perform the desired effect. The desired effect is of the form:
+     *         a) Transform point in coordinate system
+     *         b) Put the noise on the origin
+     *         c) Rotation to get the tail on the X axis
+     *         d) Perfom a scaling on X to obtain the desired value
+     *         e) inverse of c)
+     *         f) inverse of b)
+     *         g) inverse of a)
+     *
+     * 3) Compute the origin of each element and delta between the origin and the center point.
+     *    This is done to cover the case of profiles that are shifted (origin of element != center point)
+     *
+     * 4) Compute the new center points and the new origin to get the wanted length
+     *
+     * 5) Find the new Transformation that elements should have to have these new origins and save in the memory
+     *
+     *
+     */
 
     CPACSTreeItem* fuselage = getRoot()->getChildByUid(fuselageUID);
     if( fuselage == nullptr){
@@ -2422,8 +2446,8 @@ void cpcr::AircraftTree::setFuselageLength(cpcr::UID fuselageUID, double newLeng
         throw CreatorException("setFuselageLength: the given input UID: \"" + fuselageUID + "\" seems not to be a fuselage.");
     }
 
-    bool debug = true;
-    std::map<cpcr::UID, Eigen::Vector4d> centerPoints;
+    bool debug = false; // if true print some information on the log
+    std::map<cpcr::UID, Eigen::Vector4d> oldCenterPoints;
     std::map<cpcr::UID, Eigen::Vector4d> oldGlobalOrigin;
     std::map<cpcr::UID, Eigen::Vector4d> newCenterPoints;
     std::map<cpcr::UID, Eigen::Vector4d> newGlobalOrigin;
@@ -2439,9 +2463,9 @@ void cpcr::AircraftTree::setFuselageLength(cpcr::UID fuselageUID, double newLeng
     cpcr::CPACSTreeItem * fuselageTail = graphF.back();
 
     // Get fuselage point in world coordinate
-    centerPoints = getCenterPointsOfElementsInFuselage(fuselageUID);
-    Eigen::Vector4d fuselageNoiseP = centerPoints[fuselageNoise->getUid()];
-    Eigen::Vector4d fuselageTailP = centerPoints[fuselageTail->getUid()];
+    oldCenterPoints = getCenterPointsOfElementsInFuselage(fuselageUID);
+    Eigen::Vector4d fuselageNoiseP = oldCenterPoints[fuselageNoise->getUid()];
+    Eigen::Vector4d fuselageTailP = oldCenterPoints[fuselageTail->getUid()];
 
     // Transform it in the fuselage coordinate system
     CPACSTransformation fuselageT =  modifier.getTransformation(fuselage->getXPath().toString() + "/transformation");
@@ -2503,7 +2527,7 @@ void cpcr::AircraftTree::setFuselageLength(cpcr::UID fuselageUID, double newLeng
     // Compute the new center point and the new origin of each element
     Eigen::Matrix4d totalTransformation = fuselageTM * noiseToOI * rotTailToXI * scaleM * rotTailToX4d * noiseToO * fuselageTMI ;
     Eigen::Vector4d tempDelatOtoP;
-    for( std::pair<cpcr::UID, Eigen::Vector4d> pair :centerPoints){
+    for( std::pair<cpcr::UID, Eigen::Vector4d> pair :oldCenterPoints){
         newCenterPoints[pair.first] = totalTransformation * pair.second;
         tempDelatOtoP = pair.second - oldGlobalOrigin[pair.first];
         // delta between origin and the center point will not change because no scaling or rotation will be changed
@@ -2514,13 +2538,13 @@ void cpcr::AircraftTree::setFuselageLength(cpcr::UID fuselageUID, double newLeng
         LOG(INFO) << "uid, oldCenterPoint, newCenterPoint, old delta, new delta " << std::endl;
         for( std::pair<cpcr::UID, Eigen::Vector4d> pair :newCenterPoints){
             LOG(INFO) << pair.first << ": "
-                    << std::endl << centerPoints[pair.first]
+                    << std::endl << oldCenterPoints[pair.first]
                     << std::endl << "---"
                     << std::endl << pair.second
                     << std::endl << "---"
                     << std::endl << newCenterPoints[pair.first] - newGlobalOrigin[pair.first]
                     << std::endl << "---"
-                    << std::endl << centerPoints[pair.first] - oldGlobalOrigin[pair.first] << std::endl;
+                    << std::endl << oldCenterPoints[pair.first] - oldGlobalOrigin[pair.first] << std::endl;
         }
     }
 

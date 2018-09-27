@@ -112,6 +112,9 @@ namespace cpcr{
 
         /**
          * Get the fuselage length in fuselage coordinate system.
+         * The length is define as the distance from the center of the noise to the center of the tail.
+         * The center is retrieve from Tigl function "tiglFuselageGetSectionCenter".
+         *
          * @param fuselage
          * @return
          */
@@ -122,6 +125,7 @@ namespace cpcr{
          * Set the length of the fuselage.
          * The fuselage is stretched in the noise-tail direction.
          * The noise will stay at the same place.
+         * No additional scaling or rotation will be performed on the profile
          * @param fuselage
          * @param length
          */

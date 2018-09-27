@@ -25,7 +25,17 @@ void TIGLViewerFuselageWidget::setFuselage(cpcr::CPACSTreeItem *fuselageItem) {
 }
 
 void TIGLViewerFuselageWidget::apply() {
-    ModificatorWidget::apply();
+   bool lengthHasChanged = ( (! isApprox(internalLength, spinBoxLength->value()) ) );
+
+   if(lengthHasChanged){
+       internalLength = spinBoxLength->value();
+       associateManager->adapter->setFuselageLength(fuselageItem, internalLength);
+   }
+
+   if(lengthHasChanged){
+       associateManager->adapter->writeToFile();
+   }
+
 }
 
 

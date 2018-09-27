@@ -480,4 +480,11 @@ double CPACSCreatorAdapter::getFuselageLength(cpcr::CPACSTreeItem *item) {
     return aircraftTree.getFuselageLength(item->getUid());
 }
 
+void CPACSCreatorAdapter::setFuselageLength(cpcr::CPACSTreeItem *item, double newLength) {
+    if( ! testItem(item, "fuselage")){
+        return;
+    }
+    aircraftTree.setFuselageLength(item->getUid(), newLength);
+}
+
 

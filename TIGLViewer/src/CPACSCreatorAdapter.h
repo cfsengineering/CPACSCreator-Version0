@@ -102,6 +102,8 @@ public:
 
     double getFuselageLength(cpcr::CPACSTreeItem * item);
 
+    void setFuselageLength(cpcr::CPACSTreeItem * item, double newLength);
+
     cpcr::CPACSTreeItem * getRoot()const;
     void resetCpacsConfig(const TIGLViewerDocument& config);
     bool isValid();
