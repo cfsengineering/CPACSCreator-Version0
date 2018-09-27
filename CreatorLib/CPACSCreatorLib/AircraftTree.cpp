@@ -127,8 +127,6 @@ cpcr::CPACSTransformation cpcr::AircraftTree::getTransformToPlaceElementByTransl
                                                                                         const Eigen::Vector4d &wantedOriginP) {
 
     CPACSTreeItem* element = m_root->getChildByUid(elementUID);
-    CPACSTreeItem* wing = element->getParentOfType("wing");
-
 
     std::vector<std::pair<CPACSTreeItem*, Eigen::Matrix4d> > Ts = getTransformationChainForOneElement(element);
 
@@ -2412,6 +2410,135 @@ double cpcr::AircraftTree::getFuselageLength(cpcr::UID fuselageUID) {
 
     return length;
 }
+
+
+void cpcr::AircraftTree::setFuselageLength(cpcr::UID fuselageUID, double newLength){
+
+    CPACSTreeItem* fuselage = getRoot()->getChildByUid(fuselageUID);
+    if( fuselage == nullptr){
+        throw CreatorException("setFuselageLength: fuselageUID: \""+ fuselageUID + "\" not found.");
+    }
+    if(fuselage->getType() != "fuselage"){
+        throw CreatorException("setFuselageLength: the given input UID: \"" + fuselageUID + "\" seems not to be a fuselage.");
+    }
+
+    bool debug = true;
+    std::map<cpcr::UID, Eigen::Vector4d> centerPoints;
+    std::map<cpcr::UID, Eigen::Vector4d> oldGlobalOrigin;
+    std::map<cpcr::UID, Eigen::Vector4d> newCenterPoints;
+    std::map<cpcr::UID, Eigen::Vector4d> newGlobalOrigin;
+
+    std::vector<cpcr::CPACSTreeItem *> graphF;
+    double oldLength = getFuselageLength(fuselageUID);
+
+    // Get the noise and the end
+    std::map<cpcr::CPACSTreeItem *, std::vector<cpcr::CPACSTreeItem *> > graph = getWingOrFuselageGraph(fuselage);
+    graphF = formatWingOrFuselageGraph(graph);
+
+    cpcr::CPACSTreeItem * fuselageNoise = graphF.front();
+    cpcr::CPACSTreeItem * fuselageTail = graphF.back();
+
+    // Get fuselage point in world coordinate
+    centerPoints = getCenterPointsOfElementsInFuselage(fuselageUID);
+    Eigen::Vector4d fuselageNoiseP = centerPoints[fuselageNoise->getUid()];
+    Eigen::Vector4d fuselageTailP = centerPoints[fuselageTail->getUid()];
+
+    // Transform it in the fuselage coordinate system
+    CPACSTransformation fuselageT =  modifier.getTransformation(fuselage->getXPath().toString() + "/transformation");
+    Eigen::Matrix4d fuselageTM = fuselageT.getTransformationAsMatrix();
+    Eigen::Matrix4d fuselageTMI = fuselageTM.inverse();
+    fuselageNoiseP = fuselageTMI * fuselageNoiseP;
+    fuselageTailP = fuselageTMI * fuselageTailP;
+
+    // bring Noise to Origin
+    Eigen::Matrix4d noiseToO = CPACSTransformation(1,1,1,0,0,0, -fuselageNoiseP[0],-fuselageNoiseP[1],-fuselageNoiseP[2]).getTransformationAsMatrix();
+    fuselageNoiseP = noiseToO *fuselageNoiseP;
+    fuselageTailP = noiseToO *fuselageTailP;
+
+    // bring Tail on the x axis
+    Eigen::Quaterniond q;
+    Eigen::Vector4d fuselageTailPOnX;
+    fuselageTailPOnX << fuselageTailP.norm(),0,0,1;
+    q.setFromTwoVectors(fuselageTailP.block<3,1>(0,0), fuselageTailPOnX.block<3,1>(0,0) );
+    Eigen::Matrix3d rotTailToX =  q.toRotationMatrix();
+    Eigen::Matrix4d rotTailToX4d =  Eigen::Matrix4d::Identity();
+    rotTailToX4d.block<3,3>(0,0) = rotTailToX;
+
+    fuselageTailP = rotTailToX4d * fuselageTailP;
+
+
+    // at this point Noise should be on the origin and tail on the x axis
+    if(debug){
+        Eigen::Vector4d temp ;
+        bool tempB = false;
+        temp << 0,0,0,1;
+        tempB = fuselageNoiseP.isApprox(temp, 0.0001);
+        LOG(INFO)<< std::endl << "fuselageNoiseP: Ok? "<< tempB << std::endl << fuselageNoiseP << std::endl;
+
+        temp << oldLength,0,0,1;
+        tempB = fuselageTailP.isApprox(temp, 0.0001);
+        LOG(INFO)<< std::endl << "fuselageTailP: Ok? "<< tempB <<  std::endl << fuselageTailP << std::endl;
+    }
+
+    // Compute the needed scaling in x
+    if(oldLength == 0 ){
+        throw CreatorException("setFuselageLength: the old length is 0, impossible to scale the length");
+    }
+    double xScale = newLength / oldLength;
+    Eigen::Matrix4d scaleM = Eigen::Matrix4d::Identity();
+    scaleM(0,0) = xScale;
+
+    Eigen::Matrix4d noiseToOI = noiseToO.inverse();
+    Eigen::Matrix4d  rotTailToXI = rotTailToX4d.inverse();
+
+
+
+    // Get the origin of each element
+    Eigen::Vector4d origin;
+    origin << 0,0,0,1;
+    for(CPACSTreeItem * element : graphF) {
+        oldGlobalOrigin[element->getUid()] = getGlobalTransformMatrixOfElement(element->getUid()) * origin;
+    }
+
+    // Compute the new center point and the new origin of each element
+    Eigen::Matrix4d totalTransformation = fuselageTM * noiseToOI * rotTailToXI * scaleM * rotTailToX4d * noiseToO * fuselageTMI ;
+    Eigen::Vector4d tempDelatOtoP;
+    for( std::pair<cpcr::UID, Eigen::Vector4d> pair :centerPoints){
+        newCenterPoints[pair.first] = totalTransformation * pair.second;
+        tempDelatOtoP = pair.second - oldGlobalOrigin[pair.first];
+        // delta between origin and the center point will not change because no scaling or rotation will be changed
+        newGlobalOrigin[pair.first] =  newCenterPoints[pair.first] - tempDelatOtoP;
+    }
+
+    if(debug){
+        LOG(INFO) << "uid, oldCenterPoint, newCenterPoint, old delta, new delta " << std::endl;
+        for( std::pair<cpcr::UID, Eigen::Vector4d> pair :newCenterPoints){
+            LOG(INFO) << pair.first << ": "
+                    << std::endl << centerPoints[pair.first]
+                    << std::endl << "---"
+                    << std::endl << pair.second
+                    << std::endl << "---"
+                    << std::endl << newCenterPoints[pair.first] - newGlobalOrigin[pair.first]
+                    << std::endl << "---"
+                    << std::endl << centerPoints[pair.first] - oldGlobalOrigin[pair.first] << std::endl;
+        }
+    }
+
+
+    // Compute the new transformation element of each element to be placed at the wanted orgin
+    cpcr::CPACSTransformation tempNewTransformationE;
+    for(CPACSTreeItem * element : graphF){
+        tempNewTransformationE = getTransformToPlaceElementByTranslationAt(element->getUid(), newGlobalOrigin[element->getUid()] );
+        modifier.setTransformation(element->getXPath().toString() + "/transformation", tempNewTransformationE);  // here we save the info in memory
+    }
+
+    closeTiglHandle();
+    openTiglHandle(m_root->getUid() );
+}
+
+
+
+
 
 
 

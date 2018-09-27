@@ -2736,8 +2736,8 @@
                     <transformation xsi:type="transformationType" uID="D150_VAMP_FL1_Sec60_Elem1_transformation1">
                       <scaling xsi:type="pointType" uID="D150_VAMP_FL1_Sec60_Elem1_transformation1_scaling1">
                         <x>0.0</x>
-                        <y>0.0</y>
-                        <z>0.0</z>
+                        <y>0.001</y>
+                        <z>0.001</z>
                       </scaling>
                       <rotation xsi:type="pointType" uID="D150_VAMP_FL1_Sec60_Elem1_transformation1_rotation1">
                         <x>0.0</x>

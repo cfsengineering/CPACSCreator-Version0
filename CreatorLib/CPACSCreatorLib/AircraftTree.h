@@ -110,7 +110,22 @@ namespace cpcr{
          * FUSELAGE FUNCTIONS
          */
 
+        /**
+         * Get the fuselage length in fuselage coordinate system.
+         * @param fuselage
+         * @return
+         */
         double getFuselageLength(UID fuselage);
+
+
+        /**
+         * Set the length of the fuselage.
+         * The fuselage is stretched in the noise-tail direction.
+         * The noise will stay at the same place.
+         * @param fuselage
+         * @param length
+         */
+        void setFuselageLength(UID fuselage, double length);
 
 
 
@@ -431,7 +446,7 @@ namespace cpcr{
          * the translation component.
          *
          * @param elementUid uid of the element to place
-         * @param wantedOriginP the wanted origin position for the element
+         * @param wantedOriginP the wanted origin position for the element in the world coordinate system
          * @return CPACSTransform that the element should have to be at the wanted position
          */
         CPACSTransformation getTransformToPlaceElementByTranslationAt(const UID &elementUid,

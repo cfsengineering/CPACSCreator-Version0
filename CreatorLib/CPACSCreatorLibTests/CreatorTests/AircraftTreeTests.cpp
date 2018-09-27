@@ -2312,4 +2312,30 @@ TEST_F(AircraftTreeTest, getFuselageLength) {
     EXPECT_TRUE(r < 63*20);
 
 
+    setVariables("TestCases/boxWing.xml");
+    r = tree.getFuselageLength("D150_VAMP_FL1");
+    EXPECT_GE(r , 35);
+    EXPECT_LE(r, 40);
+
+
+}
+
+
+
+
+
+TEST_F(AircraftTreeTest, setFuselageLength) {
+
+    setVariables("simple-aircraft-two-fuselages.cpacs.xml");
+
+    double newLength, r;
+    cpcr::UID fuselageUID = "SimpleFuselage";
+
+    newLength = 3;
+    tree.setFuselageLength(fuselageUID, newLength);
+    r = tree.getFuselageLength(fuselageUID);
+    EXPECT_DOUBLE_EQ(r, newLength);
+
+
+
 }
