@@ -159,3 +159,31 @@ TEST_F(CPACSTreeTest, writeToFile){
     EXPECT_TRUE(rT == newT);
 
 }
+
+
+
+
+
+TEST_F(CPACSTreeTest, checkFunctions) {
+
+
+    // construct the tree
+    currentFile = DATA_DIR + "CPACSTreeTest.xml";
+    rootXPath = UniqueXPath("/cpacs/vehicles/aircraft/model[1]");
+
+    tree.build(currentFile, rootXPath);
+
+    tree.checkUID("Wing_section1");
+    EXPECT_THROW(tree.checkUID("D150_VAMP_wing_W1fsa"), CreatorException) ;
+
+    tree.checkUID("D150_Fuselage_1Section2IDElement1");
+    tree.checkUIDAndType("D150_Fuselage_1Section2IDElement1", "element");
+    EXPECT_THROW(tree.checkUIDAndType("D150_Fuselage_1Section2IDElement1", "wing"), CreatorException );
+
+    tree.checkUIDAndTypeAndParentType("D150_Fuselage_1Section2IDElement1", "element", "fuselage");
+    EXPECT_THROW(tree.checkUIDAndTypeAndParentType("D150_Fuselage_1Section2IDElement1", "element", "wing"), CreatorException);
+    EXPECT_THROW(tree.checkUIDAndTypeAndParentType("D150_Fuselage_dsafd1Section2IDElement1", "element", "fuselage"), CreatorException );
+    EXPECT_THROW(tree.checkUIDAndTypeAndParentType("D150_Fuselage_1Section2IDElement1", "efaslement", "fuselage"), CreatorException );
+
+
+}

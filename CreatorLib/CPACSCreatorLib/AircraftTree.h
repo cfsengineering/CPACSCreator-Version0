@@ -122,22 +122,41 @@ namespace cpcr{
 
 
         /**
+         * Get the length between the two fuselage elements in fuselage coordinate system.
+         * The length is distance between the center of the first element given by "startElementUID"
+         * and the center of the second element given by "endElementUID"
+         *
+         * @param fuselage
+         * @return
+         */
+        double getFuselageLengthBetween(UID startElementUID, UID endElementUID);
+
+
+
+        /**
          * Set the length of the fuselage.
          * The fuselage is stretched in the noise-tail direction.
          * The noise will stay at the same place.
-         * Every profiles will remain the same
+         * Every profiles will remain with the same dimension.
          * @param fuselage
          * @param length
          */
         void setFuselageLength(UID fuselage, double length);
 
-
         /**
+         * Set the length between these two element.
+         * The element between start and end are stretched in the direction of the fuselage
+         * The elements before are untouched.
+         * The elements after are shifted such that the element does not overlap.
          *
-         * @param fuselage
+         *
+         * @param startElementUID
+         * @param endElementUID
          * @param length
          */
-        void setFuselageLengthUsingElementBetween(UID fuselage, double length, UID startElement, UID endElement);
+        void setFuselageLengthBetween(UID startElementUID, UID endElementUID, double length);
+
+
 
         /**
          * Shift the the given element by the shift.

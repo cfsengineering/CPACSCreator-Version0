@@ -2375,146 +2375,183 @@ void cpcr::AircraftTree::setWingARKeepArea(cpcr::UID wingUID, double AR) {
 
 }
 
+
+double cpcr::AircraftTree::getFuselageLengthBetween(cpcr::UID startElementUID, cpcr::UID endElementUID){
+
+    // check input
+    checkUIDAndTypeAndParentType(startElementUID, "element", "fuselage", "getFuselageLengthBetween");
+    checkUIDAndTypeAndParentType(endElementUID, "element", "fuselage", "getFuselageLengthBetween");
+
+    CPACSTreeItem  * startElement = getRoot()->getChildByUid(startElementUID);
+    CPACSTreeItem  * endElement = getRoot()->getChildByUid(endElementUID);
+    CPACSTreeItem  * fuselage = startElement->getParentOfType("fuselage");
+
+
+    // Get fuselage point in world coordinate
+    std::map<cpcr::UID, Eigen::Vector4d> centerPoints = getCenterPointsOfElementsInFuselage(fuselage->getUid());
+    Eigen::Vector4d startP = centerPoints[startElement->getUid()];
+    Eigen::Vector4d endP = centerPoints[endElement->getUid()];
+
+    // Transform it in the fuselage coordinate system
+    CPACSTransformation fuselageT =  modifier.getTransformation(fuselage->getXPath().toString() + "/transformation");
+    Eigen::Matrix4d fuselageTMI = fuselageT.getTransformationAsMatrix().inverse();
+    startP = fuselageTMI * startP;
+    endP = fuselageTMI * endP;
+
+    // compute the delta
+    Eigen::Vector4d delta = endP - startP;
+    double length = delta.norm() ;
+
+    return length;
+
+};
+
+
+
 double cpcr::AircraftTree::getFuselageLength(cpcr::UID fuselageUID) {
 
     // Check the input
+    checkUIDAndType(fuselageUID, "fuselage", "getFuselageLength");
     CPACSTreeItem* fuselage = getRoot()->getChildByUid(fuselageUID);
-    if( fuselage == nullptr){
-        throw CreatorException("getFuselageLength: fuselageUID: \""+ fuselageUID + "\" not found.");
-    }
-    if(fuselage->getType() != "fuselage"){
-        throw CreatorException("getFuselageLength: the given input UID: \"" + fuselageUID + "\" seems not to be a fuselage.");
-    }
 
-    // Get the noise and the end
+    // Get the noise and the end    // TODO: manage case where the graph can not be formated
     std::map<cpcr::CPACSTreeItem *, std::vector<cpcr::CPACSTreeItem *> > graph = getWingOrFuselageGraph(fuselage);
     std::vector<cpcr::CPACSTreeItem *> graphF = formatWingOrFuselageGraph(graph);
 
     cpcr::CPACSTreeItem * fuselageNoise = graphF.front();
     cpcr::CPACSTreeItem * fuselageTail = graphF.back();
 
-    // Get fuselage point in world coordinate
-    std::map<cpcr::UID, Eigen::Vector4d> centerPoints = getCenterPointsOfElementsInFuselage(fuselageUID);
-    Eigen::Vector4d fuselageNoiseP = centerPoints[fuselageNoise->getUid()];
-    Eigen::Vector4d fuselageTailP = centerPoints[fuselageTail->getUid()];
-
-    // Transform it in the fuselage coordinate system
-    CPACSTransformation fuselageT =  modifier.getTransformation(fuselage->getXPath().toString() + "/transformation");
-    Eigen::Matrix4d fuselageTMI = fuselageT.getTransformationAsMatrix().inverse();
-    fuselageNoiseP = fuselageTMI * fuselageNoiseP;
-    fuselageTailP = fuselageTMI * fuselageTailP;
-
-    // compute the delta
-    Eigen::Vector4d delta = fuselageTailP - fuselageNoiseP;
-    double length = delta.norm() ;
+    // call getPartialFuselageLength with noise and tail
+    double length = getFuselageLengthBetween(fuselageNoise->getUid(), fuselageTail->getUid());
 
     return length;
 }
 
 
 
-void cpcr::AircraftTree::setFuselageLength(cpcr::UID fuselageUID, double newLength){
+
+void cpcr::AircraftTree::setFuselageLengthBetween(cpcr::UID startElementUID, cpcr::UID endElementUID,
+                                                  double newPartialLength) {
+
+    checkUIDAndTypeAndParentType(startElementUID, "element", "fuselage", "setFuselageLengthBetween");
+    checkUIDAndTypeAndParentType(endElementUID, "element", "fuselage", "setFuselageLengthBetween");
+
+    CPACSTreeItem* startElement = getRoot()->getChildByUid(startElementUID);
+    CPACSTreeItem* endElement = getRoot()->getChildByUid(endElementUID);
+    CPACSTreeItem* fuselage = startElement->getParentOfType("fuselage");
+
+    std::map<cpcr::CPACSTreeItem *, std::vector<cpcr::CPACSTreeItem *> > graph = getWingOrFuselageGraph(fuselage);
+    std::vector<cpcr::CPACSTreeItem *> graphF = formatWingOrFuselageGraph(graph);
+
+
     /*
-     * This function follow basically these steps:
+     * Divide the elements in 3 categories:
+     * 1) Elements before start that need not to be modified
+     * 2) Elements between that need to create the partial length
+     * 3) Elements after end that need to be shifted has the last between element
+     */
+    std::vector<cpcr::CPACSTreeItem *> elementsBetween; // contain the start and the end
+    std::vector<cpcr::CPACSTreeItem *> elementsBefore;
+    std::vector<cpcr::CPACSTreeItem *> elementsAfter;
+
+    bool afterStart = false;
+    bool afterEnd = false;
+    for ( CPACSTreeItem* i : graphF){
+        if ( i == startElement){
+            afterStart = true;
+            elementsBetween.push_back(i);
+        }
+        else if ( i == endElement){
+            afterEnd = true;
+            elementsBetween.push_back(i);
+        }
+        else if (afterStart == true && afterEnd == false){
+            elementsBetween.push_back(i);
+        }
+        else if (afterStart == false && afterEnd == false){
+            elementsBefore.push_back(i);
+        }
+        else if (afterStart == true && afterEnd== true){
+            elementsAfter.push_back(i);
+        }
+    }
+
+    if(elementsBetween.size() < 2 ){
+        throw CreatorException("setFuselageLengthBetween: impossible to get the start and the end coorectly");
+    }
+
+
+    /*
+     * BETWEEN ELEMENT SCALING
      *
-     * 1) The noise and tail are retrieve from the graph
+     * This part follow basically these steps:
      *
-     * 2) Computation the affine transformation needed to perform the desired effect. The desired effect is of the form:
+     * 1) Computation of the affine transformations needed to perform the desired effect. The desired effect can be perform as:
      *         a) Transform point in coordinate system
-     *         b) Put the noise on the origin
-     *         c) Rotation to get the tail on the X axis
-     *         d) Perfom a scaling on X to obtain the desired value
-     *         e) inverse of c)
-     *         f) inverse of b)
-     *         g) inverse of a)
+     *         b) Put the start on the origin
+     *         c) Rotation to get the end on the X axis
+     *         d) Perfome a scaling on X to obtain the desired length value
+     *         e) inverse of of c) to put the fuselage in the right direction
+     *         f) inverse of b) to shift the fuselage to its origina place
+     *         g) inverse of a) to get the values in the world coordinate system
      *
-     * 3) Compute the origin of each element and delta between the origin and the center point.
+     * 2) Compute the origin of each element and delta between the origin and the center point.
      *    This is done to cover the case of profiles that are shifted (origin of element != center point)
      *
-     * 4) Compute the new center points and the new origin to get the wanted length
+     * 3) Compute the new center points and the new origin to get the wanted length
      *
-     * 5) Find the new Transformation that elements should have to have these new origins and save in the memory
+     * 4) Find the new Transformation that elements should have to have these new origins and save in the memory
      *
      *
      */
 
-    CPACSTreeItem* fuselage = getRoot()->getChildByUid(fuselageUID);
-    if( fuselage == nullptr){
-        throw CreatorException("setFuselageLength: fuselageUID: \""+ fuselageUID + "\" not found.");
-    }
-    if(fuselage->getType() != "fuselage"){
-        throw CreatorException("setFuselageLength: the given input UID: \"" + fuselageUID + "\" seems not to be a fuselage.");
-    }
 
-    bool debug = false; // if true print some information on the log
     std::map<cpcr::UID, Eigen::Vector4d> oldCenterPoints;
     std::map<cpcr::UID, Eigen::Vector4d> oldGlobalOrigin;
     std::map<cpcr::UID, Eigen::Vector4d> newCenterPoints;
     std::map<cpcr::UID, Eigen::Vector4d> newGlobalOrigin;
 
-    std::vector<cpcr::CPACSTreeItem *> graphF;
-    double oldLength = getFuselageLength(fuselageUID);
-
-    // Get the noise and the end
-    std::map<cpcr::CPACSTreeItem *, std::vector<cpcr::CPACSTreeItem *> > graph = getWingOrFuselageGraph(fuselage);
-    graphF = formatWingOrFuselageGraph(graph);
-
-    cpcr::CPACSTreeItem * fuselageNoise = graphF.front();
-    cpcr::CPACSTreeItem * fuselageTail = graphF.back();
-
     // Get fuselage point in world coordinate
-    oldCenterPoints = getCenterPointsOfElementsInFuselage(fuselageUID);
-    Eigen::Vector4d fuselageNoiseP = oldCenterPoints[fuselageNoise->getUid()];
-    Eigen::Vector4d fuselageTailP = oldCenterPoints[fuselageTail->getUid()];
+    oldCenterPoints = getCenterPointsOfElementsInFuselage(fuselage->getUid());
+    Eigen::Vector4d startP = oldCenterPoints[startElement->getUid()];
+    Eigen::Vector4d endP = oldCenterPoints[endElement->getUid()];
 
     // Transform it in the fuselage coordinate system
     CPACSTransformation fuselageT =  modifier.getTransformation(fuselage->getXPath().toString() + "/transformation");
     Eigen::Matrix4d fuselageTM = fuselageT.getTransformationAsMatrix();
     Eigen::Matrix4d fuselageTMI = fuselageTM.inverse();
-    fuselageNoiseP = fuselageTMI * fuselageNoiseP;
-    fuselageTailP = fuselageTMI * fuselageTailP;
+    startP = fuselageTMI * startP;
+    endP = fuselageTMI * endP;
 
-    // bring Noise to Origin
-    Eigen::Matrix4d noiseToO = CPACSTransformation(1,1,1,0,0,0, -fuselageNoiseP[0],-fuselageNoiseP[1],-fuselageNoiseP[2]).getTransformationAsMatrix();
-    fuselageNoiseP = noiseToO *fuselageNoiseP;
-    fuselageTailP = noiseToO *fuselageTailP;
+    // bring StartP to Origin
+    Eigen::Matrix4d startToO = CPACSTransformation(1,1,1,0,0,0, -startP[0],-startP[1],-startP[2]).getTransformationAsMatrix();
+    startP = startToO *startP;
+    endP = startToO *endP;
 
-    // bring Tail on the x axis
+    // bring endP on the x axis
     Eigen::Quaterniond q;
-    Eigen::Vector4d fuselageTailPOnX;
-    fuselageTailPOnX << fuselageTailP.norm(),0,0,1;
-    q.setFromTwoVectors(fuselageTailP.block<3,1>(0,0), fuselageTailPOnX.block<3,1>(0,0) );
-    Eigen::Matrix3d rotTailToX =  q.toRotationMatrix();
-    Eigen::Matrix4d rotTailToX4d =  Eigen::Matrix4d::Identity();
-    rotTailToX4d.block<3,3>(0,0) = rotTailToX;
+    Eigen::Vector4d endPOnXaxis;
+    endPOnXaxis << endP.norm(),0,0,1;
+    q.setFromTwoVectors(endP.block<3,1>(0,0), endPOnXaxis.block<3,1>(0,0) );
+    Eigen::Matrix3d rotEndPToX =  q.toRotationMatrix();
+    Eigen::Matrix4d rotEndToX4d =  Eigen::Matrix4d::Identity();
+    rotEndToX4d.block<3,3>(0,0) = rotEndPToX;
 
-    fuselageTailP = rotTailToX4d * fuselageTailP;
+    endP = rotEndToX4d * endP;
 
-
-    // at this point Noise should be on the origin and tail on the x axis
-    if(debug){
-        Eigen::Vector4d temp ;
-        bool tempB = false;
-        temp << 0,0,0,1;
-        tempB = fuselageNoiseP.isApprox(temp, 0.0001);
-        LOG(INFO)<< std::endl << "fuselageNoiseP: Ok? "<< tempB << std::endl << fuselageNoiseP << std::endl;
-
-        temp << oldLength,0,0,1;
-        tempB = fuselageTailP.isApprox(temp, 0.0001);
-        LOG(INFO)<< std::endl << "fuselageTailP: Ok? "<< tempB <<  std::endl << fuselageTailP << std::endl;
-    }
+    double oldPartialLength = getFuselageLengthBetween(startElement->getUid(), endElement->getUid());
 
     // Compute the needed scaling in x
-    if(oldLength == 0 ){
-        throw CreatorException("setFuselageLength: the old length is 0, impossible to scale the length");
+    if(oldPartialLength == 0 ){
+        throw CreatorException("setFuselageLengthBetween: the old length is 0, impossible to scale the length");
     }
-    double xScale = newLength / oldLength;
+
+    double xScale = newPartialLength / oldPartialLength;
     Eigen::Matrix4d scaleM = Eigen::Matrix4d::Identity();
     scaleM(0,0) = xScale;
 
-    Eigen::Matrix4d noiseToOI = noiseToO.inverse();
-    Eigen::Matrix4d  rotTailToXI = rotTailToX4d.inverse();
-
+    Eigen::Matrix4d startToOI = startToO.inverse();
+    Eigen::Matrix4d  rotEndToX4dI = rotEndToX4d.inverse();
 
 
     // Get the origin of each element
@@ -2524,71 +2561,75 @@ void cpcr::AircraftTree::setFuselageLength(cpcr::UID fuselageUID, double newLeng
         oldGlobalOrigin[element->getUid()] = getGlobalTransformMatrixOfElement(element->getUid()) * origin;
     }
 
-    // Compute the new center point and the new origin of each element
-    Eigen::Matrix4d totalTransformation = fuselageTM * noiseToOI * rotTailToXI * scaleM * rotTailToX4d * noiseToO * fuselageTMI ;
+    // Compute the new center point and the new origin of each element in Between
+    Eigen::Matrix4d totalTransformation = fuselageTM * startToOI * rotEndToX4dI * scaleM * rotEndToX4d * startToO * fuselageTMI ;
     Eigen::Vector4d tempDelatOtoP;
-    for( std::pair<cpcr::UID, Eigen::Vector4d> pair :oldCenterPoints){
-        newCenterPoints[pair.first] = totalTransformation * pair.second;
-        tempDelatOtoP = pair.second - oldGlobalOrigin[pair.first];
+    for( CPACSTreeItem* e :elementsBetween){
+        newCenterPoints[e->getUid()] = totalTransformation * oldCenterPoints[e->getUid()];
+        tempDelatOtoP = oldCenterPoints[e->getUid()] - oldGlobalOrigin[e->getUid()];
         // delta between origin and the center point will not change because no scaling or rotation will be changed
-        newGlobalOrigin[pair.first] =  newCenterPoints[pair.first] - tempDelatOtoP;
-    }
-
-    if(debug){
-        LOG(INFO) << "uid, oldCenterPoint, newCenterPoint, old delta, new delta " << std::endl;
-        for( std::pair<cpcr::UID, Eigen::Vector4d> pair :newCenterPoints){
-            LOG(INFO) << pair.first << ": "
-                    << std::endl << oldCenterPoints[pair.first]
-                    << std::endl << "---"
-                    << std::endl << pair.second
-                    << std::endl << "---"
-                    << std::endl << newCenterPoints[pair.first] - newGlobalOrigin[pair.first]
-                    << std::endl << "---"
-                    << std::endl << oldCenterPoints[pair.first] - oldGlobalOrigin[pair.first] << std::endl;
-        }
+        newGlobalOrigin[e->getUid()] =  newCenterPoints[e->getUid()] - tempDelatOtoP;
     }
 
 
     // Compute the new transformation element of each element to be placed at the wanted orgin
     cpcr::CPACSTransformation tempNewTransformationE;
-    for(CPACSTreeItem * element : graphF){
+    for(CPACSTreeItem * element : elementsBetween){
         tempNewTransformationE = getTransformToPlaceElementByTranslationAt(element->getUid(), newGlobalOrigin[element->getUid()] );
         modifier.setTransformation(element->getXPath().toString() + "/transformation", tempNewTransformationE);  // here we save the info in memory
     }
 
+
+    /*
+     * SHIFT THE END OF THE FUSELAGE
+    */
+
+    Eigen::Vector3d shiftEndElement =( newGlobalOrigin[endElement->getUid()] - oldGlobalOrigin[endElement->getUid()] ).block<3,1>(0,0);
+    std::vector<UID> elementsAfterUID;
+    for(CPACSTreeItem* e: elementsAfter){
+        elementsAfterUID.push_back(e->getUid());
+    }
+    shiftElements(elementsAfterUID, shiftEndElement);
+
+
     closeTiglHandle();
     openTiglHandle(m_root->getUid() );
-}
-
-
-
-
-
-void cpcr::AircraftTree::setFuselageLengthUsingElementBetween(cpcr::UID fuselageUID, double length, cpcr::UID startElementUID,
-                                                              cpcr::UID endElementUID) {
 
 
 
 
 }
+
+
+
+void cpcr::AircraftTree::setFuselageLength(cpcr::UID fuselageUID, double newLength){
+
+    checkUIDAndType(fuselageUID, "fuselage" , "setFuselageLength");
+
+    CPACSTreeItem* fuselage = getRoot()->getChildByUid(fuselageUID);
+
+
+    // Get noise and tail
+    std::map<cpcr::CPACSTreeItem *, std::vector<cpcr::CPACSTreeItem *> > graph = getWingOrFuselageGraph(fuselage);
+    std::vector<cpcr::CPACSTreeItem *> graphF = formatWingOrFuselageGraph(graph);
+    cpcr::CPACSTreeItem * fuselageNoise = graphF.front();
+    cpcr::CPACSTreeItem * fuselageTail = graphF.back();
+
+    setFuselageLengthBetween(fuselageNoise->getUid(), fuselageTail->getUid(), newLength);
+
+}
+
+
 
 void cpcr::AircraftTree::shiftElements(std::vector<cpcr::UID> elementToShift, Eigen::Vector3d shift) {
 
     std::vector<CPACSTreeItem*> elements;
-
-
     std::map <cpcr::CPACSTreeItem *, std::vector<std::pair<cpcr::CPACSTreeItem *, Eigen::Matrix4d>> > chains;
 
-    CPACSTreeItem* temp;
+
     for( UID uid : elementToShift){
-        temp = getRoot()->getChildByUid(uid);
-        if (temp == nullptr){
-            CreatorException("shiftElements: the element given as input with UID: " + uid + "seems not to exist in the aircraft");
-        }
-        if(temp->getType() != "element"){
-            CreatorException("shiftElements: the item given as input with UID: " + uid + "seems not to to be an element");
-        }
-        elements.push_back(temp);
+        checkUIDAndType(uid, "element", "shiftElements");
+        elements.push_back(getRoot()->getChildByUid(uid));
     }
 
     Eigen::Matrix4d shiftM = Eigen::Matrix4d::Identity();
@@ -2617,6 +2658,9 @@ void cpcr::AircraftTree::shiftElements(std::vector<cpcr::UID> elementToShift, Ei
     closeTiglHandle();
     openTiglHandle(m_root->getUid() );
 }
+
+
+
 
 
 

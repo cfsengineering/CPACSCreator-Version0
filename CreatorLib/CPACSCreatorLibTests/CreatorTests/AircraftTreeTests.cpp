@@ -2292,6 +2292,27 @@ TEST_F(AircraftTreeTest, setWingARKeepArea) {
 
 
 
+TEST_F(AircraftTreeTest, getFuselagePartialLength) {
+
+    setVariables("simple-aircraft-two-fuselages.cpacs.xml");
+
+    double r = tree.getFuselageLengthBetween("D150_Fuselage_1Section1IDElement1", "D150_Fuselage_1Section2IDElement1");
+    EXPECT_EQ(r, 1);
+
+    r = tree.getFuselageLengthBetween("D150_Fuselage_1Section2IDElement1", "D150_Fuselage_1Section3IDElement1");
+    EXPECT_EQ(r, 1);
+
+    r = tree.getFuselageLengthBetween("D150_Fuselage_4Section1IDElement1", "D150_Fuselage_4Section3IDElement1");
+    EXPECT_DOUBLE_EQ(r, 2);
+
+    // invalid input
+    EXPECT_THROW(
+            tree.getFuselageLengthBetween("D150_Fuselage_4Section1IDElement1", "D150_Fuselage_4Section3IDElement1fas"), CreatorException );
+
+
+}
+
+
 TEST_F(AircraftTreeTest, getFuselageLength) {
 
     setVariables("simple-aircraft-two-fuselages.cpacs.xml");
@@ -2327,6 +2348,33 @@ TEST_F(AircraftTreeTest, getFuselageLength) {
 
 
 
+TEST_F(AircraftTreeTest, setFuselageLengthBetween) {
+
+    setVariables("simple-aircraft-two-fuselages.cpacs.xml");
+
+    double newLength, r;
+    cpcr::UID fuselageUID;
+
+    newLength = 3;
+    tree.setFuselageLengthBetween("D150_Fuselage_1Section1IDElement1", "D150_Fuselage_1Section2IDElement1",  newLength);
+    r = tree.getFuselageLengthBetween("D150_Fuselage_1Section1IDElement1", "D150_Fuselage_1Section2IDElement1");
+    tree.writeToFile();
+    EXPECT_DOUBLE_EQ(r, newLength);
+
+
+    newLength = 5;
+    tree.setFuselageLengthBetween("D150_Fuselage_4Section2IDElement1", "D150_Fuselage_4Section3IDElement1" , newLength);
+    r = tree.getFuselageLengthBetween("D150_Fuselage_4Section2IDElement1", "D150_Fuselage_4Section3IDElement1");
+    tree.writeToFile();
+    EXPECT_LE(r, newLength + 0.00001);
+    EXPECT_GE(r, newLength - 0.00001);
+
+    // invalid input
+    EXPECT_THROW(tree.setFuselageLengthBetween("D150_Fuselage_4Section2IDElement1asdfsa", "D150_Fuselage_4Section3IDElement1" , newLength), CreatorException);
+
+}
+
+
 
 
 TEST_F(AircraftTreeTest, setFuselageLength) {
@@ -2348,8 +2396,6 @@ TEST_F(AircraftTreeTest, setFuselageLength) {
     r = tree.getFuselageLength(fuselageUID);
     EXPECT_DOUBLE_EQ(r, newLength);
 
-
-
 }
 
 
@@ -2363,6 +2409,7 @@ TEST_F(AircraftTreeTest, shiftElement) {
 
     Eigen::Vector3d shift ;
     Eigen::Matrix4d globalMAfter, globalMBefore, shiftM;
+
 
     elementToShift.push_back("D150_Fuselage_1Section1IDElement1");
     globalMBefore = tree.getGlobalTransformMatrixOfElement(elementToShift[0]);
@@ -2409,4 +2456,8 @@ TEST_F(AircraftTreeTest, shiftElement) {
     EXPECT_TRUE(globalMAfter.isApprox(shiftM * globalMBefore, 0.00001));
 
 
+    // invalid input
+    elementToShift.clear();
+    elementToShift.push_back("fdadfsas");
+    EXPECT_THROW(tree.shiftElements(elementToShift, shift), CreatorException) ;
 }

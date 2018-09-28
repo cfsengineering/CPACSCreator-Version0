@@ -166,6 +166,47 @@ namespace cpcr {
     }
 
 
+
+    void cpcr::CPACSTree::checkUID(cpcr::UID uid, std::string prefixErr) {
+
+        if(! isBuild()){
+            throw CreatorException(prefixErr + ":checkUID: the aircraft is not build yet!" );
+        }
+
+        CPACSTreeItem* e =getRoot()->getChildByUid(uid);
+        if( e == nullptr ){
+            throw CreatorException(prefixErr + ":checkUID: the UID: \"" + uid + "\" was not found" );
+        }
+        return;
+    }
+
+
+    void cpcr::CPACSTree::checkUIDAndType(cpcr::UID uid, std::string type, std::string prefixErr){
+
+        checkUID(uid, prefixErr);
+
+        CPACSTreeItem* e =getRoot()->getChildByUid(uid);
+        if( e->getType() != type){
+            throw  CreatorException(prefixErr + ":checkUIDAndType: the element with  UID: \"" + uid
+            + "\" is not of the wanted type: \"" + type + "\"." );
+        }
+        return;
+    }
+
+    void CPACSTree::checkUIDAndTypeAndParentType(UID uid, std::string elementType, std::string parentType,
+                                                 std::string prefixErr) {
+
+        checkUIDAndType(uid, elementType, prefixErr);
+
+
+        CPACSTreeItem* e =getRoot()->getChildByUid(uid);
+        if( ! (e->hasParentOfType(parentType)) ) {
+            throw CreatorException(prefixErr + ":checkUIDAndTypeAndParentType: the element with  UID: \"" + uid
+                   + "\" has not parent of type: \"" + parentType + "\"." );
+        }
+    }
+
+
 }   // end namespace cpcr
 
 

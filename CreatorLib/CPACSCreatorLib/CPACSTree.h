@@ -68,7 +68,45 @@ namespace  cpcr {
         inline CPACSFile* getModifier() {return &modifier;};
 
 
+
+        /**
+         * Check if the UID exist in the tree.
+         * If not throw an Exception with the optional prefix.
+         *
+         * @param uid
+         * @param prefixErr The first part of the error message
+         */
+        void checkUID(UID uid, std::string prefixErr = "");
+
+        /**
+         *
+         * Check if the UID exist in the tree and is of the given type.
+         * If not throw an Exception with the optional prefix.
+         *
+         * @param uid
+         * @param type
+         * @param prefixErr The first part of the error message
+         * @return
+         */
+        void checkUIDAndType(UID uid, std::string type, std::string prefixErr = "");
+
+        /**
+         * Check if the UID exist in the tree and is of the given type and has a parent of the given type.
+         * If not throw an Exception with the optional prefix.
+         *
+         * @param uid
+         * @param elementType
+         * @param parentType
+         * @param prefixErr The first part of the error message
+         * @return
+         */
+        void checkUIDAndTypeAndParentType(UID uid, std::string elementType, std::string parentType, std::string prefixErr = "");
+
+
+
+
     protected:
+
 
         void createChildrenRecursively(CPACSTreeItem& parent);
 
