@@ -2564,6 +2564,66 @@ void cpcr::AircraftTree::setFuselageLength(cpcr::UID fuselageUID, double newLeng
 
 
 
+void cpcr::AircraftTree::setFuselageLengthUsingElementBetween(cpcr::UID fuselageUID, double length, cpcr::UID startElementUID,
+                                                              cpcr::UID endElementUID) {
+
+
+
+
+}
+
+void cpcr::AircraftTree::shiftElements(std::vector<cpcr::UID> elementToShift, Eigen::Vector3d shift) {
+
+    std::vector<CPACSTreeItem*> elements;
+
+
+    std::map <cpcr::CPACSTreeItem *, std::vector<std::pair<cpcr::CPACSTreeItem *, Eigen::Matrix4d>> > chains;
+
+    CPACSTreeItem* temp;
+    for( UID uid : elementToShift){
+        temp = getRoot()->getChildByUid(uid);
+        if (temp == nullptr){
+            CreatorException("shiftElements: the element given as input with UID: " + uid + "seems not to exist in the aircraft");
+        }
+        if(temp->getType() != "element"){
+            CreatorException("shiftElements: the item given as input with UID: " + uid + "seems not to to be an element");
+        }
+        elements.push_back(temp);
+    }
+
+    Eigen::Matrix4d shiftM = Eigen::Matrix4d::Identity();
+    shiftM.block<3,1>(0,3) = shift;
+
+
+    std::vector<std::pair<cpcr::CPACSTreeItem *, Eigen::Matrix4d>> tempChain;
+    Eigen::Matrix4d newE;
+    CPACSTransformation tempT;
+    for( CPACSTreeItem* e : elements){
+
+        /*
+         * G' = T W P S E
+         * G' = W P S E'
+         * -> E' =  SI PI WI G'
+         * -> E' = SI PI WI T W P S E
+         */
+        tempChain = getTransformationChainForOneElement(e);
+        newE = tempChain[1].second.inverse() * tempChain[2].second.inverse() * tempChain[3].second.inverse()
+                * shiftM * tempChain[3].second * tempChain[2].second * tempChain[1].second * tempChain[0].second;
+        tempT = CPACSTransformation(newE);
+        modifier.setTransformation(e->getXPath().toString() + "/transformation", tempT);
+
+    }
+
+    closeTiglHandle();
+    openTiglHandle(m_root->getUid() );
+}
+
+
+
+
+
+
+
 
 
 

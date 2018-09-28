@@ -125,12 +125,28 @@ namespace cpcr{
          * Set the length of the fuselage.
          * The fuselage is stretched in the noise-tail direction.
          * The noise will stay at the same place.
-         * No additional scaling or rotation will be performed on the profile
+         * Every profiles will remain the same
          * @param fuselage
          * @param length
          */
         void setFuselageLength(UID fuselage, double length);
 
+
+        /**
+         *
+         * @param fuselage
+         * @param length
+         */
+        void setFuselageLengthUsingElementBetween(UID fuselage, double length, UID startElement, UID endElement);
+
+        /**
+         * Shift the the given element by the shift.
+         * The shift is expressed in world coordinate system.
+         *
+         * @param elementToShift
+         * @param shift
+         */
+        void shiftElements(std::vector<UID> elementToShift , Eigen::Vector3d shift);
 
 
         /*

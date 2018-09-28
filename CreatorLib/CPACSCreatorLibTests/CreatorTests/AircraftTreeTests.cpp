@@ -2351,3 +2351,62 @@ TEST_F(AircraftTreeTest, setFuselageLength) {
 
 
 }
+
+
+
+
+TEST_F(AircraftTreeTest, shiftElement) {
+
+    setVariables("simple-aircraft-two-fuselages.cpacs.xml");
+
+    std::vector<UID> elementToShift;
+
+    Eigen::Vector3d shift ;
+    Eigen::Matrix4d globalMAfter, globalMBefore, shiftM;
+
+    elementToShift.push_back("D150_Fuselage_1Section1IDElement1");
+    globalMBefore = tree.getGlobalTransformMatrixOfElement(elementToShift[0]);
+    shift << -2, 3.3, 0.8;
+    shiftM = Eigen::Matrix4d::Identity();
+    shiftM.block<3,1>(0,3) = shift;
+    tree.shiftElements(elementToShift, shift);
+    tree.writeToFile();
+    globalMAfter  = tree.getGlobalTransformMatrixOfElement(elementToShift[0]);
+    EXPECT_TRUE(globalMAfter.isApprox(shiftM * globalMBefore, 0.00001));
+
+
+    globalMBefore = tree.getGlobalTransformMatrixOfElement(elementToShift[0]);
+    shift = - shift;
+    shiftM = Eigen::Matrix4d::Identity();
+    shiftM.block<3,1>(0,3) = shift;
+    tree.shiftElements(elementToShift, shift);
+    tree.writeToFile();
+    globalMAfter  = tree.getGlobalTransformMatrixOfElement(elementToShift[0]);
+    EXPECT_TRUE(globalMAfter.isApprox(shiftM * globalMBefore, 0.00001));
+
+    elementToShift.clear();
+
+    elementToShift.push_back("D150_Fuselage_4Section1IDElement1");
+    elementToShift.push_back( "D150_Fuselage_4Section2IDElement1");
+    elementToShift.push_back("D150_Fuselage_4Section3IDElement1");
+    shift << -3,2,1.2;
+    shiftM = Eigen::Matrix4d::Identity();
+    shiftM.block<3,1>(0,3) = shift;
+    globalMBefore = tree.getGlobalTransformMatrixOfElement(elementToShift[1]);
+    tree.shiftElements(elementToShift, shift);
+    tree.writeToFile();
+    globalMAfter  = tree.getGlobalTransformMatrixOfElement(elementToShift[1]);
+    EXPECT_TRUE(globalMAfter.isApprox(shiftM * globalMBefore, 0.00001));
+
+
+    shift = -shift;
+    shiftM = Eigen::Matrix4d::Identity();
+    shiftM.block<3,1>(0,3) = shift;
+    globalMBefore = tree.getGlobalTransformMatrixOfElement(elementToShift[1]);
+    tree.shiftElements(elementToShift, shift);
+    tree.writeToFile();
+    globalMAfter  = tree.getGlobalTransformMatrixOfElement(elementToShift[1]);
+    EXPECT_TRUE(globalMAfter.isApprox(shiftM * globalMBefore, 0.00001));
+
+
+}
