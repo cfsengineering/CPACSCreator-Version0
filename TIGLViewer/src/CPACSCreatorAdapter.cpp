@@ -27,6 +27,8 @@
 
 #include "TIGLViewerException.h"
 
+#include "CPACSCreatorLib/CreatorException.h"
+
 
 CPACSCreatorAdapter::CPACSCreatorAdapter(ProfilesDBManager *profilesDBManager) {
     profilesDB = profilesDBManager;
@@ -488,3 +490,57 @@ void CPACSCreatorAdapter::setFuselageLength(cpcr::CPACSTreeItem *item, double ne
 }
 
 
+QStringList CPACSCreatorAdapter::getFuselageElementUIDs(cpcr::CPACSTreeItem * item){
+
+    QStringList uids;
+    if( ! testItem(item, "fuselage")){
+        return uids;
+    }
+    std::vector<cpcr::CPACSTreeItem *> elements ;
+
+    try {
+        elements =  aircraftTree.formatWingOrFuselageGraph( aircraftTree.getWingOrFuselageGraph(item) );
+
+    }catch (const CreatorException & e){
+        LOG(WARNING) << "Error catch in getFuselageElementUIDs: " << e.what() << std::endl;
+        uids.clear();
+        return uids;
+    }
+
+    for( cpcr::CPACSTreeItem* e: elements){
+        uids.push_back(e->getUid().c_str());
+    }
+
+    return uids;
+}
+
+
+
+double CPACSCreatorAdapter::getFuselageLengthBetween(QString Uid1, QString Uid2) {
+
+    double l = -1;
+    try {
+        l = aircraftTree.getFuselageLengthBetween(Uid1.toStdString(), Uid2.toStdString());
+    }catch (const CreatorException& e){
+        LOG(WARNING) << "Error catch in getFuselageLengthBetween: " << e.what() << std::endl;
+        return  -1;
+    }
+
+    return l;
+
+
+}
+
+void CPACSCreatorAdapter::setFuselageLengthBetween(QString Uid1, QString Uid2, double newLength) {
+
+    try {
+        aircraftTree.setFuselageLengthBetween(Uid1.toStdString(), Uid2.toStdString(), newLength);
+
+    }catch (const CreatorException& e){
+        LOG(WARNING) << "Error catch in setFuselageLengthBetween: " << e.what() << std::endl;
+        return;
+    }
+
+
+
+}

@@ -104,6 +104,14 @@ public:
 
     void setFuselageLength(cpcr::CPACSTreeItem * item, double newLength);
 
+    // Get all the uid of the elements from the fuselage in the fuselage order
+    QStringList getFuselageElementUIDs(cpcr::CPACSTreeItem * item);
+
+    double getFuselageLengthBetween(QString UID1, QString UID2);
+
+    void setFuselageLengthBetween(QString Uid1, QString Uid2, double newLength);
+
+
     cpcr::CPACSTreeItem * getRoot()const;
     void resetCpacsConfig(const TIGLViewerDocument& config);
     bool isValid();

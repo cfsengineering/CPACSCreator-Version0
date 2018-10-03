@@ -2292,7 +2292,7 @@ TEST_F(AircraftTreeTest, setWingARKeepArea) {
 
 
 
-TEST_F(AircraftTreeTest, getFuselagePartialLength) {
+TEST_F(AircraftTreeTest, getFuselageLengthBetween) {
 
     setVariables("simple-aircraft-two-fuselages.cpacs.xml");
 
@@ -2301,6 +2301,11 @@ TEST_F(AircraftTreeTest, getFuselagePartialLength) {
 
     r = tree.getFuselageLengthBetween("D150_Fuselage_1Section2IDElement1", "D150_Fuselage_1Section3IDElement1");
     EXPECT_EQ(r, 1);
+
+
+    r = tree.getFuselageLengthBetween( "D150_Fuselage_1Section3IDElement1", "D150_Fuselage_1Section2IDElement1");
+    EXPECT_EQ(r, 1);
+
 
     r = tree.getFuselageLengthBetween("D150_Fuselage_4Section1IDElement1", "D150_Fuselage_4Section3IDElement1");
     EXPECT_DOUBLE_EQ(r, 2);
@@ -2352,25 +2357,40 @@ TEST_F(AircraftTreeTest, setFuselageLengthBetween) {
 
     setVariables("simple-aircraft-two-fuselages.cpacs.xml");
 
-    double newLength, r;
+    double newPartialL, oldPartialL,  globalL, oldGlobalL, r;
     cpcr::UID fuselageUID;
 
-    newLength = 3;
-    tree.setFuselageLengthBetween("D150_Fuselage_1Section1IDElement1", "D150_Fuselage_1Section2IDElement1",  newLength);
+    newPartialL = 3;
+    tree.setFuselageLengthBetween("D150_Fuselage_1Section1IDElement1", "D150_Fuselage_1Section2IDElement1",  newPartialL);
     r = tree.getFuselageLengthBetween("D150_Fuselage_1Section1IDElement1", "D150_Fuselage_1Section2IDElement1");
     tree.writeToFile();
-    EXPECT_DOUBLE_EQ(r, newLength);
+    EXPECT_DOUBLE_EQ(r, newPartialL);
 
 
-    newLength = 5;
-    tree.setFuselageLengthBetween("D150_Fuselage_4Section2IDElement1", "D150_Fuselage_4Section3IDElement1" , newLength);
+    newPartialL = 5;
+    tree.setFuselageLengthBetween("D150_Fuselage_4Section2IDElement1", "D150_Fuselage_4Section3IDElement1" , newPartialL);
     r = tree.getFuselageLengthBetween("D150_Fuselage_4Section2IDElement1", "D150_Fuselage_4Section3IDElement1");
     tree.writeToFile();
-    EXPECT_LE(r, newLength + 0.00001);
-    EXPECT_GE(r, newLength - 0.00001);
+    EXPECT_LE(r, newPartialL + 0.00001);
+    EXPECT_GE(r, newPartialL - 0.00001);
+
+
+    oldGlobalL =  tree.getFuselageLength("SimpleFuselage4");
+    oldPartialL = tree.getFuselageLengthBetween("D150_Fuselage_4Section3IDElement1", "D150_Fuselage_4Section1IDElement1");
+    newPartialL = 1;
+    tree.setFuselageLengthBetween("D150_Fuselage_4Section3IDElement1", "D150_Fuselage_4Section1IDElement1" , newPartialL);
+    r = tree.getFuselageLengthBetween("D150_Fuselage_4Section3IDElement1", "D150_Fuselage_4Section1IDElement1");
+    globalL =  tree.getFuselageLength("SimpleFuselage4");
+    tree.writeToFile();
+    EXPECT_LE(r, newPartialL + 0.00001);
+    EXPECT_GE(r, newPartialL - 0.00001);
+    EXPECT_DOUBLE_EQ(globalL, oldGlobalL-oldPartialL+newPartialL );
+
+
 
     // invalid input
-    EXPECT_THROW(tree.setFuselageLengthBetween("D150_Fuselage_4Section2IDElement1asdfsa", "D150_Fuselage_4Section3IDElement1" , newLength), CreatorException);
+    EXPECT_THROW(tree.setFuselageLengthBetween("D150_Fuselage_4Section2IDElement1asdfsa", "D150_Fuselage_4Section3IDElement1" , newPartialL), CreatorException);
+    EXPECT_THROW(tree.setFuselageLengthBetween("D150_Fuselage_4Section3IDElement1", "D150_Fuselage_4Section3IDElement1" , newPartialL), CreatorException);
 
 }
 

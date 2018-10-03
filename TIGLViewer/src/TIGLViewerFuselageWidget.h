@@ -8,11 +8,20 @@
 #include "ModificatorWidget.h"
 #include "CPACSCreatorLib/CPACSTreeItem.h"
 #include <QDoubleSpinBox>
+#include <QPushButton>
+#include <QComboBox>
 
 class TIGLViewerFuselageWidget : public ModificatorWidget {
 
 Q_OBJECT
 
+public slots:
+
+    void expendLengthDetails(bool checked);
+
+    void setPartialLengthFromComboBoxes();
+    // If a new partial length is set it will recompute the the global length
+    void recomputeTotalLength(double newPartialLength);
 
 public:
     TIGLViewerFuselageWidget(QWidget * parent = 0);
@@ -29,8 +38,17 @@ private:
 
     cpcr::CPACSTreeItem * fuselageItem;
 
+    // Length parameters
     QDoubleSpinBox* spinBoxLength;
+    QPushButton*  btnExpendLengthDetails;
+    QWidget* widgetLengthDetails;
+    QComboBox* comboBoxLengthE1;
+    QComboBox* comboBoxLengthE2;
+    QDoubleSpinBox* spinBoxPartialLength;
+
+    // Internal length parameters
     double internalLength;
+    double internalPartialLength;
 
 
 

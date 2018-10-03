@@ -2433,6 +2433,7 @@ double cpcr::AircraftTree::getFuselageLength(cpcr::UID fuselageUID) {
 void cpcr::AircraftTree::setFuselageLengthBetween(cpcr::UID startElementUID, cpcr::UID endElementUID,
                                                   double newPartialLength) {
 
+
     checkUIDAndTypeAndParentType(startElementUID, "element", "fuselage", "setFuselageLengthBetween");
     checkUIDAndTypeAndParentType(endElementUID, "element", "fuselage", "setFuselageLengthBetween");
 
@@ -2445,6 +2446,35 @@ void cpcr::AircraftTree::setFuselageLengthBetween(cpcr::UID startElementUID, cpc
 
 
     /*
+     * Check inputs
+     */
+    int idxStart = -1;
+    int idxEnd = -1;
+    for( int i = 0; i < graphF.size(); i++){
+        if ( graphF[i] == startElement){
+           idxStart = i;
+        }
+        if ( graphF[i] == endElement ){
+            idxEnd = i;
+        }
+    }
+
+    if( idxStart < 0 || idxEnd < 0 ){
+        throw CreatorException("setFuselageLengthBetween: startElement or endElement not found");
+    }
+    else if (idxEnd == idxStart){
+        throw CreatorException("setFuselageLengthBetween: startElement and endElement should be different");
+    }
+    else if ( idxEnd < idxStart) {
+        LOG(WARNING) << "setFuselageLengthBetween: endElement seems to be before startElement, we switch between the two elements to apply this function";
+        CPACSTreeItem* temp = startElement;
+        startElement = endElement;
+        endElement = temp;
+    }
+
+
+
+    /*
      * Divide the elements in 3 categories:
      * 1) Elements before start that need not to be modified
      * 2) Elements between that need to create the partial length
@@ -2453,6 +2483,7 @@ void cpcr::AircraftTree::setFuselageLengthBetween(cpcr::UID startElementUID, cpc
     std::vector<cpcr::CPACSTreeItem *> elementsBetween; // contain the start and the end
     std::vector<cpcr::CPACSTreeItem *> elementsBefore;
     std::vector<cpcr::CPACSTreeItem *> elementsAfter;
+
 
     bool afterStart = false;
     bool afterEnd = false;
@@ -2477,7 +2508,7 @@ void cpcr::AircraftTree::setFuselageLengthBetween(cpcr::UID startElementUID, cpc
     }
 
     if(elementsBetween.size() < 2 ){
-        throw CreatorException("setFuselageLengthBetween: impossible to get the start and the end coorectly");
+        throw CreatorException("setFuselageLengthBetween: impossible to get the start and the end correctly");
     }
 
 
