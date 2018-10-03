@@ -194,11 +194,13 @@ namespace cpcr {
         return getChild(UniqueXPath(xpathString), warnings);
     }
 
-    CPACSTreeItem *CPACSTreeItem::getParentOfType(std::string type) {
+    CPACSTreeItem *CPACSTreeItem::getParentOfType(std::string type, bool withoutWarning ) {
 
         CPACSTreeItem * parent = this->getParent();
         if( parent == nullptr) {
-            LOG(WARNING) << "The parent of the required type \"" << type << " \" was not found.";
+            if( ! withoutWarning){
+                LOG(WARNING) << "The parent of the required type \"" << type << " \" was not found.";
+            }
             return nullptr;
         }
         if( parent->getType() == type ){
@@ -206,11 +208,11 @@ namespace cpcr {
         }
 
         // else recursive call
-        return parent->getParentOfType(type);
+        return parent->getParentOfType(type, withoutWarning);
     }
 
     bool CPACSTreeItem::hasParentOfType(std::string type) {
-        if (getParentOfType(type) != nullptr){
+        if (getParentOfType(type, true) != nullptr){
             return true;
         }
         return false;

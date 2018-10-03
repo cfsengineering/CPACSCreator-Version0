@@ -3,14 +3,14 @@
   <header>
     <name>CST_BWB_Research</name>
     <description>BWB geometry described by CST, Copyright DLR</description>
-    <aircraftTree>Pier Davide Ciampa, Thomas Zill</aircraftTree>
+    <creator>Pier Davide Ciampa, Thomas Zill</creator>
     <timestamp>2014-11-03T12:00:00</timestamp>
     <version>0.2</version>
     <cpacsVersion>3.0</cpacsVersion>
     <updates>
       <update>
         <modification>Converted to cpacs 3.0 using cpacs2to3 - does not include structure update</modification>
-        <aircraftTree>cpacs2to3</aircraftTree>
+        <creator>cpacs2to3</creator>
         <timestamp>2018-01-15T09:29:51</timestamp>
         <version>0.2r1</version>
         <cpacsVersion>3.0</cpacsVersion>

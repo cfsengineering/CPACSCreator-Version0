@@ -66,7 +66,7 @@ namespace cpcr {
         CPACSTreeItem * getChildByUid(std::string uid);
 
         bool hasParentOfType(std::string type);
-        CPACSTreeItem * getParentOfType(std::string type);
+        CPACSTreeItem * getParentOfType(std::string type, bool withoutWarning = false);
 
         
         std::vector<CPACSTreeItem *> findAllChildrenOfTypeRecursively(std::string type);

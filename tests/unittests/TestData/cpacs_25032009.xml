@@ -3,19 +3,19 @@
 	<header>
 		<name>Dataset with VFW-614 - ATTAS data</name>
 		<description>This dataset contains an example of the new CPACS XML structure</description>
-		<aircraftTree>Martin Hepperle, DLR-AS</aircraftTree>
+		<creator>Martin Hepperle, DLR-AS</creator>
 		<timestamp>2005-10-01T09:30:47</timestamp>
 		<version>1</version>
 		<updates>
 			<update>
 				<modification>Added horizontal tailplane</modification>
-				<aircraftTree>Martin Hepperle, DLR-AS</aircraftTree>
+				<creator>Martin Hepperle, DLR-AS</creator>
 				<timestamp>2005-11-15T18:00:00</timestamp>
 				<version>1.1</version>
 			</update>
 			<update>
 				<modification>Revised to CPACS V2</modification>
-				<aircraftTree>Carsten Liersch, DLR-AS</aircraftTree>
+				<creator>Carsten Liersch, DLR-AS</creator>
 				<timestamp>2009-01-28T10:05:00</timestamp>
 				<version>1.2</version>
 			</update>

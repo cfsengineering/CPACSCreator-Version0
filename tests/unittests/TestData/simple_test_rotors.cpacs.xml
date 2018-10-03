@@ -3,14 +3,14 @@
   <header>
     <name>SimpleTestRotors</name>
     <description>Dataset containing simple rotors for TIGL tests</description>
-    <aircraftTree>Philipp Kunze, DLR-AS</aircraftTree>
+    <creator>Philipp Kunze, DLR-AS</creator>
     <timestamp>2014-04-23T12:00:00</timestamp>
     <version>1.1</version>
     <cpacsVersion>3.0</cpacsVersion>
     <updates>
       <update>
         <modification>Converted to cpacs 3.0 using cpacs2to3 - does not include structure update</modification>
-        <aircraftTree>cpacs2to3</aircraftTree>
+        <creator>cpacs2to3</creator>
         <timestamp>2018-01-15T09:22:23</timestamp>
         <version>1.1</version>
         <cpacsVersion>3.0</cpacsVersion>

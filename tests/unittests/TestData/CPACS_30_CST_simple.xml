@@ -3,14 +3,14 @@
   <header xsi:type="headerType">
     <name>CPACS 2.1 simplest CST curve</name>
     <description>Wing Segment with CST Airfoils</description>
-    <aircraftTree>Tobias Stollenwerk, DLR, SC-VSS</aircraftTree>
+    <creator>Tobias Stollenwerk, DLR, SC-VSS</creator>
     <timestamp>2013-12-19T12:51:00</timestamp>
     <version>0.2</version>
     <cpacsVersion>3.0</cpacsVersion>
     <updates>
       <update>
         <modification>Converted to cpacs 3.0 using cpacs2to3 - does not include structure update</modification>
-        <aircraftTree>cpacs2to3</aircraftTree>
+        <creator>cpacs2to3</creator>
         <timestamp>2018-01-15T09:02:09</timestamp>
         <version>0.2</version>
         <cpacsVersion>3.0</cpacsVersion>

@@ -207,7 +207,7 @@ void CTiglExportVtk::writeVTKHeader(TixiDocumentHandle& handle)
     std::stringstream stream;
     stream << "tigl " << tiglGetVersion();
     tixiCreateElement(handle, "/VTKFile","MetaData");
-    tixiAddTextAttribute(handle, "/VTKFile/MetaData", "aircraftTree", stream.str().c_str());
+    tixiAddTextAttribute(handle, "/VTKFile/MetaData", "creator", stream.str().c_str());
     
     tixiCreateElement(handle, "/VTKFile", "PolyData");
 }
