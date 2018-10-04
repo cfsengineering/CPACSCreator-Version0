@@ -2720,6 +2720,73 @@ void cpcr::AircraftTree::shiftElements(std::vector<cpcr::UID> elementToShift, Ei
 
 
 
+double cpcr::AircraftTree::getFuselageMaximalDiameter(cpcr::UID fuselageUID) {
+
+    return 0;
+}
+
+std::map<cpcr::UID, double> cpcr::AircraftTree::getCircumferenceOfElementsInFuselage(cpcr::UID fuselageUID) {
+    std::map<cpcr::UID, double> circumferences;
+
+    // check inputs
+    checkUIDAndType(fuselageUID, "fuselage", "getCircumferenceOfElementsInFuselage" );
+
+    // get all segment Items
+    CPACSTreeItem* fuselageItem = m_root->getChildByUid(fuselageUID);
+    std::vector<CPACSTreeItem *> segmentItems = fuselageItem->findAllChildrenOfTypeRecursively("segment");
+
+
+    // prepare loop
+    CPACSTreeItem * tempFromItem;
+    CPACSTreeItem * tempToItem;
+
+    std::string tempFromUid;
+    std::string tempToUid;
+
+    double fromCircumference;
+    double toCircumference;
+
+    TiglReturnCode returnTigl;
+
+    // Loop over all segment and call tigl to get the chord point
+    for(auto s : segmentItems){
+
+        // get reference element
+        tempFromItem = s->getChild("fromElementUID");
+        tempToItem = s->getChild("toElementUID");
+
+        // retrive uid values
+        tempFromUid = modifier.retrieve<std::string>(tempFromItem->getXPath(), "", true);
+        tempToUid = modifier.retrieve<std::string>(tempToItem->getXPath(), "", true);
+
+        // get chord points
+        returnTigl =  tiglFuselageGetCircumference(*tiglHandle, fuselageItem->getTixiIndex(), s->getTixiIndex(), 0, &fromCircumference );
+        if ( returnTigl != TIGL_SUCCESS ){
+            DLOG(ERROR) << "SOMETHING GO WORNG WITH TIGL";
+        }
+        returnTigl =    tiglFuselageGetCircumference(*tiglHandle, fuselageItem->getTixiIndex(), s->getTixiIndex(), 1, &toCircumference );
+        if ( returnTigl != TIGL_SUCCESS ){
+            DLOG(ERROR) << "SOMETHING GO WORNG WITH TIGL";
+        }
+
+        // Insert in the map. If the element already exist is overwritten, otherwise is created.
+        // Remark that the element have the same position whatever in witch segment the element is used
+        circumferences[tempFromUid] = fromCircumference;
+        circumferences[tempToUid] = toCircumference;
+    }
+
+
+    return circumferences;
+
+
+
+
+}
+
+
+
+
+
 
 
 

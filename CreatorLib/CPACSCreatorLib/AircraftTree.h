@@ -168,6 +168,11 @@ namespace cpcr{
         void shiftElements(std::vector<UID> elementToShift , Eigen::Vector3d shift);
 
 
+
+        double getFuselageMaximalDiameter(UID fuselageUID);
+
+
+
         /*
          * WING FUNCTIONS
          */
@@ -467,10 +472,21 @@ namespace cpcr{
         /**
          * Retrieve form TIGL the center position of every element in a fuselage
          * @param fuselageUID
-         * @param ChordPercent (0: Leading edge, 1: trailing edge)
          * @return
          */
         std::map< UID, Eigen::Vector4d> getCenterPointsOfElementsInFuselage(UID fuselageUID);
+
+
+        /***
+         * Retrieve from TIGL (tiglFuselageGetCircumference) the circumference create by each elements in fuselage
+         * If a uid is not in the map, this means that is not connect by any segments
+         * @param fuselageUID
+         * @return
+         *
+         */
+        std::map< UID, double> getCircumferenceOfElementsInFuselage(UID fuselageUID);
+
+
 
 
 

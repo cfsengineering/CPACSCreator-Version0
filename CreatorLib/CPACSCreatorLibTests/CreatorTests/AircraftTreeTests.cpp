@@ -2374,7 +2374,7 @@ TEST_F(AircraftTreeTest, setWingARKeepArea) {
 
 TEST_F(AircraftTreeTest, getFuselageLengthBetween) {
 
-    setVariables("simple-aircraft-two-fuselages.cpacs.xml");
+    setVariables("simple-aircraft-fuselages.xml");
 
     double r = tree.getFuselageLengthBetween("D150_Fuselage_1Section1IDElement1", "D150_Fuselage_1Section2IDElement1");
     EXPECT_EQ(r, 1);
@@ -2400,7 +2400,7 @@ TEST_F(AircraftTreeTest, getFuselageLengthBetween) {
 
 TEST_F(AircraftTreeTest, getFuselageLength) {
 
-    setVariables("simple-aircraft-two-fuselages.cpacs.xml");
+    setVariables("simple-aircraft-fuselages.xml");
 
     double r = tree.getFuselageLength("SimpleFuselage");
     EXPECT_EQ(r, 2);
@@ -2435,7 +2435,7 @@ TEST_F(AircraftTreeTest, getFuselageLength) {
 
 TEST_F(AircraftTreeTest, setFuselageLengthBetween) {
 
-    setVariables("simple-aircraft-two-fuselages.cpacs.xml");
+    setVariables("simple-aircraft-fuselages.xml");
 
     double newPartialL, oldPartialL,  globalL, oldGlobalL, r;
     cpcr::UID fuselageUID;
@@ -2479,7 +2479,7 @@ TEST_F(AircraftTreeTest, setFuselageLengthBetween) {
 
 TEST_F(AircraftTreeTest, setFuselageLength) {
 
-    setVariables("simple-aircraft-two-fuselages.cpacs.xml");
+    setVariables("simple-aircraft-fuselages.xml");
 
     double newLength, r;
     cpcr::UID fuselageUID;
@@ -2503,7 +2503,7 @@ TEST_F(AircraftTreeTest, setFuselageLength) {
 
 TEST_F(AircraftTreeTest, shiftElement) {
 
-    setVariables("simple-aircraft-two-fuselages.cpacs.xml");
+    setVariables("simple-aircraft-fuselages.xml");
 
     std::vector<UID> elementToShift;
 
@@ -2560,4 +2560,24 @@ TEST_F(AircraftTreeTest, shiftElement) {
     elementToShift.clear();
     elementToShift.push_back("fdadfsas");
     EXPECT_THROW(tree.shiftElements(elementToShift, shift), CreatorException) ;
+}
+
+
+
+
+TEST_F(AircraftTreeTest, getCircumferenceOfElementsInFuselage) {
+
+    setVariables("simple-aircraft-fuselages.xml");
+
+    std::map<cpcr::UID, double> circumferences;
+    UID fuselageUID;
+
+    fuselageUID= "SimpleFuselageCircumference";
+    circumferences = tree.getCircumferenceOfElementsInFuselage(fuselageUID);
+
+    EXPECT_EQ(circumferences.size(), 3);
+    EXPECT_TRUE( IsApprox(circumferences["D150_Fuselage_CSection1IDElement1"], 2 * M_PI, 0.5 ) ); // the interpolation can gives significant difference from the perfect circle
+    EXPECT_TRUE( IsApprox(circumferences["D150_Fuselage_CSection2IDElement1"], 19, 1 ) );
+    EXPECT_TRUE( IsApprox(circumferences["D150_Fuselage_CSection3IDElement1"], 3.23, 1 ) );
+
 }
