@@ -168,8 +168,36 @@ namespace cpcr{
         void shiftElements(std::vector<UID> elementToShift , Eigen::Vector3d shift);
 
 
+        /**
+         * Retrieve form TIGL the center position of every element in a fuselage
+         * @param fuselageUID
+         * @return
+         */
+        std::map< UID, Eigen::Vector4d> getCenterPointsOfElementsInFuselage(UID fuselageUID);
 
-        double getFuselageMaximalDiameter(UID fuselageUID);
+
+        /***
+         * Retrieve from TIGL (tiglFuselageGetCircumference) the circumference create by each elements in fuselage.
+         * If a uid is not in the map, this means that is not connect by any segments.
+         * @remark The circumference is given in Worl coordinate system
+         * @param fuselageUID
+         * @return
+         *
+         */
+        std::map< UID, double> getCircumferenceOfElementsInFuselage(UID fuselageUID);
+
+        /**
+         * Return the maximal circumference of the fuselage in world coordinate system.
+         *
+         * @param fuselageUID
+         * @return
+         */
+        double getFuselageMaximalCircumference(UID fuselageUID);
+
+
+        void scaleFuselageCircumferences(UID fuselageUID, double scaleFactor);
+
+        void setFuselageMaximalCircumference(UID fuselageUID, double maximalCircumference);
 
 
 
@@ -469,22 +497,7 @@ namespace cpcr{
 
 
 
-        /**
-         * Retrieve form TIGL the center position of every element in a fuselage
-         * @param fuselageUID
-         * @return
-         */
-        std::map< UID, Eigen::Vector4d> getCenterPointsOfElementsInFuselage(UID fuselageUID);
 
-
-        /***
-         * Retrieve from TIGL (tiglFuselageGetCircumference) the circumference create by each elements in fuselage
-         * If a uid is not in the map, this means that is not connect by any segments
-         * @param fuselageUID
-         * @return
-         *
-         */
-        std::map< UID, double> getCircumferenceOfElementsInFuselage(UID fuselageUID);
 
 
 

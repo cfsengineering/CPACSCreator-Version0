@@ -2581,3 +2581,88 @@ TEST_F(AircraftTreeTest, getCircumferenceOfElementsInFuselage) {
     EXPECT_TRUE( IsApprox(circumferences["D150_Fuselage_CSection3IDElement1"], 3.23, 1 ) );
 
 }
+
+
+TEST_F(AircraftTreeTest, getFuselageMaximalCircumference) {
+
+    setVariables("simple-aircraft-fuselages.xml");
+
+    double circumference;
+    UID fuselageUID;
+
+    fuselageUID= "SimpleFuselageCircumference";
+    circumference = tree.getFuselageMaximalCircumference(fuselageUID);
+    EXPECT_TRUE( IsApprox(circumference, 19 , 1 ) ); // the interpolation can gives significant difference from the perfect circle
+
+
+}
+
+
+
+
+
+TEST_F(AircraftTreeTest, scaleFuselageCircumferences) {
+
+
+
+    setVariables("simple-aircraft-fuselages.xml");
+
+
+    std::map<cpcr::UID, double> circumferencesBefore,  circumferencesAfter ;
+    UID fuselageUID;
+    double scale;
+
+    fuselageUID= "SimpleFuselage";
+    circumferencesBefore = tree.getCircumferenceOfElementsInFuselage(fuselageUID);
+    scale = 3.3;
+    tree.scaleFuselageCircumferences(fuselageUID, scale);
+    circumferencesAfter = tree.getCircumferenceOfElementsInFuselage(fuselageUID);
+    tree.writeToFile();
+    for(std::pair<UID, double> p : circumferencesBefore){
+        EXPECT_DOUBLE_EQ(circumferencesAfter[p.first], p.second * scale );
+    }
+
+
+    fuselageUID= "FuselageUnconventionalOrdering";
+    circumferencesBefore = tree.getCircumferenceOfElementsInFuselage(fuselageUID);
+    scale = 0.3;
+    tree.scaleFuselageCircumferences(fuselageUID, scale);
+    circumferencesAfter = tree.getCircumferenceOfElementsInFuselage(fuselageUID);
+    tree.writeToFile();
+    for(std::pair<UID, double> p : circumferencesBefore){
+        EXPECT_DOUBLE_EQ(circumferencesAfter[p.first], p.second * scale );
+    }
+
+
+    fuselageUID= "SimpleFuselageCircumference";
+    circumferencesBefore = tree.getCircumferenceOfElementsInFuselage(fuselageUID);
+    scale = 0.6;
+    tree.scaleFuselageCircumferences(fuselageUID, scale);
+    circumferencesAfter = tree.getCircumferenceOfElementsInFuselage(fuselageUID);
+    tree.writeToFile();
+    for(std::pair<UID, double> p : circumferencesBefore){
+        EXPECT_DOUBLE_EQ(circumferencesAfter[p.first], p.second * scale );
+    }
+
+
+    fuselageUID= "SimpleFuselage3";
+    circumferencesBefore = tree.getCircumferenceOfElementsInFuselage(fuselageUID);
+    scale = 3;
+    tree.scaleFuselageCircumferences(fuselageUID, scale);
+    circumferencesAfter = tree.getCircumferenceOfElementsInFuselage(fuselageUID);
+    tree.writeToFile();
+    for(std::pair<UID, double> p : circumferencesBefore){
+        EXPECT_DOUBLE_EQ(circumferencesAfter[p.first], p.second * scale );
+    }
+
+    fuselageUID= "SimpleFuselage4";
+    circumferencesBefore = tree.getCircumferenceOfElementsInFuselage(fuselageUID);
+    scale = 44;
+    tree.scaleFuselageCircumferences(fuselageUID, scale);
+    circumferencesAfter = tree.getCircumferenceOfElementsInFuselage(fuselageUID);
+    tree.writeToFile();
+    for(std::pair<UID, double> p : circumferencesBefore){
+        EXPECT_DOUBLE_EQ(circumferencesAfter[p.first], p.second * scale );
+    }
+
+}

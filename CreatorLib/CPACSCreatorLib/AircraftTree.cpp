@@ -2718,13 +2718,6 @@ void cpcr::AircraftTree::shiftElements(std::vector<cpcr::UID> elementToShift, Ei
 
 
 
-
-
-double cpcr::AircraftTree::getFuselageMaximalDiameter(cpcr::UID fuselageUID) {
-
-    return 0;
-}
-
 std::map<cpcr::UID, double> cpcr::AircraftTree::getCircumferenceOfElementsInFuselage(cpcr::UID fuselageUID) {
     std::map<cpcr::UID, double> circumferences;
 
@@ -2775,11 +2768,67 @@ std::map<cpcr::UID, double> cpcr::AircraftTree::getCircumferenceOfElementsInFuse
         circumferences[tempToUid] = toCircumference;
     }
 
-
     return circumferences;
+}
 
 
 
+double cpcr::AircraftTree::getFuselageMaximalCircumference(cpcr::UID fuselageUID) {
+
+    checkUIDAndType(fuselageUID, "fuselage", "getFuselageMaximalCircumference");
+    std::map<cpcr::UID, double> circumferences = getCircumferenceOfElementsInFuselage(fuselageUID);
+
+
+    UID maxUID = "";
+    double maxCircumference = std::numeric_limits<double>::min();
+
+    for( std::pair<cpcr::UID, double> p: circumferences){
+        if(p.second > maxCircumference){
+            maxUID = p.first;
+            maxCircumference = p.second;
+        }
+    }
+
+    return maxCircumference;
+}
+
+
+
+void cpcr::AircraftTree::scaleFuselageCircumferences(cpcr::UID fuselageUID, double scaleFactor) {
+
+    checkUIDAndType(fuselageUID, "fuselage", "scaleFuselageCircumferences");
+
+    CPACSTreeItem * fuselage = getRoot()->getChildByUid(fuselageUID);
+    Eigen::Matrix4d centerToOriginM, centerToOriginMI, scaleM, newGlobalM;
+
+    scaleM = Eigen::Matrix4d::Identity();
+    scaleM = scaleFactor * scaleM;
+    scaleM(3,3) = 1 ;  // augmented part
+
+
+    std::map<cpcr::UID, Eigen::Vector4d> centers = getCenterPointsOfElementsInFuselage(fuselageUID);
+    CPACSTreeItem* element;
+    std::vector<std::pair<CPACSTreeItem*,Eigen::Matrix4d>> chain;
+    for (std::pair<UID,Eigen::Vector4d> p : centers){
+         element = fuselage->getChildByUid(p.first);
+         chain = getTransformationChainForOneElement(element);
+         centerToOriginM = Eigen::Matrix4d::Identity();
+         centerToOriginM.block<4,1>(0,3) = - chain[3].second.inverse() * p.second; // the center is world coordinate sys
+         centerToOriginMI = centerToOriginM.inverse();
+         /*
+          *  The idea is to bring the element to its center and scale it in fuselage coordinate system.
+          *  So we get:
+          *  FPSE' =  F*Ti*S*T*PSE
+          *
+          */
+         newGlobalM = chain[3].second * centerToOriginMI * scaleM * centerToOriginM * chain[2].second * chain[1].second * chain[0].second;
+         placeElementMinimalChanges(element, newGlobalM);
+
+    }
+
+
+    closeTiglHandle(); // is necessary!
+    openTiglHandle(m_root->getUid() );
 
 }
 
