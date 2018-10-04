@@ -1461,6 +1461,10 @@ TEST_F(AircraftTreeTest, airfoilWingNormalization ){
 
 TEST_F(AircraftTreeTest, setWingTransformation ) {
 
+
+
+
+
     setVariables("TestCases/d150.xml");
     std::string wingUID = "D150_VAMP_wing_W1";
 
@@ -1532,6 +1536,34 @@ TEST_F(AircraftTreeTest, setWingTransformation ) {
         EXPECT_TRUE( tEsA[u].isApprox(tEsB[u], 0.0001) ) ;
     }
 
+    // optimal aircraft
+
+    setVariables("TestCases/Optimale17.xml");
+    wingUID = "Wing";
+
+
+    UIDs = tree.getAllElementUIDsUsedInAWing(wingUID);
+    lEsB = tree.getChordPointsOfElementsInWing(wingUID, 0);
+    tEsB = tree.getChordPointsOfElementsInWing(wingUID, 1);
+
+
+    dT = tree.determineWingTransformation(wingUID);
+    EXPECT_TRUE(dT.getRotation() == Point(0,0,0));
+    EXPECT_TRUE(dT.getScaling() == Point(1,1,1));
+   // EXPECT_TRUE(dT.getTranslation() == Point(29.837965090800001, -0.0020029219731199999, 1.89101464137));
+
+
+    tree.setWingTransformation(wingUID, dT);
+    tree.writeToFile();
+
+    lEsA = tree.getChordPointsOfElementsInWing(wingUID, 0);
+    tEsA = tree.getChordPointsOfElementsInWing(wingUID, 1);
+
+    for(UID u: UIDs )
+    {
+        EXPECT_TRUE(lEsA[u].isApprox( lEsB[u], 0.0001) );
+        EXPECT_TRUE( tEsA[u].isApprox(tEsB[u], 0.0001) ) ;
+    }
 
 
     // Blended wing
@@ -1640,6 +1672,19 @@ TEST_F(AircraftTreeTest, positioningsStandardization  ) {
 
     EXPECT_TRUE(tree.checkIfPositioningsAreStandardizedForWing(wingUID));
 
+    // Optimal aircraft case
+    setVariables("TestCases/Optimale17.xml");
+    wingUID = "Wing";
+
+    backupChordPointsOfWing(wingUID);
+
+    EXPECT_FALSE(tree.checkIfPositioningsAreStandardizedForWing(wingUID));
+    tree.positioningsStandardizationForWing(wingUID);
+    tree.writeToFile();
+
+    EXPECT_TRUE(tree.checkIfPositioningsAreStandardizedForWing(wingUID));
+    checkCurrentChordPointsWithBackup(wingUID);
+
 }
 
 
@@ -1718,6 +1763,21 @@ TEST_F(AircraftTreeTest, completeNormalization  ) {
     tree.completeStandardizationForWing(wingUID);
     EXPECT_TRUE(tree.isWingStandardized(wingUID));
     checkCurrentChordPointsWithBackup(wingUID);
+
+
+
+    // TEST CASE: Optimale17
+
+    wingUID = "Wing";
+    setVariables("TestCases/Optimale17.xml");
+
+    backupChordPointsOfWing(wingUID);
+    EXPECT_FALSE(tree.isWingStandardized(wingUID));
+    tree.completeStandardizationForWing(wingUID);
+    tree.writeToFile();
+    EXPECT_TRUE(tree.isWingStandardized(wingUID));
+    checkCurrentChordPointsWithBackup(wingUID);
+
 
 //
 //   // TODO manage case with trailing edge define with two points

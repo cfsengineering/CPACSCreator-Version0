@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1141</width>
-    <height>1041</height>
+    <height>1091</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -951,7 +951,7 @@
              <double>0.000000000000000</double>
             </property>
             <property name="maximum">
-             <double>1000000.000000000000000</double>
+             <double>99999999999999998278261272554585856747747644714015897553975120217811154108416.000000000000000</double>
             </property>
            </widget>
           </item>
@@ -1001,7 +1001,7 @@
                 <number>3</number>
                </property>
                <property name="maximum">
-                <double>1000000.000000000000000</double>
+                <double>99999999999999998278261272554585856747747644714015897553975120217811154108416.000000000000000</double>
                </property>
               </widget>
              </item>
@@ -1030,7 +1030,7 @@
                 <number>3</number>
                </property>
                <property name="maximum">
-                <double>1000000.000000000000000</double>
+                <double>99999999999999998278261272554585856747747644714015897553975120217811154108416.000000000000000</double>
                </property>
               </widget>
              </item>
@@ -1056,7 +1056,7 @@
                 <number>3</number>
                </property>
                <property name="maximum">
-                <double>1000000.000000000000000</double>
+                <double>99999999999999998278261272554585856747747644714015897553975120217811154108416.000000000000000</double>
                </property>
               </widget>
              </item>
@@ -1133,7 +1133,7 @@
              <number>3</number>
             </property>
             <property name="maximum">
-             <double>1000000.000000000000000</double>
+             <double>99999999999999998278261272554585856747747644714015897553975120217811154108416.000000000000000</double>
             </property>
            </widget>
           </item>
@@ -1207,7 +1207,10 @@
              <number>3</number>
             </property>
             <property name="minimum">
-             <double>-1000000.000000000000000</double>
+             <double>0.010000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>1000000000000000013287555072.000000000000000</double>
             </property>
            </widget>
           </item>
@@ -1880,7 +1883,7 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>772</width>
+             <width>1012</width>
              <height>198</height>
             </rect>
            </property>
