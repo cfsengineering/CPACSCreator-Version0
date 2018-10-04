@@ -1937,14 +1937,34 @@ TEST_F(AircraftTreeTest, setWingAreaKeepLeadingEdges) {
     tree.setWingAreaKeepLeadingEdges(wing, scaleA * areaBefore);
     tree.writeToFile();
     areaAfter = tree.getWingPlanformArea("Wing", XY_PLANE);
-    EXPECT_EQ( areaBefore * scaleA, areaAfter);
+    EXPECT_TRUE( IsApprox(areaBefore * scaleA, areaAfter) );
 
     scaleA = 1.7;
     wing = tree.getRoot()->getChildByUid("Wing");
     tree.setWingAreaKeepLeadingEdges(wing, scaleA * areaBefore);
     tree.writeToFile();
     areaAfter = tree.getWingPlanformArea("Wing", XY_PLANE);
-    EXPECT_EQ( areaBefore * scaleA, areaAfter);
+    EXPECT_TRUE( IsApprox(areaBefore * scaleA, areaAfter));
+
+
+    setVariables("TestCases/blendedWingBody.xml");
+    areaBefore = tree.getWingPlanformArea("BWB450_wingID", XY_PLANE);
+    scaleA = 0.5;
+    wing = tree.getRoot()->getChildByUid("BWB450_wingID");
+    tree.setWingAreaKeepLeadingEdges(wing, scaleA * areaBefore);
+    tree.writeToFile();
+    areaAfter = tree.getWingPlanformArea("BWB450_wingID", XY_PLANE);
+    EXPECT_TRUE( IsApprox(areaBefore * scaleA, areaAfter ));
+
+
+    setVariables("wing-simple-roty30.xml");
+    areaBefore = tree.getWingPlanformArea("Wing", XY_PLANE);
+    scaleA = 0.5;
+    wing = tree.getRoot()->getChildByUid("Wing");
+    tree.setWingAreaKeepLeadingEdges(wing, scaleA * areaBefore);
+    tree.writeToFile();
+    areaAfter = tree.getWingPlanformArea("Wing", XY_PLANE);
+    EXPECT_TRUE( IsApprox( areaBefore * scaleA, areaAfter));
 
 
     setVariables("wing-simple-two-sections.xml");

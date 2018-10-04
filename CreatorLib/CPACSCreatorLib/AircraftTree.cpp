@@ -2250,12 +2250,13 @@ void cpcr::AircraftTree::setWingAreaKeepLeadingEdges(cpcr::CPACSTreeItem *wing, 
     CPACSTransformation tempNewTransformationE ;
 
 
-    Eigen::Vector3d lE, tE, newTE, newDelta;
+    Eigen::Vector3d lEInWing, tEInWing;
     double deltaX, deltaY, deltaZ, newDeltaX, newDeltaY, newDeltaZ, normXY, newNormXY,  ratio; // ratio between xy and  z
-    Eigen::Matrix4d globalM, globalMI, allExpectE, allExpectEI;
+    Eigen::Matrix4d globalM, globalMI, allExpectE, allExpectEI, translateLEToO, translateLEToOI, scale, newGlobalM, newGlobalMI;
     UniqueXPath tempXPath;
     UID uid;
     std::vector<std::pair<cpcr::CPACSTreeItem *, Eigen::Matrix4d>> chain;
+
 
     // For each element find out the good transformation for element to do the shearing
     for (CPACSTreeItem*  e :graph ) {
@@ -2265,33 +2266,58 @@ void cpcr::AircraftTree::setWingAreaKeepLeadingEdges(cpcr::CPACSTreeItem *wing, 
         allExpectEI = allExpectE.inverse();
 
         // compute the new TE base ont the scale factor
-        lE = ( wingTMI *lEsMap[uid]).block(0,0,3,1);
-        tE = ( wingTMI *tEsMap[uid]).block(0,0,3,1);
-        deltaX = tE(0) -lE(0);
-        deltaY = tE(1) -lE(1);
-        deltaZ = tE(2) -lE(2);
-        normXY = sqrt( pow(deltaX,2) +  pow(deltaY,2) );
-        ratio = deltaZ / normXY ;
-        newDeltaX = f * deltaX;
-        newDeltaY = f * deltaY;
-        newNormXY = sqrt( pow(newDeltaX,2) +  pow(newDeltaY,2) );
-        newDeltaZ = ratio * newNormXY;
-        newDelta << newDeltaX,newDeltaY,newDeltaZ;
-        newTE = lE + newDelta;  // in wing coor
-        newTEA << newTE(0), newTE(1), newTE(2), 1;
-        newTEA = wingTM * newTEA;
+//        lEInWing = ( wingTMI *lEsMap[uid]).block(0,0,3,1);
+//        tE = ( wingTMI *tEsMap[uid]).block(0,0,3,1);
+//        deltaX = tE(0) -lEInWing(0);
+//        deltaY = tE(1) -lEInWing(1);
+//        deltaZ = tE(2) -lEInWing(2);
+//        normXY = sqrt( pow(deltaX,2) +  pow(deltaY,2) );
+//        ratio = deltaZ / normXY ;
+//        newDeltaX = f * deltaX;
+//        newDeltaY = f * deltaY;
+//        newNormXY = sqrt( pow(newDeltaX,2) +  pow(newDeltaY,2) );
+//        newDeltaZ = ratio * newNormXY;
+//        newDelta << newDeltaX,newDeltaY,newDeltaZ;
+//        newTE = lEInWing + newDelta;  // in wing coor
+//        newTEA << newTE(0), newTE(1), newTE(2), 1;
+//        newTEA = wingTM * newTEA;
+
+
+        lEInWing = (wingTMI *lEsMap[uid]).block(0,0,3,1);
+        tEInWing = (wingTMI *tEsMap[uid]).block(0,0,3,1);
+
+
+        // move LE to wing Origin
+        translateLEToO = Eigen::Matrix4d::Identity();
+        translateLEToO(0,3) = - lEInWing(0);
+        translateLEToO(1,3) = - lEInWing(1);
+        translateLEToO(2,3) = - lEInWing(2);
+
+        translateLEToOI = translateLEToO.inverse();
+
+        // scale operation
+        scale = Eigen::Matrix4d::Identity();
+        scale = f * scale;
+        scale(3,3) = 1;
+
+        newGlobalM = Eigen::Matrix4d::Identity();
+        newGlobalM = chain[3].second *  translateLEToOI * scale * translateLEToO * chain[2].second * chain[1].second * chain[0].second;
+        newGlobalMI = newGlobalM.inverse();
 
         globalM = getGlobalTransformMatrixOfElement(e->getUid());
         globalMI = globalM.inverse();
 
+        // Get the reference points of the airfoil
         sensor1 = globalMI * lEsMap[uid]; // give the point in the airfoil sys
         sensor2 = globalMI * tEsMap[uid];
-        sensorN << 0,1,0,1 ; // sensor 1 and sensor 2 should be on the XZ-plane, because they are airfoil // todo test?
+        sensorN << 0,1,0,1 ; // sensor 1 and sensor 2 should be on the XZ-plane, because they are airfoil
         sensor3.block<3,1>(0,0) = sensor1.block<3,1>(0,0) +  (sensorN.block<3,1>(0,0)).cross((sensor2-sensor1).block<3,1>(0,0)); // create a vector perpendicular at s1 s2 on the XZ-plane
         sensor3(3) = 1;  // set the augmented component;
-        sensor1P = allExpectEI * lEsMap[uid]; // Leading edge dos not change
-        sensor2P = allExpectEI * newTEA;
-        sensor3P =  sensor3;
+
+        // Where we want to bring the reference points
+        sensor1P = allExpectEI* newGlobalM * sensor1;  // Leading edge dos not change
+        sensor2P = allExpectEI* newGlobalM * sensor2;
+        sensor3P = allExpectEI * newGlobalM * sensor3;
 
         tempNewTransformationE = TransformChord(sensor1, sensor2, sensor3, sensor1P, sensor2P, sensor3P);
         tempXPath = UniqueXPath(e->getXPath());
