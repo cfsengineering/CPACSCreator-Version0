@@ -2833,6 +2833,27 @@ void cpcr::AircraftTree::scaleFuselageCircumferences(cpcr::UID fuselageUID, doub
 }
 
 
+void  cpcr::AircraftTree::setFuselageMaximalCircumference(cpcr::UID fuselageUID, double newMaximalCircumference){
+
+    checkUIDAndType(fuselageUID, "fuselage", "setFuselageMaximalCircumference");
+
+    if ( newMaximalCircumference < 0){
+        throw CreatorException("setFuselageMaximalCircumference: the newMaximalCricumference should be bigger than 0");
+    } else if ( IsApprox(newMaximalCircumference,0) ){
+        LOG(WARNING) <<  "setFuselageMaximalCircumference: The newMaximalCircumference is realy close to 0, this can lead to unexpected behavior.";
+    }
+
+    double oldMaximalCircumference = getFuselageMaximalCircumference(fuselageUID);
+
+    double  s = newMaximalCircumference/oldMaximalCircumference;
+
+    scaleFuselageCircumferences(fuselageUID, s);
+
+
+
+}
+
+
 
 
 

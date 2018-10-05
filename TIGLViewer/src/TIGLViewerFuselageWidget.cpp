@@ -20,6 +20,8 @@ void TIGLViewerFuselageWidget::init(ModificatorManager * associate ) {
     comboBoxLengthE2 = this->findChild<QComboBox*>("comboBoxE2");
     spinBoxPartialLength = this->findChild<QDoubleSpinBox*>("spinBoxPartialLength");
 
+    spinBoxCircumference = this->findChild<QDoubleSpinBox*>("spinBoxCircumference");
+    spinBoxRadius = this->findChild<QDoubleSpinBox*>("spinBoxRadius");
 
     widgetLengthDetails->hide();
 
@@ -28,6 +30,11 @@ void TIGLViewerFuselageWidget::init(ModificatorManager * associate ) {
     connect(comboBoxLengthE1,SIGNAL(currentIndexChanged(int )), this, SLOT(setPartialLengthFromComboBoxes()));
     connect(comboBoxLengthE2,SIGNAL(currentIndexChanged(int )), this, SLOT(setPartialLengthFromComboBoxes()));
     connect(spinBoxPartialLength, SIGNAL(valueChanged(double)), this, SLOT(recomputeTotalLength(double)));
+
+    // connect spinBoxRadius with spinBoxCircumference
+    connect(spinBoxRadius, SIGNAL(valueChanged(double)), this, SLOT(setCircumferenceFromRadius(double)));
+    connect(spinBoxCircumference, SIGNAL(valueChanged(double)), this, SLOT(setRadiusFromCircumference(double)));
+
 
 
 }
@@ -74,6 +81,21 @@ void TIGLViewerFuselageWidget::recomputeTotalLength(double newPartialLength){
 
 
 
+void TIGLViewerFuselageWidget::setCircumferenceFromRadius(double newRadius) {
+    bool block = spinBoxCircumference->blockSignals(true); // to avoid infinite loop with setRadiusFromCircumference
+    spinBoxCircumference->setValue(2.0* M_PI * newRadius);
+    spinBoxCircumference->blockSignals(block);
+
+}
+
+
+void TIGLViewerFuselageWidget::setRadiusFromCircumference(double newCircumference) {
+    bool block = spinBoxRadius->blockSignals(true); // to avoid infinite loop with setCircumferenceFromRadius
+    spinBoxRadius->setValue( newCircumference/ ( M_PI * 2.0));
+    spinBoxRadius->blockSignals(block);
+
+}
+
 
 void TIGLViewerFuselageWidget::setFuselage(cpcr::CPACSTreeItem *fuselageItem) {
     this->fuselageItem = fuselageItem;
@@ -89,13 +111,19 @@ void TIGLViewerFuselageWidget::setFuselage(cpcr::CPACSTreeItem *fuselageItem) {
     // do total length after partial length, because changing partial can change total
     internalLength = associateManager->adapter->getFuselageLength(fuselageItem);
     spinBoxLength->setValue(internalLength);
-    widgetLengthDetails->setVisible(false); 
+    widgetLengthDetails->setVisible(false);
+
+    // circumference
+    internalCircumference = associateManager->adapter->getFuselageMaximalCircumference(this->fuselageItem);
+    spinBoxCircumference->setValue(internalCircumference);
+
 }
 
 void TIGLViewerFuselageWidget::apply() {
    bool lengthHasChanged = ( (! isApprox(internalLength, spinBoxLength->value()) ) );
    bool partialLengthHasChanged = ( ! isApprox(internalPartialLength, spinBoxPartialLength->value() ) );
    bool isPartialCase = widgetLengthDetails->isVisible(); // if expend length details is shown, the details modifications prime on the main mofif
+   bool circumferenceHasChanged = ( (! isApprox(internalCircumference, spinBoxCircumference->value())) );
 
    if(lengthHasChanged && (!isPartialCase)){
        internalLength = spinBoxLength->value();
@@ -108,7 +136,12 @@ void TIGLViewerFuselageWidget::apply() {
         associateManager->adapter->setFuselageLengthBetween(uid1, uid2, internalPartialLength);
    }
 
-   if(lengthHasChanged || partialLengthHasChanged ){
+   if( circumferenceHasChanged){
+       internalCircumference = spinBoxCircumference->value();
+       associateManager->adapter->setFuselageMaximalCircumference(fuselageItem, internalCircumference);
+   }
+
+   if(lengthHasChanged || partialLengthHasChanged || circumferenceHasChanged ){
        associateManager->adapter->writeToFile();
    }
 
@@ -122,3 +155,4 @@ void TIGLViewerFuselageWidget::reset() {
         LOG(WARNING) << "TIGLViewerWingWidget: reset call but wing is not set!";
     }
 }
+

@@ -111,6 +111,10 @@ public:
 
     void setFuselageLengthBetween(QString Uid1, QString Uid2, double newLength);
 
+    double getFuselageMaximalCircumference(cpcr::CPACSTreeItem* item);
+
+    void setFuselageMaximalCircumference(cpcr::CPACSTreeItem* item, double newCircumference);
+
 
     cpcr::CPACSTreeItem * getRoot()const;
     void resetCpacsConfig(const TIGLViewerDocument& config);

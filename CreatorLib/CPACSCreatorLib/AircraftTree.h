@@ -195,9 +195,26 @@ namespace cpcr{
         double getFuselageMaximalCircumference(UID fuselageUID);
 
 
+        /***
+         * Scale the fuselage width by the scale factor in fuselage coordinate system
+         * The Circumferences of each wires will scale, but the positions and the orientation of each wire will remain
+         * the same.
+         *
+         * @param fuselageUID
+         * @param scaleFactor
+         */
         void scaleFuselageCircumferences(UID fuselageUID, double scaleFactor);
 
-        void setFuselageMaximalCircumference(UID fuselageUID, double maximalCircumference);
+
+        /***
+         * Scale the fuselage wires such that the maximal circumference would be "newMaximalCircumference".
+         * Each wire would by scaled by the same scale factor.
+         * The positions and the orientation of each wires will remain the same.
+         *
+         * @param fuselageUID
+         * @param scaleFactor
+         */
+        void setFuselageMaximalCircumference(UID fuselageUID, double newMaximalCircumference);
 
 
 

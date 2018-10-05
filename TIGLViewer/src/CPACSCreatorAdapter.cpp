@@ -544,3 +544,24 @@ void CPACSCreatorAdapter::setFuselageLengthBetween(QString Uid1, QString Uid2, d
 
 
 }
+
+double CPACSCreatorAdapter::getFuselageMaximalCircumference(cpcr::CPACSTreeItem *item) {
+    if( ! testItem(item, "fuselage")){
+        return -1;
+    }
+
+    return aircraftTree.getFuselageMaximalCircumference(item->getUid());
+}
+
+void CPACSCreatorAdapter::setFuselageMaximalCircumference(cpcr::CPACSTreeItem *item, double newCircumference) {
+    if( ! testItem(item, "fuselage")){
+        return ;
+    }
+
+    try {
+        aircraftTree.setFuselageMaximalCircumference(item->getUid(), newCircumference);
+    }catch (const CreatorException& e){
+        LOG(WARNING) << "Error catch in setFuselageMaximalCircumference: " << e.what() << std::endl;
+    }
+
+}

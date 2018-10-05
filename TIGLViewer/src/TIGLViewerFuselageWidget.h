@@ -23,6 +23,9 @@ public slots:
     // If a new partial length is set it will recompute the the global length
     void recomputeTotalLength(double newPartialLength);
 
+    void setCircumferenceFromRadius(double newRadius);
+    void setRadiusFromCircumference(double newCircumference);
+
 public:
     TIGLViewerFuselageWidget(QWidget * parent = 0);
     // Initialize the linked objects
@@ -49,6 +52,15 @@ private:
     // Internal length parameters
     double internalLength;
     double internalPartialLength;
+
+
+    // Circumference parameters:
+    QDoubleSpinBox* spinBoxCircumference;
+    QDoubleSpinBox* spinBoxRadius;
+
+    // Internal circumference parameters:
+    double internalCircumference;
+
 
 
 

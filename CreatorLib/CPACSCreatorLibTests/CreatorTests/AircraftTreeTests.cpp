@@ -2666,3 +2666,38 @@ TEST_F(AircraftTreeTest, scaleFuselageCircumferences) {
     }
 
 }
+
+
+
+
+
+TEST_F(AircraftTreeTest, setFuselageMaximalCircumference) {
+
+    setVariables("simple-aircraft-fuselages.xml");
+    UID fuselageUID;
+    double newMaxC, maxCBefore, maxCAfter ;
+
+    fuselageUID = "SimpleFuselageCircumference";
+    newMaxC = 5;
+    maxCBefore = tree.getFuselageMaximalCircumference(fuselageUID);
+    tree.setFuselageMaximalCircumference(fuselageUID, newMaxC);
+    maxCAfter = tree.getFuselageMaximalCircumference(fuselageUID);
+    tree.writeToFile();
+    EXPECT_TRUE(IsApprox(maxCAfter, newMaxC));
+
+
+    fuselageUID = "SimpleFuselage4";
+    newMaxC = 5;
+    maxCBefore = tree.getFuselageMaximalCircumference(fuselageUID);
+    tree.setFuselageMaximalCircumference(fuselageUID, newMaxC);
+    maxCAfter = tree.getFuselageMaximalCircumference(fuselageUID);
+    tree.writeToFile();
+    EXPECT_TRUE(IsApprox(maxCAfter, newMaxC) );
+
+
+    EXPECT_THROW(tree.setFuselageMaximalCircumference(fuselageUID, -3), CreatorException);
+    EXPECT_THROW(tree.setFuselageMaximalCircumference("fdsa", 3), CreatorException);
+    tree.setFuselageMaximalCircumference(fuselageUID, 0); // is accpeted with warning
+    tree.writeToFile();
+
+}
