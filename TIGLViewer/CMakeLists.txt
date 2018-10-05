@@ -117,7 +117,9 @@ set(tv_src
     ProfilesDBManager.cpp
     TIGLViewerPositioningsWidget.cpp
     TIGLViewerFuselageWidget.cpp
-)
+    UndoHelper.cpp
+
+        )
 	
 # normal header files
 set(tv_hdr
@@ -135,6 +137,7 @@ set(tv_hdr
     TIGLViewerScopedCommand.h
     TIGLQAspectWindow.h
     TIGLViewerException.h
+    UndoHelper.h
 
 
         )

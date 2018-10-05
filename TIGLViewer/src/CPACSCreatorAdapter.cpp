@@ -231,12 +231,6 @@ void CPACSCreatorAdapter::setAllAirfoilsInWing(cpcr::CPACSTreeItem *item, QStrin
 
 }
 
-void CPACSCreatorAdapter::writeToFile() {
-    if(isValid()){
-        aircraftTree.writeToFile();
-    }
-
-}
 
 
 std::list<std::pair<cpcr::CPACSTreeItem*, cpcr::CPACSPositioning >>  CPACSCreatorAdapter::getPositionings(cpcr::CPACSTreeItem * item) {
@@ -564,4 +558,19 @@ void CPACSCreatorAdapter::setFuselageMaximalCircumference(cpcr::CPACSTreeItem *i
         LOG(WARNING) << "Error catch in setFuselageMaximalCircumference: " << e.what() << std::endl;
     }
 
+}
+
+
+
+void CPACSCreatorAdapter::writeToFile() {
+    if(isValid()){
+        aircraftTree.writeToFile();
+    }
+
+}
+
+void CPACSCreatorAdapter::setSavingFile(QString savingFile) {
+    if(isValid()){
+        aircraftTree.writeToFile(savingFile.toStdString());
+    }
 }

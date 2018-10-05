@@ -56,8 +56,10 @@ void ModificatorManager::reset() {
 }
 
 
-void ModificatorManager::applyCurrentModifications(){
+void ModificatorManager::applyCurrentModifications(QString savingFile){
+
     if(currentModificator != nullptr) {
+        adapter->setSavingFile(savingFile); // set the file that will be used in apply function
         currentModificator->apply();
     }
 }

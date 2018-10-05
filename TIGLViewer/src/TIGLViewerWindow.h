@@ -42,6 +42,7 @@
 #include "CPACSCreatorAdapter.h"
 #include "ModificatorManager.h"
 #include "ProfilesDBManager.h"
+#include "UndoHelper.h"
 
 
 class QAction;
@@ -111,7 +112,9 @@ private slots:
     void drawPoint();
     void drawVector();
     void updateCreatorInterface();
-    void applyModifications();
+    void applyModifications(); // preparation for undo is done here
+    void undoCommit();
+    void redoCommit();
 
 private:
     void connectSignals();
@@ -142,7 +145,7 @@ private:
     ProfilesDBManager* profilesDB;
 
 
-    QString currentFile;
+    UndoHelper undoHelper;  // manage the file names for undo function
     QString controlFileName;
     QFileSystemWatcher *watcher;
     class QDebugStream * stdoutStream, * errorStream;

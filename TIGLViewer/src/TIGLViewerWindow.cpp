@@ -137,6 +137,8 @@ TIGLViewerWindow::TIGLViewerWindow()
     statusBar()->showMessage(tr("A context menu is available by right-clicking"));
 
     setMinimumSize(160, 160);
+
+
 }
 
 TIGLViewerWindow::~TIGLViewerWindow()
@@ -280,13 +282,21 @@ void TIGLViewerWindow::openFile(const QString& fileName)
     Q_UNUSED(command);
     statusBar()->showMessage(tr("Invoked File|Open"));
 
+
+    fileInfo.setFile(fileName);
+    fileType = fileInfo.suffix();
+    undoHelper.set(fileInfo.absoluteFilePath()); // check if the file is allready registred, if yes do nothing, otherwise initialize the undoHelper
+
+
+
     if (!fileName.isEmpty()) {
-        fileInfo.setFile(fileName);
-        fileType = fileInfo.suffix();
-        
+
+
         if (fileType.toLower() == tr("xml")) {
+
+
             TIGLViewerDocument* config = new TIGLViewerDocument(this);
-            TiglReturnCode tiglRet = config->openCpacsConfiguration(fileInfo.absoluteFilePath());
+            TiglReturnCode tiglRet = config->openCpacsConfiguration(undoHelper.currentFile());
             if (tiglRet != TIGL_SUCCESS) {
                 delete config;
                 return;
@@ -349,7 +359,7 @@ void TIGLViewerWindow::reopenFile()
     QString      fileType;
     QFileInfo    fileInfo;
 
-    fileInfo.setFile(currentFile);
+    fileInfo.setFile(undoHelper.currentFile());
     fileType = fileInfo.suffix();
 
     if (fileType.toLower() == tr("xml")){
@@ -357,7 +367,7 @@ void TIGLViewerWindow::reopenFile()
     }
     else {
         myScene->getContext()->EraseAll(Standard_False);
-        openFile(currentFile);
+        openFile(undoHelper.currentFile());
     }
 }
 
@@ -365,8 +375,6 @@ void TIGLViewerWindow::setCurrentFile(const QString &fileName)
 {
     setWindowTitle(QString("%1 - CPACSCreator ")
                    .arg(QDir::toNativeSeparators(QFileInfo(fileName).absoluteFilePath())));
-
-    currentFile = fileName;
 
     QSettings settings("DLR SC-HPC", "TiGLViewer3");
     QStringList files = settings.value("recentFileList").toStringList();
@@ -837,14 +845,37 @@ void TIGLViewerWindow::applyModifications()
     std::string selectedUID = model->getUidForIdx(selectionModel->currentIndex());
     bool blockB = watcher->blockSignals(true);  // we do not want to reopen the file during the moification
     model->disconnectAdapter();
-    modificatorManager->applyCurrentModifications();    // Here updateCreatorInterface can be called because we write the primary cpacs file
+    QString  newFileName = undoHelper.addCommit();
+    modificatorManager->applyCurrentModifications(newFileName);   // modificator manager file save the commit in the new file  // Here updateCreatorInterface can be called because we write the primary cpacs file
     model->resetAdapter(adapter);
     treeView->hideColumn(3);
     modificatorManager->reset();
     QModelIndex idx = model->getIdxForUID(selectedUID);
     selectionModel->setCurrentIndex(idx,  QItemSelectionModel::Select);
-    reopenFile();   // because we have diconnect it durring the write of the file
+    openFile(newFileName);   // the modification is writen in a new file "newFileName"
     watcher->blockSignals(blockB);
+
+}
+
+void TIGLViewerWindow::undoCommit(){
+
+    if( undoHelper.undoIsAvailable()){
+        QString fileToRestore = undoHelper.undo();
+        openFile(fileToRestore);
+    }
+    else {
+        LOG(WARNING) << "Undo unavaible!" << std::endl;
+    }
+}
+
+
+void TIGLViewerWindow::redoCommit(){
+    if(undoHelper.redoIsAvailable()){
+        QString fileToRestore = undoHelper.redo();
+        openFile(fileToRestore);
+    } else {
+        LOG(WARNING) << "Redo unavaible!" << std::endl;
+    }
 
 }
 
