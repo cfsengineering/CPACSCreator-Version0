@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1141</width>
-    <height>1091</height>
+    <height>1125</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -307,26 +307,6 @@
    <addaction name="helpMenu"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <widget class="QToolBar" name="toolBar">
-   <property name="windowTitle">
-    <string>File</string>
-   </property>
-   <property name="movable">
-    <bool>false</bool>
-   </property>
-   <attribute name="toolBarArea">
-    <enum>TopToolBarArea</enum>
-   </attribute>
-   <attribute name="toolBarBreak">
-    <bool>false</bool>
-   </attribute>
-   <addaction name="openAction"/>
-   <addaction name="saveAction"/>
-   <addaction name="closeAction"/>
-   <addaction name="separator"/>
-   <addaction name="settingsAction"/>
-   <addaction name="refreshAction"/>
-  </widget>
   <widget class="QToolBar" name="toolBarView">
    <property name="windowTitle">
     <string>Views</string>
@@ -2002,6 +1982,28 @@
     </layout>
    </widget>
   </widget>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>File</string>
+   </property>
+   <property name="movable">
+    <bool>false</bool>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="openAction"/>
+   <addaction name="saveAction"/>
+   <addaction name="closeAction"/>
+   <addaction name="separator"/>
+   <addaction name="settingsAction"/>
+   <addaction name="refreshAction"/>
+   <addaction name="undoAction_2"/>
+   <addaction name="redoAction_2"/>
+  </widget>
   <action name="newAction">
    <property name="text">
     <string>&amp;New</string>
@@ -3100,6 +3102,25 @@
    </property>
    <property name="shortcut">
     <string>Alt+M</string>
+   </property>
+  </action>
+  <action name="undoAction_2">
+   <property name="text">
+    <string>Undo</string>
+   </property>
+   <property name="toolTip">
+    <string>Undo last commit</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+U</string>
+   </property>
+  </action>
+  <action name="redoAction_2">
+   <property name="text">
+    <string>Redo</string>
+   </property>
+   <property name="toolTip">
+    <string>Redo last commit</string>
    </property>
   </action>
  </widget>

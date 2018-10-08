@@ -285,15 +285,12 @@ void TIGLViewerWindow::openFile(const QString& fileName)
 
     fileInfo.setFile(fileName);
     fileType = fileInfo.suffix();
-    undoHelper.set(fileInfo.absoluteFilePath()); // check if the file is allready registred, if yes do nothing, otherwise initialize the undoHelper
-
-
 
     if (!fileName.isEmpty()) {
 
+        undoHelper.set(fileInfo.absoluteFilePath()); // check if the file is allready registred, if yes do nothing, otherwise initialize the undoHelper
 
         if (fileType.toLower() == tr("xml")) {
-
 
             TIGLViewerDocument* config = new TIGLViewerDocument(this);
             TiglReturnCode tiglRet = config->openCpacsConfiguration(undoHelper.currentFile());
@@ -334,17 +331,18 @@ void TIGLViewerWindow::openFile(const QString& fileName)
                 success = reader.importModel ( fileInfo.absoluteFilePath(), format, *getScene() );
             }
         }
+
         watcher = new QFileSystemWatcher();
         watcher->addPath(fileInfo.absoluteFilePath());
         QObject::connect(watcher, SIGNAL(fileChanged(QString)), openTimer, SLOT(start()));
 
+        setCurrentFile(undoHelper.currentFile());
         if (fileType.toLower() == tr("xml")) {
             updateCreatorInterface();
         }
 
         myLastFolder = fileInfo.absolutePath();
         if (success) {
-            setCurrentFile(fileName);
             myOCC->viewAxo();
             myOCC->fitAll();
         }
@@ -692,6 +690,9 @@ void TIGLViewerWindow::connectSignals()
     connect(openScriptAction, SIGNAL(triggered()), this, SLOT(openScript()));
     connect(closeAction, SIGNAL(triggered()), this, SLOT(closeConfiguration()));
     connect(refreshAction,SIGNAL(triggered()), this, SLOT(reopenFile()));
+    connect(redoAction_2,SIGNAL(triggered()), this, SLOT(redoCommit()));
+    connect(undoAction_2,SIGNAL(triggered()), this, SLOT(undoCommit()));
+
 
     for (int i = 0; i < MaxRecentFiles; ++i) {
         recentFileActions[i] = new QAction(this);

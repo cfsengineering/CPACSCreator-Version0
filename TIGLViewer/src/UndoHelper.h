@@ -9,7 +9,9 @@
 #include <QFileInfo>
 
 /***
- * Helper classe to manage the undo and redo operation.
+ * Helper class to manage the undo and redo operations.
+ * The undo operation is done by saving files
+ *
  * Basically this class take care of repertoring the filenames to do the undo operations.
  */
 class UndoHelper {
@@ -54,6 +56,14 @@ public:
     QString redo();
 
     /***
+     * Save the current index into the original file.
+     * @return
+     */
+    void saveInOriginal();
+
+
+
+    /***
      * Create a new fileName to use to store the commit.
      * If there is redo on the stack they will be earsed.
      *
@@ -67,9 +77,18 @@ public:
      */
     QString currentFile();
 
+    bool isXmlFile();
+
 
 protected:
     QString generateFileName();
+
+    /***
+     * Check if the UndoHelper is in a valid state.
+     * This means that the original file is set and the current index reference a existing filename.
+     * @return
+     */
+    bool isValid();
 
 private:
 

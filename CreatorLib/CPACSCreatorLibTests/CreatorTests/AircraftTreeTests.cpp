@@ -458,7 +458,7 @@ TEST_F(AircraftTreeTest, getTransformationChainForOneElement){
     /*
      * FUSELAGE CASE
      */
-    setVariables("simple-aircraft-two-fuselages.cpacs.xml");
+    setVariables("simple-aircraft-fuselages.xml");
 
     element = root->getChildByUid("D150_Fuselage_1Section1IDElement1");
     r = tree.getTransformationChainForOneElement(element);
@@ -1356,7 +1356,7 @@ TEST_F(AircraftTreeTest, formatWingOrFuselalgeGraph)
     EXPECT_EQ( formatedGraph[2]->getUid(), "D150_Fuselage_1Section3IDElement1");
 
 
-    setVariables("simple-aircraft-two-fuselages.cpacs.xml");
+    setVariables("simple-aircraft-fuselages.xml");
 
     fuselage = tree.getRoot()->getChildByUid("FuselageUnconventionalOrdering");
     graph = tree.getWingOrFuselageGraph(fuselage);
