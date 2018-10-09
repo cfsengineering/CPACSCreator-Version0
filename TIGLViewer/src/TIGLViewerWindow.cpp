@@ -846,14 +846,14 @@ void TIGLViewerWindow::applyModifications()
     std::string selectedUID = model->getUidForIdx(selectionModel->currentIndex());
     bool blockB = watcher->blockSignals(true);  // we do not want to reopen the file during the moification
     model->disconnectAdapter();
-    QString  newFileName = undoHelper.addCommit();
-    modificatorManager->applyCurrentModifications(newFileName);   // modificator manager file save the commit in the new file  // Here updateCreatorInterface can be called because we write the primary cpacs file
+    undoHelper.addCheckPoint();
+    modificatorManager->applyCurrentModifications();   // modificator manager file save the commit in the new file  // Here updateCreatorInterface can be called because we write the primary cpacs file
     model->resetAdapter(adapter);
     treeView->hideColumn(3);
     modificatorManager->reset();
     QModelIndex idx = model->getIdxForUID(selectedUID);
     selectionModel->setCurrentIndex(idx,  QItemSelectionModel::Select);
-    openFile(newFileName);   // the modification is writen in a new file "newFileName"
+    reopenFile();
     watcher->blockSignals(blockB);
 
 }
@@ -861,8 +861,21 @@ void TIGLViewerWindow::applyModifications()
 void TIGLViewerWindow::undoCommit(){
 
     if( undoHelper.undoIsAvailable()){
+        //protect the openning from the emit of the interface
+        std::string selectedUID = model->getUidForIdx(selectionModel->currentIndex());
+        bool blockB = watcher->blockSignals(true);  // we do not want to reopen the file during the moification
+        model->disconnectAdapter();
         QString fileToRestore = undoHelper.undo();
+
+        myScene->getContext()->EraseAll(Standard_False);
         openFile(fileToRestore);
+
+        model->resetAdapter(adapter);
+        treeView->hideColumn(3);
+        modificatorManager->reset();
+        QModelIndex idx = model->getIdxForUID(selectedUID);
+        selectionModel->setCurrentIndex(idx,  QItemSelectionModel::Select);
+        watcher->blockSignals(blockB);
     }
     else {
         LOG(WARNING) << "Undo unavaible!" << std::endl;
@@ -872,8 +885,21 @@ void TIGLViewerWindow::undoCommit(){
 
 void TIGLViewerWindow::redoCommit(){
     if(undoHelper.redoIsAvailable()){
+        //protect the openning from the emit of the interface
+        std::string selectedUID = model->getUidForIdx(selectionModel->currentIndex());
+        bool blockB = watcher->blockSignals(true);  // we do not want to reopen the file during the moification
+        model->disconnectAdapter();
         QString fileToRestore = undoHelper.redo();
+
+        myScene->getContext()->EraseAll(Standard_False);
         openFile(fileToRestore);
+
+        model->resetAdapter(adapter);
+        treeView->hideColumn(3);
+        modificatorManager->reset();
+        QModelIndex idx = model->getIdxForUID(selectedUID);
+        selectionModel->setCurrentIndex(idx,  QItemSelectionModel::Select);
+        watcher->blockSignals(blockB);
     } else {
         LOG(WARNING) << "Redo unavaible!" << std::endl;
     }

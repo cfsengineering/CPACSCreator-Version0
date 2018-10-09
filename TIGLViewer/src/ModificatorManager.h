@@ -38,7 +38,7 @@ class ModificatorManager: public QObject {
 
 public slots:
     void dispatch(cpcr::CPACSTreeItem * item ) ;
-    void applyCurrentModifications(QString savingFile);
+    void applyCurrentModifications();
     // simply reset the values displayed by the current modificator from the file
     void applyCurrentCancellation();
 

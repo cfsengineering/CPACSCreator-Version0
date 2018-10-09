@@ -9,54 +9,90 @@
 #include <QFileInfo>
 
 /***
- * Helper class to manage the undo and redo operations.
- * The undo operation is done by saving files
+ * Helper class to manage undo and redo operations.
  *
- * Basically this class take care of repertoring the filenames to do the undo operations.
+ * On "init" (or "set"), the helper will duplicate the given file and the helper will return the new copied file.
+ * Then the user should work with this new copied. This copied file becomes the "currentFile".
+ * At some point, the user can add a check point calling the "addCheckPoint".
+ * The "addCheckPoint" function will copy the file and register it, but the "currentFile" stay the same.
+ * On calling "undo" the helper file return the last check point file and the current file will be updated. It'is up
+ * to the user to reopen the returned file in its application (the filename is no more the same as before).
+ *
+ *
+ *
  */
 class UndoHelper {
 
 
 public:
 
+    /***
+     * Initialize a empty UndoHelper
+     */
     UndoHelper();
 
-    /**
-     * Initialize the undo helper
+    /***
+     * Destroy the UndoHelper
+     * @remark All the backup files will be deleted! Make sure to save your result before.
      *
+     */
+    ~UndoHelper();
+
+    /**
+     * Initialize the undo helper with a particular file.
      * @param fileName
      */
     void init(QString fileName);
 
+
+    /***
+     * Check if the filename is already used by some check points.
+     * If yes, this check point file will become the current file.
+     * Otherwise the UndoHelper will be reinitialized with this new filename.
+     *
+     * @param fileName
+     */
     void set(QString fileName);
 
     /**
-     * reset every thing to null
+     * Reset every variable and destroy backup files.
      */
     void clean();
 
     /***
-     * Return true if there is a filename available for a undo operation
+     * Return true if there is a checkpoint available for a undo operation
      * @return
      */
     bool undoIsAvailable();
 
     /**
     *  Return the filename that correspond to the file to restore to do the undo.
-    *  The current index is updated to this file.
-    *  If it is impossible to do a undo this function return a empty string.
+    *  The currentFile is updated.
+    *  If it is impossible to do a undo, this function return a empty string.
     *  @remark No change will occurs in tiglViewer, only the name is returned
     * @return
     */
     QString undo();
 
 
+    /***
+     * Return true if there is a checkpoint available for a redo operation
+     * @return
+     */
     bool redoIsAvailable();
 
+
+    /**
+    *  Return the filename that correspond to the file to restore to do the redo.
+    *  The currentFile is updated.
+    *  If it is impossible to do a redo, this function return a empty string.
+    *  @remark No change will occurs in tiglViewer, only the name is returned
+    * @return
+    */
     QString redo();
 
     /***
-     * Save the current index into the original file.
+     * Save the currentFile into the original file.
      * @return
      */
     void saveInOriginal();
@@ -64,18 +100,18 @@ public:
 
 
     /***
-     * Create a new fileName to use to store the commit.
-     * If there is redo on the stack they will be earsed.
+     * Copy the currentFile in a new file and register this new file.
+     * If the currentFile has some possible redo available, they will be destroyed.
      *
      */
-    QString addCommit();
+    void addCheckPoint();
 
     /**
      * Return the current file.
-     * Should be the same as the file that is actually used by cpacscreator.
      * @return
      */
     QString currentFile();
+
 
     bool isXmlFile();
 
@@ -90,10 +126,12 @@ protected:
      */
     bool isValid();
 
+    void print();
+
 private:
 
     int currentIdx;
-    QStringList files;
+    QStringList backupFiles;
     QFileInfo originFile;
     int generatorIdx;
 

@@ -11,8 +11,8 @@ UndoHelper::UndoHelper() {
 }
 
 void UndoHelper::set(QString fileName) {
-    if(files.contains(fileName)){
-        currentIdx = files.indexOf(fileName);
+    if(backupFiles.contains(fileName)){
+        currentIdx = backupFiles.indexOf(fileName);
     }
     else{
         init(fileName);
@@ -20,15 +20,14 @@ void UndoHelper::set(QString fileName) {
 }
 
 void UndoHelper::init(QString fileName) {
+    clean();
     originFile = QFileInfo(fileName);
     if( ! (originFile.exists() && originFile.isFile() ) ){
         LOG(WARNING) << "UndoHelper::init::unable to find file:" << originFile.absoluteFilePath().toStdString() << std::endl;
-        clean();
         return;
     }
-
     QString newFN = generateFileName();
-    files.push_front(newFN);
+    backupFiles.push_front(newFN);
     currentIdx = 0;
 
     QFile::copy(originFile.absoluteFilePath(), this->currentFile());
@@ -37,9 +36,15 @@ void UndoHelper::init(QString fileName) {
 }
 
 void UndoHelper::clean() {
-
+    // delete backup files
+    for(int i = 0; i < backupFiles.size(); i++){
+        bool removed = QFile::remove(backupFiles[i]) ;
+        if( !removed){
+            LOG(WARNING) << "UndoHelper::clean: the bakcup files was not removed correctly";
+        }
+    }
     currentIdx = -1;
-    files = QStringList();
+    backupFiles = QStringList();
     originFile = QFileInfo();
     generatorIdx = 0;
 
@@ -47,7 +52,7 @@ void UndoHelper::clean() {
 
 bool UndoHelper::undoIsAvailable() {
     if( isValid()){
-        return  ( (currentIdx + 1) >= 0  &&  ((currentIdx + 1) < files.size() ) ) ;
+        return  ( (currentIdx + 1) >= 0  &&  ((currentIdx + 1) < backupFiles.size() ) ) ;
     }
     else {
         LOG(WARNING) << "UndoHelper: this undoHelper seems to be in an incorrect state, impossible to perform the undo " << std::endl;
@@ -60,7 +65,7 @@ QString UndoHelper::undo() {
     if( isValid()){
          if( undoIsAvailable() ){
              currentIdx = currentIdx + 1;
-             return files.at(currentIdx);
+             return backupFiles.at(currentIdx);
          }else{
              // TODO throw ERROR
              return QString();
@@ -74,7 +79,7 @@ QString UndoHelper::undo() {
 
 bool UndoHelper::redoIsAvailable() {
     if( isValid()){
-        return  ( (currentIdx - 1) >= 0  &&  ((currentIdx - 1) < files.size() ) ) ;
+        return  ( (currentIdx - 1) >= 0  &&  ((currentIdx - 1) < backupFiles.size() ) ) ;
     }
     else {
         LOG(WARNING) << "UndoHelper: this undoHelper seems to be in an incorrect state, impossible to perform the redo " << std::endl;
@@ -86,7 +91,7 @@ QString UndoHelper::redo() {
     if( isValid()){
         if( redoIsAvailable() ){
             currentIdx = currentIdx - 1;
-            return files.at(currentIdx);
+            return backupFiles.at(currentIdx);
         }else{
             // TODO throw ERROR
             return QString();
@@ -98,27 +103,32 @@ QString UndoHelper::redo() {
     }
 }
 
-QString UndoHelper::addCommit() {
+void UndoHelper::addCheckPoint() {
     if ( ! isValid()){
         // TODO throw ERROR
-        return QString();
     }
+    QString currentF = this->currentFile();
+
     // redo and undo cases -> when we add a commit the previous commit will be the current commit and all
     if(currentIdx > 0) {
         for(int i = 0; i < currentIdx; i++){
-            QFile::remove(files[0] ) ;
-            files.pop_front();
+            bool removed = QFile::remove(backupFiles[0]) ;
+            if( !removed){
+                LOG(WARNING) << "UndoHelper::clean: the bakcup files was not removed correctly";
+            }
+            backupFiles.pop_front();
         }
     }
 
-    QString newFN = generateFileName();
-    files.push_front(newFN);
+    QString newBackup = generateFileName();
+    QFile::copy(currentF, newBackup );
     currentIdx = 0;
-    return newFN;
+    backupFiles.insert(1, newBackup);
+
 }
 
 QString UndoHelper::currentFile() {
-    return files.at(currentIdx);
+    return backupFiles.at(currentIdx);
 }
 
 QString UndoHelper::generateFileName() {
@@ -138,7 +148,7 @@ bool UndoHelper::isXmlFile() {
 void UndoHelper::saveInOriginal() {
 
     if( isValid()){
-        QFile::copy(files.at(currentIdx), originFile.absoluteFilePath());
+        QFile::copy(backupFiles.at(currentIdx), originFile.absoluteFilePath());
     }
     else {
         LOG(WARNING) << "UndoHelper: this undo helper seems to be in an incorrect state, the saving is not performed " << std::endl;
@@ -147,7 +157,19 @@ void UndoHelper::saveInOriginal() {
 
 bool UndoHelper::isValid() {
     bool fileExist = originFile.exists() && originFile.isFile();
-    bool idxValid = (0 <= currentIdx) && (currentIdx < files.size() ) ;
+    bool idxValid = (0 <= currentIdx) && (currentIdx < backupFiles.size() ) ;
     return fileExist && idxValid;
+}
+
+UndoHelper::~UndoHelper() {
+    clean();
+}
+
+void UndoHelper::print() {
+    LOG(WARNING) << "backup list" << std::endl;
+    for(QString f: backupFiles){
+        LOG(WARNING) << f.toStdString() << std::endl;
+    }
+    LOG(WARNING) << "currentIdx:" << std::to_string(currentIdx) << std::endl;
 }
 

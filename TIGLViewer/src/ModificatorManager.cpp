@@ -56,11 +56,12 @@ void ModificatorManager::reset() {
 }
 
 
-void ModificatorManager::applyCurrentModifications(QString savingFile){
+void ModificatorManager::applyCurrentModifications(){
 
     if(currentModificator != nullptr) {
-        adapter->setSavingFile(savingFile); // set the file that will be used in apply function
         currentModificator->apply();
+    }else{
+        LOG(WARNING) << "ModificatorManager::applyCurrentModifications: current modificator is null" <<std::endl;
     }
 }
 
@@ -69,6 +70,8 @@ void ModificatorManager::applyCurrentModifications(QString savingFile){
 void ModificatorManager::applyCurrentCancellation() {
     if(currentModificator != nullptr){
         currentModificator->reset();
+    }else{
+        LOG(WARNING) << "ModificatorManager::applyCurrentCancellation: current modificator is null" <<std::endl;
     }
 }
 
