@@ -1410,8 +1410,8 @@ bool cpcr::AircraftTree::checkIfWingTransformationIsStandardizedForWing(UID wing
 
 
 
-void cpcr::AircraftTree::setWingTransformation(UID wingUID,
-                                               const cpcr::CPACSTransformation &newT) {
+void cpcr::AircraftTree::setWingTransformationKeepWires(UID wingUID,
+                                                        const cpcr::CPACSTransformation &newT) {
 
     CPACSTreeItem* wing = m_root->getChildByUid(wingUID);
 
@@ -2036,10 +2036,10 @@ std::string cpcr::AircraftTree::getWingSymmetry(cpcr::UID wingUID) {
 void cpcr::AircraftTree::wingTransformationStandardization(cpcr::UID wingUID) {
 
     cpcr::CPACSTransformation idealWingT = this->determineWingTransformation(wingUID);
-    this->setWingTransformation(wingUID, idealWingT);
+    this->setWingTransformationKeepWires(wingUID, idealWingT);
 
 
-    this->writeToFile();  // TODO: temp file or in memory build
+    this->writeToFile();
     this->reBuild();
 
     return;
@@ -2853,6 +2853,53 @@ void  cpcr::AircraftTree::setFuselageMaximalCircumference(cpcr::UID fuselageUID,
 
 
 
+}
+
+
+
+Eigen::Vector3d cpcr::AircraftTree::getFuselageDirection(cpcr::UID fuselageUID) {
+
+    Eigen::Vector3d direction;
+
+    // Check the input
+    checkUIDAndType(fuselageUID, "fuselage", "getFuselageDirection");
+    CPACSTreeItem* fuselage = getRoot()->getChildByUid(fuselageUID);
+
+    // Get the noise and the end    // TODO: manage case where the graph can not be formated
+    std::map<cpcr::CPACSTreeItem *, std::vector<cpcr::CPACSTreeItem *> > graph = getWingOrFuselageGraph(fuselage);
+    std::vector<cpcr::CPACSTreeItem *> graphF = formatWingOrFuselageGraph(graph);
+
+    cpcr::CPACSTreeItem * fuselageNoise = graphF.front();
+    cpcr::CPACSTreeItem * fuselageTail = graphF.back();
+
+
+    // Get fuselage point in world coordinate
+    std::map<cpcr::UID, Eigen::Vector4d> centerPoints = getCenterPointsOfElementsInFuselage(fuselage->getUid());
+    Eigen::Vector4d startP = centerPoints[fuselageNoise->getUid()];
+    Eigen::Vector4d endP = centerPoints[fuselageTail->getUid()];
+
+    //TODO: Should we use fuselage coordinate system?
+
+    // compute the delta
+    Eigen::Vector4d delta = endP - startP;
+
+    direction << delta[0], delta[1], delta[2];
+    direction.normalize();
+
+    return direction;
+}
+
+
+
+
+cpcr::CPACSTransformation cpcr::AircraftTree::determineFuselageTransformation(cpcr::UID fuselageUID) {
+    CPACSTransformation newTransformation ;
+
+    newTransformation.setScaling( Point(1,1,1) );
+
+
+
+    return cpcr::CPACSTransformation();
 }
 
 

@@ -502,10 +502,6 @@ TEST_F(AircraftTreeTest, getTransformationChainForOneElement){
     EXPECT_TRUE(r[0].second.isApprox( expected.getTransformationAsMatrix()) );
 
 
-
-
-
-
 }
 
 
@@ -1478,7 +1474,7 @@ TEST_F(AircraftTreeTest, setWingTransformation ) {
     trans.setTranslation(Point(0,5,0));
     trans.setScaling(Point(2,2,2));
     tree.writeToFile();
-    tree.setWingTransformation(wingUID, trans);
+    tree.setWingTransformationKeepWires(wingUID, trans);
     tree.writeToFile();
 
     std::map<cpcr::UID, Eigen::Vector4d>  lEsA = tree.getChordPointsOfElementsInWing(wingUID, 0);
@@ -1497,7 +1493,7 @@ TEST_F(AircraftTreeTest, setWingTransformation ) {
     EXPECT_TRUE(dT.getTranslation() == Point(12.745585588751897,0,-1.1362781709599128));
 
 
-    tree.setWingTransformation(wingUID, dT);
+    tree.setWingTransformationKeepWires(wingUID, dT);
     tree.writeToFile();
 
     lEsA = tree.getChordPointsOfElementsInWing(wingUID, 0);
@@ -1524,7 +1520,7 @@ TEST_F(AircraftTreeTest, setWingTransformation ) {
     EXPECT_TRUE(dT.getTranslation() == Point(29.837965090800001, -0.0020029219731199999, 1.89101464137));
 
 
-    tree.setWingTransformation(wingUID, dT);
+    tree.setWingTransformationKeepWires(wingUID, dT);
     tree.writeToFile();
 
     lEsA = tree.getChordPointsOfElementsInWing(wingUID, 0);
@@ -1553,7 +1549,7 @@ TEST_F(AircraftTreeTest, setWingTransformation ) {
    // EXPECT_TRUE(dT.getTranslation() == Point(29.837965090800001, -0.0020029219731199999, 1.89101464137));
 
 
-    tree.setWingTransformation(wingUID, dT);
+    tree.setWingTransformationKeepWires(wingUID, dT);
     tree.writeToFile();
 
     lEsA = tree.getChordPointsOfElementsInWing(wingUID, 0);
@@ -1584,7 +1580,7 @@ TEST_F(AircraftTreeTest, setWingTransformation ) {
     trans.setTranslation(Point(0,5,0));
     trans.setScaling(Point(2,2,2));
     tree.writeToFile();
-    tree.setWingTransformation(wingUID, trans);
+    tree.setWingTransformationKeepWires(wingUID, trans);
     tree.writeToFile();
 
     lEsA = tree.getChordPointsOfElementsInWing(wingUID, 0);
@@ -2699,5 +2695,57 @@ TEST_F(AircraftTreeTest, setFuselageMaximalCircumference) {
     EXPECT_THROW(tree.setFuselageMaximalCircumference("fdsa", 3), CreatorException);
     tree.setFuselageMaximalCircumference(fuselageUID, 0); // is accpeted with warning
     tree.writeToFile();
+
+}
+
+
+TEST_F(AircraftTreeTest, getFuselageDirection){
+
+    setVariables("simple-aircraft-fuselages.xml");
+    UID fuselageUID;
+    Eigen::Quaterniond rot;
+    Eigen::Vector3d direction, expected;
+
+    fuselageUID= "SimpleFuselage";
+    direction = tree.getFuselageDirection(fuselageUID);
+    expected << 1, 0,0;
+    EXPECT_TRUE(direction.isApprox(expected, 0.0001));
+
+
+    fuselageUID= "FuselageUnconventionalOrdering";
+    direction = tree.getFuselageDirection(fuselageUID);
+    expected << 1, 0,0;
+    EXPECT_TRUE(direction.isApprox(expected, 0.0001));
+
+
+    fuselageUID= "SimpleFuselage4";
+    direction = tree.getFuselageDirection(fuselageUID);
+    expected << 1, 0,0;
+    // The transform is express as Euler angle XY'Z".
+    // We use the fact that an intrinsic rotation XY'Z" is equivalent to a extrinsic rotation ZYX :)
+    rot =  Eigen::AngleAxisd( 0/180.0 * M_PI, Eigen::Vector3d::UnitX() )
+                 * Eigen::AngleAxisd(0/180.0 * M_PI, Eigen::Vector3d::UnitY() )
+                 * Eigen::AngleAxisd(40/180.0 * M_PI, Eigen::Vector3d::UnitZ() );
+    expected = rot * expected;
+    EXPECT_TRUE(direction.isApprox(expected, 0.0001));
+
+
+
+    fuselageUID= "SimpleFuselage5";
+    direction = tree.getFuselageDirection(fuselageUID);
+    expected << 1, 0,0;
+    // The transform is express as Euler angle XY'Z".
+    // We use the fact that an intrinsic rotation XY'Z" is equivalent to a extrinsic rotation ZYX :)
+    rot =  Eigen::AngleAxisd( 10/180.0 * M_PI, Eigen::Vector3d::UnitX() )
+           * Eigen::AngleAxisd(20/180.0 * M_PI, Eigen::Vector3d::UnitY() )
+           * Eigen::AngleAxisd(40/180.0 * M_PI, Eigen::Vector3d::UnitZ() );
+    expected = rot * expected;
+    EXPECT_TRUE(direction.isApprox(expected, 0.0001));
+
+
+
+    EXPECT_THROW(tree.getFuselageDirection(fuselageUID + "afdaf"), CreatorException);
+
+
 
 }

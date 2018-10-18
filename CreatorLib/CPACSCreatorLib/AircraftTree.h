@@ -218,6 +218,39 @@ namespace cpcr{
 
 
 
+        /***
+         * Get the direction of the fuselage.
+         *
+         * @param fuselageUID
+         * @return
+         */
+        Eigen::Vector3d getFuselageDirection(UID fuselageUID);
+
+
+        /*
+         * Standardization for fuselage
+         */
+
+        /***
+         *
+         * @param fusleageUID
+         * @return
+         */
+        CPACSTransformation determineFuselageTransformation(UID fuselageUID);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         /*
          * WING FUNCTIONS
          */
@@ -288,7 +321,13 @@ namespace cpcr{
 
 
 
-
+        /***
+         *
+         *
+         *
+         * @param wingUID
+         * @return
+         */
         bool checkIfWingTransformationIsStandardizedForWing(UID wingUID);
 
 
@@ -299,11 +338,12 @@ namespace cpcr{
 
 
         /***
-         * Set the wing transformation without any remarkable changes on the output.
+         * Set the wing transformation without any remarkable changes on the output shape.
          * @param wing
          * @param newTransformation
+         * @remark used in standardization
          */
-        void setWingTransformation(UID wingUID, const CPACSTransformation& newTransformation );
+        void setWingTransformationKeepWires(UID wingUID, const CPACSTransformation &newTransformation);
 
 
 
