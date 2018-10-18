@@ -365,7 +365,9 @@ double cpcr::AircraftTree::getWingSweep(cpcr::UID wingUID, double chordPercent) 
 
 
 void cpcr::AircraftTree::writeToFile() {
+    closeTiglHandle();
     CPACSTree::writeToFile();
+    openTiglHandle(m_root->getUid());
 }
 
 

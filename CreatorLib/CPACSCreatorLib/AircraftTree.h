@@ -521,7 +521,7 @@ namespace cpcr{
 
 
         /*
-         *  HELPER FUNCTIONS TO MODIFIY THE GEOMETRY
+         *  HELPER FUNCTIONS TO MODIFY THE GEOMETRY
          */
 
 

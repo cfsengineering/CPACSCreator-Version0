@@ -94,7 +94,7 @@ cpcr::CPACSTransformation CPACSCreatorAdapter::getTransformation(cpcr::CPACSTree
 
 void CPACSCreatorAdapter::setTransformation(cpcr::CPACSTreeItem *item, cpcr::CPACSTransformation transformation) {
 
-    // TODO MODIFIER A LITTEL WIRD
+    // TODO USE MODIFIER A LITTLE WIERD
     aircraftTree.getModifier()->setTransformation(item->getXPath(), transformation);
     LOG(INFO) << "Set transformation Values for xPath: ";
 
