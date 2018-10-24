@@ -156,5 +156,11 @@ cpcr::CPACSTransformation::CPACSTransformation(const Eigen::Matrix4d &inMatrix) 
 
 }
 
+bool cpcr::CPACSTransformation::isApprox(const cpcr::CPACSTransformation &other, double precision) {
+
+    return other.getTranslationAsMatrix().isApprox( this->getTransformationAsMatrix() , precision) ;
+
+}
+
 
 

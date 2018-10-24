@@ -50,15 +50,13 @@ Eigen::Matrix4d cpcr::AircraftTree::getGlobalTransformMatrixOfElement( UID eleme
 }
 
 
-std::vector<cpcr::UID> cpcr::AircraftTree::getAllElementUIDsUsedInAWing(UID wingUID) {
+std::vector<cpcr::UID> cpcr::AircraftTree::getAllElementUIDsUsedInAWingOrFuselage(UID wingUID) {
+
+    checkUID(wingUID);
 
     std::vector< std::string> elementUIDs ;
+    CPACSTreeItem* wing = m_root->getChildByUid(wingUID);
 
-
-    CPACSTreeItem * wing = m_root->getChildByUid(wingUID);
-    if(wing->getType() != "wing" ){
-        LOG(ERROR) << "The given uid is not a wing uid" ;
-    }
 
     std::vector<CPACSTreeItem *> fromElementsItems =  wing->getChild(UniqueXPath("segments"))->findAllChildrenOfTypeRecursively("fromElementUID");
     std::vector<CPACSTreeItem *> toElementsItems =  wing->getChild(UniqueXPath("segments"))->findAllChildrenOfTypeRecursively("toElementUID");
@@ -331,7 +329,7 @@ double cpcr::AircraftTree::getWingSweep(cpcr::UID wingUID, double chordPercent) 
     CPACSTreeItem* wing = m_root->getChildByUid(wingUID);
 
 
-    std::vector<UID> elementUIDs = getAllElementUIDsUsedInAWing(wingUID);
+    std::vector<UID> elementUIDs = getAllElementUIDsUsedInAWingOrFuselage(wingUID);
     std::map<UID, Eigen::Vector4d> chordPoints = getChordPointsOfElementsInWing(wingUID, chordPercent);
     std::map<UID, Eigen::Vector4d> chordPointsM = getChordPointsOfElementsInWing(wingUID, 0.5);
 
@@ -442,7 +440,7 @@ void cpcr::AircraftTree::setWingSweepByTranslation(cpcr::UID wingUID, double swe
     CPACSTreeItem * wing = m_root->getChildByUid(wingUID);
 
 
-    std::vector<UID> elementUIDs = getAllElementUIDsUsedInAWing(wingUID);   // element UIDs used in this wing
+    std::vector<UID> elementUIDs = getAllElementUIDsUsedInAWingOrFuselage(wingUID);   // element UIDs used in this wing
     std::map<UID, Eigen::Vector4d> chordPoints = getChordPointsOfElementsInWing(wingUID, chordPercent);     // get for each element the associated chord Point
     std::map<UID, Eigen::Vector4d> chordPointsM = getChordPointsOfElementsInWing(wingUID, 0.5);
     std::map< UID, Eigen::Matrix4d> globalMatrices;
@@ -545,7 +543,7 @@ void cpcr::AircraftTree::setWingSweepByShearing(cpcr::UID wingUID, double sweepA
 
     bool enableTest = true; // If true check at the end if all chord are correctly placed
 
-    std::vector<UID> elementUIDs = getAllElementUIDsUsedInAWing(wingUID);
+    std::vector<UID> elementUIDs = getAllElementUIDsUsedInAWingOrFuselage(wingUID);
     std::map<UID, Eigen::Vector4d> chordPoints = getChordPointsOfElementsInWing(wingUID, chordPercent);
     std::map<UID, Eigen::Vector4d> chordPointsM = getChordPointsOfElementsInWing(wingUID, 0.5);
     std::map<UID, Eigen::Vector4d> chordPointsLE = getChordPointsOfElementsInWing(wingUID, 0);
@@ -829,7 +827,7 @@ double cpcr::AircraftTree::getWingDihedral(UID wingUID,  double chordPercent) {
 
     CPACSTreeItem* wing =  m_root->getChildByUid(wingUID);
 
-    std::vector<UID> elementUIDs = getAllElementUIDsUsedInAWing(wingUID);
+    std::vector<UID> elementUIDs = getAllElementUIDsUsedInAWingOrFuselage(wingUID);
     std::map<UID, Eigen::Vector4d> chordPoints = getChordPointsOfElementsInWing(wingUID, chordPercent);
     std::map<UID, Eigen::Vector4d> chordPointsM = getChordPointsOfElementsInWing(wingUID, 0.5);
 
@@ -864,7 +862,7 @@ double cpcr::AircraftTree::getWingDihedral(UID wingUID,  double chordPercent) {
 double cpcr::AircraftTree::getWingWorldDihedral(cpcr::UID wingUID, double chordPercent) {
     CPACSTreeItem* wing =  m_root->getChildByUid(wingUID);
 
-    std::vector<UID> elementUIDs = getAllElementUIDsUsedInAWing(wingUID);
+    std::vector<UID> elementUIDs = getAllElementUIDsUsedInAWingOrFuselage(wingUID);
     std::map<UID, Eigen::Vector4d> chordPoints = getChordPointsOfElementsInWing(wingUID, chordPercent);
     std::map<UID, Eigen::Vector4d> chordPointsM = getChordPointsOfElementsInWing(wingUID, 0.5);
 
@@ -894,7 +892,7 @@ void cpcr::AircraftTree::setWingDihedral(UID wingUID, double dihedral, double ch
     // wing tree item
     CPACSTreeItem * wing = m_root->getChildByUid(wingUID);
     // element UIDs used in this wing
-    std::vector<UID> elementUIDs = getAllElementUIDsUsedInAWing(wingUID);
+    std::vector<UID> elementUIDs = getAllElementUIDsUsedInAWingOrFuselage(wingUID);
     // get for each element the associated chord Point
     std::map<UID, Eigen::Vector4d> chordPoints = getChordPointsOfElementsInWing(wingUID, chordPercent);
     // get for each element the middle chord point (used to determine the extremity)
@@ -1001,7 +999,7 @@ void cpcr::AircraftTree::setWingDihedral(UID wingUID, double dihedral, double ch
 std::vector<cpcr::UID> cpcr::AircraftTree::getAllAirfoilsUIDInThisWing(cpcr::UID wingUID) {
 
     std::vector<UID> airfoilsUID;
-    std::vector<UID> elementsUID = getAllElementUIDsUsedInAWing(wingUID);
+    std::vector<UID> elementsUID = getAllElementUIDsUsedInAWingOrFuselage(wingUID);
 
 
     CPACSTreeItem* element;
@@ -1055,7 +1053,7 @@ void cpcr::AircraftTree::setWingAirfoilsByUIDKeepChord(CPACSTreeItem* wing, UID 
     // elements in this wing , also the elements not used in a segment!!!
     std::vector<CPACSTreeItem*> elements = wing->findAllChildrenOfTypeRecursively("element");
     // element Uids used in this wing , only the elements used in a segment!!!
-    std::vector<UID> elementUIDs = getAllElementUIDsUsedInAWing(wing->getUid());
+    std::vector<UID> elementUIDs = getAllElementUIDsUsedInAWingOrFuselage(wing->getUid());
     // get for each element the associated chord Point
     std::map<UID, Eigen::Vector4d> lEPoints = getChordPointsOfElementsInWing(wing->getUid(), 0);
     // get for each element the associated chord Point
@@ -1355,7 +1353,7 @@ void cpcr::AircraftTree::airfoilsStandardizationForWing(UID wingUID) {
     db.createAssociateNormalizedProfiles();
 
     CPACSTreeItem* element;
-    for( std::string eUid : getAllElementUIDsUsedInAWing(wingUID) ){
+    for( std::string eUid : getAllElementUIDsUsedInAWingOrFuselage(wingUID) ){
         element = m_root->getChildByUid(eUid);
         std::string airfoilUID = modifier.retrieve<std::string>(element->getXPath().toString() + "/airfoilUID", "", true);
 
@@ -1388,6 +1386,7 @@ void cpcr::AircraftTree::airfoilsStandardizationForWing(UID wingUID) {
 
 bool cpcr::AircraftTree::checkIfWingTransformationIsStandardizedForWing(UID wingUID) {
 
+    //TODO: move the comparison to CPACSTransformation
     CPACSTreeItem* wing = m_root->getChildByUid(wingUID);
 
     cpcr::CPACSTransformation idealWingT = this->determineWingTransformation(wingUID); // the tree was rebuild -> the item has changed
@@ -1410,53 +1409,11 @@ bool cpcr::AircraftTree::checkIfWingTransformationIsStandardizedForWing(UID wing
 
 
 
-void cpcr::AircraftTree::setWingTransformationKeepWires(UID wingUID,
-                                                        const cpcr::CPACSTransformation &newT) {
+void cpcr::AircraftTree::setWingTransformationKeepGeometry(UID wingUID,
+                                                           const cpcr::CPACSTransformation &newT) {
 
-    CPACSTreeItem* wing = m_root->getChildByUid(wingUID);
-
-    cpcr::CPACSTransformation oldT = modifier.getTransformation(wing->getXPath().toString() + "/transformation");
-
-    Eigen::Matrix4d oldM = oldT.getTransformationAsMatrix();
-    Eigen::Matrix4d newWingM = newT.getTransformationAsMatrix();
-
-    std::vector<UID> elementsUID = getAllElementUIDsUsedInAWing(wing->getUid());
-    std::map<UID, Eigen::Matrix4d> globals ;
-    std::map<UID, Eigen::Matrix4d> newElementsM ;
-
-
-    Eigen::Matrix4d newWingMI = newWingM.inverse();
-
-    for(UID uid : elementsUID){
-        globals[uid] = getGlobalTransformMatrixOfElement(uid);
-        newElementsM[uid] = newWingMI * globals[uid];    // Wnew Wnew^-1 G = G
-    }
-
-    modifier.setTransformation(wing->getXPath().toString() + "/transformation", newT);
-
-    // remove all positioning
-    modifier.clearPositionings(wing->getXPath().toString() + "/positionings");
-
-    // set all section to identity
-    CPACSTransformation identity ;
-    identity.setRotation( Point(0,0,0));
-    identity.setTranslation( Point(0,0,0));
-    identity.setScaling( Point(1,1,1));
-    for(CPACSTreeItem * section : wing->findAllChildrenOfTypeRecursively("section")){
-        modifier.setTransformation(section->getXPath().toString() + "/transformation", identity);
-    }
-
-    // set the new position in element (and wing) only
-    CPACSTransformation tempNewE;
-    CPACSTreeItem* tempE;
-    for(UID uid : elementsUID){
-        tempE = wing->getChildByUid(uid);
-        CPACSTransformation tempNewE(newElementsM[uid]);
-        modifier.setTransformation(tempE->getXPath().toString() + "/transformation", tempNewE);
-    }
-
-    writeToFile();
-    reBuild();
+   checkUIDAndType(wingUID, "wing", "setWingTransformationKeepGeometry");
+   setWingOrFuselageTransformationKeepGeometry(wingUID, newT);
 
 }
 
@@ -1886,7 +1843,7 @@ double cpcr::AircraftTree::getWingSpan(cpcr::UID wingUID, double chordPercent) {
     CPACSTreeItem* wing = m_root->getChildByUid(wingUID);
 
 
-    std::vector<UID> elementUIDs = getAllElementUIDsUsedInAWing(wingUID);
+    std::vector<UID> elementUIDs = getAllElementUIDsUsedInAWingOrFuselage(wingUID);
     std::map<UID, Eigen::Vector4d> chordPoints = getChordPointsOfElementsInWing(wingUID, chordPercent);
     std::map<UID, Eigen::Vector4d> chordPointsM = getChordPointsOfElementsInWing(wingUID, 0.5);
 
@@ -1920,7 +1877,7 @@ double cpcr::AircraftTree::getSegmentArea(cpcr::CPACSTreeItem *segmentItem, PLAN
     Eigen::Matrix4d wingTM = wingT.getTransformationAsMatrix();
     Eigen::Matrix4d wingTMI = wingTM.inverse();
 
-    std::vector<UID> elementUIDs = getAllElementUIDsUsedInAWing(wing->getUid());
+    std::vector<UID> elementUIDs = getAllElementUIDsUsedInAWingOrFuselage(wing->getUid());
     std::map<cpcr::UID, Eigen::Vector4d> LEPoints = getChordPointsOfElementsInWing(wing->getUid(), 0);
     std::map<cpcr::UID, Eigen::Vector4d> TEPoints = getChordPointsOfElementsInWing(wing->getUid(), 1);
 
@@ -2036,7 +1993,7 @@ std::string cpcr::AircraftTree::getWingSymmetry(cpcr::UID wingUID) {
 void cpcr::AircraftTree::wingTransformationStandardization(cpcr::UID wingUID) {
 
     cpcr::CPACSTransformation idealWingT = this->determineWingTransformation(wingUID);
-    this->setWingTransformationKeepWires(wingUID, idealWingT);
+    this->setWingTransformationKeepGeometry(wingUID, idealWingT);
 
 
     this->writeToFile();
@@ -2367,7 +2324,7 @@ void cpcr::AircraftTree::scaleWingUniformly(cpcr::UID wingUID, double s) {
     Eigen::Matrix4d wingTM = wingT.getTransformationAsMatrix();
     Eigen::Matrix4d wingTMI = wingTM.inverse();
 
-    std::vector<UID> elementUIDs = getAllElementUIDsUsedInAWing(wingUID);
+    std::vector<UID> elementUIDs = getAllElementUIDsUsedInAWingOrFuselage(wingUID);
     std::map<UID, Eigen::Matrix4d> newGlobals ;
 
     for( UID uid : elementUIDs){
@@ -2890,16 +2847,151 @@ Eigen::Vector3d cpcr::AircraftTree::getFuselageDirection(cpcr::UID fuselageUID) 
 }
 
 
+void cpcr::AircraftTree::setWingOrFuselageTransformationKeepGeometry(cpcr::UID wingOrFuselageUID,
+                                                                     const cpcr::CPACSTransformation &newTransformation) {
+
+    /*
+     * The global matrix, G, of each wires need to remain unchanged.
+     * Let 's N be the new Transformation for the fuselage.
+     * P' the new positioning for a particular wire.
+     * S' the new section for a particular wire
+     * E' the new element for a particular wire
+     *
+     * For each wire, we have:
+     *  N*P'*S'*E'  = G
+     * If we set P' = Identity and S' = Identity
+     * We have: N*E' = G
+     * So E' = N-1 * G
+     *
+     * We implement the previous math to set the transformation and keep the geometry of the wing or the fuselage.
+     * Remarque that this method will modify delete the positionings and modify the sections of the wing or fuselage.
+     *
+     */
+    CPACSTreeItem* wing = m_root->getChildByUid(wingOrFuselageUID);
+    cpcr::CPACSTransformation oldT = modifier.getTransformation(wing->getXPath().toString() + "/transformation");
+
+    Eigen::Matrix4d oldM = oldT.getTransformationAsMatrix();
+    Eigen::Matrix4d newWingM = newTransformation.getTransformationAsMatrix();
+
+    std::vector<UID> elementsUID = getAllElementUIDsUsedInAWingOrFuselage(wing->getUid());
+    std::map<UID, Eigen::Matrix4d> globals ;
+    std::map<UID, Eigen::Matrix4d> newElementsM ;
+
+
+    Eigen::Matrix4d newWingMI = newWingM.inverse();
+
+    for(UID uid : elementsUID){
+        globals[uid] = getGlobalTransformMatrixOfElement(uid);
+        newElementsM[uid] = newWingMI * globals[uid];    // Wnew Wnew^-1 G = G
+    }
+
+    modifier.setTransformation(wing->getXPath().toString() + "/transformation", newTransformation);
+
+    // remove all positioning
+    modifier.clearPositionings(wing->getXPath().toString() + "/positionings");
+
+    // set all section to identity
+    CPACSTransformation identity ;
+    identity.setRotation( Point(0,0,0));
+    identity.setTranslation( Point(0,0,0));
+    identity.setScaling( Point(1,1,1));
+    for(CPACSTreeItem * section : wing->findAllChildrenOfTypeRecursively("section")){
+        modifier.setTransformation(section->getXPath().toString() + "/transformation", identity);
+    }
+
+    // set the new position in element (and wing) only
+    CPACSTransformation tempNewE;
+    CPACSTreeItem* tempE;
+    for(UID uid : elementsUID){
+        tempE = wing->getChildByUid(uid);
+        CPACSTransformation tempNewE(newElementsM[uid]);
+        modifier.setTransformation(tempE->getXPath().toString() + "/transformation", tempNewE);
+    }
+
+    writeToFile();
+    reBuild();
+}
+
 
 
 cpcr::CPACSTransformation cpcr::AircraftTree::determineFuselageTransformation(cpcr::UID fuselageUID) {
-    CPACSTransformation newTransformation ;
 
+    // Check the input
+    checkUIDAndType(fuselageUID, "fuselage", "getFuselageDirection");
+
+    CPACSTransformation newTransformation ;
+    CPACSTreeItem* fuselage = getRoot()->getChildByUid(fuselageUID);
+
+    CPACSTransformation fuselageT = modifier.getTransformation(fuselage->getXPath().toString() + "/transformation");
+
+    // the ideal scaling is trivial
     newTransformation.setScaling( Point(1,1,1) );
 
+    // the rotation is the rotation of the old fuselage transformation
+    newTransformation.setRotation( fuselageT.getRotation() );
+
+    // Get the noise position    // TODO: manage case where the graph can not be formated
+    std::map<cpcr::CPACSTreeItem *, std::vector<cpcr::CPACSTreeItem *> > graph = getWingOrFuselageGraph(fuselage);
+    std::vector<cpcr::CPACSTreeItem *> graphF = formatWingOrFuselageGraph(graph);
+    cpcr::CPACSTreeItem * fuselageNoise = graphF.front();
+    std::map<cpcr::UID, Eigen::Vector4d> centerPoints = getCenterPointsOfElementsInFuselage(fuselage->getUid());
+    Eigen::Vector4d startP = centerPoints[fuselageNoise->getUid()];
+
+    // set the translation as the noise position
+    newTransformation.setTranslation(Point(startP[0], startP[1], startP[2]));
+
+    return newTransformation;
+}
 
 
-    return cpcr::CPACSTransformation();
+
+
+
+void cpcr::AircraftTree::setFuselageTransformationKeepGeometry(cpcr::UID fuselageUID,
+                                                               const cpcr::CPACSTransformation &newTransformation) {
+
+    // check the type
+    checkUIDAndType(fuselageUID, "fuselage", "setFuselageTransformationKeepGeometry");
+    // call the function
+    setWingOrFuselageTransformationKeepGeometry(fuselageUID, newTransformation);
+
+
+}
+
+bool cpcr::AircraftTree::isFuselageTransformationStandardized(cpcr::UID fuselageUID) {
+
+
+    //TODO: move the comparison to CPACSTransformation
+    CPACSTreeItem* wing = m_root->getChildByUid(fuselageUID);
+
+    cpcr::CPACSTransformation idealWingT = this->determineFuselageTransformation(fuselageUID); // the tree was rebuild -> the item has changed
+    cpcr::CPACSTransformation currentWingT = this->modifier.getTransformation(wing->getXPath().toString() + "/transformation");
+
+    bool simmilar = true;
+    if( ! (idealWingT.getTranslation().toEigen().isApprox(currentWingT.getTranslation().toEigen(), 0.0001)) ){
+        simmilar = false;
+    }
+    if( !(idealWingT.getRotation() == currentWingT.getRotation()) ){
+        simmilar = false;
+    }
+
+    if( !(idealWingT.getScaling() == currentWingT.getScaling()) ){
+        simmilar = false;
+    }
+    return simmilar ;
+
+}
+
+void cpcr::AircraftTree::fuselageTransformationStandardization(UID fuselageUID){
+
+    checkUIDAndType(fuselageUID, "fuselage", "fuselageTransformationStandardization");
+
+    bool isStd = isFuselageTransformationStandardized(fuselageUID);
+    if ( ! isStd ){
+        CPACSTransformation newT = determineFuselageTransformation(fuselageUID);
+        setFuselageTransformationKeepGeometry(fuselageUID, newT);
+    }
+
 }
 
 

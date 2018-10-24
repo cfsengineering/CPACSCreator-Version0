@@ -58,6 +58,7 @@ namespace  cpcr{
 
         bool operator==(const CPACSTransformation &other) ;
 
+        bool  isApprox( const CPACSTransformation &other , double precision = 0.0001);
         Eigen::Quaterniond getRotationAsQuaternion() const ;
 
 

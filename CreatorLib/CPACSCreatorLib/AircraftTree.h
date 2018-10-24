@@ -227,11 +227,15 @@ namespace cpcr{
         Eigen::Vector3d getFuselageDirection(UID fuselageUID);
 
 
+
+
         /*
          * Standardization for fuselage
          */
 
         /***
+         *
+         * Find the transformation for fuselage element that respect the CPACSCreator standard.
          *
          * @param fusleageUID
          * @return
@@ -239,12 +243,32 @@ namespace cpcr{
         CPACSTransformation determineFuselageTransformation(UID fuselageUID);
 
 
+        /***
+         * This function set the transformation element of the fuselage keeping the resulting geometry unchanged.
+         *
+         * @param fuselageUID
+         * @param newTransformation
+         * @remark The function will delete all positionings and modify the section and the element transformations of this fuselage
+        */
+        void setFuselageTransformationKeepGeometry(UID fuselageUID, const CPACSTransformation &newTransformation);
 
 
 
+        /***
+         * Check if the fuselage transformation element respects the CPACSCreator standard.
+         * @param fuselageUID
+         * @return
+         */
+        bool isFuselageTransformationStandardized(UID fuselageUID);
 
 
-
+        /***
+         * Check if the fuselage transformation element respects the CPACSCreator standard.
+         * If not, the fuselage transformation will be mofdify such that the fuselage transformation respects the standard.
+         * The global geometry will remain unchanged.
+         * @param fuselageUID
+         */
+        void fuselageTransformationStandardization(UID fuselageUID);
 
 
 
@@ -341,9 +365,9 @@ namespace cpcr{
          * Set the wing transformation without any remarkable changes on the output shape.
          * @param wing
          * @param newTransformation
-         * @remark used in standardization
+         * @remark used in standardization, delete all positionings, change section and elements transformation of the fuselage
          */
-        void setWingTransformationKeepWires(UID wingUID, const CPACSTransformation &newTransformation);
+        void setWingTransformationKeepGeometry(UID wingUID, const CPACSTransformation &newTransformation);
 
 
 
@@ -539,7 +563,7 @@ namespace cpcr{
         * Then a vector that contains exactly each UID once is returned.
         *
         */
-        std::vector<UID> getAllElementUIDsUsedInAWing( UID wingUID);
+        std::vector<UID> getAllElementUIDsUsedInAWingOrFuselage(UID wingUID);
 
 
 
@@ -678,6 +702,17 @@ namespace cpcr{
 
 
     protected:
+
+
+        /***
+        * Set the wing or fuselage transformation without any remarkable changes on the output shape.
+        * @param wing
+        * @param newTransformation
+        * @remark used in standardization
+        */
+        void setWingOrFuselageTransformationKeepGeometry(UID wingOrFuselageUID, const CPACSTransformation &newTransformation);
+
+
 
 
         void setWingAirfoilsByUIDKeepChord(CPACSTreeItem* wing, UID airfoilUID);
