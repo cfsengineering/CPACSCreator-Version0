@@ -528,13 +528,13 @@ TEST_F(CPACSFileTest, create ){
     cpacsFile.save();
 
     x.setXPath(baseXpath + "wings/wing[1]/sections/section[2]/elements/element[2]");
-    cpacsFile.createEmptyElement(x , "ellle-uid");
+    cpacsFile.createEmptyElementForWing(x, "ellle-uid");
     cpacsFile.save();
     EXPECT_EQ("ellle-uid",  cpacsFile.getUid(x,""));
 
 
     x.setXPath(baseXpath + "wings/wing[1]/sections/section");
-    cpacsFile.createEmptySection(x , "sect-uid");
+    cpacsFile.createEmptySection(x, "sect-uid");
     cpacsFile.save();
     x.setXPath(baseXpath + "wings/wing[1]/sections/section[@uID=\"sect-uid\"]");
     EXPECT_EQ("sect-uid",  cpacsFile.getUid(x,""));

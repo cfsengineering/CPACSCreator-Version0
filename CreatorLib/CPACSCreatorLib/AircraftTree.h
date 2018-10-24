@@ -271,6 +271,21 @@ namespace cpcr{
         void fuselageTransformationStandardization(UID fuselageUID);
 
 
+        /**
+         * Check if there is exactly one element per each fuselage section.
+         * @param fuselageUID
+         * @return
+         */
+        bool checkExactlyOneElementPerSectionForFuselage(UID fuselageUID);
+
+        /**
+         * Force each section of the fuselage to contain exactly one element.
+         *
+         * @remark The aircraft tree will be save in file and rebuild, all the CPACSTreeItem will change !!!!!!!!!
+         * @param wing
+         */
+        void oneSectionOneElementStandardizationForFuselage(UID fuselageUID);
+
 
 
 
@@ -332,11 +347,15 @@ namespace cpcr{
 
 
 
-
-        bool checkIfOneSectionOneElementForWing(UID wingUID);
+        /**
+         * Check if there is exactly one element per each wing section.
+         * @param wingUID
+         * @return
+         */
+        bool checkExactlyOneElementPerSectionForWing(UID wingUID);
 
         /**
-         * Create one section for each element.
+         * Force each section to contain exactly one element.
          *
          * @remark The aircraft tree will be save in file and rebuild, all the CPACSTreeItem will change !!!!!!!!!
          * @param wing
@@ -712,6 +731,19 @@ namespace cpcr{
         */
         void setWingOrFuselageTransformationKeepGeometry(UID wingOrFuselageUID, const CPACSTransformation &newTransformation);
 
+
+        /***
+         * Check if there is exactly one element per each child section of the parent.
+         *
+         * @param parent
+         */
+        bool checkExactlyOneElementPerSection(UID parent);
+
+        /***
+         * Force the wing or the wing description to have exactly one element per each section.
+         * To do this it can modify the description of the shape but the final geometry will remain the same.
+         */
+        void oneSectionOneElementStandardizationForFuselageOrWing(UID wingOrFuselage);
 
 
 

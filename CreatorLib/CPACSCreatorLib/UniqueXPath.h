@@ -56,6 +56,7 @@ namespace cpcr {
         int getLastElementIndex() const ;
 
 
+        void replaceLastTixiIndexByUidAttribute(std::string attribute) ;
 
         // remove the first element and return it
         std::string popFirst();

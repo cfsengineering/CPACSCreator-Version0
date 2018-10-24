@@ -805,13 +805,14 @@ namespace cpcr {
 
         tixi::TixiCreateElement(tixiHandle, newSectionX.toString() + "/description" );
 
-        tixi::TixiCreateElement(tixiHandle, newSectionX.toString() + "/elements" );
-
-        this->createEmptyElement(newSectionX.toString() + "/elements/element", newUid + "_element1" );
-
         tixi::TixiCreateElement(tixiHandle, newSectionX.toString() + "/name" );
 
         this->createTransformation( newSectionX.toString() + "/transformation", CPACSTransformation());
+
+        tixi::TixiCreateElement(tixiHandle, newSectionX.toString() + "/elements" );
+
+        //this->createEmptyElementForWing(newSectionX.toString() + "/elements/element", newUid + "_element1" );
+
 
         return newSectionX;
     }
@@ -819,7 +820,7 @@ namespace cpcr {
 
 
 
-    void CPACSFile::createEmptyElement(UniqueXPath target, std::string newUid) {
+    void CPACSFile::createEmptyElementForWing(UniqueXPath target, std::string newUid) {
         if( ! isValidWithWarning() ){
             return;
         }
@@ -828,10 +829,10 @@ namespace cpcr {
         parent.popLast();
 
         if (! tixi::TixiCheckElement(tixiHandle, parent.toString() )) {
-            throw CreatorException("createEmptyElement: parent element not found!");
+            throw CreatorException("createEmptyElementForWing: parent element not found!");
         }
         if ( parent.getLastElementType() != "elements" ) {
-            throw CreatorException("createEmptyElement: parent is not a elements");
+            throw CreatorException("createEmptyElementForWing: parent is not a elements");
         }
 
         int positioningCount = tixi::TixiGetNamedChildrenCount(tixiHandle, parent.toString() + "/element") ;
@@ -922,6 +923,37 @@ namespace cpcr {
         }
 
         return symmetry;
+    }
+
+    void CPACSFile::createEmptyElementForFuselage(UniqueXPath target, std::string newUid) {
+        if( ! isValidWithWarning() ){
+            return;
+        }
+
+        UniqueXPath parent = target;
+        parent.popLast();
+
+        if (! tixi::TixiCheckElement(tixiHandle, parent.toString() )) {
+            throw CreatorException("createEmptyElementForFuselage: parent element not found!");
+        }
+        if ( parent.getLastElementType() != "elements" ) {
+            throw CreatorException("createEmptyElementForFuselage: parent is not a elements");
+        }
+
+        int positioningCount = tixi::TixiGetNamedChildrenCount(tixiHandle, parent.toString() + "/element") ;
+        int idx = positioningCount + 1;
+
+        UniqueXPath newSegmentX(parent.toString() + "/element[" + std::to_string(idx) + "]" );
+
+        tixi::TixiCreateElement(tixiHandle, parent.toString() + "/element");
+
+        tixi::TixiSaveAttribute(tixiHandle, newSegmentX.toString(), "uID", newUid );
+
+        tixi::TixiCreateElement(tixiHandle, newSegmentX.toString() + "/profileUID" );
+
+        tixi::TixiCreateElement(tixiHandle, newSegmentX.toString() + "/name" );
+
+        this->createTransformation( newSegmentX.toString() + "/transformation", CPACSTransformation());
     }
 
 

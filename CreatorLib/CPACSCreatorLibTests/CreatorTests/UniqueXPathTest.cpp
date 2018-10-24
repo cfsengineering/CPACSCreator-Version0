@@ -271,3 +271,19 @@ TEST_F(UniqueXPathTest, relativeTo){
 
 
 }
+
+
+
+
+
+TEST_F(UniqueXPathTest, replaceLastTixiIndexByUidAttribute){
+
+    UniqueXPath xpath1 = UniqueXPath("/a/b[4]/c[3]");
+
+    xpath1.replaceLastTixiIndexByUidAttribute("beautiful");
+
+    EXPECT_TRUE( xpath1.toString() == "/a/b[4]/c[@uID=\"beautiful\"]" );
+
+
+
+}

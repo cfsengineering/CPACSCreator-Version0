@@ -79,13 +79,20 @@ protected:
     // Same principle as for area,
     // first need to back up the chord values with "backupChordPointsOfWing"
     // then the value can be checked with "checkCurrentChordPointsWithBackup"
-    std::vector<cpcr::UID> UIDs;
+    std::vector<cpcr::UID> wingElementsUIDs;
     std::map<cpcr::UID, Eigen::Vector4d> lEsB;
     std::map<cpcr::UID, Eigen::Vector4d> tEsB;
     std::map<cpcr::UID, Eigen::Vector4d> lEsA;
     std::map<cpcr::UID, Eigen::Vector4d> tEsA;
 
 
+    // Used to check if centers of the fuselage has changed.
+    // Same principle as for area,
+    // first need to back up the centers values with "backupCentersOfFuselage"
+    // then the value can be checked with "checkCurrentCentersWithBackup"
+    std::vector<cpcr::UID> fuselageElementsUIDs;
+    std::map<cpcr::UID, Eigen::Vector4d> centersB;
+    std::map<cpcr::UID, Eigen::Vector4d> centersA;
 
 
     void setVariables(std::string fileName){
@@ -140,24 +147,32 @@ protected:
 
 
     void backupChordPointsOfWing(std::string wingUID) {
-
-        CPACSTreeItem *wing = tree.getRoot()->getChildByUid(wingUID);
-
-        UIDs = tree.getAllElementUIDsUsedInAWingOrFuselage(wing->getUid());
-        lEsB = tree.getChordPointsOfElementsInWing(wing->getUid(), 0);
-        tEsB = tree.getChordPointsOfElementsInWing(wing->getUid(), 1);
+        wingElementsUIDs = tree.getAllElementUIDsUsedInAWingOrFuselage(wingUID);
+        lEsB = tree.getChordPointsOfElementsInWing(wingUID, 0 );
+        tEsB = tree.getChordPointsOfElementsInWing(wingUID, 1);
     }
 
     void checkCurrentChordPointsWithBackup(std::string wingUID){
+        lEsA = tree.getChordPointsOfElementsInWing(wingUID, 0);
+        tEsA = tree.getChordPointsOfElementsInWing(wingUID, 1);
 
-        CPACSTreeItem *wing = tree.getRoot()->getChildByUid(wingUID);
-        lEsA = tree.getChordPointsOfElementsInWing(wing->getUid(), 0);
-        tEsA = tree.getChordPointsOfElementsInWing(wing->getUid(), 1);
-
-        for(UID u: UIDs )
+        for(UID u: wingElementsUIDs )
         {
             EXPECT_TRUE(lEsA[u].isApprox( lEsB[u], 0.0001) );
             EXPECT_TRUE( tEsA[u].isApprox(tEsB[u], 0.0001) ) ;
+        }
+
+    }
+    
+    void backupCenterPointsOfFuselage(std::string fuselageUID){
+        fuselageElementsUIDs = tree.getAllElementUIDsUsedInAWingOrFuselage(fuselageUID);
+        centersB = tree.getCenterPointsOfElementsInFuselage(fuselageUID);
+    }
+
+    void checkCurrentCentersWithBackup(std::string fuselageUID){
+        centersA = tree.getCenterPointsOfElementsInFuselage(fuselageUID);
+        for( UID u: fuselageElementsUIDs){
+            EXPECT_TRUE(centersA[u].isApprox(centersB[u]));
         }
 
     }
@@ -1601,39 +1616,22 @@ TEST_F(AircraftTreeTest, setWingTransformation ) {
 
 TEST_F(AircraftTreeTest, oneElementOneSection ) {
 
-
     setVariables("wing-one-kick-double-elements-in-section.xml");
-
     std::string wingUID = "Wing";
 
-    std::vector<cpcr::UID> UIDs = tree.getAllElementUIDsUsedInAWingOrFuselage(wingUID);
-    std::map<cpcr::UID, Eigen::Vector4d> lEsB = tree.getChordPointsOfElementsInWing(wingUID, 0);
-    std::map<cpcr::UID, Eigen::Vector4d> tEsB = tree.getChordPointsOfElementsInWing(wingUID, 1);
+    backupChordPointsOfWing(wingUID);
 
-    EXPECT_FALSE( tree.checkIfOneSectionOneElementForWing(wingUID));
+    EXPECT_FALSE(tree.checkExactlyOneElementPerSectionForWing(wingUID));
     tree.oneSectionOneElementStandardizationForWing(wingUID);
-    EXPECT_TRUE( tree.checkIfOneSectionOneElementForWing(wingUID));
-
+    EXPECT_TRUE(tree.checkExactlyOneElementPerSectionForWing(wingUID));
     tree.writeToFile();
 
-    std::map<cpcr::UID, Eigen::Vector4d>  lEsA = tree.getChordPointsOfElementsInWing(wingUID, 0);
-    std::map<cpcr::UID, Eigen::Vector4d>  tEsA = tree.getChordPointsOfElementsInWing(wingUID, 1);
-
-    for(UID u: UIDs )
-    {
-        EXPECT_TRUE(lEsA[u].isApprox( lEsB[u], 0.0001) );
-        EXPECT_TRUE( tEsA[u].isApprox(tEsB[u], 0.0001) ) ;
-    }
-
+    checkCurrentChordPointsWithBackup(wingUID);
 
 
     setVariables("BWB_DoE_102_modWP4.4_CS_v3.xml");
-
     wingUID = "BWB450_wingID";
-
-    EXPECT_TRUE(tree.checkIfOneSectionOneElementForWing(wingUID));
-
-
+    EXPECT_TRUE(tree.checkExactlyOneElementPerSectionForWing(wingUID));
 
 }
 
@@ -2779,9 +2777,37 @@ TEST_F(AircraftTreeTest, fuselageTransformation){
     tree.fuselageTransformationStandardization(fuselageUID);
     isStd = tree.isFuselageTransformationStandardized(fuselageUID);
     EXPECT_TRUE(isStd);
+}
+
+
+
+
+TEST_F(AircraftTreeTest, fuselageOneElementPerSection ) {
+
+    
+
+    setVariables("simple-aircraft-fuselages.xml");
+    UID fuselageUID;
+    bool isStd;
+
+    fuselageUID = "SimpleFuselage";
+    isStd = tree.checkExactlyOneElementPerSectionForFuselage(fuselageUID);
+    EXPECT_TRUE( isStd); 
+    
+    fuselageUID = "SimpleFuselageWierdSections";
+    backupCenterPointsOfFuselage(fuselageUID);
+    isStd = tree.checkExactlyOneElementPerSectionForFuselage(fuselageUID);
+    EXPECT_FALSE(isStd);
+    tree.oneSectionOneElementStandardizationForFuselage(fuselageUID);
+    isStd = tree.checkExactlyOneElementPerSectionForFuselage(fuselageUID);
+    EXPECT_TRUE(isStd);
+    checkCurrentCentersWithBackup(fuselageUID);
 
 
 
 
 
 }
+
+
+

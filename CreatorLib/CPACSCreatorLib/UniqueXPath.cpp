@@ -211,5 +211,10 @@ cpcr::UniqueXPath cpcr::UniqueXPath::relativeTo(const cpcr::UniqueXPath &other) 
     return UniqueXPath(newXpath);
 }
 
+void cpcr::UniqueXPath::replaceLastTixiIndexByUidAttribute(std::string attribute) {
+    this->xpath = removeBrackets(this->xpath);
+    this->xpath = this->xpath + "[@uID=\"" + attribute + "\"]";
+}
+
 
 

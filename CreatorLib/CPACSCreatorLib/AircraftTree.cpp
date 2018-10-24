@@ -1442,90 +1442,14 @@ cpcr::CPACSTransformation cpcr::AircraftTree::determineWingTransformation(UID wi
 
 void cpcr::AircraftTree::oneSectionOneElementStandardizationForWing(UID wingUID) {
 
-    CPACSTreeItem* wing = m_root->getChildByUid(wingUID);
-
-    std::vector< CPACSTreeItem *> sections = wing->findAllChildrenOfTypeRecursively("section");
-
-
-    std::vector< CPACSTreeItem *> elements;
-    for(CPACSTreeItem* s : sections){
-
-        elements = s->findAllChildrenOfTypeRecursively("element");
-        if (elements.size() == 0 ){
-
-            LOG(WARNING) << "oneSectionOneElementStandardizationForWing: A section with no element was found -> we remove it.";
-            tixi::TixiRemoveElement(modifier.getTixiHandle(), s->getXPath().toString() );
-
-        }else{
-
-            for( CPACSTreeItem * e : elements){
-                if( e->getTixiIndex() == 1 ){ // we keep the first in the original section
-
-                }else{
-
-                    UID airfoilUID = modifier.retrieve<std::string>(e->getXPath().toString() + "/airfoilUID", "");
-                    UID elementUID = e->getUid(); // element uid should stay the same for the segment
-                    UID ETransformationUID = e->getChild("transformation")->getUid();
-                    std::vector<std::pair<cpcr::CPACSTreeItem *, Eigen::Matrix4d>> chain = getTransformationChainForOneElement(e);
-
-                    // make  section
-                    UID newSectionUID = s->getUid() + "_bis" + std::to_string(e->getTixiIndex());
-                    newSectionUID = modifier.makeUIDUnique(newSectionUID);
-                    UniqueXPath newSectionX = modifier.createEmptySection(wing->getXPath().toString() + "/sections/section", newSectionUID);
-                    modifier.setTransformation(newSectionX.toString() +"/transformation" , CPACSTransformation() ); // we set the transform of the section to identity
-
-                    // set element
-                    modifier.setUid(newSectionX.toString() + "/elements/element", elementUID);
-                    modifier.setValue<std::string>(newSectionX.toString() + "/elements/element/airfoilUID", airfoilUID);
-                    CPACSTransformation newE(  chain[2].second * chain[1].second * chain[0].second); // We set the position only in element
-                    modifier.setTransformation(newSectionX.toString() + "/elements/element/transformation", newE);
-                    if(ETransformationUID != ""){
-                        modifier.setUid(newSectionX.toString() + "/elements/element/transformation", ETransformationUID);
-                    }else{
-                        ETransformationUID = elementUID + "_transformation1";
-                        ETransformationUID = modifier.makeUIDUnique(ETransformationUID);
-                    }
-
-
-                    // remove section in the old section
-                    tixi::TixiRemoveElement(modifier.getTixiHandle(), e->getXPath().toString());
-
-                }
-
-            }
-        }
-    }
-
-    // need to be rebuild -> Carefull the treeItem would not be the same anymore!
-    this->writeToFile();  // TODO: temp file or in memory build
-    this->reBuild();
-
-
+    checkUIDAndType(wingUID, "wing", "oneSectionOneElementStandardizationForWing");
+    oneSectionOneElementStandardizationForFuselageOrWing(wingUID);
 }
 
-bool cpcr::AircraftTree::checkIfOneSectionOneElementForWing(UID wingUID) {
+bool cpcr::AircraftTree::checkExactlyOneElementPerSectionForWing(UID wingUID) {
 
-    bool r = true;
-    CPACSTreeItem* wing = m_root->getChildByUid(wingUID);
-    std::vector< CPACSTreeItem *> sections = wing->findAllChildrenOfTypeRecursively("section");
-
-    std::vector< CPACSTreeItem *> elements;
-    for(CPACSTreeItem* s : sections){
-
-        elements = s->findAllChildrenOfTypeRecursively("element");
-
-        if( elements.size() == 1 ){
-            // perfect
-        }else if (elements.size() == 0 ) {
-            LOG(INFO) << "checkIfOneSectionOneElementForWing: Section with 0 element found for wing: " + wing->getUid();
-            r = false;
-        }else if( elements.size() > 1) {
-            LOG(INFO) << "checkIfOneSectionOneElementForWing: Section with more than 1 element found for wing: " + wing->getUid();
-            r = false;
-        }
-    }
-
-    return r;
+    checkUIDAndType(wingUID, "wing", "checkExactlyOneElementPerSectionForWing");
+    return checkExactlyOneElementPerSection(wingUID);
 }
 
 
@@ -1546,7 +1470,7 @@ bool cpcr::AircraftTree::checkIfPositioningsAreStandardizedForWing(UID wingUID) 
     std::map<CPACSTreeItem*, bool > pUsedByEIsStd;
 
 
-    if(! checkIfOneSectionOneElementForWing(wingUID)){
+    if(!checkExactlyOneElementPerSectionForWing(wingUID)){
         return false;
     }
 
@@ -1621,7 +1545,7 @@ void cpcr::AircraftTree::positioningsStandardizationForWing(UID wingUID) {
     std::vector<cpcr::CPACSTreeItem *> graph;
     CPACSTreeItem* wing = m_root->getChildByUid(wingUID);
 
-    if(! checkIfOneSectionOneElementForWing(wingUID)){
+    if(!checkExactlyOneElementPerSectionForWing(wingUID)){
         throw CreatorException("positioningsStandardizationForWing: required oneSectionOneElement in the wing!");
     }
 
@@ -1738,7 +1662,7 @@ void cpcr::AircraftTree::completeStandardizationForWing(cpcr::UID wingUID) {
     }
 
     LOG(INFO) << "One Section One Element phase:";
-    if( this->checkIfOneSectionOneElementForWing(wingUID)){
+    if(this->checkExactlyOneElementPerSectionForWing(wingUID)){
         LOG(INFO) << " - The wing has already one section per elements";
     }else{
         LOG(INFO) << " - One section one element standardization will be performed";
@@ -1775,7 +1699,7 @@ bool cpcr::AircraftTree::isWingStandardized(cpcr::UID wingUID) {
     CPACSTreeItem * wing = m_root->getChildByUid(wingUID);
 
     r = r && checkIfAirfoilsAreStandardizedForWing(wingUID);
-    r = r && checkIfOneSectionOneElementForWing(wingUID);
+    r = r && checkExactlyOneElementPerSectionForWing(wingUID);
     r = r && checkIfWingTransformationIsStandardizedForWing(wingUID);
     r = r && checkIfPositioningsAreStandardizedForWing(wingUID);
 
@@ -2049,7 +1973,7 @@ void cpcr::AircraftTree::placeElement(cpcr::CPACSTreeItem *element, Eigen::Matri
 
     CPACSTreeItem * wing = element->getParentOfType("wing");
 
-    if( checkIfOneSectionOneElementForWing(wing->getUid()) && checkIfPositioningsAreStandardizedForWing(wing->getUid()) ){
+    if(checkExactlyOneElementPerSectionForWing(wing->getUid()) && checkIfPositioningsAreStandardizedForWing(wing->getUid()) ){
         placeElementRespectStd(element, globalM);
     }else {
         placeElementMinimalChanges(element, globalM);
@@ -2982,7 +2906,7 @@ bool cpcr::AircraftTree::isFuselageTransformationStandardized(cpcr::UID fuselage
 
 }
 
-void cpcr::AircraftTree::fuselageTransformationStandardization(UID fuselageUID){
+void cpcr::AircraftTree::fuselageTransformationStandardization(cpcr::UID fuselageUID){
 
     checkUIDAndType(fuselageUID, "fuselage", "fuselageTransformationStandardization");
 
@@ -2996,7 +2920,124 @@ void cpcr::AircraftTree::fuselageTransformationStandardization(UID fuselageUID){
 
 
 
+bool cpcr::AircraftTree::checkExactlyOneElementPerSection(cpcr::UID parentUID) {
 
+    bool r = true;
+
+    CPACSTreeItem* parent = m_root->getChildByUid(parentUID);
+    std::vector< CPACSTreeItem *> sections = parent->findAllChildrenOfTypeRecursively("section");
+
+    std::vector< CPACSTreeItem *> elements;
+    for(CPACSTreeItem* s : sections){
+
+        elements = s->findAllChildrenOfTypeRecursively("element");
+
+        if( elements.size() == 1 ){
+            // perfect
+        }else if (elements.size() == 0 ) {
+            LOG(INFO) << "checkExactlyOneElementPerSection: Section with 0 element found in: " + parent->getUid();
+            r = false;
+        }else if( elements.size() > 1) {
+            LOG(INFO) << "checkExactlyOneElementPerSection: Section with more than 1 element found in: " + parent->getUid();
+            r = false;
+        }
+    }
+    return r;
+}
+
+void cpcr::AircraftTree::oneSectionOneElementStandardizationForFuselageOrWing(cpcr::UID wingOrFuselage){
+
+    // we assume that the inputs was checked prior to this function call
+
+    while( ! checkExactlyOneElementPerSection(wingOrFuselage) ){
+
+        // This function is not optimized, we assume that it
+        CPACSTreeItem* parent = m_root->getChildByUid(wingOrFuselage);
+
+        std::vector< CPACSTreeItem *> sections = parent->findAllChildrenOfTypeRecursively("section");
+        std::vector< CPACSTreeItem *> elements;
+
+        for(CPACSTreeItem* s : sections){
+
+            elements = s->findAllChildrenOfTypeRecursively("element");
+            if (elements.size() == 0 ){
+                LOG(WARNING) << "oneSectionOneElementStandardizationForFuselage: A section with no element was found -> we remove it.";
+                tixi::TixiRemoveElement(modifier.getTixiHandle(), s->getXPath().toString() );
+                break; // we need to rebuild the tree to have the synchronisation between the tree and the tixi handler
+
+            }else{
+                for( CPACSTreeItem * e : elements){
+                    if( e->getTixiIndex() == 1 ){ // we keep the first in the original section
+
+                    }else{
+
+                        // retrieve the chain before the structure is changed
+                        std::vector<std::pair<cpcr::CPACSTreeItem *, Eigen::Matrix4d>> chain = getTransformationChainForOneElement(e);
+
+
+                        // make the new section
+                        UID newSectionUID = s->getUid() + "_bis" + std::to_string(e->getTixiIndex());
+                        newSectionUID = modifier.makeUIDUnique(newSectionUID);
+                        UniqueXPath newSectionX = modifier.createEmptySection(parent->getXPath().toString() + "/sections/section", newSectionUID);
+                        modifier.setTransformation(newSectionX.toString() +"/transformation" , CPACSTransformation() ); // we set the transform of the section to identity
+
+
+                        // The only difference between a wing and a fuselage is the profile reference in element
+                        // Create the particular need for the wing and the fuselage and set them
+                        if(parent->getType() == "fuselage"){
+                            UID profileUID = modifier.retrieve<std::string>(e->getXPath().toString() + "/profileUID", "");
+                            modifier.createEmptyElementForFuselage(newSectionX.toString() + "/elements/element", newSectionUID + "_element1");
+                            modifier.setValue<std::string>(newSectionX.toString() + "/elements/element/profileUID", profileUID);
+                        }else {
+                            UID airfoilUID = modifier.retrieve<std::string>(e->getXPath().toString() + "/airfoilUID", "");
+                            modifier.createEmptyElementForWing(newSectionX.toString() + "/elements/element", newSectionUID + "_element1");
+                            modifier.setValue<std::string>(newSectionX.toString() + "/elements/element/airfoilUID", airfoilUID);
+                        }
+
+
+                        // set the rest of the element
+                        UID elementUID = e->getUid(); // element uid should stay the same for the segment
+                        modifier.setUid(newSectionX.toString() + "/elements/element", elementUID);
+
+                        UID ETransformationUID = e->getChild("transformation")->getUid();
+                        if(ETransformationUID != ""){
+                            modifier.setUid(newSectionX.toString() + "/elements/element/transformation", ETransformationUID);
+                        }else{
+                            ETransformationUID = elementUID + "_transformation1";
+                            ETransformationUID = modifier.makeUIDUnique(ETransformationUID);
+                        }
+
+                        CPACSTransformation newE(  chain[2].second * chain[1].second * chain[0].second); // We set the position only in element
+                        modifier.setTransformation(newSectionX.toString() + "/elements/element/transformation", newE);
+
+
+                        // remove section in the old section
+                        tixi::TixiRemoveElement(modifier.getTixiHandle(),e->getXPath().toString());
+                        break; // we need to rebuild the tree to have the synchronisation between the tree and the tixi handler
+                    }
+
+                }
+            }
+        }
+
+        // need to be rebuild -> Becarefull the treeItems would not be the same anymore!
+        this->writeToFile();
+        this->reBuild();
+    }
+
+};
+
+bool cpcr::AircraftTree::checkExactlyOneElementPerSectionForFuselage(cpcr::UID fuselageUID) {
+    checkUIDAndType(fuselageUID, "fuselage", "checkExactlyOneElementPerSectionForFuselage");
+    return checkExactlyOneElementPerSection(fuselageUID);
+}
+
+void cpcr::AircraftTree::oneSectionOneElementStandardizationForFuselage(cpcr::UID fuselageUID) {
+
+    checkUIDAndType(fuselageUID, "fuselage", "oneSectionOneElementStandardizationForFuselage");
+    oneSectionOneElementStandardizationForFuselageOrWing(fuselageUID);
+
+}
 
 
 

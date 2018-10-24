@@ -95,11 +95,12 @@ public:
     void createSegment(UniqueXPath target, std::string uid,  const CPACSSegment& segment);
 
     /***
-    * Create a standard section with one element
+    * Create a standard section with no element
      * @return the XPath of the new section
     */
     UniqueXPath createEmptySection(UniqueXPath target, std::string newUid);
-    void createEmptyElement(UniqueXPath target, std::string newUid);
+    void createEmptyElementForWing(UniqueXPath target, std::string newUid);
+    void createEmptyElementForFuselage(UniqueXPath target, std::string newUid);
     void createEmptyWing(UniqueXPath target, std::string wingUID);
 
 

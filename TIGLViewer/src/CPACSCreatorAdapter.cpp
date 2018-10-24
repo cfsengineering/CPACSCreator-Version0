@@ -325,7 +325,7 @@ CPACSCreatorAdapter::getStdValues(cpcr::CPACSTreeItem *item, bool &stdAirfoil, b
 
     std::string wingUID = item->getUid();
 
-    stdSections = aircraftTree.checkIfOneSectionOneElementForWing(wingUID);
+    stdSections = aircraftTree.checkExactlyOneElementPerSectionForWing(wingUID);
     stdAirfoil = aircraftTree.checkIfAirfoilsAreStandardizedForWing(wingUID);
     stdPositionings = aircraftTree.checkIfPositioningsAreStandardizedForWing(wingUID);
     stdAnchor = aircraftTree.checkIfWingTransformationIsStandardizedForWing(wingUID);
@@ -345,7 +345,7 @@ CPACSCreatorAdapter::setStdValues(cpcr::CPACSTreeItem *item, bool stdAirfoil, bo
         aircraftTree.airfoilsStandardizationForWing(wingUID);
     }
 
-    if(stdSections && (! aircraftTree.checkIfOneSectionOneElementForWing(wingUID)) ){
+    if(stdSections && (!aircraftTree.checkExactlyOneElementPerSectionForWing(wingUID)) ){
         aircraftTree.oneSectionOneElementStandardizationForWing(wingUID);
     }
 
