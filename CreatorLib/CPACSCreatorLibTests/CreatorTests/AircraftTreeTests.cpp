@@ -2803,11 +2803,53 @@ TEST_F(AircraftTreeTest, fuselageOneElementPerSection ) {
     EXPECT_TRUE(isStd);
     checkCurrentCentersWithBackup(fuselageUID);
 
+}
 
 
 
+TEST_F(AircraftTreeTest, checkIfPositioningsAreStandardizedForFuselage ) {
+
+    setVariables("simple-aircraft-fuselages.xml");
+    UID fuselageUID;
+    bool isStd;
+
+    // invalid uid should throw a error
+    fuselageUID = "fsdfsd";
+    EXPECT_THROW(tree.checkIfPositioningsAreStandardizedForFuselage(fuselageUID), CreatorException);
+
+
+    fuselageUID = "SimpleFuselage";
+    isStd = tree.checkIfPositioningsAreStandardizedForFuselage(fuselageUID);
+    EXPECT_FALSE(isStd);
+
+    fuselageUID = "SimpleFuselageStdP";
+    isStd =  tree.checkIfPositioningsAreStandardizedForFuselage(fuselageUID);
+    EXPECT_TRUE(isStd);
 
 }
+
+
+
+
+TEST_F(AircraftTreeTest, positioningsStandardizationForFuselage ) {
+
+    setVariables("simple-aircraft-fuselages.xml");
+    UID fuselageUID;
+    bool isStd;
+
+
+    fuselageUID = "SimpleFuselage";
+    backupCenterPointsOfFuselage(fuselageUID);
+    isStd = tree.checkIfPositioningsAreStandardizedForFuselage(fuselageUID);
+    EXPECT_FALSE(isStd);
+    tree.positioningsStandardizationForFuselage(fuselageUID);
+    checkCurrentCentersWithBackup(fuselageUID);
+    isStd =  tree.checkIfPositioningsAreStandardizedForFuselage(fuselageUID);
+    EXPECT_TRUE(isStd);
+
+}
+
+
 
 
 

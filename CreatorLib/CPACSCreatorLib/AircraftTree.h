@@ -289,6 +289,38 @@ namespace cpcr{
 
 
 
+        /***
+         * Check if the positionings used by this fuselage are standard.
+         *
+         * This mean that the translation of each elements is only given by positioning
+         * and that the positioning are define incrementally from noise to tail.
+         * This implies that:
+         * - All positionings depend on the previous one,
+         * - Elements and Sections translations are trivial.
+         */
+        bool checkIfPositioningsAreStandardizedForFuselage(UID fuselageUID);
+
+
+
+
+        /***
+         * Creator standardization for positionings.
+         *
+         * Rewrite the description of a fuselage such that the translation of every element is contained
+         * only in positionings elements.
+         * The first positioning start at the fuselage origin and end at noise element.
+         * The second positioning start at noise origin and end at the second element.
+         * (etc. following the fuselage graph order)
+         *
+         * @remark The rotations and scaling location can also be modify. After this function call the scaling is always
+         * located in the element transformation only and the rotation is always locate in the section transformation.
+         * @param wingOrFuselage
+         */
+         void positioningsStandardizationForFuselage(UID fuselageUID);
+
+
+
+
 
         /*
          * WING FUNCTIONS
@@ -331,18 +363,34 @@ namespace cpcr{
         void airfoilsStandardizationForWing(UID wingUID);
 
         /***
-         * Check if the positionings used by the wing is standard.
+         * Check if the positionings used by this wing are standard.
          *
          * This mean that the translation of each elements is only given by positioning
          * and that the positioning are define incrementally from root to tip.
-         * This implies that all positionings depend on the previous one.
-         *
-         *
+         * This implies that:
+         * - All positionings depend on the previous one,
+         * - Elements and Sections translations are trivial.
          * @param wing
          * @return
          */
         bool checkIfPositioningsAreStandardizedForWing(UID wingUID);
 
+
+
+
+        /***
+         * Creator standardization for positionings.
+         *
+         * Rewrite the description of a wing such that the translation of every element is contained
+         * only in positionings elements.
+         * The first positioning start at the fuselage origin and end at noise element.
+         * The second positioning start at noise origin and end at the second element.
+         * (etc. following the fuselage graph order)
+         *
+         * @remark The rotations and scaling location can also be modify. After this function call the scaling is always
+         * located in the element transformation only and the rotation is always locate in the section transformation.
+         * @param wingOrFuselage
+         */
         void positioningsStandardizationForWing(UID wingUID);
 
 
@@ -747,6 +795,42 @@ namespace cpcr{
 
 
 
+        /***
+         * Check if the positionings used by this wing or this fuselage are standard.
+         *
+         * This mean that the translation of each elements is only given by positioning
+         * and that the positioning are define incrementally from root to tip.
+         * This implies that:
+         * - All positionings depend on the previous one,
+         * - Elements and Sections translations are trivial.
+         * @param wing
+         * @return
+         */
+        bool checkIfPositioningsAreStandardizedForFuselageOrWing(UID uid);
+
+
+
+
+        /***
+         * Creator standardization for positionings.
+         *
+         * Rewrite the description of a fuselage (or a wing) such that the translation of every element is contained
+         * only in positionings elements.
+         * The first positioning start at the fuselage origin and end at noise element.
+         * The second positioning start at noise origin and end at the second element.
+         * (etc. following the fuselage graph order)
+         *
+         * @remark The rotations and scaling location can also be modify. After this function call the scaling is always
+         * located in the element transformation only and the rotation is always locate in the section transformation.
+         * @param wingOrFuselage
+         */
+        void positioningsStandardization(UID wingOrFuselage);
+
+
+
+
+
+
         void setWingAirfoilsByUIDKeepChord(CPACSTreeItem* wing, UID airfoilUID);
 
         void setWingAirfoilsByUIDBasic(CPACSTreeItem* wing, UID airfoilUID);
@@ -758,7 +842,7 @@ namespace cpcr{
         UID getRootOfWing( CPACSTreeItem* wing );
 
         // The element that is more distant of the root in the Y direction
-        // The root must be contained in the second list
+        // The root must be contained in the second listpositioningsStandardizationForWing
         UID getExtremityInY( cpcr::UID rootUID, std::map<cpcr::UID, Eigen::Vector4d> );
 
         // Given a the global transformation matrix of a element,
@@ -767,7 +851,7 @@ namespace cpcr{
 
 
         // Given a the global transformation matrix of a element,
-        // this function set the global element transformation to get the correct global transformation
+        // this function set the global element transformation to get the correct glpositioningsStandardizationForWingobal transformation
         // trying to keep the creator standard.
         // This mean that the element transformation, the section transformation and the positioning can change.
         void placeElementRespectStd(CPACSTreeItem* element, Eigen::Matrix4d globalM);
