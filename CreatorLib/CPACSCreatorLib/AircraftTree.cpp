@@ -1485,6 +1485,7 @@ void cpcr::AircraftTree::positioningsStandardizationForWing(UID wingUID) {
 
 void cpcr::AircraftTree::completeStandardizationForWing(cpcr::UID wingUID) {
 
+    checkUIDAndType(wingUID, "wing", "completeStandardizationForWing");
     // normalize airfoil
 
     LOG(INFO) << "STARTING: CREATOR STANDARDIZATION FOR WING: " + wingUID ;
@@ -1530,9 +1531,9 @@ void cpcr::AircraftTree::completeStandardizationForWing(cpcr::UID wingUID) {
 
 bool cpcr::AircraftTree::isWingStandardized(cpcr::UID wingUID) {
 
-    bool r = true;
-    CPACSTreeItem * wing = m_root->getChildByUid(wingUID);
+    checkUIDAndType(wingUID, "wing", "isWingStandardized");
 
+    bool r = true;
     r = r && checkIfAirfoilsAreStandardizedForWing(wingUID);
     r = r && checkExactlyOneElementPerSectionForWing(wingUID);
     r = r && checkIfWingTransformationIsStandardizedForWing(wingUID);
@@ -3060,6 +3061,55 @@ void cpcr::AircraftTree::positioningsStandardization(cpcr::UID wingOrFuselage) {
     // need to be rebuild -> Carefull the treeItem would not be the same anymore!
     this->writeToFile();  // TODO: temp file or in memory build
     this->reBuild();
+
+}
+
+void cpcr::AircraftTree::completeStandardizationForFuselage(cpcr::UID fuselageUID) {
+
+
+    checkUIDAndType(fuselageUID, "fuselage", "completeStandardizationForFuselage");
+
+    LOG(INFO) << "STARTING: CREATOR STANDARDIZATION FOR FUSELAGE: " + fuselageUID ;
+
+    LOG(INFO) << "One Section One Element phase:";
+    if(this->checkExactlyOneElementPerSectionForFuselage(fuselageUID)){
+        LOG(INFO) << " - The fuselage has already one section per elements";
+    }else{
+        LOG(INFO) << " - One section one element standardization will be performed";
+        this->oneSectionOneElementStandardizationForFuselage(fuselageUID);
+    }
+
+
+    LOG(INFO) << "Fuselage transformation phase:";
+    if( isFuselageTransformationStandardized(fuselageUID) ) {
+        LOG(INFO) << " - The fuselage transformation is already conform to the creator standard";
+    }else{
+        LOG(INFO) << " - The fuselage transformation will be standardized";
+        fuselageTransformationStandardization(fuselageUID);
+    }
+
+
+    LOG(INFO) << "Positionings phase:";
+    if(checkIfPositioningsAreStandardizedForFuselage(fuselageUID) ){
+        LOG(INFO) << " - The positionings are already conform to the creator standard\"";
+    }else{
+        LOG(INFO) << " - Postionings will be standardized";
+        this->positioningsStandardizationForFuselage(fuselageUID);
+    }
+
+
+    LOG(INFO) << "END: CREATOR STANDARDIZATION FOR Fuselage: " + fuselageUID ;
+}
+
+bool cpcr::AircraftTree::isFuselageStandardized(cpcr::UID fuselageUID) {
+
+    checkUIDAndType(fuselageUID, "fuselage", "isFuselageStandardized");
+
+    bool r = true;
+    r = r & checkExactlyOneElementPerSectionForFuselage(fuselageUID);
+    r = r & isFuselageTransformationStandardized(fuselageUID);
+    r = r & checkIfPositioningsAreStandardizedForFuselage(fuselageUID);
+    return r;
 
 }
 

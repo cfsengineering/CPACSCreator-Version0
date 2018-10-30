@@ -1429,8 +1429,8 @@
             <transformation uID="SimpleFuselageStdP_transformation1">
               <scaling uID="SimpleFuselageStdP_transformation1_scaling1">
                 <x>1.0</x>
-                <y>0.5</y>
-                <z>0.5</z>
+                <y>1</y>
+		<z>1</z>
               </scaling>
               <rotation uID="SimpleFuselageStdP_transformation1_rotation1">
                 <x>0.0</x>
@@ -1440,7 +1440,7 @@
               <translation refType="absLocal" uID="SimpleFuselageStdP_transformation1_translation1">
                 <x>-10.0</x>
                 <y>10.0</y>
-                <z>0.0</z>
+                <z>-0.004715</z>
               </translation>
             </transformation>
             <sections>
@@ -1577,9 +1577,9 @@
             <positionings>
 	      <positioning uID="D150_FuselageStdP_Positioning1ID">
                 <name>D150_FuselageStdP_Positioning1</name>
-                <length>-1</length>
-                <sweepAngle>90</sweepAngle>
-                <dihedralAngle>0</dihedralAngle>
+                <length>0.004715</length>
+                <sweepAngle>0</sweepAngle>
+                <dihedralAngle>90</dihedralAngle>
                 <toSectionUID>D150_FuselageStdP_Section1ID</toSectionUID>
               </positioning>
               <positioning uID="D150_FuselageStdP_Positioning2ID">

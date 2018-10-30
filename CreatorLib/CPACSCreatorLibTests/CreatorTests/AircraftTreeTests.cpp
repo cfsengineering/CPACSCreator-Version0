@@ -2851,5 +2851,52 @@ TEST_F(AircraftTreeTest, positioningsStandardizationForFuselage ) {
 
 
 
+TEST_F(AircraftTreeTest, completeStandardizationForFuselage ) {
+
+    setVariables("simple-aircraft-fuselages.xml");
+    UID fuselageUID;
+    bool isStd;
+
+
+    fuselageUID = "SimpleFuselage";
+    backupCenterPointsOfFuselage(fuselageUID);
+    isStd = tree.isFuselageStandardized(fuselageUID);
+    EXPECT_FALSE(isStd);
+    tree.completeStandardizationForFuselage(fuselageUID);
+    isStd =  tree.isFuselageStandardized(fuselageUID);
+    EXPECT_TRUE(isStd);
+    checkCurrentCentersWithBackup(fuselageUID);
+
+
+    fuselageUID = "SimpleFuselageStdP";
+    backupCenterPointsOfFuselage(fuselageUID);
+    isStd = tree.isFuselageStandardized(fuselageUID);
+    EXPECT_TRUE(isStd);
+    tree.completeStandardizationForFuselage(fuselageUID);
+    isStd =  tree.isFuselageStandardized(fuselageUID);
+    EXPECT_TRUE(isStd);
+    checkCurrentCentersWithBackup(fuselageUID);
+
+    fuselageUID = "SimpleFuselageCircumference";
+    backupCenterPointsOfFuselage(fuselageUID);
+    isStd = tree.isFuselageStandardized(fuselageUID);
+    EXPECT_FALSE(isStd);
+    tree.completeStandardizationForFuselage(fuselageUID);
+    isStd =  tree.isFuselageStandardized(fuselageUID);
+    EXPECT_TRUE(isStd);
+    checkCurrentCentersWithBackup(fuselageUID);
+
+
+    fuselageUID = "FuselageUnconventionalOrdering";
+    backupCenterPointsOfFuselage(fuselageUID);
+    isStd = tree.isFuselageStandardized(fuselageUID);
+    EXPECT_FALSE(isStd);
+    tree.completeStandardizationForFuselage(fuselageUID);
+    isStd =  tree.isFuselageStandardized(fuselageUID);
+    EXPECT_TRUE(isStd);
+    checkCurrentCentersWithBackup(fuselageUID);
+
+}
+
 
 

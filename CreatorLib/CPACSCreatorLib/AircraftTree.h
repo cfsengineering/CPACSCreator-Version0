@@ -320,8 +320,12 @@ namespace cpcr{
 
 
 
+         void completeStandardizationForFuselage(UID fuselageUID);
 
 
+         bool isFuselageStandardized(UID fuselageUID);
+         
+         
         /*
          * WING FUNCTIONS
          */
