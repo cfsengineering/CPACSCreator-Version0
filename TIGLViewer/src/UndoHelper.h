@@ -11,13 +11,14 @@
 /***
  * Helper class to manage undo and redo operations.
  *
- * On "init" (or "set"), the helper will duplicate the given file and the helper will return the new copied file.
- * Then the user should work with this new copied. This copied file becomes the "currentFile".
+ * On "init" (or "set"), the helper will duplicate the given file. This copied file becomes the "currentFile".
+ * Then the user should work with this "currentFile" (for example to open the CPACSConfiguration).
  * At some point, the user can add a check point calling the "addCheckPoint".
  * The "addCheckPoint" function will copy the file and register it, but the "currentFile" stay the same.
  * On calling "undo" the helper file return the last check point file and the current file will be updated. It'is up
  * to the user to reopen the returned file in its application (the filename is no more the same as before).
- *
+ * At the end (when the destructor or the clean function is call) every temp files (bakcup files) will be delete. This
+ * include the current file.
  *
  *
  */

@@ -144,6 +144,7 @@
     <addaction name="setBackgroundAction"/>
     <addaction name="openScriptAction"/>
     <addaction name="separator"/>
+    <addaction name="standardizeAction"/>
     <addaction name="refreshAction"/>
     <addaction name="separator"/>
     <addaction name="saveAction"/>
@@ -3121,6 +3122,17 @@
    </property>
    <property name="toolTip">
     <string>Redo last commit</string>
+   </property>
+  </action>
+  <action name="standardizeAction">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Standardize</string>
+   </property>
+   <property name="toolTip">
+    <string>Standardize the CPACS file to follow the CPACSCreator strandard description</string>
    </property>
   </action>
  </widget>

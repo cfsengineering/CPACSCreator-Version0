@@ -115,6 +115,7 @@ private slots:
     void applyModifications(); // preparation for undo is done here
     void undoCommit();
     void redoCommit();
+    void standardizeCurrentFile(bool YesOrNo);  // if
 
 private:
     void connectSignals();

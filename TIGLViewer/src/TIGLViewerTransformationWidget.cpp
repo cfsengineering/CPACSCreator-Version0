@@ -31,8 +31,8 @@ TIGLViewerTransformationWidget::TIGLViewerTransformationWidget(QWidget *parent):
 
 void TIGLViewerTransformationWidget::apply() {
     setInternalFromSpinBoxes();
-    associateManager->adapter->setTransformation(transformationItem, transformation);
-    associateManager->adapter->writeToFile();
+    associateManager->getAdapter()->setTransformation(transformationItem, transformation);
+    associateManager->getAdapter()->writeToFile();
 }
 
 
@@ -58,7 +58,7 @@ void TIGLViewerTransformationWidget::init(ModificatorManager* associate)
 void TIGLViewerTransformationWidget::setTransformation(cpcr::CPACSTreeItem* item) {
 
     this->transformationItem = item;
-    transformation = this->associateManager->adapter->getTransformation(transformationItem);
+    transformation = this->associateManager->getAdapter()->getTransformation(transformationItem);
     setSpinBoxesFromInternal();
 }
 

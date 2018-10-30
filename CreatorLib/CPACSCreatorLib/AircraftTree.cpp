@@ -3113,6 +3113,58 @@ bool cpcr::AircraftTree::isFuselageStandardized(cpcr::UID fuselageUID) {
 
 }
 
+bool cpcr::AircraftTree::isAircraftStandardized() {
+
+    if ( ! isBuild() ){
+        throw CreatorException("AircraftTree::isAircraftStandardized: the aircraft tree is not build");
+    }
+
+    bool isStd = true;
+
+    // check the wings
+    std::vector<CPACSTreeItem *> wings = m_root->findAllChildrenOfTypeRecursively("wing");
+    for( CPACSTreeItem* w : wings){
+        isStd = isStd & this->isWingStandardized(w->getUid());
+    }
+
+    // check the fuselages
+    std::vector<CPACSTreeItem* > fuselages = m_root->findAllChildrenOfTypeRecursively("fuselage");
+    for ( CPACSTreeItem* f: fuselages){
+        isStd = isStd & this->isFuselageTransformationStandardized(f->getUid());
+    }
+
+    return isStd;
+}
+
+void cpcr::AircraftTree::standardizeAircraft() {
+    if ( ! isBuild() ){
+        throw CreatorException("AircraftTree::isAircraftStandardized: the aircraft tree is not build");
+    }
+
+    // check the wings
+    std::vector<CPACSTreeItem *> wings = m_root->findAllChildrenOfTypeRecursively("wing");
+    std::vector<UID> wingUIDs = {};
+
+    // first we need to get the uid because the tree item can change during the statardization // TODO: think to a better solution
+    for( CPACSTreeItem* w : wings){
+      wingUIDs.push_back(w->getUid());
+    }
+    for( UID u: wingUIDs){
+        this->completeStandardizationForWing(u);
+    }
+
+    // check the fuselages
+    std::vector<CPACSTreeItem* > fuselages = m_root->findAllChildrenOfTypeRecursively("fuselage");
+    std::vector<UID> fuselageUIDs = {};
+    // first we need to get the uid because the tree item can change during the statardization // TODO: think to a better solution
+    for( CPACSTreeItem* f : fuselages){
+        fuselageUIDs.push_back(f->getUid());
+    }
+    for ( UID u: fuselageUIDs){
+        this->completeStandardizationForFuselage(u);
+    }
+}
+
 
 
 

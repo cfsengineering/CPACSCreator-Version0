@@ -45,14 +45,14 @@ void TIGLViewerFuselageWidget::expendLengthDetails(bool checked) {
     widgetLengthDetails->setVisible(! (widgetLengthDetails->isVisible() ));
     if(widgetLengthDetails->isVisible()){
         // Reset the values to the file values, avoid modifying from details and main at the same time
-        internalLength = associateManager->adapter->getFuselageLength(fuselageItem);
+        internalLength = associateManager->getAdapter()->getFuselageLength(fuselageItem);
         spinBoxLength->setValue(internalLength);
         setPartialLengthFromComboBoxes();
         spinBoxLength->setReadOnly(true);
 
     }else{
         // Reset the values to the file values, avoid modifying from details and main at the same time
-        internalLength = associateManager->adapter->getFuselageLength(fuselageItem);
+        internalLength = associateManager->getAdapter()->getFuselageLength(fuselageItem);
         spinBoxLength->setValue(internalLength);
         setPartialLengthFromComboBoxes();
         spinBoxLength->setReadOnly(false);
@@ -66,7 +66,7 @@ void TIGLViewerFuselageWidget::setPartialLengthFromComboBoxes(){
 
     QString uid1 = comboBoxLengthE1->currentText();
     QString uid2 = comboBoxLengthE2->currentText();
-    internalPartialLength = associateManager->adapter->getFuselageLengthBetween(uid1, uid2);
+    internalPartialLength = associateManager->getAdapter()->getFuselageLengthBetween(uid1, uid2);
     spinBoxPartialLength->setValue(internalPartialLength);
 
 }
@@ -99,22 +99,22 @@ void TIGLViewerFuselageWidget::setRadiusFromCircumference(double newCircumferenc
 
 void TIGLViewerFuselageWidget::setFuselage(cpcr::CPACSTreeItem *fuselageItem) {
     this->fuselageItem = fuselageItem;
-    internalLength = associateManager->adapter->getFuselageLength(fuselageItem);
+    internalLength = associateManager->getAdapter()->getFuselageLength(fuselageItem);
     spinBoxLength->setValue(internalLength);
     comboBoxLengthE1->clear();
-    QStringList elementsUids = associateManager->adapter->getFuselageElementUIDs(fuselageItem);
+    QStringList elementsUids = associateManager->getAdapter()->getFuselageElementUIDs(fuselageItem);
     comboBoxLengthE1->addItems(elementsUids);
     comboBoxLengthE2->clear();
     comboBoxLengthE2->addItems(elementsUids);
     comboBoxLengthE2->setCurrentIndex(elementsUids.size() -1 ); // set the last element of the list
     setPartialLengthFromComboBoxes();
     // do total length after partial length, because changing partial can change total
-    internalLength = associateManager->adapter->getFuselageLength(fuselageItem);
+    internalLength = associateManager->getAdapter()->getFuselageLength(fuselageItem);
     spinBoxLength->setValue(internalLength);
     widgetLengthDetails->setVisible(false);
 
     // circumference
-    internalCircumference = associateManager->adapter->getFuselageMaximalCircumference(this->fuselageItem);
+    internalCircumference = associateManager->getAdapter()->getFuselageMaximalCircumference(this->fuselageItem);
     spinBoxCircumference->setValue(internalCircumference);
 
 }
@@ -127,22 +127,22 @@ void TIGLViewerFuselageWidget::apply() {
 
    if(lengthHasChanged && (!isPartialCase)){
        internalLength = spinBoxLength->value();
-       associateManager->adapter->setFuselageLength(fuselageItem, internalLength);
+       associateManager->getAdapter()->setFuselageLength(fuselageItem, internalLength);
    }
    if(partialLengthHasChanged && isPartialCase){
         internalPartialLength = spinBoxPartialLength->value();
         QString uid1 = comboBoxLengthE1->currentText();
         QString uid2 = comboBoxLengthE2->currentText();
-        associateManager->adapter->setFuselageLengthBetween(uid1, uid2, internalPartialLength);
+        associateManager->getAdapter()->setFuselageLengthBetween(uid1, uid2, internalPartialLength);
    }
 
    if( circumferenceHasChanged){
        internalCircumference = spinBoxCircumference->value();
-       associateManager->adapter->setFuselageMaximalCircumference(fuselageItem, internalCircumference);
+       associateManager->getAdapter()->setFuselageMaximalCircumference(fuselageItem, internalCircumference);
    }
 
    if(lengthHasChanged || partialLengthHasChanged || circumferenceHasChanged ){
-       associateManager->adapter->writeToFile();
+       associateManager->getAdapter()->writeToFile();
    }
 
 }

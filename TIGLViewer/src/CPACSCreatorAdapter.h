@@ -120,6 +120,10 @@ public:
     void resetCpacsConfig(const TIGLViewerDocument& config);
     bool isValid();
 
+    void standardize();
+
+    bool isStandardized();
+
     void setSavingFile(QString savingFile);
 
     void writeToFile();

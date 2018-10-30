@@ -324,8 +324,8 @@ namespace cpcr{
 
 
          bool isFuselageStandardized(UID fuselageUID);
-         
-         
+
+
         /*
          * WING FUNCTIONS
          */
@@ -769,6 +769,24 @@ namespace cpcr{
 
 
 
+
+        /*
+         * GLOBAL FUNCTIONS
+         */
+
+
+        /**
+         * Return true iff all wings and fuselages are standardized.
+         *
+         * @return
+         */
+        bool isAircraftStandardized();
+
+
+        /**
+         * Standardize all the wings and the fuselages of this aircraft if needed.
+         */
+        void standardizeAircraft();
 
 
 

@@ -69,9 +69,9 @@
                     <airfoilUID>profile_0.000-creatorNormalized</airfoilUID>
                     <transformation uID="BWB450_wingSection1IDElement1_transformation1">
                       <scaling uID="BWB450_wingSection1IDElement1_transformation1_scaling1">
-                        <x>40.9947</x>
-                        <y>40.9947</y>
-                        <z>40.9947</z>
+                        <x>39.6002</x>
+                        <y>39.6002</y>
+                        <z>39.6002</z>
                       </scaling>
                       <rotation uID="BWB450_wingSection1IDElement1_transformation1_rotation1">
                         <x>0</x>
@@ -112,9 +112,9 @@
                     <airfoilUID>profile_0.039-creatorNormalized</airfoilUID>
                     <transformation uID="BWB450_wingSection2IDElement1_transformation1">
                       <scaling uID="BWB450_wingSection2IDElement1_transformation1_scaling1">
-                        <x>40.4137</x>
-                        <y>40.4137</y>
-                        <z>40.4137</z>
+                        <x>39.0389</x>
+                        <y>39.0389</y>
+                        <z>39.0389</z>
                       </scaling>
                       <rotation uID="BWB450_wingSection2IDElement1_transformation1_rotation1">
                         <x>0</x>
@@ -155,9 +155,9 @@
                     <airfoilUID>profile_0.078-creatorNormalized</airfoilUID>
                     <transformation uID="BWB450_wingSection3IDElement1_transformation1">
                       <scaling uID="BWB450_wingSection3IDElement1_transformation1_scaling1">
-                        <x>38.3695</x>
-                        <y>38.3695</y>
-                        <z>38.3695</z>
+                        <x>37.0642</x>
+                        <y>37.0642</y>
+                        <z>37.0642</z>
                       </scaling>
                       <rotation uID="BWB450_wingSection3IDElement1_transformation1_rotation1">
                         <x>0</x>
@@ -182,9 +182,9 @@
                     <z>1</z>
                   </scaling>
                   <rotation uID="BWB450_wingSection4ID_Transf_rotation1">
-                    <x>4.93272e-14</x>
+                    <x>-0</x>
                     <y>1.89246</y>
-                    <z>-1.62896e-15</z>
+                    <z>0</z>
                   </rotation>
                   <translation refType="absGlobal" uID="BWB450_wingSection4ID_Transf_translation1">
                     <x>0</x>
@@ -198,9 +198,9 @@
                     <airfoilUID>profile_0.117-creatorNormalized</airfoilUID>
                     <transformation uID="BWB450_wingSection4IDElement1_transformation1">
                       <scaling uID="BWB450_wingSection4IDElement1_transformation1_scaling1">
-                        <x>35.4827</x>
-                        <y>35.4827</y>
-                        <z>35.4827</z>
+                        <x>34.2757</x>
+                        <y>34.2757</y>
+                        <z>34.2757</z>
                       </scaling>
                       <rotation uID="BWB450_wingSection4IDElement1_transformation1_rotation1">
                         <x>0</x>
@@ -225,9 +225,9 @@
                     <z>1</z>
                   </scaling>
                   <rotation uID="BWB450_wingSection5ID_Transf_rotation1">
-                    <x>1.51144e-13</x>
+                    <x>-0</x>
                     <y>1.64074</y>
-                    <z>-4.32762e-15</z>
+                    <z>0</z>
                   </rotation>
                   <translation refType="absGlobal" uID="BWB450_wingSection5ID_Transf_translation1">
                     <x>0</x>
@@ -241,9 +241,9 @@
                     <airfoilUID>profile_0.156-creatorNormalized</airfoilUID>
                     <transformation uID="BWB450_wingSection5IDElement1_transformation1">
                       <scaling uID="BWB450_wingSection5IDElement1_transformation1_scaling1">
-                        <x>32.2647</x>
-                        <y>32.2647</y>
-                        <z>32.2647</z>
+                        <x>31.1671</x>
+                        <y>31.1671</y>
+                        <z>31.1671</z>
                       </scaling>
                       <rotation uID="BWB450_wingSection5IDElement1_transformation1_rotation1">
                         <x>0</x>
@@ -268,9 +268,9 @@
                     <z>1</z>
                   </scaling>
                   <rotation uID="BWB450_wingSection6ID_Transf_rotation1">
-                    <x>2.49756e-13</x>
+                    <x>-0</x>
                     <y>1.39017</y>
-                    <z>-6.05925e-15</z>
+                    <z>0</z>
                   </rotation>
                   <translation refType="absGlobal" uID="BWB450_wingSection6ID_Transf_translation1">
                     <x>0</x>
@@ -284,9 +284,9 @@
                     <airfoilUID>profile_0.195-creatorNormalized</airfoilUID>
                     <transformation uID="BWB450_wingSection6IDElement1_transformation1">
                       <scaling uID="BWB450_wingSection6IDElement1_transformation1_scaling1">
-                        <x>28.8002</x>
-                        <y>28.8002</y>
-                        <z>28.8002</z>
+                        <x>27.8205</x>
+                        <y>27.8205</y>
+                        <z>27.8205</z>
                       </scaling>
                       <rotation uID="BWB450_wingSection6IDElement1_transformation1_rotation1">
                         <x>0</x>
@@ -311,9 +311,9 @@
                     <z>1</z>
                   </scaling>
                   <rotation uID="BWB450_wingSection7ID_Transf_rotation1">
-                    <x>1.94059e-13</x>
+                    <x>-0</x>
                     <y>1.14068</y>
-                    <z>-3.86319e-15</z>
+                    <z>0</z>
                   </rotation>
                   <translation refType="absGlobal" uID="BWB450_wingSection7ID_Transf_translation1">
                     <x>0</x>
@@ -327,9 +327,9 @@
                     <airfoilUID>profile_0.233-creatorNormalized</airfoilUID>
                     <transformation uID="BWB450_wingSection7IDElement1_transformation1">
                       <scaling uID="BWB450_wingSection7IDElement1_transformation1_scaling1">
-                        <x>25.1507</x>
-                        <y>25.1507</y>
-                        <z>25.1507</z>
+                        <x>24.2951</x>
+                        <y>24.2951</y>
+                        <z>24.2951</z>
                       </scaling>
                       <rotation uID="BWB450_wingSection7IDElement1_transformation1_rotation1">
                         <x>0</x>
@@ -354,9 +354,9 @@
                     <z>1</z>
                   </scaling>
                   <rotation uID="BWB450_wingSection8ID_Transf_rotation1">
-                    <x>1.87682e-13</x>
+                    <x>-0</x>
                     <y>0.892342</y>
-                    <z>-2.9229e-15</z>
+                    <z>0</z>
                   </rotation>
                   <translation refType="absGlobal" uID="BWB450_wingSection8ID_Transf_translation1">
                     <x>0</x>
@@ -370,9 +370,9 @@
                     <airfoilUID>profile_0.272-creatorNormalized</airfoilUID>
                     <transformation uID="BWB450_wingSection8IDElement1_transformation1">
                       <scaling uID="BWB450_wingSection8IDElement1_transformation1_scaling1">
-                        <x>21.211</x>
-                        <y>21.211</y>
-                        <z>21.211</z>
+                        <x>20.4894</x>
+                        <y>20.4894</y>
+                        <z>20.4894</z>
                       </scaling>
                       <rotation uID="BWB450_wingSection8IDElement1_transformation1_rotation1">
                         <x>0</x>
@@ -397,9 +397,9 @@
                     <z>1</z>
                   </scaling>
                   <rotation uID="BWB450_wingSection9ID_Transf_rotation1">
-                    <x>4.89853e-13</x>
+                    <x>-0</x>
                     <y>0.645149</y>
-                    <z>-5.59275e-15</z>
+                    <z>0</z>
                   </rotation>
                   <translation refType="absGlobal" uID="BWB450_wingSection9ID_Transf_translation1">
                     <x>0</x>
@@ -413,9 +413,9 @@
                     <airfoilUID>profile_0.311-creatorNormalized</airfoilUID>
                     <transformation uID="BWB450_wingSection9IDElement1_transformation1">
                       <scaling uID="BWB450_wingSection9IDElement1_transformation1_scaling1">
-                        <x>17.0467</x>
-                        <y>17.0467</y>
-                        <z>17.0467</z>
+                        <x>16.4668</x>
+                        <y>16.4668</y>
+                        <z>16.4668</z>
                       </scaling>
                       <rotation uID="BWB450_wingSection9IDElement1_transformation1_rotation1">
                         <x>0</x>
@@ -440,9 +440,9 @@
                     <z>1</z>
                   </scaling>
                   <rotation uID="BWB450_wingSection10ID_Transf_rotation1">
-                    <x>4.64388e-13</x>
+                    <x>-0</x>
                     <y>0.398988</y>
-                    <z>-3.23381e-15</z>
+                    <z>0</z>
                   </rotation>
                   <translation refType="absGlobal" uID="BWB450_wingSection10ID_Transf_translation1">
                     <x>0</x>
@@ -456,9 +456,9 @@
                     <airfoilUID>profile_0.350-creatorNormalized</airfoilUID>
                     <transformation uID="BWB450_wingSection10IDElement1_transformation1">
                       <scaling uID="BWB450_wingSection10IDElement1_transformation1_scaling1">
-                        <x>13.1963</x>
-                        <y>13.1963</y>
-                        <z>13.1963</z>
+                        <x>12.7474</x>
+                        <y>12.7474</y>
+                        <z>12.7474</z>
                       </scaling>
                       <rotation uID="BWB450_wingSection10IDElement1_transformation1_rotation1">
                         <x>0</x>
@@ -483,9 +483,9 @@
                     <z>1</z>
                   </scaling>
                   <rotation uID="BWB450_wingSection11ID_Transf_rotation1">
-                    <x>6.6158e-13</x>
+                    <x>-0</x>
                     <y>0.154087</y>
-                    <z>-1.7792e-15</z>
+                    <z>0</z>
                   </rotation>
                   <translation refType="absGlobal" uID="BWB450_wingSection11ID_Transf_translation1">
                     <x>0</x>
@@ -499,9 +499,9 @@
                     <airfoilUID>profile_0.389-creatorNormalized</airfoilUID>
                     <transformation uID="BWB450_wingSection11IDElement1_transformation1">
                       <scaling uID="BWB450_wingSection11IDElement1_transformation1_scaling1">
-                        <x>11.0991</x>
-                        <y>11.0991</y>
-                        <z>11.0991</z>
+                        <x>10.7216</x>
+                        <y>10.7216</y>
+                        <z>10.7216</z>
                       </scaling>
                       <rotation uID="BWB450_wingSection11IDElement1_transformation1_rotation1">
                         <x>0</x>
@@ -526,9 +526,9 @@
                     <z>1</z>
                   </scaling>
                   <rotation uID="BWB450_wingSection12ID_Transf_rotation1">
-                    <x>6.67917e-13</x>
+                    <x>-0</x>
                     <y>-0.0897821</y>
-                    <z>1.04662e-15</z>
+                    <z>-0</z>
                   </rotation>
                   <translation refType="absGlobal" uID="BWB450_wingSection12ID_Transf_translation1">
                     <x>0</x>
@@ -542,9 +542,9 @@
                     <airfoilUID>profile_0.428-creatorNormalized</airfoilUID>
                     <transformation uID="BWB450_wingSection12IDElement1_transformation1">
                       <scaling uID="BWB450_wingSection12IDElement1_transformation1_scaling1">
-                        <x>9.9496</x>
-                        <y>9.9496</y>
-                        <z>9.9496</z>
+                        <x>9.61115</x>
+                        <y>9.61115</y>
+                        <z>9.61115</z>
                       </scaling>
                       <rotation uID="BWB450_wingSection12IDElement1_transformation1_rotation1">
                         <x>0</x>
@@ -569,9 +569,9 @@
                     <z>1</z>
                   </scaling>
                   <rotation uID="BWB450_wingSection13ID_Transf_rotation1">
-                    <x>5.09694e-13</x>
+                    <x>-0</x>
                     <y>-3.17933</y>
-                    <z>2.73958e-14</z>
+                    <z>-0</z>
                   </rotation>
                   <translation refType="absGlobal" uID="BWB450_wingSection13ID_Transf_translation1">
                     <x>0</x>
@@ -585,9 +585,9 @@
                     <airfoilUID>profile_1.000-creatorNormalized</airfoilUID>
                     <transformation uID="BWB450_wingSection13IDElement1_transformation1">
                       <scaling uID="BWB450_wingSection13IDElement1_transformation1_scaling1">
-                        <x>2.18889</x>
-                        <y>2.18889</y>
-                        <z>2.18889</z>
+                        <x>2.11442</x>
+                        <y>2.11442</y>
+                        <z>2.11442</z>
                       </scaling>
                       <rotation uID="BWB450_wingSection13IDElement1_transformation1_rotation1">
                         <x>0</x>
@@ -1416,7 +1416,7 @@
             <positionings>
               <positioning uID="BWB450_wingID_positioning_BWB450_wingSection1ID">
                 <dihedralAngle>0</dihedralAngle>
-                <length>3.53011e-15</length>
+                <length>2.1684e-19</length>
                 <name>BWB450_wingID_positioning_BWB450_wingSection1ID - auto generated by positioning standardization</name>
                 <sweepAngle>0</sweepAngle>
                 <toSectionUID>BWB450_wingSection1ID</toSectionUID>
@@ -1424,7 +1424,7 @@
               <positioning uID="BWB450_wingID_positioning_BWB450_wingSection2ID">
                 <dihedralAngle>-0.282238</dihedralAngle>
                 <fromSectionUID>BWB450_wingSection1ID</fromSectionUID>
-                <length>1.30349</length>
+                <length>1.31184</length>
                 <name>BWB450_wingID_positioning_BWB450_wingSection2ID - auto generated by positioning standardization</name>
                 <sweepAngle>18.3892</sweepAngle>
                 <toSectionUID>BWB450_wingSection2ID</toSectionUID>
@@ -1432,7 +1432,7 @@
               <positioning uID="BWB450_wingID_positioning_BWB450_wingSection3ID">
                 <dihedralAngle>-0.209173</dihedralAngle>
                 <fromSectionUID>BWB450_wingSection2ID</fromSectionUID>
-                <length>2.04308</length>
+                <length>2.05616</length>
                 <name>BWB450_wingID_positioning_BWB450_wingSection3ID - auto generated by positioning standardization</name>
                 <sweepAngle>52.741</sweepAngle>
                 <toSectionUID>BWB450_wingSection3ID</toSectionUID>
@@ -1440,7 +1440,7 @@
               <positioning uID="BWB450_wingID_positioning_BWB450_wingSection4ID">
                 <dihedralAngle>-0.132667</dihedralAngle>
                 <fromSectionUID>BWB450_wingSection3ID</fromSectionUID>
-                <length>2.75345</length>
+                <length>2.77108</length>
                 <name>BWB450_wingID_positioning_BWB450_wingSection4ID - auto generated by positioning standardization</name>
                 <sweepAngle>63.3068</sweepAngle>
                 <toSectionUID>BWB450_wingSection4ID</toSectionUID>
@@ -1448,7 +1448,7 @@
               <positioning uID="BWB450_wingID_positioning_BWB450_wingSection5ID">
                 <dihedralAngle>0.675341</dihedralAngle>
                 <fromSectionUID>BWB450_wingSection4ID</fromSectionUID>
-                <length>2.80878</length>
+                <length>2.82676</length>
                 <name>BWB450_wingID_positioning_BWB450_wingSection5ID - auto generated by positioning standardization</name>
                 <sweepAngle>63.8715</sweepAngle>
                 <toSectionUID>BWB450_wingSection5ID</toSectionUID>
@@ -1456,7 +1456,7 @@
               <positioning uID="BWB450_wingID_positioning_BWB450_wingSection6ID">
                 <dihedralAngle>1.36573</dihedralAngle>
                 <fromSectionUID>BWB450_wingSection5ID</fromSectionUID>
-                <length>2.85184</length>
+                <length>2.8701</length>
                 <name>BWB450_wingID_positioning_BWB450_wingSection6ID - auto generated by positioning standardization</name>
                 <sweepAngle>64.2889</sweepAngle>
                 <toSectionUID>BWB450_wingSection6ID</toSectionUID>
@@ -1464,7 +1464,7 @@
               <positioning uID="BWB450_wingID_positioning_BWB450_wingSection7ID">
                 <dihedralAngle>2.04467</dihedralAngle>
                 <fromSectionUID>BWB450_wingSection6ID</fromSectionUID>
-                <length>2.88881</length>
+                <length>2.9073</length>
                 <name>BWB450_wingID_positioning_BWB450_wingSection7ID - auto generated by positioning standardization</name>
                 <sweepAngle>64.6319</sweepAngle>
                 <toSectionUID>BWB450_wingSection7ID</toSectionUID>
@@ -1472,7 +1472,7 @@
               <positioning uID="BWB450_wingID_positioning_BWB450_wingSection8ID">
                 <dihedralAngle>2.72079</dihedralAngle>
                 <fromSectionUID>BWB450_wingSection7ID</fromSectionUID>
-                <length>2.91346</length>
+                <length>2.93211</length>
                 <name>BWB450_wingID_positioning_BWB450_wingSection8ID - auto generated by positioning standardization</name>
                 <sweepAngle>64.8483</sweepAngle>
                 <toSectionUID>BWB450_wingSection8ID</toSectionUID>
@@ -1480,7 +1480,7 @@
               <positioning uID="BWB450_wingID_positioning_BWB450_wingSection9ID">
                 <dihedralAngle>3.38243</dihedralAngle>
                 <fromSectionUID>BWB450_wingSection8ID</fromSectionUID>
-                <length>2.92988</length>
+                <length>2.94864</length>
                 <name>BWB450_wingID_positioning_BWB450_wingSection9ID - auto generated by positioning standardization</name>
                 <sweepAngle>64.9826</sweepAngle>
                 <toSectionUID>BWB450_wingSection9ID</toSectionUID>
@@ -1488,7 +1488,7 @@
               <positioning uID="BWB450_wingID_positioning_BWB450_wingSection10ID">
                 <dihedralAngle>3.99921</dihedralAngle>
                 <fromSectionUID>BWB450_wingSection9ID</fromSectionUID>
-                <length>2.16137</length>
+                <length>2.17521</length>
                 <name>BWB450_wingID_positioning_BWB450_wingSection10ID - auto generated by positioning standardization</name>
                 <sweepAngle>54.9942</sweepAngle>
                 <toSectionUID>BWB450_wingSection10ID</toSectionUID>
@@ -1496,7 +1496,7 @@
               <positioning uID="BWB450_wingID_positioning_BWB450_wingSection11ID">
                 <dihedralAngle>4.52301</dihedralAngle>
                 <fromSectionUID>BWB450_wingSection10ID</fromSectionUID>
-                <length>2.16292</length>
+                <length>2.17677</length>
                 <name>BWB450_wingID_positioning_BWB450_wingSection11ID - auto generated by positioning standardization</name>
                 <sweepAngle>54.9953</sweepAngle>
                 <toSectionUID>BWB450_wingSection11ID</toSectionUID>
@@ -1504,7 +1504,7 @@
               <positioning uID="BWB450_wingID_positioning_BWB450_wingSection12ID">
                 <dihedralAngle>5.09528</dihedralAngle>
                 <fromSectionUID>BWB450_wingSection11ID</fromSectionUID>
-                <length>2.16482</length>
+                <length>2.17868</length>
                 <name>BWB450_wingID_positioning_BWB450_wingSection12ID - auto generated by positioning standardization</name>
                 <sweepAngle>54.9968</sweepAngle>
                 <toSectionUID>BWB450_wingSection12ID</toSectionUID>
@@ -1512,7 +1512,7 @@
               <positioning uID="BWB450_wingID_positioning_BWB450_wingSection13ID">
                 <dihedralAngle>13.0283</dihedralAngle>
                 <fromSectionUID>BWB450_wingSection12ID</fromSectionUID>
-                <length>25.1236</length>
+                <length>25.2844</length>
                 <name>BWB450_wingID_positioning_BWB450_wingSection13ID - auto generated by positioning standardization</name>
                 <sweepAngle>41.9968</sweepAngle>
                 <toSectionUID>BWB450_wingSection13ID</toSectionUID>

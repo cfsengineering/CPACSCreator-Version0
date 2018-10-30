@@ -2900,3 +2900,28 @@ TEST_F(AircraftTreeTest, completeStandardizationForFuselage ) {
 
 
 
+
+
+TEST_F(AircraftTreeTest, globalStandardization ) {
+
+    bool isStd;
+
+    setVariables("simple-aircraft-fuselages.xml");
+
+    isStd = tree.isAircraftStandardized();
+    EXPECT_FALSE(isStd);
+    tree.standardizeAircraft();
+    isStd = tree.isAircraftStandardized();
+    EXPECT_TRUE(isStd);
+
+
+    setVariables("TestCases/boxwing2.xml");
+
+    isStd = tree.isAircraftStandardized();
+    EXPECT_FALSE(isStd);
+    tree.standardizeAircraft();
+    isStd = tree.isAircraftStandardized();
+    EXPECT_TRUE(isStd);
+
+
+}

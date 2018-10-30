@@ -36,6 +36,7 @@
 class ModificatorManager: public QObject {
     Q_OBJECT
 
+
 public slots:
     void dispatch(cpcr::CPACSTreeItem * item ) ;
     void applyCurrentModifications();
@@ -60,10 +61,20 @@ public:
     void setFuselageModificator(cpcr::CPACSTreeItem *pItem);
     void hideAll();
 
+    void standardizeCurrentFile();
+    bool isStandardized();
+    void setUseCPACSStandard(bool value);
+    inline bool useCPACSStandard() {return useCpacsStandard; };
+
+    // copy the pointer (the pointer is contain in a new address but point to the same object) -> the user can not change the container of adapterS
+    inline CPACSCreatorAdapter* getAdapter() {return  adapter; }
+    inline ProfilesDBManager* getProfilesDB() {return profilesDB; }
+
+private:
+
     CPACSCreatorAdapter* adapter;
     ProfilesDBManager* profilesDB;
 
-private:
 
     TIGLViewerTransformationWidget* transformationModificator;
     TIGLViewerWingWidget* wingModificator;
@@ -74,6 +85,8 @@ private:
     QWidget* widgetApply;
     QPushButton* commitButton;
     QPushButton* cancelButton;
+
+    bool useCpacsStandard;
 
 
 };

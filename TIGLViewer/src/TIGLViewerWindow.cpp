@@ -241,7 +241,7 @@ void TIGLViewerWindow::openScript()
     fileName = QFileDialog::getOpenFileName (   this,
                                                 tr("Open File"),
                                                 myLastFolder,
-                                                tr( "Choose your script (*)" ) );
+                                                tr( "Choofse your script (*)" ) );
     openScript(fileName);
 }
 
@@ -256,7 +256,12 @@ void TIGLViewerWindow::closeConfiguration()
         getScene()->deleteAllObjects();
         delete cpacsConfiguration;
         cpacsConfiguration = NULL;
+
     }
+    // desactivate the standardization option
+    standardizeAction->setEnabled(false);
+    // clean the undo helper
+    undoHelper.clean();
     setWindowTitle(QString("CPACSCreator"));
 }
 
@@ -339,6 +344,19 @@ void TIGLViewerWindow::openFile(const QString& fileName)
         setCurrentFile(undoHelper.currentFile());
         if (fileType.toLower() == tr("xml")) {
             updateCreatorInterface();
+            if( modificatorManager->isStandardized()){
+
+                bool blockB = standardizeAction->blockSignals(true);  // we do not want to call the standardization function the first time we set the value
+                standardizeAction->setChecked(true);
+                standardizeAction->blockSignals(blockB);
+            }
+            else{
+                modificatorManager->setUseCPACSStandard(false);
+                bool blockB = standardizeAction->blockSignals(true);
+                standardizeAction->setChecked(false);
+                standardizeAction->blockSignals(blockB);
+            }
+            standardizeAction->setEnabled(true);
         }
 
         myLastFolder = fileInfo.absolutePath();
@@ -692,6 +710,7 @@ void TIGLViewerWindow::connectSignals()
     connect(refreshAction,SIGNAL(triggered()), this, SLOT(reopenFile()));
     connect(redoAction_2,SIGNAL(triggered()), this, SLOT(redoCommit()));
     connect(undoAction_2,SIGNAL(triggered()), this, SLOT(undoCommit()));
+    connect(standardizeAction, SIGNAL(toggled(bool)), this, SLOT(standardizeCurrentFile(bool))  );
 
 
     for (int i = 0; i < MaxRecentFiles; ++i) {
@@ -812,6 +831,9 @@ void TIGLViewerWindow::initCreatorInterface()
     treeView->setModel(model);
     selectionModel = treeView->selectionModel();
 
+    // We do not allow to standardize until one file is open
+    standardizeAction->setEnabled(false);
+
 
     connect(selectionModel, SIGNAL(selectionChanged (const QItemSelection &, const QItemSelection &)),model,
             SLOT(onItemSelectionChanged(const QItemSelection &, const QItemSelection &)) );
@@ -821,6 +843,7 @@ void TIGLViewerWindow::initCreatorInterface()
     connect(commitButton, SIGNAL(pressed() ), this, SLOT(applyModifications() )); // not in modificatorManager because we need to disconnect the model
     connect(cancelButton, SIGNAL(pressed() ), modificatorManager, SLOT(applyCurrentCancellation() )); // not in modificatorManager because we need to disconnect the model
 }
+
 
 
 void TIGLViewerWindow::updateCreatorInterface()
@@ -905,6 +928,43 @@ void TIGLViewerWindow::redoCommit(){
     }
 
 }
+
+
+
+void TIGLViewerWindow::standardizeCurrentFile(bool standardize) {
+
+    if (modificatorManager != nullptr ){
+        if( standardize ){
+            std::string selectedUID = model->getUidForIdx(selectionModel->currentIndex());
+            bool blockB = watcher->blockSignals(true);  // we do not want to reopen the file during the moification
+            model->disconnectAdapter();
+            myScene->getContext()->EraseAll(Standard_False);
+
+            modificatorManager->standardizeCurrentFile();
+
+            model->resetAdapter(adapter);
+            treeView->hideColumn(3);
+            modificatorManager->reset();
+            QModelIndex idx = model->getIdxForUID(selectedUID);
+            selectionModel->setCurrentIndex(idx,  QItemSelectionModel::Select);
+            reopenFile();
+            watcher->blockSignals(blockB);
+
+        }else{
+            LOG(WARNING)    << "Standardization function is unchecked! Nothing will happend directly, but"
+                            << "the cpacs creator standardization will nomore be forced by the software. "
+                            << "This can leads to strange strucutre in the cpacs file and the impossiblity to "
+                            << "use properly some function of cpacs creator. "
+                            << std::endl;
+        }
+    }else {
+        LOG(WARNING) << "modificatorManager is null impossible to standardize!" << std::endl;
+    }
+
+
+}
+
+
 
 
 
@@ -1080,3 +1140,5 @@ bool TIGLViewerWindow::deleteEnvVar(const char * varName)
     return putenv(envVar) == 0;
 #endif
 }
+
+

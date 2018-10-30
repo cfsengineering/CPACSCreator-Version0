@@ -60,6 +60,9 @@ void ModificatorManager::applyCurrentModifications(){
 
     if(currentModificator != nullptr) {
         currentModificator->apply();
+        if (useCpacsStandard){
+            adapter->standardize();
+        }
     }else{
         LOG(WARNING) << "ModificatorManager::applyCurrentModifications: current modificator is null" <<std::endl;
     }
@@ -143,6 +146,19 @@ void ModificatorManager::hideAll() {
     positioningsModificator->setVisible(visible);
     fuselageModificator->setVisible(visible);
     widgetApply->setVisible(visible);
+
+}
+
+void ModificatorManager::standardizeCurrentFile() {
+    adapter->standardize();
+}
+
+bool ModificatorManager::isStandardized() {
+    adapter->isStandardized();
+}
+
+void ModificatorManager::setUseCPACSStandard(bool value) {
+    useCpacsStandard = value;
 
 }
 

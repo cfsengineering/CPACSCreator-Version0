@@ -108,7 +108,7 @@ void TIGLViewerWingWidget::init(ModificatorManager * associate ) {
 
     spinBoxSpan->setValue(-1);
 
-    comboBoxAirfoil->addItems(associate->profilesDB->getAvailableAirfoils());
+    comboBoxAirfoil->addItems(associate->getProfilesDB()->getAvailableAirfoils());
 
     comboBoxWingOrientation->addItem("horizontal");
     comboBoxWingOrientation->addItem("vertical");
@@ -296,13 +296,13 @@ void TIGLViewerWingWidget::setWing(cpcr::CPACSTreeItem *wing) {
     wingItem = wing;
 
     // set anchor
-    associateManager->adapter->getAnchorValues(wing, internalAnchorX, internalAnchorY, internalAnchorZ);
+    associateManager->getAdapter()->getAnchorValues(wing, internalAnchorX, internalAnchorY, internalAnchorZ);
     spinBoxAnchorX->setValue(internalAnchorX);
     spinBoxAnchorY->setValue(internalAnchorY);
     spinBoxAnchorZ->setValue(internalAnchorZ);
 
     // set orientration & symmetry
-    internalWingOrientation = associateManager->adapter->getWingOrientation(wingItem);
+    internalWingOrientation = associateManager->getAdapter()->getWingOrientation(wingItem);
     int idx = comboBoxWingOrientation->findText(internalWingOrientation);
     if(idx == -1){  // case for custom
         idx = comboBoxWingOrientation->count();
@@ -310,7 +310,7 @@ void TIGLViewerWingWidget::setWing(cpcr::CPACSTreeItem *wing) {
     }
     comboBoxWingOrientation->setCurrentIndex(idx);
 
-    internalSymmetry = associateManager->adapter->getWingSymmetry(wingItem);
+    internalSymmetry = associateManager->getAdapter()->getWingSymmetry(wingItem);
     idx = comboBoxSymmetry->findText(internalSymmetry);
     comboBoxSymmetry->setCurrentIndex(idx);
 
@@ -318,33 +318,33 @@ void TIGLViewerWingWidget::setWing(cpcr::CPACSTreeItem *wing) {
     // set sweep
     internalMethod = comboBoxSweepMethod->currentText(); // retrieve the information of the interface -> when we switch from one wing to the other method and chord are conserved
     internalSweepChord = spinBoxSweepChord->value();
-    internalSweep = associateManager->adapter->getSweepAngle(wingItem, internalSweepChord);
+    internalSweep = associateManager->getAdapter()->getSweepAngle(wingItem, internalSweepChord);
     spinBoxSweep->setValue(internalSweep);
 
     // set dihedral
     internalDihedralChord = spinBoxDihedralChord->value();
-    internalDihedral = associateManager->adapter->getDihedralAngle(wingItem, internalDihedralChord);
+    internalDihedral = associateManager->getAdapter()->getDihedralAngle(wingItem, internalDihedralChord);
     spinBoxDihedral->setValue(internalDihedral);
 
     // set area
-    internalAreaXY = associateManager->adapter->getWingArea(wingItem, cpcr::PLANE::XY_PLANE);
+    internalAreaXY = associateManager->getAdapter()->getWingArea(wingItem, cpcr::PLANE::XY_PLANE);
     spinBoxAreaXY->setValue(internalAreaXY);
 
-    internalAreaXZ = associateManager->adapter->getWingArea(wingItem, cpcr::PLANE::XZ_PLANE);
+    internalAreaXZ = associateManager->getAdapter()->getWingArea(wingItem, cpcr::PLANE::XZ_PLANE);
     spinBoxAreaXZ->setValue(internalAreaXZ);
 
-    internalAreaYZ = associateManager->adapter->getWingArea(wingItem, cpcr::PLANE::YZ_PLANE);
+    internalAreaYZ = associateManager->getAdapter()->getWingArea(wingItem, cpcr::PLANE::YZ_PLANE);
     spinBoxAreaYZ->setValue(internalAreaYZ);
 
-    internalAreaT = associateManager->adapter->getWingArea(wingItem, cpcr::PLANE::NO_PLANE);
+    internalAreaT = associateManager->getAdapter()->getWingArea(wingItem, cpcr::PLANE::NO_PLANE);
     spinBoxAreaT->setValue(internalAreaT);
 
     // set span
-    internalSpan = associateManager->adapter->getWingSpan(wingItem);
+    internalSpan = associateManager->getAdapter()->getWingSpan(wingItem);
     spinBoxSpan->setValue(internalSpan);
 
     // set AR
-    internalAR = associateManager->adapter->getWingAR(wingItem);
+    internalAR = associateManager->getAdapter()->getWingAR(wingItem);
     spinBoxAR->setValue(internalAR);
 
     // set constant between ar, span and area
@@ -353,9 +353,9 @@ void TIGLViewerWingWidget::setWing(cpcr::CPACSTreeItem *wing) {
 
     // set wingAirfoil1
     comboBoxAirfoil->clear();
-    comboBoxAirfoil->addItems(associateManager->profilesDB->getAvailableAirfoils());
+    comboBoxAirfoil->addItems(associateManager->getProfilesDB()->getAvailableAirfoils());
 
-    internalAirfoilUID = associateManager->adapter->getAirfoilValueForWing(wingItem);
+    internalAirfoilUID = associateManager->getAdapter()->getAirfoilValueForWing(wingItem);
     idx = comboBoxAirfoil->findText(internalAirfoilUID);
     if(idx == -1){  // case for combined or None
         idx = comboBoxAirfoil->count();
@@ -364,7 +364,7 @@ void TIGLViewerWingWidget::setWing(cpcr::CPACSTreeItem *wing) {
     comboBoxAirfoil->setCurrentIndex(idx);
 
     // set standarization
-    associateManager->adapter->getStdValues(wingItem, internalStdAirfoils, internalStdSections, internalStdPositionings, internalStdAnchor);
+    associateManager->getAdapter()->getStdValues(wingItem, internalStdAirfoils, internalStdSections, internalStdPositionings, internalStdAnchor);
     comboBoxStdGlobal->clear();
     comboBoxStdGlobal->addItem("Total");
     checkBoxStdAnchor->setChecked(internalStdAnchor);
@@ -417,46 +417,46 @@ void TIGLViewerWingWidget::apply() {
         internalAnchorX = spinBoxAnchorX->value();
         internalAnchorY = spinBoxAnchorY->value();
         internalAnchorZ = spinBoxAnchorZ->value();
-        associateManager->adapter->setAnchorValues(wingItem, internalAnchorX, internalAnchorY, internalAnchorZ);
+        associateManager->getAdapter()->setAnchorValues(wingItem, internalAnchorX, internalAnchorY, internalAnchorZ);
     }
 
     if( orientationHasChanged ){
         internalWingOrientation = comboBoxWingOrientation->currentText();
-        associateManager->adapter->setWingOrientation(wingItem, internalWingOrientation);
+        associateManager->getAdapter()->setWingOrientation(wingItem, internalWingOrientation);
     }
 
 
     if (symmetryHasChanged){
         internalSymmetry = comboBoxSymmetry->currentText();
-        associateManager->adapter->setWingSymmetry(wingItem, internalSymmetry);
+        associateManager->getAdapter()->setWingSymmetry(wingItem, internalSymmetry);
     }
 
     if(sweepHasChanged){ //TODO do not change if the change is to small
         internalSweep = spinBoxSweep->value();
         internalMethod = comboBoxSweepMethod->currentText();
         internalSweepChord = spinBoxSweepChord->value();
-        associateManager->adapter->setSweepAngle(wingItem, internalSweep, internalSweepChord, internalMethod );
+        associateManager->getAdapter()->setSweepAngle(wingItem, internalSweep, internalSweepChord, internalMethod );
     }
 
     if(dihedralHasChanged){
         internalDihedral = spinBoxDihedral->value();
         internalDihedralChord = spinBoxDihedralChord->value();
-        associateManager->adapter->setDihedralAngle(wingItem, internalDihedral, internalDihedralChord);
+        associateManager->getAdapter()->setDihedralAngle(wingItem, internalDihedral, internalDihedralChord);
     }
 
     if(airfoilHasChanged){
         internalAirfoilUID = comboBoxAirfoil->currentText();
-        associateManager->adapter->setAllAirfoilsInWing(wingItem, internalAirfoilUID);
+        associateManager->getAdapter()->setAllAirfoilsInWing(wingItem, internalAirfoilUID);
 
     }
 
     if( areaXYHasChanged){
         internalAreaXY = spinBoxAreaXY->value();
         if(checkBoxIsSpanConstant->isChecked()){
-            associateManager->adapter->setWingAreaKeepSpan(wingItem, internalAreaXY);
+            associateManager->getAdapter()->setWingAreaKeepSpan(wingItem, internalAreaXY);
         }
         else if( checkBoxIsARConstant->isChecked() ){
-            associateManager->adapter->setWingAreaKeepAR(wingItem, internalAreaXY);
+            associateManager->getAdapter()->setWingAreaKeepAR(wingItem, internalAreaXY);
         }
         else {
             LOG(ERROR) << "TIGLViewerWingWidget: set area called, but not correct constant checkbox set";
@@ -468,10 +468,10 @@ void TIGLViewerWingWidget::apply() {
     if(spanHasChanged ){
         internalSpan = spinBoxSpan->value();
         if(checkBoxIsAreaConstant->isChecked()){
-            associateManager->adapter->setWingSpanKeepArea(wingItem, internalSpan);
+            associateManager->getAdapter()->setWingSpanKeepArea(wingItem, internalSpan);
         }
         else if(checkBoxIsARConstant->isChecked()){
-            associateManager->adapter->setWingSpanKeepAR(wingItem, internalSpan);
+            associateManager->getAdapter()->setWingSpanKeepAR(wingItem, internalSpan);
         }
         else {
             LOG(ERROR) << "TIGLViewerWingWidget: set span called, but not correct constant checkbox set";
@@ -481,10 +481,10 @@ void TIGLViewerWingWidget::apply() {
     if(aRHasChanged ){
         internalAR = spinBoxAR->value();
         if(checkBoxIsAreaConstant->isChecked()){
-            associateManager->adapter->setWingARKeepArea(wingItem, internalAR);
+            associateManager->getAdapter()->setWingARKeepArea(wingItem, internalAR);
         }
         else if(checkBoxIsSpanConstant->isChecked()){
-            associateManager->adapter->setWingARKeepSpan(wingItem, internalAR);
+            associateManager->getAdapter()->setWingARKeepSpan(wingItem, internalAR);
         }
         else {
             LOG(ERROR) << "TIGLViewerWingWidget: set AR called, but not correct constant checkbox set";
@@ -496,11 +496,11 @@ void TIGLViewerWingWidget::apply() {
 
     if(sweepHasChanged || airfoilHasChanged || dihedralHasChanged || areaXYHasChanged || spanHasChanged
        || aRHasChanged || anchorHasChanged || symmetryHasChanged || orientationHasChanged){
-        associateManager->adapter->writeToFile();   // we do this here to update all the change at once in the file
+        associateManager->getAdapter()->writeToFile();   // we do this here to update all the change at once in the file
     }
 
     // we reset the internal values form the file, because standardization is not guarantee by the functions above
-    associateManager->adapter->getStdValues(wingItem, internalStdAirfoils, internalStdSections, internalStdPositionings, internalStdAnchor);
+    associateManager->getAdapter()->getStdValues(wingItem, internalStdAirfoils, internalStdSections, internalStdPositionings, internalStdAnchor);
     bool stdardizationHasChanged = ( internalStdAirfoils != checkBoxStdAirfoils->isChecked()
                                      || internalStdPositionings != checkBoxStdPositionings->isChecked()
                                      || internalStdSections != checkBoxStdSections->isChecked()
@@ -513,7 +513,7 @@ void TIGLViewerWingWidget::apply() {
         internalStdPositionings = checkBoxStdPositionings->isChecked();
         internalStdAirfoils = checkBoxStdAirfoils->isChecked();
 
-        associateManager->adapter->setStdValues(wingItem, internalStdAirfoils, internalStdSections,
+        associateManager->getAdapter()->setStdValues(wingItem, internalStdAirfoils, internalStdSections,
                                                 internalStdPositionings, internalStdAnchor);
 
     }

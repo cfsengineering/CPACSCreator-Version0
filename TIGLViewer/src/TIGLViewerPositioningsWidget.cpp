@@ -73,7 +73,7 @@ void TIGLViewerPositioningsWidget::apply() {
             p.second.setDihedralAngle(dihedrals[i]->value() ); // set internals from boxes
             p.second.setSweepAngle(sweeps[i]->value() ); // set internals from boxes
             p.second.setLength(lengths[i]->value() ); // set internals from boxes
-            associateManager->adapter->setPositioning(p.first, p.second ); // set in CPACS
+            associateManager->getAdapter()->setPositioning(p.first, p.second ); // set in CPACS
             numberOfChange ++;
         }
 
@@ -81,7 +81,7 @@ void TIGLViewerPositioningsWidget::apply() {
     }
 
     if(numberOfChange > 0){
-        associateManager->adapter->writeToFile();
+        associateManager->getAdapter()->writeToFile();
     }
 
 }
@@ -93,7 +93,7 @@ void TIGLViewerPositioningsWidget::setPositionings(cpcr::CPACSTreeItem *item) {
     clean();
 
     // get all the positionings
-    this->internals = associateManager->adapter->getPositionings(item);
+    this->internals = associateManager->getAdapter()->getPositionings(item);
 
     // creation of the spin boxes
     int count = 1;
