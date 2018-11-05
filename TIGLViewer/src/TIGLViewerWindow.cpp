@@ -35,7 +35,6 @@
 #include <QProcessEnvironment>
 #include <QMessageBox>
 
-
 #include "TIGLViewerWindow.h"
 #include "TIGLViewerSettingsDialog.h"
 #include "TIGLViewerDrawVectorDialog.h"
@@ -65,9 +64,10 @@
 
 namespace
 {
-    QString makeLink(const QString& linkText, const QString& address) {
-        return QString("<a style='color: #8eceff;' href='%1'>%2</a>").arg(address).arg(linkText);
-    }
+QString makeLink(const QString& linkText, const QString& address)
+{
+    return QString("<a style='color: #8eceff;' href='%1'>%2</a>").arg(address).arg(linkText);
+}
 }
 
 TIGLViewerWindow::TIGLViewerWindow()
@@ -79,9 +79,9 @@ TIGLViewerWindow::TIGLViewerWindow()
     setWindowTitle(QString("CPACSCreator"));
 
     tiglViewerSettings = &TIGLViewerSettings::Instance();
-    settingsDialog = new TIGLViewerSettingsDialog(*tiglViewerSettings, this);
+    settingsDialog     = new TIGLViewerSettingsDialog(*tiglViewerSettings, this);
 
-    myScene  = new TIGLViewerContext();
+    myScene = new TIGLViewerContext();
     myOCC->setContext(myScene);
 
     // we create a timer to workaround QFileSystemWatcher bug,
@@ -98,7 +98,7 @@ TIGLViewerWindow::TIGLViewerWindow()
     //redirect everything to TIGL console, let error messages be printed in red
     stdoutStream = new QDebugStream(std::cout, true);
     errorStream  = new QDebugStream(std::cerr, true);
-    errorStream->setMarkup("<b><font color=\"red\">","</font></b>");
+    errorStream->setMarkup("<b><font color=\"red\">", "</font></b>");
 
     // insert two loggers, one for the log history and one for the console
     CSharedPtr<tigl::CTiglLogSplitter> splitter(new tigl::CTiglLogSplitter);
@@ -120,7 +120,7 @@ TIGLViewerWindow::TIGLViewerWindow()
 
     //cpacsConfiguration = new TIGLViewerDocument(this);
     scriptEngine = new TIGLScriptEngine(this);
-    
+
     setAcceptDrops(true);
 
     initCreatorInterface();
@@ -129,16 +129,11 @@ TIGLViewerWindow::TIGLViewerWindow()
     createMenus();
     updateMenus();
 
-
-
     loadSettings();
-
 
     statusBar()->showMessage(tr("A context menu is available by right-clicking"));
 
     setMinimumSize(160, 160);
-
-
 }
 
 TIGLViewerWindow::~TIGLViewerWindow()
@@ -151,7 +146,7 @@ TIGLViewerWindow::~TIGLViewerWindow()
     delete profilesDB;
 }
 
-void TIGLViewerWindow::dragEnterEvent(QDragEnterEvent * ev)
+void TIGLViewerWindow::dragEnterEvent(QDragEnterEvent* ev)
 {
     QList<QUrl> urls = ev->mimeData()->urls();
     foreach (QUrl url, urls) {
@@ -164,7 +159,7 @@ void TIGLViewerWindow::dragEnterEvent(QDragEnterEvent * ev)
     }
 }
 
-void TIGLViewerWindow::dropEvent(QDropEvent *ev)
+void TIGLViewerWindow::dropEvent(QDropEvent* ev)
 {
     QList<QUrl> urls = ev->mimeData()->urls();
     foreach (QUrl url, urls) {
@@ -178,7 +173,6 @@ void TIGLViewerWindow::dropEvent(QDropEvent *ev)
         }
     }
 }
-
 
 void TIGLViewerWindow::setInitialControlFile(QString filename)
 {
@@ -201,9 +195,7 @@ void TIGLViewerWindow::setInitialControlFile(QString filename)
             toolBarView->setVisible(false);
         }
     }
-
 }
-
 
 void TIGLViewerWindow::newFile()
 {
@@ -214,34 +206,28 @@ void TIGLViewerWindow::newFile()
 
 void TIGLViewerWindow::open()
 {
-    QString        fileName;
+    QString fileName;
 
     statusBar()->showMessage(tr("Invoked File|Open"));
 
-    fileName = QFileDialog::getOpenFileName (    this,
-                                                  tr("Open File"),
-                                                myLastFolder,
-                                                tr( "CPACS (*.xml);;"
-                                                    "Other drawing types (*.brep *.igs *iges *.stp *.step *.mesh);;"
-                                                    "BREP (*.brep);;"
-                                                    "STEP (*.step *.stp);;"
-                                                    "IGES (*.iges *.igs);;"
-                                                    "STL  (*.stl);;"
-                                                    "Hotsose Mesh (*.mesh)") );
+    fileName = QFileDialog::getOpenFileName(this, tr("Open File"), myLastFolder,
+                                            tr("CPACS (*.xml);;"
+                                               "Other drawing types (*.brep *.igs *iges *.stp *.step *.mesh);;"
+                                               "BREP (*.brep);;"
+                                               "STEP (*.step *.stp);;"
+                                               "IGES (*.iges *.igs);;"
+                                               "STL  (*.stl);;"
+                                               "Hotsose Mesh (*.mesh)"));
     openFile(fileName);
 }
 
-
 void TIGLViewerWindow::openScript()
 {
-    QString     fileName;
+    QString fileName;
 
     statusBar()->showMessage(tr("Invoked File|Open Script"));
 
-    fileName = QFileDialog::getOpenFileName (   this,
-                                                tr("Open File"),
-                                                myLastFolder,
-                                                tr( "Choofse your script (*)" ) );
+    fileName = QFileDialog::getOpenFileName(this, tr("Open File"), myLastFolder, tr("Choofse your script (*)"));
     openScript(fileName);
 }
 
@@ -256,7 +242,6 @@ void TIGLViewerWindow::closeConfiguration()
         getScene()->deleteAllObjects();
         delete cpacsConfiguration;
         cpacsConfiguration = NULL;
-
     }
     // desactivate the standardization option
     standardizeAction->setEnabled(false);
@@ -267,7 +252,7 @@ void TIGLViewerWindow::closeConfiguration()
 
 void TIGLViewerWindow::openRecentFile()
 {
-    QAction *action = qobject_cast<QAction *>(sender());
+    QAction* action = qobject_cast<QAction*>(sender());
     if (action) {
         openFile(action->data().toString());
     }
@@ -275,42 +260,83 @@ void TIGLViewerWindow::openRecentFile()
 
 void TIGLViewerWindow::openFile(const QString& fileName)
 {
-    QString      fileType;
-    QFileInfo    fileInfo;
+    QString fileType;
+    QFileInfo fileInfo;
 
     TIGLViewerInputOutput::FileFormat format;
     TIGLViewerInputOutput reader;
     bool triangulation = false;
-    bool success = false;
+    bool success       = false;
 
     TIGLViewerScopedCommand command(getConsole());
     Q_UNUSED(command);
     statusBar()->showMessage(tr("Invoked File|Open"));
 
-
     fileInfo.setFile(fileName);
     fileType = fileInfo.suffix();
 
-    if (!fileName.isEmpty()) {
+    if (!fileName.isEmpty()) { // if the file is empty -> this is the case when the user press cancel.
 
-        undoHelper.set(fileInfo.absoluteFilePath()); // check if the file is allready registred, if yes do nothing, otherwise initialize the undoHelper
+        // check if the file is already registred, if yes do nothing, otherwise initialize the undoHelper
+        undoHelper.set(fileInfo.absoluteFilePath());
+
+        watcher = new QFileSystemWatcher(); // here, because we use it in updateCreatorInterface
 
         if (fileType.toLower() == tr("xml")) {
 
+            // Init TIGLViewerDocument
             TIGLViewerDocument* config = new TIGLViewerDocument(this);
-            TiglReturnCode tiglRet = config->openCpacsConfiguration(undoHelper.currentFile());
+            TiglReturnCode tiglRet     = config->openCpacsConfiguration(undoHelper.currentFile());
             if (tiglRet != TIGL_SUCCESS) {
                 delete config;
                 return;
             }
             delete cpacsConfiguration;
             cpacsConfiguration = config;
-            
+
+            // Init creator interface to access the modificator manager
+            updateCreatorInterface();
+
+            //Standardization process
+            if (modificatorManager->isStandardized()) {
+                // we do not want to call the standardization function the first time we set the value
+                bool blockB = standardizeAction->blockSignals(true);
+                standardizeAction->setChecked(true);
+                standardizeAction->blockSignals(blockB);
+            }
+            else {
+                QMessageBox msgBox;
+                msgBox.setText(
+                    "The CPACS file does not use the Creator standard. Did you want to standardize the file?");
+                msgBox.setInformativeText("The Creator standard guaranty that creator functions work properly. "
+                                          "Otherwise, the Creator functions can have unexpected behavior. ");
+                msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+                msgBox.setDefaultButton(QMessageBox::Yes);
+                int ret = msgBox.exec();
+                if (ret == QMessageBox::Yes) {
+                    modificatorManager->standardizeCurrentFile();
+                    bool blockB = standardizeAction->blockSignals(true);
+                    standardizeAction->setChecked(true);
+                    standardizeAction->blockSignals(blockB);
+                }
+                else if (ret == QMessageBox::No) {
+                    modificatorManager->setUseCPACSStandard(false);
+                    bool blockB = standardizeAction->blockSignals(true);
+                    standardizeAction->setChecked(false);
+                    standardizeAction->blockSignals(blockB);
+                }
+                else {
+                    displayErrorMessage("Unexpected result from the previous message box", "Error");
+                }
+            }
+
+            // Init the cpaccs interface and connections
+            standardizeAction->setEnabled(true);
             connectConfiguration();
             updateMenus();
-
             success = true;
         }
+
         else {
 
             if (fileType.toLower() == tr("brep")) {
@@ -326,45 +352,27 @@ void TIGLViewerWindow::openFile(const QString& fileName)
                 format = TIGLViewerInputOutput::FormatSTL;
             }
             if (fileType.toLower() == tr("mesh")) {
-                format = TIGLViewerInputOutput::FormatMESH;
+                format        = TIGLViewerInputOutput::FormatMESH;
                 triangulation = true;
             }
             if (triangulation) {
-                success = reader.importTriangulation( fileInfo.absoluteFilePath(), format, *getScene() );
+                success = reader.importTriangulation(fileInfo.absoluteFilePath(), format, *getScene());
             }
             else {
-                success = reader.importModel ( fileInfo.absoluteFilePath(), format, *getScene() );
+                success = reader.importModel(fileInfo.absoluteFilePath(), format, *getScene());
             }
         }
 
-        watcher = new QFileSystemWatcher();
         watcher->addPath(fileInfo.absoluteFilePath());
         QObject::connect(watcher, SIGNAL(fileChanged(QString)), openTimer, SLOT(start()));
-
-        setCurrentFile(undoHelper.currentFile());
-        if (fileType.toLower() == tr("xml")) {
-            updateCreatorInterface();
-            if( modificatorManager->isStandardized()){
-
-                bool blockB = standardizeAction->blockSignals(true);  // we do not want to call the standardization function the first time we set the value
-                standardizeAction->setChecked(true);
-                standardizeAction->blockSignals(blockB);
-            }
-            else{
-                modificatorManager->setUseCPACSStandard(false);
-                bool blockB = standardizeAction->blockSignals(true);
-                standardizeAction->setChecked(false);
-                standardizeAction->blockSignals(blockB);
-            }
-            standardizeAction->setEnabled(true);
-        }
-
+        setCurrentFile(undoHelper.currentFile()); // set the setting for the next opening
         myLastFolder = fileInfo.absolutePath();
         if (success) {
             myOCC->viewAxo();
             myOCC->fitAll();
         }
         else {
+            delete watcher;
             displayErrorMessage("Error opening file " + fileName, "Error");
         }
     }
@@ -372,13 +380,13 @@ void TIGLViewerWindow::openFile(const QString& fileName)
 
 void TIGLViewerWindow::reopenFile()
 {
-    QString      fileType;
-    QFileInfo    fileInfo;
+    QString fileType;
+    QFileInfo fileInfo;
 
     fileInfo.setFile(undoHelper.currentFile());
     fileType = fileInfo.suffix();
 
-    if (fileType.toLower() == tr("xml")){
+    if (fileType.toLower() == tr("xml")) {
         cpacsConfiguration->updateConfiguration();
     }
     else {
@@ -387,10 +395,9 @@ void TIGLViewerWindow::reopenFile()
     }
 }
 
-void TIGLViewerWindow::setCurrentFile(const QString &fileName)
+void TIGLViewerWindow::setCurrentFile(const QString& fileName)
 {
-    setWindowTitle(QString("%1 - CPACSCreator ")
-                   .arg(QDir::toNativeSeparators(QFileInfo(fileName).absoluteFilePath())));
+    setWindowTitle(QString("%1 - CPACSCreator ").arg(QDir::toNativeSeparators(QFileInfo(fileName).absoluteFilePath())));
 
     QSettings settings("DLR SC-HPC", "TiGLViewer3");
     QStringList files = settings.value("recentFileList").toStringList();
@@ -410,7 +417,7 @@ void TIGLViewerWindow::loadSettings()
 {
     QSettings settings("DLR SC-HPC", "TiGLViewer3");
 
-    bool showConsole = settings.value("show_console",QVariant(true)).toBool();
+    bool showConsole = settings.value("show_console", QVariant(true)).toBool();
     bool showCreator = settings.value("show_creator", QVariant(true)).toBool();
 
     restoreGeometry(settings.value("MainWindowGeom").toByteArray());
@@ -465,40 +472,36 @@ void TIGLViewerWindow::changeSettings()
     applySettings();
 }
 
-
 TIGLViewerWidget* TIGLViewerWindow::getViewer()
 {
     return myOCC;
 }
 
-
 void TIGLViewerWindow::save()
 {
-    QString     fileName;
+    QString fileName;
 
     statusBar()->showMessage(tr("Invoked File|Save"));
     fileName = QFileDialog::getSaveFileName(this, tr("Save as..."), myLastFolder,
-                                            tr("IGES Geometry (*.igs);;") +
-                                            tr("STEP Geometry (*.stp);;") +
-                                            tr("STL Triangulation (*.stl);;") +
-                                            tr("BRep Geometry (*.brep)"));
+                                            tr("IGES Geometry (*.igs);;") + tr("STEP Geometry (*.stp);;") +
+                                                tr("STL Triangulation (*.stl);;") + tr("BRep Geometry (*.brep)"));
 
     if (!fileName.isEmpty()) {
         TIGLViewerScopedCommand command(getConsole());
         Q_UNUSED(command);
         saveFile(fileName);
-        
+
         QFileInfo fileInfo;
         fileInfo.setFile(fileName);
         myLastFolder = fileInfo.absolutePath();
     }
 }
 
-bool TIGLViewerWindow::saveFile(const QString &fileName)
+bool TIGLViewerWindow::saveFile(const QString& fileName)
 {
     TIGLViewerInputOutput::FileFormat format;
     QFileInfo fileInfo;
-    
+
     fileInfo.setFile(fileName);
     QString fileType = fileInfo.suffix();
     if (fileType.toLower() == tr("brep") || fileType.toLower() == tr("rle")) {
@@ -519,32 +522,30 @@ bool TIGLViewerWindow::saveFile(const QString &fileName)
     }
 
     TIGLViewerInputOutput writer;
-    return writer.exportModel ( fileInfo.absoluteFilePath(), format, getScene()->getContext());
+    return writer.exportModel(fileInfo.absoluteFilePath(), format, getScene()->getContext());
 }
 
 void TIGLViewerWindow::setBackgroundImage()
 {
-    QString        fileName;
-    QString        fileType;
-    QFileInfo    fileInfo;
+    QString fileName;
+    QString fileType;
+    QFileInfo fileInfo;
 
     statusBar()->showMessage(tr("Invoked File|Load Background Image"));
 
-    fileName = QFileDialog::getOpenFileName (    this,
-                                                  tr("Open Background Image"),
-                                                myLastFolder,
-                                                tr( "Images (*.jpg *.png *.gif *.bmp);;" ) );
+    fileName = QFileDialog::getOpenFileName(this, tr("Open Background Image"), myLastFolder,
+                                            tr("Images (*.jpg *.png *.gif *.bmp);;"));
     if (!fileName.isEmpty()) {
         fileInfo.setFile(fileName);
         fileType = fileInfo.suffix();
-        
-        if (fileType.toLower() == tr("bmp") || fileType.toLower() == tr("gif") || fileType.toLower() == tr("jpg") || fileType.toLower() == tr("png")) {
+
+        if (fileType.toLower() == tr("bmp") || fileType.toLower() == tr("gif") || fileType.toLower() == tr("jpg") ||
+            fileType.toLower() == tr("png")) {
             myOCC->setBGImage(fileName);
         }
         else {
-            displayErrorMessage(tr("Invalid image format!"),tr("TIGL Error"));
+            displayErrorMessage(tr("Invalid image format!"), tr("TIGL Error"));
         }
-
     }
 }
 
@@ -553,31 +554,36 @@ void TIGLViewerWindow::about()
     QString text;
     QString tixiVersion(tixiGetVersion());
     QString tiglVersion(tiglGetVersion());
-    QString occtVersion = QString("%1.%2.%3").arg(OCC_VERSION_MAJOR).arg(OCC_VERSION_MINOR).arg(OCC_VERSION_MAINTENANCE);
+    QString occtVersion =
+        QString("%1.%2.%3").arg(OCC_VERSION_MAJOR).arg(OCC_VERSION_MINOR).arg(OCC_VERSION_MAINTENANCE);
 
-    text =  "The <b>CPACSCreator</b> is based on the TiGL library and CPACSCreatorLib and allows you to view and edit CPACS geometries. ";
+    text = "The <b>CPACSCreator</b> is based on the TiGL library and CPACSCreatorLib and allows you to view and edit "
+           "CPACS geometries. ";
     text += "CPACSCreator uses the following Open Source libraries:<br/><br/>";
-    
+
     if (tiglVersion.contains("-r")) {
         QStringList list = tiglVersion.split("-r");
-        QString ver = list[0];
-        QString rev = list[1];
+        QString ver      = list[0];
+        QString rev      = list[1];
 
-        tiglVersion = QString("%1-r%2").arg(ver).arg(makeLink(rev, QString("https://github.com/DLR-SC/tigl/commit/%1").arg(rev)));
+        tiglVersion =
+            QString("%1-r%2").arg(ver).arg(makeLink(rev, QString("https://github.com/DLR-SC/tigl/commit/%1").arg(rev)));
     }
 
     text += makeLink("TiXI", "https://github.com/dlr-sc/tixi") + ": v" + tixiVersion + "<br/>";
     text += makeLink("TiGL", "https://github.com/dlr-sc/tigl") + ": v" + tiglVersion + "<br/>";
-    text += makeLink("CPACSCreator", "https://github.com/cfsengineering/CPACSCreator.git") + ": v" + "1.0.0"+ "<br/>";
+    text += makeLink("CPACSCreator", "https://github.com/cfsengineering/CPACSCreator.git") + ": v" + "1.0.0" + "<br/>";
     text += makeLink("OpenCASCADE", "https://www.opencascade.com/") + ": v" + occtVersion + "<br/><br/>";
 
-
-    text += "Visit the CPACSCreator project page at " + makeLink("https://github.com/cfsengineering/CPACSCreator.git", "https://github.com/cfsengineering/CPACSCreator.git")+ "<br/><br/>";
-    text += "Visit the TiGL project page at " + makeLink("http://software.dlr.de/p/tigl/", "http://software.dlr.de/p/tigl/")+ "<br/><br/>";
+    text += "Visit the CPACSCreator project page at " +
+            makeLink("https://github.com/cfsengineering/CPACSCreator.git",
+                     "https://github.com/cfsengineering/CPACSCreator.git") +
+            "<br/><br/>";
+    text += "Visit the TiGL project page at " +
+            makeLink("http://software.dlr.de/p/tigl/", "http://software.dlr.de/p/tigl/") + "<br/><br/>";
 
     text += "&copy; 2017 German Aerospace Center (DLR) <br/>";
     text += "&copy; 2018 CFS Engineering ";
-
 
     QMessageBox::about(this, tr("About CPACSCreator"), text);
 }
@@ -588,10 +594,7 @@ void TIGLViewerWindow::aboutQt()
     qApp->aboutQt();
 }
 
-
-void TIGLViewerWindow::xyzPosition (V3d_Coordinate X,
-                                    V3d_Coordinate Y,
-                                    V3d_Coordinate Z)
+void TIGLViewerWindow::xyzPosition(V3d_Coordinate X, V3d_Coordinate Y, V3d_Coordinate Z)
 {
     QString aString;
     QTextStream ts(&aString);
@@ -599,13 +602,12 @@ void TIGLViewerWindow::xyzPosition (V3d_Coordinate X,
     //statusBar()->showMessage(aString); // do not bother user with x,y,z crap
 }
 
-void TIGLViewerWindow::statusMessage (const QString aMessage)
+void TIGLViewerWindow::statusMessage(const QString aMessage)
 {
     statusBar()->showMessage(aMessage);
 }
 
-
-void TIGLViewerWindow::displayErrorMessage (const QString aMessage, QString aHeader = "TIGL Error")
+void TIGLViewerWindow::displayErrorMessage(const QString aMessage, QString aHeader = "TIGL Error")
 {
     TIGLViewerErrorDialog dialog(this);
     dialog.setMessage(QString("<b>%1</b><br /><br />%2").arg(aHeader).arg(aMessage));
@@ -619,10 +621,11 @@ void TIGLViewerWindow::connectConfiguration()
     if (!cpacsConfiguration) {
         return;
     }
-    
+
     // CPACS Wing Actions
     connect(drawWingProfilesAction, SIGNAL(triggered()), cpacsConfiguration, SLOT(drawWingProfiles()));
-    connect(drawWingOverlayCPACSProfilePointsAction, SIGNAL(triggered()), cpacsConfiguration, SLOT(drawWingOverlayProfilePoints()));
+    connect(drawWingOverlayCPACSProfilePointsAction, SIGNAL(triggered()), cpacsConfiguration,
+            SLOT(drawWingOverlayProfilePoints()));
     connect(drawWingGuideCurvesAction, SIGNAL(triggered()), cpacsConfiguration, SLOT(drawWingGuideCurves()));
     connect(drawWingsAction, SIGNAL(triggered()), cpacsConfiguration, SLOT(drawWing()));
     connect(drawWingTriangulationAction, SIGNAL(triggered()), cpacsConfiguration, SLOT(drawWingTriangulation()));
@@ -633,13 +636,14 @@ void TIGLViewerWindow::connectConfiguration()
     connect(drawWingShellAction, SIGNAL(triggered()), cpacsConfiguration, SLOT(drawWingShells()));
     connect(drawWingStructureAction, SIGNAL(triggered(bool)), cpacsConfiguration, SLOT(drawWingStructure()));
 
-
     // CPACS Aircraft Actions
     connect(showAllWingsAndFuselagesAction, SIGNAL(triggered()), cpacsConfiguration, SLOT(drawAllFuselagesAndWings()));
-    connect(showAllWingsAndFuselagesSurfacePointsAction, SIGNAL(triggered()), cpacsConfiguration, SLOT(drawAllFuselagesAndWingsSurfacePoints()));
+    connect(showAllWingsAndFuselagesSurfacePointsAction, SIGNAL(triggered()), cpacsConfiguration,
+            SLOT(drawAllFuselagesAndWingsSurfacePoints()));
     connect(drawFusedAircraftAction, SIGNAL(triggered()), cpacsConfiguration, SLOT(drawFusedAircraft()));
     connect(drawIntersectionAction, SIGNAL(triggered()), cpacsConfiguration, SLOT(drawIntersectionLine()));
-    connect(showFusedAirplaneTriangulation, SIGNAL(triggered()), cpacsConfiguration, SLOT(drawFusedAircraftTriangulation()));
+    connect(showFusedAirplaneTriangulation, SIGNAL(triggered()), cpacsConfiguration,
+            SLOT(drawFusedAircraftTriangulation()));
     connect(drawFarFieldAction, SIGNAL(triggered()), cpacsConfiguration, SLOT(drawFarField()));
     connect(drawSystemsAction, SIGNAL(triggered()), cpacsConfiguration, SLOT(drawSystems()));
     connect(drawComponentAction, SIGNAL(triggered()), cpacsConfiguration, SLOT(drawComponent()));
@@ -647,22 +651,30 @@ void TIGLViewerWindow::connectConfiguration()
     // CPACS Fuselage Actions
     connect(drawFuselageProfilesAction, SIGNAL(triggered()), cpacsConfiguration, SLOT(drawFuselageProfiles()));
     connect(drawFuselageAction, SIGNAL(triggered()), cpacsConfiguration, SLOT(drawFuselage()));
-    connect(drawFuselageTriangulationAction, SIGNAL(triggered()), cpacsConfiguration, SLOT(drawFuselageTriangulation()));
+    connect(drawFuselageTriangulationAction, SIGNAL(triggered()), cpacsConfiguration,
+            SLOT(drawFuselageTriangulation()));
     connect(drawFuselageSamplePointsAction, SIGNAL(triggered()), cpacsConfiguration, SLOT(drawFuselageSamplePoints()));
-    connect(drawFuselageSamplePointsAngleAction, SIGNAL(triggered()), cpacsConfiguration, SLOT(drawFuselageSamplePointsAngle()));
+    connect(drawFuselageSamplePointsAngleAction, SIGNAL(triggered()), cpacsConfiguration,
+            SLOT(drawFuselageSamplePointsAngle()));
     connect(drawFusedFuselageAction, SIGNAL(triggered()), cpacsConfiguration, SLOT(drawFusedFuselage()));
     connect(drawFuselageGuideCurvesAction, SIGNAL(triggered()), cpacsConfiguration, SLOT(drawFuselageGuideCurves()));
 
     // CPACS RotorBlade Actions
     connect(drawRotorProfilesAction, SIGNAL(triggered()), cpacsConfiguration, SLOT(drawRotorProfiles()));
-    connect(drawRotorBladeOverlayCPACSProfilePointsAction, SIGNAL(triggered()), cpacsConfiguration, SLOT(drawRotorBladeOverlayProfilePoints()));
-    connect(drawRotorBladeGuideCurvesAction, SIGNAL(triggered()), cpacsConfiguration, SLOT(drawRotorBladeGuideCurves()));
+    connect(drawRotorBladeOverlayCPACSProfilePointsAction, SIGNAL(triggered()), cpacsConfiguration,
+            SLOT(drawRotorBladeOverlayProfilePoints()));
+    connect(drawRotorBladeGuideCurvesAction, SIGNAL(triggered()), cpacsConfiguration,
+            SLOT(drawRotorBladeGuideCurves()));
     connect(drawRotorBladesAction, SIGNAL(triggered()), cpacsConfiguration, SLOT(drawRotorBlade()));
-    connect(drawRotorBladeTriangulationAction, SIGNAL(triggered()), cpacsConfiguration, SLOT(drawRotorBladeTriangulation()));
-    connect(drawRotorBladeSamplePointsAction, SIGNAL(triggered()), cpacsConfiguration, SLOT(drawRotorBladeSamplePoints()));
+    connect(drawRotorBladeTriangulationAction, SIGNAL(triggered()), cpacsConfiguration,
+            SLOT(drawRotorBladeTriangulation()));
+    connect(drawRotorBladeSamplePointsAction, SIGNAL(triggered()), cpacsConfiguration,
+            SLOT(drawRotorBladeSamplePoints()));
     connect(drawFusedRotorBladeAction, SIGNAL(triggered()), cpacsConfiguration, SLOT(drawFusedRotorBlade()));
-    connect(drawRotorBladeComponentSegmentAction, SIGNAL(triggered()), cpacsConfiguration, SLOT(drawRotorBladeComponentSegment()));
-    connect(drawRotorBladeCSPointAction, SIGNAL(triggered()), cpacsConfiguration, SLOT(drawRotorBladeComponentSegmentPoints()));
+    connect(drawRotorBladeComponentSegmentAction, SIGNAL(triggered()), cpacsConfiguration,
+            SLOT(drawRotorBladeComponentSegment()));
+    connect(drawRotorBladeCSPointAction, SIGNAL(triggered()), cpacsConfiguration,
+            SLOT(drawRotorBladeComponentSegmentPoints()));
     connect(drawRotorBladeShellAction, SIGNAL(triggered()), cpacsConfiguration, SLOT(drawRotorBladeShells()));
 
     // CPACS Rotorcraft Actions
@@ -682,7 +694,8 @@ void TIGLViewerWindow::connectConfiguration()
     connect(tiglExportMeshedWingVTKsimple, SIGNAL(triggered()), cpacsConfiguration, SLOT(exportMeshedWingVTKsimple()));
     connect(tiglExportMeshedFuselageVTK, SIGNAL(triggered()), cpacsConfiguration, SLOT(exportMeshedFuselageVTK()));
     connect(tiglExportMeshedConfigVTK, SIGNAL(triggered()), cpacsConfiguration, SLOT(exportMeshedConfigVTK()));
-    connect(tiglExportMeshedConfigVTKNoFuse, SIGNAL(triggered()), cpacsConfiguration, SLOT(exportMeshedConfigVTKNoFuse()));
+    connect(tiglExportMeshedConfigVTKNoFuse, SIGNAL(triggered()), cpacsConfiguration,
+            SLOT(exportMeshedConfigVTKNoFuse()));
     connect(tiglExportWingColladaAction, SIGNAL(triggered()), cpacsConfiguration, SLOT(exportWingCollada()));
     connect(tiglExportFuselageColladaAction, SIGNAL(triggered()), cpacsConfiguration, SLOT(exportFuselageCollada()));
     connect(tiglExportConfigurationColladaAction, SIGNAL(triggered()), cpacsConfiguration, SLOT(exportConfigCollada()));
@@ -690,15 +703,15 @@ void TIGLViewerWindow::connectConfiguration()
     connect(tiglExportWingBRepAction, SIGNAL(triggered()), cpacsConfiguration, SLOT(exportWingBRep()));
     connect(tiglExportFusedConfigBRep, SIGNAL(triggered()), cpacsConfiguration, SLOT(exportFusedConfigBRep()));
     connect(tiglExportWingCurvesBRepAction, SIGNAL(triggered()), cpacsConfiguration, SLOT(exportWingCurvesBRep()));
-    connect(tiglExportFuselageCurvesBRepAction, SIGNAL(triggered()), cpacsConfiguration, SLOT(exportFuselageCurvesBRep()));
-    
-    connect(cpacsConfiguration, SIGNAL(documentUpdated(TiglCPACSConfigurationHandle)), 
-             this, SLOT(updateMenus()) );
+    connect(tiglExportFuselageCurvesBRepAction, SIGNAL(triggered()), cpacsConfiguration,
+            SLOT(exportFuselageCurvesBRep()));
+
+    connect(cpacsConfiguration, SIGNAL(documentUpdated(TiglCPACSConfigurationHandle)), this, SLOT(updateMenus()));
 
     // Set functions
 
-    connect(cpacsConfiguration, SIGNAL(documentUpdated(TiglCPACSConfigurationHandle)), this, SLOT(updateCreatorInterface()) );
-
+    connect(cpacsConfiguration, SIGNAL(documentUpdated(TiglCPACSConfigurationHandle)), this,
+            SLOT(updateCreatorInterface()));
 }
 
 void TIGLViewerWindow::connectSignals()
@@ -707,17 +720,15 @@ void TIGLViewerWindow::connectSignals()
     connect(openAction, SIGNAL(triggered()), this, SLOT(open()));
     connect(openScriptAction, SIGNAL(triggered()), this, SLOT(openScript()));
     connect(closeAction, SIGNAL(triggered()), this, SLOT(closeConfiguration()));
-    connect(refreshAction,SIGNAL(triggered()), this, SLOT(reopenFile()));
-    connect(redoAction_2,SIGNAL(triggered()), this, SLOT(redoCommit()));
-    connect(undoAction_2,SIGNAL(triggered()), this, SLOT(undoCommit()));
-    connect(standardizeAction, SIGNAL(toggled(bool)), this, SLOT(standardizeCurrentFile(bool))  );
-
+    connect(refreshAction, SIGNAL(triggered()), this, SLOT(reopenFile()));
+    connect(redoAction_2, SIGNAL(triggered()), this, SLOT(redoCommit()));
+    connect(undoAction_2, SIGNAL(triggered()), this, SLOT(undoCommit()));
+    connect(standardizeAction, SIGNAL(toggled(bool)), this, SLOT(standardizeCurrentFile(bool)));
 
     for (int i = 0; i < MaxRecentFiles; ++i) {
         recentFileActions[i] = new QAction(this);
         recentFileActions[i]->setVisible(false);
-        connect(recentFileActions[i], SIGNAL(triggered()),
-                this, SLOT(openRecentFile()));
+        connect(recentFileActions[i], SIGNAL(triggered()), this, SLOT(openRecentFile()));
     }
 
     connect(saveAction, SIGNAL(triggered()), this, SLOT(save()));
@@ -730,13 +741,12 @@ void TIGLViewerWindow::connectSignals()
     // Misc drawing actions
     connect(drawPointAction, SIGNAL(triggered()), this, SLOT(drawPoint()));
     connect(drawVectorAction, SIGNAL(triggered()), this, SLOT(drawVector()));
-    
 
     // view->actions menu
     connect(fitAction, SIGNAL(triggered()), myOCC, SLOT(fitExtents()));
     connect(fitAllAction, SIGNAL(triggered()), myOCC, SLOT(fitAll()));
     //connect(zoomAction, SIGNAL(triggered()), myOCC, SLOT(fitArea()));
-    connect(zoomAction, SIGNAL(triggered()),myOCC, SLOT(zoom()));
+    connect(zoomAction, SIGNAL(triggered()), myOCC, SLOT(zoom()));
     connect(panAction, SIGNAL(triggered()), myOCC, SLOT(pan()));
     connect(rotAction, SIGNAL(triggered()), myOCC, SLOT(rotation()));
     connect(selectAction, SIGNAL(triggered()), myOCC, SLOT(selecting()));
@@ -770,25 +780,23 @@ void TIGLViewerWindow::connectSignals()
     connect(showCreatorAction, SIGNAL(toggled(bool)), creatorDockWidget, SLOT(setVisible(bool)));
     connect(creatorDockWidget, SIGNAL(visibilityChanged(bool)), showCreatorAction, SLOT(setChecked(bool)));
     connect(showWireframeAction, SIGNAL(toggled(bool)), myScene, SLOT(wireFrame(bool)));
-#if OCC_VERSION_HEX >= VERSION_HEX_CODE(6,7,0)
+#if OCC_VERSION_HEX >= VERSION_HEX_CODE(6, 7, 0)
     connect(showReflectionLinesAction, SIGNAL(toggled(bool)), myScene, SLOT(setReflectionlinesEnabled(bool)));
 #else
     showReflectionLinesAction->setVisible(false);
     showReflectionLinesAction->setEnabled(false);
 #endif
 
-
     connect(openTimer, SIGNAL(timeout()), this, SLOT(reopenFile()));
 
     // The co-ordinates from the view
-    connect( myOCC, SIGNAL(mouseMoved(V3d_Coordinate,V3d_Coordinate,V3d_Coordinate)),
-             this,   SLOT(xyzPosition(V3d_Coordinate,V3d_Coordinate,V3d_Coordinate)) );
+    connect(myOCC, SIGNAL(mouseMoved(V3d_Coordinate, V3d_Coordinate, V3d_Coordinate)), this,
+            SLOT(xyzPosition(V3d_Coordinate, V3d_Coordinate, V3d_Coordinate)));
 
-
-    connect( myOCC, SIGNAL(sendStatus(const QString)), this,  SLOT  (statusMessage(const QString)) );
+    connect(myOCC, SIGNAL(sendStatus(const QString)), this, SLOT(statusMessage(const QString)));
 
     connect(stdoutStream, SIGNAL(sendString(QString)), console, SLOT(output(QString)));
-    connect(errorStream , SIGNAL(sendString(QString)), console, SLOT(output(QString)));
+    connect(errorStream, SIGNAL(sendString(QString)), console, SLOT(output(QString)));
 
     connect(logDirect.get(), SIGNAL(newMessage(QString)), console, SLOT(output(QString)));
 
@@ -799,9 +807,6 @@ void TIGLViewerWindow::connectSignals()
     connect(console, SIGNAL(onCommand(QString)), scriptEngine, SLOT(eval(QString)));
 
     connect(settingsAction, SIGNAL(triggered()), this, SLOT(changeSettings()));
-
-
-
 }
 
 void TIGLViewerWindow::createMenus()
@@ -812,20 +817,13 @@ void TIGLViewerWindow::createMenus()
     updateRecentFileActions();
 }
 
-
-
 void TIGLViewerWindow::initCreatorInterface()
 {
     profilesDB = new ProfilesDBManager();
 
-    adapter = new CPACSCreatorAdapter(profilesDB);
-    modificatorManager = new ModificatorManager(adapter,
-                                                widgetApply,
-                                                transforamtionModificator,
-                                                wingModificator,
-                                                profilesDB,
-                                                positioningsModificator,
-                                                fuselageModificator);
+    adapter            = new CPACSCreatorAdapter(profilesDB);
+    modificatorManager = new ModificatorManager(adapter, widgetApply, transforamtionModificator, wingModificator,
+                                                profilesDB, positioningsModificator, fuselageModificator);
 
     model = new CPACSAbstractModel(adapter);
     treeView->setModel(model);
@@ -834,23 +832,23 @@ void TIGLViewerWindow::initCreatorInterface()
     // We do not allow to standardize until one file is open
     standardizeAction->setEnabled(false);
 
+    connect(selectionModel, SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)), model,
+            SLOT(onItemSelectionChanged(const QItemSelection&, const QItemSelection&)));
 
-    connect(selectionModel, SIGNAL(selectionChanged (const QItemSelection &, const QItemSelection &)),model,
-            SLOT(onItemSelectionChanged(const QItemSelection &, const QItemSelection &)) );
+    connect(model, SIGNAL(selectionAsTreeItem(cpcr::CPACSTreeItem*)), modificatorManager,
+            SLOT(dispatch(cpcr::CPACSTreeItem*)));
 
-    connect(model,SIGNAL(selectionAsTreeItem(cpcr::CPACSTreeItem * )), modificatorManager, SLOT(dispatch(cpcr::CPACSTreeItem * )));
-
-    connect(commitButton, SIGNAL(pressed() ), this, SLOT(applyModifications() )); // not in modificatorManager because we need to disconnect the model
-    connect(cancelButton, SIGNAL(pressed() ), modificatorManager, SLOT(applyCurrentCancellation() )); // not in modificatorManager because we need to disconnect the model
+    connect(commitButton, SIGNAL(pressed()), this,
+            SLOT(applyModifications())); // not in modificatorManager because we need to disconnect the model
+    connect(cancelButton, SIGNAL(pressed()), modificatorManager,
+            SLOT(applyCurrentCancellation())); // not in modificatorManager because we need to disconnect the model
 }
-
-
 
 void TIGLViewerWindow::updateCreatorInterface()
 {
 
     std::string selectedUID = model->getUidForIdx(selectionModel->currentIndex());
-    bool blockB = watcher->blockSignals(true);  // we do not want to reopen the file during the moification
+    bool blockB             = watcher->blockSignals(true); // we do not want to reopen the file during the moification
     model->disconnectAdapter();
     adapter->resetCpacsConfig(*cpacsConfiguration);
     profilesDB->setAirfoilsFromCurrentCpacsFile(adapter->getAirfoilsUid());
@@ -858,35 +856,35 @@ void TIGLViewerWindow::updateCreatorInterface()
     treeView->hideColumn(3);
     modificatorManager->reset();
     QModelIndex idx = model->getIdxForUID(selectedUID);
-    selectionModel->setCurrentIndex(idx,  QItemSelectionModel::Select);
+    selectionModel->setCurrentIndex(idx, QItemSelectionModel::Select);
     watcher->blockSignals(blockB);
 }
-
 
 void TIGLViewerWindow::applyModifications()
 {
 
     std::string selectedUID = model->getUidForIdx(selectionModel->currentIndex());
-    bool blockB = watcher->blockSignals(true);  // we do not want to reopen the file during the moification
+    bool blockB             = watcher->blockSignals(true); // we do not want to reopen the file during the moification
     model->disconnectAdapter();
     undoHelper.addCheckPoint();
-    modificatorManager->applyCurrentModifications();   // modificator manager file save the commit in the new file  // Here updateCreatorInterface can be called because we write the primary cpacs file
+    modificatorManager
+        ->applyCurrentModifications(); // modificator manager file save the commit in the new file  // Here updateCreatorInterface can be called because we write the primary cpacs file
     model->resetAdapter(adapter);
     treeView->hideColumn(3);
     modificatorManager->reset();
     QModelIndex idx = model->getIdxForUID(selectedUID);
-    selectionModel->setCurrentIndex(idx,  QItemSelectionModel::Select);
+    selectionModel->setCurrentIndex(idx, QItemSelectionModel::Select);
     reopenFile();
     watcher->blockSignals(blockB);
-
 }
 
-void TIGLViewerWindow::undoCommit(){
+void TIGLViewerWindow::undoCommit()
+{
 
-    if( undoHelper.undoIsAvailable()){
+    if (undoHelper.undoIsAvailable()) {
         //protect the openning from the emit of the interface
         std::string selectedUID = model->getUidForIdx(selectionModel->currentIndex());
-        bool blockB = watcher->blockSignals(true);  // we do not want to reopen the file during the moification
+        bool blockB = watcher->blockSignals(true); // we do not want to reopen the file during the moification
         model->disconnectAdapter();
         QString fileToRestore = undoHelper.undo();
 
@@ -897,7 +895,7 @@ void TIGLViewerWindow::undoCommit(){
         treeView->hideColumn(3);
         modificatorManager->reset();
         QModelIndex idx = model->getIdxForUID(selectedUID);
-        selectionModel->setCurrentIndex(idx,  QItemSelectionModel::Select);
+        selectionModel->setCurrentIndex(idx, QItemSelectionModel::Select);
         watcher->blockSignals(blockB);
     }
     else {
@@ -905,12 +903,12 @@ void TIGLViewerWindow::undoCommit(){
     }
 }
 
-
-void TIGLViewerWindow::redoCommit(){
-    if(undoHelper.redoIsAvailable()){
+void TIGLViewerWindow::redoCommit()
+{
+    if (undoHelper.redoIsAvailable()) {
         //protect the openning from the emit of the interface
         std::string selectedUID = model->getUidForIdx(selectionModel->currentIndex());
-        bool blockB = watcher->blockSignals(true);  // we do not want to reopen the file during the moification
+        bool blockB = watcher->blockSignals(true); // we do not want to reopen the file during the moification
         model->disconnectAdapter();
         QString fileToRestore = undoHelper.redo();
 
@@ -921,22 +919,21 @@ void TIGLViewerWindow::redoCommit(){
         treeView->hideColumn(3);
         modificatorManager->reset();
         QModelIndex idx = model->getIdxForUID(selectedUID);
-        selectionModel->setCurrentIndex(idx,  QItemSelectionModel::Select);
+        selectionModel->setCurrentIndex(idx, QItemSelectionModel::Select);
         watcher->blockSignals(blockB);
-    } else {
+    }
+    else {
         LOG(WARNING) << "Redo unavaible!" << std::endl;
     }
-
 }
 
+void TIGLViewerWindow::standardizeCurrentFile(bool standardize)
+{
 
-
-void TIGLViewerWindow::standardizeCurrentFile(bool standardize) {
-
-    if (modificatorManager != nullptr ){
-        if( standardize ){
+    if (modificatorManager != nullptr) {
+        if (standardize) {
             std::string selectedUID = model->getUidForIdx(selectionModel->currentIndex());
-            bool blockB = watcher->blockSignals(true);  // we do not want to reopen the file during the moification
+            bool blockB = watcher->blockSignals(true); // we do not want to reopen the file during the moification
             model->disconnectAdapter();
             myScene->getContext()->EraseAll(Standard_False);
 
@@ -946,27 +943,21 @@ void TIGLViewerWindow::standardizeCurrentFile(bool standardize) {
             treeView->hideColumn(3);
             modificatorManager->reset();
             QModelIndex idx = model->getIdxForUID(selectedUID);
-            selectionModel->setCurrentIndex(idx,  QItemSelectionModel::Select);
+            selectionModel->setCurrentIndex(idx, QItemSelectionModel::Select);
             reopenFile();
             watcher->blockSignals(blockB);
-
-        }else{
-            LOG(WARNING)    << "Standardization function is unchecked! Nothing will happend directly, but"
-                            << "the cpacs creator standardization will nomore be forced by the software. "
-                            << "This can leads to strange strucutre in the cpacs file and the impossiblity to "
-                            << "use properly some function of cpacs creator. "
-                            << std::endl;
         }
-    }else {
+        else {
+            LOG(WARNING) << "Standardization function is unchecked! Nothing will happend directly, but"
+                         << "the cpacs creator standardization will nomore be forced by the software. "
+                         << "This can leads to strange strucutre in the cpacs file and the impossiblity to "
+                         << "use properly some function of cpacs creator. " << std::endl;
+        }
+    }
+    else {
         LOG(WARNING) << "modificatorManager is null impossible to standardize!" << std::endl;
     }
-
-
 }
-
-
-
-
 
 void TIGLViewerWindow::updateRecentFileActions()
 {
@@ -992,9 +983,9 @@ void TIGLViewerWindow::updateRecentFileActions()
 
 void TIGLViewerWindow::updateMenus()
 {
-    int nWings = 0;
+    int nWings     = 0;
     int nFuselages = 0;
-    int hand = 0;
+    int hand       = 0;
     if (cpacsConfiguration) {
         hand = cpacsConfiguration->getCpacsHandle();
         if (hand > 0) {
@@ -1006,7 +997,7 @@ void TIGLViewerWindow::updateMenus()
     menuFuselages->setEnabled(nFuselages > 0);
     menuAircraft->setEnabled(nWings > 0 || nFuselages > 0);
 
-    tiglMenu->setEnabled(hand>0);
+    tiglMenu->setEnabled(hand > 0);
 
     tiglExportMeshedFuselageSTL->setEnabled(nFuselages > 0);
     tiglExportMeshedFuselageVTK->setEnabled(nFuselages > 0);
@@ -1024,20 +1015,21 @@ void TIGLViewerWindow::updateMenus()
 
     closeAction->setEnabled(hand > 0);
 
-    bool hasFarField = false;
+    bool hasFarField  = false;
     bool hasACSystems = false;
-    int nRotorBlades = 0;
-    int nRotors = 0;
+    int nRotorBlades  = 0;
+    int nRotors       = 0;
     try {
         if (hand > 0) {
             tigl::CCPACSConfiguration& config = tigl::CCPACSConfigurationManager::GetInstance().GetConfiguration(hand);
-            hasFarField = config.GetFarField().GetType() != tigl::NONE;
-            hasACSystems = config.GetGenericSystemCount() > 0;
-            nRotorBlades = config.GetRotorBladeCount();
-            nRotors = config.GetRotorCount();
+            hasFarField                       = config.GetFarField().GetType() != tigl::NONE;
+            hasACSystems                      = config.GetGenericSystemCount() > 0;
+            nRotorBlades                      = config.GetRotorBladeCount();
+            nRotors                           = config.GetRotorCount();
         }
     }
-    catch(tigl::CTiglError& ){}
+    catch (tigl::CTiglError&) {
+    }
     drawFarFieldAction->setEnabled(hasFarField);
     drawSystemsAction->setEnabled(hasACSystems);
     drawRotorsAction->setEnabled(nRotors > 0);
@@ -1065,19 +1057,18 @@ Console* TIGLViewerWindow::getConsole()
 void TIGLViewerWindow::makeScreenShot()
 {
     QString fileName = QFileDialog::getSaveFileName(this, tr("Save Screenshot"), myLastFolder,
-                                                    tr("PNG-Image (*.png);;") +
-                                                    tr("JPEG-Image (*.jpg);;") +
-                                                    tr("Windows-BMP-Image (*.bmp)"));
+                                                    tr("PNG-Image (*.png);;") + tr("JPEG-Image (*.jpg);;") +
+                                                        tr("Windows-BMP-Image (*.bmp)"));
 
     if (!fileName.isEmpty() && myOCC) {
-        
+
         TIGLViewerScreenshotDialog dialog(fileName, this);
         dialog.setQualityValue(80);
         dialog.setImageSize(myOCC->width(), myOCC->height());
         if (dialog.exec() != QDialog::Accepted) {
             return;
         }
-        
+
         int width, height;
         dialog.getImageSize(width, height);
         if (!myOCC->makeScreenshot(fileName, dialog.getWhiteBGEnabled(), width, height, dialog.getQualityValue())) {
@@ -1090,11 +1081,10 @@ void TIGLViewerWindow::drawPoint()
 {
     TIGLViewerDrawVectorDialog dialog("Draw Point", this);
     dialog.setDirectionEnabled(false);
-    
+
     if (dialog.exec() != QDialog::Accepted) {
         return;
     }
-
 
     gp_Pnt point = dialog.getPoint().Get_gp_Pnt();
     std::stringstream stream;
@@ -1105,25 +1095,25 @@ void TIGLViewerWindow::drawPoint()
 void TIGLViewerWindow::drawVector()
 {
     TIGLViewerDrawVectorDialog dialog("Draw Vector", this);
-    
+
     if (dialog.exec() != QDialog::Accepted) {
         return;
     }
-    
+
     gp_Pnt point = dialog.getPoint().Get_gp_Pnt();
     gp_Vec dir   = dialog.getDirection().Get_gp_Pnt().XYZ();
     std::stringstream stream;
     stream << "(" << point.X() << ", " << point.Y() << ", " << point.Z() << ")";
-    getScene()->displayVector(point, dir, stream.str().c_str(), Standard_True, 0,0,0, 1.);
+    getScene()->displayVector(point, dir, stream.str().c_str(), Standard_True, 0, 0, 0, 1.);
 }
 
 /// This function is copied from QtCoreLib (>5.1)
 /// and is not available in qt4
-bool TIGLViewerWindow::deleteEnvVar(const char * varName)
+bool TIGLViewerWindow::deleteEnvVar(const char* varName)
 {
 #if defined(_MSC_VER) && _MSC_VER >= 1400
     return _putenv_s(varName, "");
-#elif (defined(_POSIX_VERSION) && (_POSIX_VERSION-0) >= 200112L) || defined(Q_OS_BSD4)
+#elif (defined(_POSIX_VERSION) && (_POSIX_VERSION - 0) >= 200112L) || defined(Q_OS_BSD4)
     // POSIX.1-2001 and BSD have unsetenv
     return unsetenv(varName) == 0;
 #elif defined(Q_CC_MINGW)
@@ -1136,9 +1126,7 @@ bool TIGLViewerWindow::deleteEnvVar(const char * varName)
     // environment and leak it
     QByteArray buffer(varName);
     buffer += '=';
-    char *envVar = qstrdup(buffer.constData());
+    char* envVar = qstrdup(buffer.constData());
     return putenv(envVar) == 0;
 #endif
 }
-
-
