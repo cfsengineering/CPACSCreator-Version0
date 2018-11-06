@@ -44,6 +44,7 @@
 #include "ProfilesDBManager.h"
 #include "UndoHelper.h"
 
+#include "CPACSTreeView.h"
 
 class QAction;
 class QLabel;
@@ -80,10 +81,11 @@ protected:
      void dragEnterEvent(QDragEnterEvent *ev) OVERRIDE;
 
 public slots:
+    // open the file adding a checkpoint for undo manager
     void openFile(const QString& fileName);
     void openScript(const QString& scriptFileName);
     bool saveFile(const QString& fileName);
-    void closeConfiguration();
+    void close();
     
     TIGLViewerWidget*   getViewer();
     TIGLViewerContext*  getScene() { return myScene; }
@@ -111,16 +113,25 @@ private slots:
     void makeScreenShot();
     void drawPoint();
     void drawVector();
-    void updateCreatorInterface();
+    // this is done with the adapter only
+    void updateCreatorInterfaceFromAdapter();
     void applyModifications(); // preparation for undo is done here
     void undoCommit();
     void redoCommit();
     void standardizeCurrentFile(bool YesOrNo);  // if
 
 private:
+
+    void closeCpacsConfigurationOnly();
+    void openCpacsConfigurationOnly(QString filename);
+    void closeAdapter();
+    //
+    void openFileNoCheckPointAdded(const QString& fileName);
+
     void connectSignals();
     void connectConfiguration();
     void createMenus();
+
     void initCreatorInterface();
 
 
@@ -139,8 +150,9 @@ private:
 
     TIGLViewerDocument* cpacsConfiguration;
 
-    CPACSAbstractModel* model;
-    QItemSelectionModel* selectionModel;
+    CPACSTreeView* cpacsTreeView;
+
+
     CPACSCreatorAdapter* adapter;
     ModificatorManager* modificatorManager;
     ProfilesDBManager* profilesDB;

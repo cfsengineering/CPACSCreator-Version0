@@ -118,6 +118,7 @@ set(tv_src
     TIGLViewerPositioningsWidget.cpp
     TIGLViewerFuselageWidget.cpp
     UndoHelper.cpp
+    CPACSTreeView.cpp
 
         )
 	
@@ -176,6 +177,8 @@ set(tv_hdr_qobj
     ProfilesDBManager.h
     TIGLViewerPositioningsWidget.h
     TIGLViewerFuselageWidget.h
+    CPACSTreeView.h
+
 
 )
 

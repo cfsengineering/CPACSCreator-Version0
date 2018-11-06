@@ -54,7 +54,7 @@ public:
                        TIGLViewerFuselageWidget * fuselageModificator
                        );
 
-    void reset();
+
     void setTransformationModificator(cpcr::CPACSTreeItem * item );
     void setWingModificator(cpcr::CPACSTreeItem * item);
     void setPositioningsModificator(cpcr::CPACSTreeItem * item);
@@ -68,6 +68,8 @@ public:
 
     // copy the pointer (the pointer is contain in a new address but point to the same object) -> the user can not change the container of adapterS
     inline CPACSCreatorAdapter* getAdapter() {return  adapter; }
+    void resetAdapter(CPACSCreatorAdapter* newAdapter );
+
     inline ProfilesDBManager* getProfilesDB() {return profilesDB; }
 
 private:

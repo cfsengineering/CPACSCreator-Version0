@@ -29,6 +29,7 @@
 
 #include "CPACSCreatorLib/CreatorException.h"
 
+
 CPACSCreatorAdapter::CPACSCreatorAdapter(ProfilesDBManager* profilesDBManager)
 {
     profilesDB = profilesDBManager;
@@ -120,28 +121,22 @@ void CPACSCreatorAdapter::close()
     aircraftTree.close();
 }
 
-void CPACSCreatorAdapter::resetCpacsConfig(const TIGLViewerDocument& doc)
+void CPACSCreatorAdapter::resetFromFile(QString filename)
 {
-    //QMutexLocker locker(&mutex); // ensure that the tree is not accessed during the creation
-
-    // Check if the new document is valid
-    if (!doc.isConfigurationValid()) {
-        aircraftTree.close();
-        return;
-    }
-
-    // check rotorcraft
-    tigl::CCPACSConfiguration& config = doc.GetConfiguration();
-    if (config.IsRotorcraft()) {
-        std::cout << "Rotorcraft is not supported by the tree viewer" << std::endl;
-        return;
-    }
 
     // todo: allow multiple model selection
     std::string rootXPath = "/cpacs/vehicles/aircraft/model[1]";
 
-    aircraftTree.build(doc.getLoadedDocumentFileName().toStdString(),
-                       rootXPath); // the build function take care to clean the old one
+    // the build function take care to clean the old one
+    try {
+        aircraftTree.build(filename.toStdString(), rootXPath);
+    }
+    catch (const CreatorException& e){
+        LOG(ERROR)  << "CPACSCreatorAdapter::resetFromFile: impossible to build the tree: error message: "
+                    << e.what()
+                    << std::endl;
+    }
+
     return;
 }
 
@@ -304,51 +299,6 @@ void CPACSCreatorAdapter::setAnchorValues(cpcr::CPACSTreeItem* item, double x, d
     wingT.setTranslation(cpcr::Point(x, y, z));
 
     setTransformation(item->getChild("transformation"), wingT);
-}
-
-void CPACSCreatorAdapter::getStdValues(cpcr::CPACSTreeItem* item, bool& stdAirfoil, bool& stdSections,
-                                       bool& stdPositionings, bool& stdAnchor)
-{
-
-    if (!testItem(item, "wing")) {
-        return;
-    }
-
-    std::string wingUID = item->getUid();
-
-    stdSections     = aircraftTree.checkExactlyOneElementPerSectionForWing(wingUID);
-    stdAirfoil      = aircraftTree.checkIfAirfoilsAreStandardizedForWing(wingUID);
-    stdPositionings = aircraftTree.checkIfPositioningsAreStandardizedForWing(wingUID);
-    stdAnchor       = aircraftTree.checkIfWingTransformationIsStandardizedForWing(wingUID);
-}
-
-void CPACSCreatorAdapter::setStdValues(cpcr::CPACSTreeItem* item, bool stdAirfoil, bool stdSections,
-                                       bool stdPositionings, bool stdAnchor)
-{
-
-    if (!testItem(item, "wing")) {
-        return;
-    }
-    std::string wingUID =
-        item->getUid(); // We need to work with UID because wing item may change during the stdardization process
-
-    if (stdAirfoil && (!aircraftTree.checkIfAirfoilsAreStandardizedForWing(wingUID))) {
-        aircraftTree.airfoilsStandardizationForWing(wingUID);
-    }
-
-    if (stdSections && (!aircraftTree.checkExactlyOneElementPerSectionForWing(wingUID))) {
-        aircraftTree.oneSectionOneElementStandardizationForWing(wingUID);
-    }
-
-    if (stdAnchor && (!aircraftTree.checkIfWingTransformationIsStandardizedForWing(wingUID))) {
-        aircraftTree.wingTransformationStandardization(wingUID);
-    }
-
-    if (stdPositionings && (!aircraftTree.checkIfPositioningsAreStandardizedForWing(wingUID))) {
-        aircraftTree.positioningsStandardizationForWing(wingUID);
-    }
-
-    // The file is rewrite with the previous functions, Careful the treeItems can be changed!
 }
 
 QString CPACSCreatorAdapter::getWingOrientation(cpcr::CPACSTreeItem* item)

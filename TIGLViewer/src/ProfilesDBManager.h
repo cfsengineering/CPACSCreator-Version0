@@ -32,6 +32,8 @@ Q_OBJECT
 public:
     ProfilesDBManager();
     void setAirfoilsFromCurrentCpacsFile(QStringList newAirfoils);
+    void clearAirfoilsFromCurrentCpacsFile();
+
     QStringList getAvailableAirfoils();
 
     // Return true if the airfoil id is in airfoisFromCPACS or in the DB

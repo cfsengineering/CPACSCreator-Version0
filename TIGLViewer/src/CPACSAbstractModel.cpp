@@ -189,31 +189,20 @@ cpcr::CPACSTreeItem* CPACSAbstractModel::getItem(QModelIndex index) const
     return creatorAdapter->getRoot();    // empty index is the root
 }
 
-void CPACSAbstractModel::onItemSelectionChanged(const QItemSelection & newSelection, const QItemSelection & oldSelection)
+cpcr::CPACSTreeItem * CPACSAbstractModel::getItemFromSelection(const QItemSelection & newSelection)
 {
     if(!isValid()){
-        throw TIGLViewerException("CPACSAbstractModel: onItemSelcetionChanged called but the model is not valid!");
+        throw TIGLViewerException("CPACSAbstractModel: getItemWithError called but the model is not valid!");
     }
 
 
     cpcr::CPACSTreeItem * item = getItem(newSelection.indexes().at(0));
 
-    emit selectionAsTreeItem(item);
+    return item;
 
-//    Quantity_Color color = Quantity_Color( 255/255.,192/255.,203/255.  , Quantity_TOC_RGB);
-//
-//    if(item->getCpacsType() == "wing"){
-//
-//        tigl::CCPACSWing& wing = m_doc.GetConfiguration().GetWing(item->getCpacsIndex());
-//
-//        for (int i = 1; i <= wing.GetSegmentCount(); i++) {
-//            // Draw segment loft
-//            app.getScene()->displayShape(wing.GetSegment(i).GetLoft(), true, color);
-//        }
-//    }
 }
 
-inline bool CPACSAbstractModel::isValid() const {
+bool CPACSAbstractModel::isValid() const {
     return (creatorAdapter != nullptr && creatorAdapter->isValid() ) ;
 }
 
@@ -226,6 +215,7 @@ void CPACSAbstractModel::resetAdapter( CPACSCreatorAdapter* adapter  ) {
 
 
 void CPACSAbstractModel::disconnectAdapter() {
+    // notify the tree view?
     QAbstractItemModel::beginResetModel();
     creatorAdapter = nullptr;
     QAbstractItemModel::endResetModel();

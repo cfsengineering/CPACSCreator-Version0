@@ -140,8 +140,8 @@ TIGLViewerWindow::~TIGLViewerWindow()
 {
     delete stdoutStream;
     delete errorStream;
-    delete model;
     delete adapter;
+    delete cpacsTreeView;
     delete modificatorManager;
     delete profilesDB;
 }
@@ -236,19 +236,43 @@ void TIGLViewerWindow::openScript(const QString& fileName)
     scriptEngine->openFile(fileName);
 }
 
-void TIGLViewerWindow::closeConfiguration()
+void TIGLViewerWindow::close()
 {
-    if (cpacsConfiguration) {
-        getScene()->deleteAllObjects();
-        delete cpacsConfiguration;
-        cpacsConfiguration = NULL;
-    }
+    closeCpacsConfigurationOnly();
     // desactivate the standardization option
     standardizeAction->setEnabled(false);
     // clean the undo helper
     undoHelper.clean();
     setWindowTitle(QString("CPACSCreator"));
 }
+
+void TIGLViewerWindow::closeAdapter(){
+    if(adapter){
+        adapter->close();
+    }
+    updateCreatorInterfaceFromAdapter();
+}
+
+
+void TIGLViewerWindow::closeCpacsConfigurationOnly() {
+
+    if (cpacsConfiguration) {
+        getScene()->deleteAllObjects();
+        delete cpacsConfiguration;
+        cpacsConfiguration = NULL;
+    }
+}
+
+void TIGLViewerWindow::openCpacsConfigurationOnly(QString filename ){
+    TIGLViewerDocument* config = new TIGLViewerDocument(this);
+    TiglReturnCode tiglRet     = config->openCpacsConfiguration(filename);
+    if (tiglRet != TIGL_SUCCESS) {
+        delete config;
+        return;
+    }
+    cpacsConfiguration = config;
+}
+
 
 void TIGLViewerWindow::openRecentFile()
 {
@@ -258,8 +282,9 @@ void TIGLViewerWindow::openRecentFile()
     }
 }
 
-void TIGLViewerWindow::openFile(const QString& fileName)
-{
+
+void TIGLViewerWindow::openFileNoCheckPointAdded(const QString& fileName) {
+
     QString fileType;
     QFileInfo fileInfo;
 
@@ -276,26 +301,15 @@ void TIGLViewerWindow::openFile(const QString& fileName)
     fileType = fileInfo.suffix();
 
     if (!fileName.isEmpty()) { // if the file is empty -> this is the case when the user press cancel.
-
-        // check if the file is already registred, if yes do nothing, otherwise initialize the undoHelper
-        undoHelper.set(fileInfo.absoluteFilePath());
-
-        watcher = new QFileSystemWatcher(); // here, because we use it in updateCreatorInterface
+        // indirectly disconnect the watcher
+        watcher = new QFileSystemWatcher();
 
         if (fileType.toLower() == tr("xml")) {
 
-            // Init TIGLViewerDocument
-            TIGLViewerDocument* config = new TIGLViewerDocument(this);
-            TiglReturnCode tiglRet     = config->openCpacsConfiguration(undoHelper.currentFile());
-            if (tiglRet != TIGL_SUCCESS) {
-                delete config;
-                return;
-            }
-            delete cpacsConfiguration;
-            cpacsConfiguration = config;
-
-            // Init creator interface to access the modificator manager
-            updateCreatorInterface();
+            // reset adapter
+            adapter->resetFromFile(fileInfo.absoluteFilePath());
+            // set creator interface
+            updateCreatorInterfaceFromAdapter();
 
             //Standardization process
             if (modificatorManager->isStandardized()) {
@@ -307,13 +321,14 @@ void TIGLViewerWindow::openFile(const QString& fileName)
             else {
                 QMessageBox msgBox;
                 msgBox.setText(
-                    "The CPACS file does not use the Creator standard. Did you want to standardize the file?");
+                        "The CPACS file does not use the Creator standard. Did you want to standardize the file?");
                 msgBox.setInformativeText("The Creator standard guaranty that creator functions work properly. "
                                           "Otherwise, the Creator functions can have unexpected behavior. ");
                 msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
                 msgBox.setDefaultButton(QMessageBox::Yes);
                 int ret = msgBox.exec();
                 if (ret == QMessageBox::Yes) {
+                    // it safe to call standardize from the modificator because we have disconnect the cpacstree view
                     modificatorManager->standardizeCurrentFile();
                     bool blockB = standardizeAction->blockSignals(true);
                     standardizeAction->setChecked(true);
@@ -329,11 +344,24 @@ void TIGLViewerWindow::openFile(const QString& fileName)
                     displayErrorMessage("Unexpected result from the previous message box", "Error");
                 }
             }
-
-            // Init the cpaccs interface and connections
             standardizeAction->setEnabled(true);
+
+
+
+            // Init TIGLViewerDocument
+            TIGLViewerDocument* config = new TIGLViewerDocument(this);
+            TiglReturnCode tiglRet     = config->openCpacsConfiguration(fileInfo.absoluteFilePath());
+            if (tiglRet != TIGL_SUCCESS) {
+                delete config;
+                return;
+            }
+            delete cpacsConfiguration;
+            cpacsConfiguration = config;
+            ;
+            // update tigl interface
             connectConfiguration();
             updateMenus();
+
             success = true;
         }
 
@@ -365,7 +393,7 @@ void TIGLViewerWindow::openFile(const QString& fileName)
 
         watcher->addPath(fileInfo.absoluteFilePath());
         QObject::connect(watcher, SIGNAL(fileChanged(QString)), openTimer, SLOT(start()));
-        setCurrentFile(undoHelper.currentFile()); // set the setting for the next opening
+        setCurrentFile(fileInfo.absoluteFilePath()); // set the setting for the next opening
         myLastFolder = fileInfo.absolutePath();
         if (success) {
             myOCC->viewAxo();
@@ -376,7 +404,25 @@ void TIGLViewerWindow::openFile(const QString& fileName)
             displayErrorMessage("Error opening file " + fileName, "Error");
         }
     }
+
 }
+
+void TIGLViewerWindow::openFile(const QString& fileName)
+{
+    QString fileType;
+    QFileInfo fileInfo;
+
+    fileInfo.setFile(fileName);
+    fileType = fileInfo.suffix();
+
+    if (!fileName.isEmpty()) { // cancel case
+        undoHelper.init(fileName);
+        openFileNoCheckPointAdded(undoHelper.currentFile());
+    }
+
+}
+
+
 
 void TIGLViewerWindow::reopenFile()
 {
@@ -386,8 +432,18 @@ void TIGLViewerWindow::reopenFile()
     fileInfo.setFile(undoHelper.currentFile());
     fileType = fileInfo.suffix();
 
-    if (fileType.toLower() == tr("xml")) {
-        cpacsConfiguration->updateConfiguration();
+    if (fileType.toLower() == tr("xml")){
+        TIGLViewerDocument* newConfig = new TIGLViewerDocument(this);
+        TiglReturnCode tiglRet     = newConfig->openCpacsConfiguration(undoHelper.currentFile());
+        if (tiglRet != TIGL_SUCCESS) {
+            delete newConfig;
+            LOG(WARNING)    << "TIGLViewerWindow::reopenFile: error in openCpacsConfiguration  for file: "
+                            << undoHelper.currentFile().toStdString() << std::endl;
+            return;
+        }
+        delete cpacsConfiguration;
+        cpacsConfiguration = newConfig;
+
     }
     else {
         myScene->getContext()->EraseAll(Standard_False);
@@ -710,8 +766,8 @@ void TIGLViewerWindow::connectConfiguration()
 
     // Set functions
 
-    connect(cpacsConfiguration, SIGNAL(documentUpdated(TiglCPACSConfigurationHandle)), this,
-            SLOT(updateCreatorInterface()));
+    // need to synchronize the adpater first
+    //connect(cpacsConfiguration, SIGNAL(documentUpdated(TiglCPACSConfigurationHandle)), this, SLOT(updateCreatorInterfaceFromAdapter()));
 }
 
 void TIGLViewerWindow::connectSignals()
@@ -719,7 +775,7 @@ void TIGLViewerWindow::connectSignals()
     connect(newAction, SIGNAL(triggered()), this, SLOT(newFile()));
     connect(openAction, SIGNAL(triggered()), this, SLOT(open()));
     connect(openScriptAction, SIGNAL(triggered()), this, SLOT(openScript()));
-    connect(closeAction, SIGNAL(triggered()), this, SLOT(closeConfiguration()));
+    connect(closeAction, SIGNAL(triggered()), this, SLOT(close()));
     connect(refreshAction, SIGNAL(triggered()), this, SLOT(reopenFile()));
     connect(redoAction_2, SIGNAL(triggered()), this, SLOT(redoCommit()));
     connect(undoAction_2, SIGNAL(triggered()), this, SLOT(undoCommit()));
@@ -817,6 +873,8 @@ void TIGLViewerWindow::createMenus()
     updateRecentFileActions();
 }
 
+
+
 void TIGLViewerWindow::initCreatorInterface()
 {
     profilesDB = new ProfilesDBManager();
@@ -825,78 +883,93 @@ void TIGLViewerWindow::initCreatorInterface()
     modificatorManager = new ModificatorManager(adapter, widgetApply, transforamtionModificator, wingModificator,
                                                 profilesDB, positioningsModificator, fuselageModificator);
 
-    model = new CPACSAbstractModel(adapter);
-    treeView->setModel(model);
-    selectionModel = treeView->selectionModel();
+    // create the cpacs tree view that is linked to the tree view of the interface
+    cpacsTreeView = new CPACSTreeView(treeView, adapter);
 
     // We do not allow to standardize until one file is open
     standardizeAction->setEnabled(false);
 
-    connect(selectionModel, SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)), model,
-            SLOT(onItemSelectionChanged(const QItemSelection&, const QItemSelection&)));
-
-    connect(model, SIGNAL(selectionAsTreeItem(cpcr::CPACSTreeItem*)), modificatorManager,
+    connect(cpacsTreeView, SIGNAL( newSelectedTreeItem(cpcr::CPACSTreeItem *)), modificatorManager,
             SLOT(dispatch(cpcr::CPACSTreeItem*)));
 
-    connect(commitButton, SIGNAL(pressed()), this,
-            SLOT(applyModifications())); // not in modificatorManager because we need to disconnect the model
-    connect(cancelButton, SIGNAL(pressed()), modificatorManager,
-            SLOT(applyCurrentCancellation())); // not in modificatorManager because we need to disconnect the model
+    // not in modificatorManager because we need to disconnect the model
+    connect(commitButton, SIGNAL(pressed()), this, SLOT(applyModifications()));
+
+    // not in modificatorManager because we need to disconnect the model
+    connect(cancelButton, SIGNAL(pressed()), modificatorManager, SLOT(applyCurrentCancellation()));
 }
 
-void TIGLViewerWindow::updateCreatorInterface()
-{
 
-    std::string selectedUID = model->getUidForIdx(selectionModel->currentIndex());
-    bool blockB             = watcher->blockSignals(true); // we do not want to reopen the file during the moification
-    model->disconnectAdapter();
-    adapter->resetCpacsConfig(*cpacsConfiguration);
-    profilesDB->setAirfoilsFromCurrentCpacsFile(adapter->getAirfoilsUid());
-    model->resetAdapter(adapter);
-    treeView->hideColumn(3);
-    modificatorManager->reset();
-    QModelIndex idx = model->getIdxForUID(selectedUID);
-    selectionModel->setCurrentIndex(idx, QItemSelectionModel::Select);
-    watcher->blockSignals(blockB);
+
+
+
+void TIGLViewerWindow::updateCreatorInterfaceFromAdapter() // need a valid cpacsConfiguaration
+{
+    if(!adapter || (! adapter->isValid()) ) {
+        profilesDB->clearAirfoilsFromCurrentCpacsFile();
+        cpacsTreeView->disconnectAdapter();
+        modificatorManager->resetAdapter(adapter);
+    }
+    else{
+        profilesDB->setAirfoilsFromCurrentCpacsFile(adapter->getAirfoilsUid());
+        cpacsTreeView->connectAdapter(adapter);
+        modificatorManager->resetAdapter(adapter);
+    }
 }
 
 void TIGLViewerWindow::applyModifications()
 {
 
-    std::string selectedUID = model->getUidForIdx(selectionModel->currentIndex());
-    bool blockB             = watcher->blockSignals(true); // we do not want to reopen the file during the moification
-    model->disconnectAdapter();
+    // we wants not that other routine are called before the end of this operation
+    bool blockB = watcher->blockSignals(true);
+    bool blockCpacsConfigUpdate = cpacsConfiguration->blockSignals(true);
+
+    // close cpacsConfiguration
+    closeCpacsConfigurationOnly();
+    // disconnect tree to not have tree access during this operation
+    cpacsTreeView->disconnectAdapter();
+
     undoHelper.addCheckPoint();
-    modificatorManager
-        ->applyCurrentModifications(); // modificator manager file save the commit in the new file  // Here updateCreatorInterface can be called because we write the primary cpacs file
-    model->resetAdapter(adapter);
-    treeView->hideColumn(3);
-    modificatorManager->reset();
-    QModelIndex idx = model->getIdxForUID(selectedUID);
-    selectionModel->setCurrentIndex(idx, QItemSelectionModel::Select);
-    reopenFile();
+
+    modificatorManager->applyCurrentModifications();
+
+    // reset the creator interface (remark adapter is still the same)
+    updateCreatorInterfaceFromAdapter();
+
+    // reopen cpacsConfiguration
+    openCpacsConfigurationOnly(undoHelper.currentFile());
+
+    // reset the tigl interface
+    connectConfiguration();
+    updateMenus();
+
     watcher->blockSignals(blockB);
+    cpacsConfiguration->blockSignals(blockCpacsConfigUpdate); // not necessary because the cpacsConfiguration is recreated
 }
+
+
 
 void TIGLViewerWindow::undoCommit()
 {
 
     if (undoHelper.undoIsAvailable()) {
-        //protect the openning from the emit of the interface
-        std::string selectedUID = model->getUidForIdx(selectionModel->currentIndex());
-        bool blockB = watcher->blockSignals(true); // we do not want to reopen the file during the moification
-        model->disconnectAdapter();
+
+        // we wants not that other routine are called before the end of this operation
+        bool blockB = watcher->blockSignals(true);
+        bool blockCpacsConfigUpdate = cpacsConfiguration->blockSignals(true);
+
+        // close cpacsConfiguration
+        closeCpacsConfigurationOnly();
+        // close the adapter and disconnect the tree
+        closeAdapter();
+
         QString fileToRestore = undoHelper.undo();
 
-        myScene->getContext()->EraseAll(Standard_False);
-        openFile(fileToRestore);
-
-        model->resetAdapter(adapter);
-        treeView->hideColumn(3);
-        modificatorManager->reset();
-        QModelIndex idx = model->getIdxForUID(selectedUID);
-        selectionModel->setCurrentIndex(idx, QItemSelectionModel::Select);
+        // cpacsConfig + adapter + creator interface + tigl interface will be restored during the opening
+        openFileNoCheckPointAdded(fileToRestore);
         watcher->blockSignals(blockB);
+        cpacsConfiguration->blockSignals(blockCpacsConfigUpdate);
+
     }
     else {
         LOG(WARNING) << "Undo unavaible!" << std::endl;
@@ -906,21 +979,23 @@ void TIGLViewerWindow::undoCommit()
 void TIGLViewerWindow::redoCommit()
 {
     if (undoHelper.redoIsAvailable()) {
-        //protect the openning from the emit of the interface
-        std::string selectedUID = model->getUidForIdx(selectionModel->currentIndex());
-        bool blockB = watcher->blockSignals(true); // we do not want to reopen the file during the moification
-        model->disconnectAdapter();
+
+        // we wants not that other routine are called before the end of this operation
+        bool blockB = watcher->blockSignals(true);
+        bool blockCpacsConfigUpdate = cpacsConfiguration->blockSignals(true);
+
+        // close cpacsConfiguration
+        closeCpacsConfigurationOnly();
+        // close the adapter and disconnect the tree
+        closeAdapter();
+
         QString fileToRestore = undoHelper.redo();
 
-        myScene->getContext()->EraseAll(Standard_False);
-        openFile(fileToRestore);
+        openFileNoCheckPointAdded(fileToRestore);
+        // the interface will be restored form the openFile function via updateCreatorInterface.
 
-        model->resetAdapter(adapter);
-        treeView->hideColumn(3);
-        modificatorManager->reset();
-        QModelIndex idx = model->getIdxForUID(selectedUID);
-        selectionModel->setCurrentIndex(idx, QItemSelectionModel::Select);
         watcher->blockSignals(blockB);
+
     }
     else {
         LOG(WARNING) << "Redo unavaible!" << std::endl;
@@ -932,20 +1007,34 @@ void TIGLViewerWindow::standardizeCurrentFile(bool standardize)
 
     if (modificatorManager != nullptr) {
         if (standardize) {
-            std::string selectedUID = model->getUidForIdx(selectionModel->currentIndex());
-            bool blockB = watcher->blockSignals(true); // we do not want to reopen the file during the moification
-            model->disconnectAdapter();
-            myScene->getContext()->EraseAll(Standard_False);
+
+            // we wants not that other routine are called before the end of this operation
+            bool blockB = watcher->blockSignals(true);
+            bool blockCpacsConfigUpdate = cpacsConfiguration->blockSignals(true);
+
+            // close cpacsConfiguration
+            closeCpacsConfigurationOnly();
+            // disconnect tree to not have tree access during this operation
+            cpacsTreeView->disconnectAdapter();
+
+            undoHelper.addCheckPoint();
 
             modificatorManager->standardizeCurrentFile();
 
-            model->resetAdapter(adapter);
-            treeView->hideColumn(3);
-            modificatorManager->reset();
-            QModelIndex idx = model->getIdxForUID(selectedUID);
-            selectionModel->setCurrentIndex(idx, QItemSelectionModel::Select);
-            reopenFile();
+            // reset the creator interface (remark adapter is still the same)
+            updateCreatorInterfaceFromAdapter();
+
+            // reopen cpacsConfiguration
+            openCpacsConfigurationOnly(undoHelper.currentFile());
+
+            // reset the tigl interface
+            connectConfiguration();
+            updateMenus();
+
             watcher->blockSignals(blockB);
+            cpacsConfiguration->blockSignals(blockCpacsConfigUpdate); // not necessary because the cpacsConfiguration is recreated
+
+
         }
         else {
             LOG(WARNING) << "Standardization function is unchecked! Nothing will happend directly, but"

@@ -50,12 +50,6 @@ ModificatorManager::ModificatorManager(CPACSCreatorAdapter *adapter,
 }
 
 
-void ModificatorManager::reset() {
-    currentModificator = nullptr;
-    this->hideAll();
-}
-
-
 void ModificatorManager::applyCurrentModifications(){
 
     if(currentModificator != nullptr) {
@@ -160,5 +154,11 @@ bool ModificatorManager::isStandardized() {
 void ModificatorManager::setUseCPACSStandard(bool value) {
     useCpacsStandard = value;
 
+}
+
+void ModificatorManager::resetAdapter(CPACSCreatorAdapter* newAdapter) {
+    adapter = newAdapter;
+    currentModificator = nullptr;
+    this->hideAll();
 }
 

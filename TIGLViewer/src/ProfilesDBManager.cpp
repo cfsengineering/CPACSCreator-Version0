@@ -29,9 +29,16 @@ ProfilesDBManager::ProfilesDBManager() {
 }
 
 
-void ProfilesDBManager::setAirfoilsFromCurrentCpacsFile(QStringList newAirfoils) {
-    QString tempA;
+void ProfilesDBManager::clearAirfoilsFromCurrentCpacsFile() {
     airfoilsFromCurentCpacsFile.clear();
+}
+
+
+
+void ProfilesDBManager::setAirfoilsFromCurrentCpacsFile(QStringList newAirfoils) {
+    clearAirfoilsFromCurrentCpacsFile();
+
+    QString tempA;
     for( QString a : newAirfoils){
         tempA = a + suffixForInFile;
         airfoilsFromCurentCpacsFile.push_back(tempA);

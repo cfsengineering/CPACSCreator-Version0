@@ -40,17 +40,10 @@ public slots:
     void expendDihedralDetails(bool checked);
     void expendSweepDetails(bool checked);
     void expendAirfoilDetails(bool checked);
-    void expendStandardizationDetails(bool checked);
 
     void setAreaConstant(bool checked);
     void setSpanConstant(bool checked);
     void setARConstant(bool checked);
-
-    void checkStdAirfoils(bool checked);
-    void checkStdSections(bool checked);
-    void checkStdPositionings(bool checked);
-    void checkStdAnchor(bool checked);
-    void setStdCheckBoxesFromComboBox(int ix);
 
 
 public:
@@ -65,8 +58,6 @@ public:
     void setWing(cpcr::CPACSTreeItem* wing);
 
 protected:
-    // set the combobox from the checkbox
-    void setStdComboBoxFromStdCheckBoxes();
 
 
 private:
@@ -119,16 +110,6 @@ private:
     QWidget* widgetAirfoilDetails;
     QComboBox* comboBoxAirfoil;
 
-    // standardization interface
-    QComboBox* comboBoxStdGlobal;
-    QPushButton* btnExpendStdDetails;
-    QWidget* widgetStdDetails;
-    QCheckBox* checkBoxStdAirfoils;
-    QCheckBox* checkBoxStdPositionings;
-    QCheckBox* checkBoxStdSections;
-    QCheckBox* checkBoxStdAnchor;
-    // use to inform the setStdCheckBoxesFromComboBox that the change is called form setStdComboBoxFromStdCheckBoxes
-    bool callFromSetStdComboBox;
 
     // internal values are used to keep track of the previous values to notice if a change occurs.
 
@@ -140,14 +121,6 @@ private:
     // internal orientation
     QString internalWingOrientation;
     QString internalSymmetry;
-
-    // internal standardization
-    bool internalStdAirfoils;
-    bool internalStdPositionings;
-    bool internalStdSections;
-    bool internalStdAnchor;
-    QString internalStGlobal;
-
 
 
     // internal sweep

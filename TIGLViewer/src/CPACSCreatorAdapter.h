@@ -95,11 +95,6 @@ public:
 
     void setWingARKeepArea(cpcr::CPACSTreeItem * item, double ar);
 
-    void getStdValues(cpcr::CPACSTreeItem * item, bool& stdAirfoil, bool& stdSections, bool& stdPositionings, bool& stdAnchor);
-
-    void setStdValues(cpcr::CPACSTreeItem * item, bool stdAirfoil, bool stdSections, bool stdPositionings, bool stdAnchor);
-
-
     double getFuselageLength(cpcr::CPACSTreeItem * item);
 
     void setFuselageLength(cpcr::CPACSTreeItem * item, double newLength);
@@ -117,7 +112,9 @@ public:
 
 
     cpcr::CPACSTreeItem * getRoot()const;
-    void resetCpacsConfig(const TIGLViewerDocument& config);
+
+    void resetFromFile(QString filename);
+
     bool isValid();
 
     void standardize();

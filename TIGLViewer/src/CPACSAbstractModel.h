@@ -44,9 +44,6 @@ signals:
     void selectionAsTreeItem(cpcr::CPACSTreeItem * treeItem);
 
 public slots:
-    void onItemSelectionChanged(const QItemSelection &, const QItemSelection &);
-
-
 
 public:
     explicit CPACSAbstractModel( CPACSCreatorAdapter* adapter ,QObject *parent = 0);
@@ -71,7 +68,7 @@ public:
 
 
     // Return true if there is a valid root
-    inline bool isValid() const;
+    bool isValid() const;
 
     void disconnectAdapter();
 
@@ -80,6 +77,8 @@ public:
     QModelIndex getIdxForUID(std::string uid );
 
     std::string getUidForIdx(QModelIndex idx);
+
+    cpcr::CPACSTreeItem * getItemFromSelection(const QItemSelection & newSelection);
 
 protected:
 

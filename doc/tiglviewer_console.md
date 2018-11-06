@@ -132,7 +132,7 @@ size, and also close the application. Some methods of the app object are
 | openFile           | opens a file (CPACS, STEP, IGES, BREP)                       |
 | saveFile           | saves all visible objects to a file (STEP, IGES, BREP, STL)  |
 | openScript         | executes a TiGL Viewer script file                           |
-| closeConfiguration | closes the current CPACS configuration and clears the scene  |
+| close | closes the current CPACS configuration and clears the scene  |
 | close              | terminates TiGL Viewer                                       |
 
 To get a list of all methods and properties, enter help(app) in the TiGL Viewer console.

@@ -128,7 +128,13 @@ void UndoHelper::addCheckPoint() {
 }
 
 QString UndoHelper::currentFile() {
-    return backupFiles.at(currentIdx);
+    if(currentIdx < backupFiles.size() && currentIdx >= 0){
+        return backupFiles.at(currentIdx);
+    }else {
+        LOG(WARNING) << " UndoHelper::currentFile but current file is not set right now!" << std::endl;
+        return "";
+    }
+
 }
 
 QString UndoHelper::generateFileName() {

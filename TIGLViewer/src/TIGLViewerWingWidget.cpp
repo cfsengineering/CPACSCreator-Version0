@@ -74,16 +74,6 @@ void TIGLViewerWingWidget::init(ModificatorManager * associate ) {
     comboBoxAirfoil = this->findChild<QComboBox*>("comboBoxAirfoil");
     widgetAirfoilDetails = this->findChild<QWidget*>("widgetAirfoilDetails");
 
-
-    // Retrieve component of the standardization interface
-    btnExpendStdDetails = this->findChild<QPushButton*>("btnExpendStandardizationDetails");
-    comboBoxStdGlobal = this->findChild<QComboBox*>("comboBoxStdGlobal");
-    checkBoxStdAirfoils = this->findChild<QCheckBox*>("checkBoxStdAirfoils");
-    checkBoxStdSections = this->findChild<QCheckBox*>("checkBoxStdSections");
-    checkBoxStdPositionings = this->findChild<QCheckBox*>("checkBoxStdPositionings");
-    checkBoxStdAnchor = this->findChild<QCheckBox*>("checkBoxStdAnchor");
-    widgetStdDetails = this->findChild<QWidget*>("widgetStandardizationDetails");
-
     // set the initials values of the display interface (should be overwritten when the wingItem is set)
     spinBoxSweep->setValue(-1.0);
     spinBoxSweepChord->setValue(0);
@@ -134,15 +124,13 @@ void TIGLViewerWingWidget::init(ModificatorManager * associate ) {
     widgetDihedralDetails->hide();
     widgetSweepDetails->hide();
     widgetAirfoilDetails->hide();
-    widgetStdDetails->hide();
+
 
     // connect the extend buttons with their slot
     connect(btnExpendAreaDetails, SIGNAL(clicked(bool)), this, SLOT(expendAreaDetails(bool)) );
     connect(btnExpendDihedralDetails, SIGNAL(clicked(bool)), this, SLOT(expendDihedralDetails(bool)) );
     connect(btnExpendSweepDetails, SIGNAL(clicked(bool)), this, SLOT(expendSweepDetails(bool)));
     connect(btnExpendAirfoilDetails, SIGNAL(clicked(bool)), this, SLOT(expendAirfoilDetails(bool)));
-    connect(btnExpendStdDetails, SIGNAL(clicked(bool)), this, SLOT(expendStandardizationDetails(bool)));
-
 
 
     // connect change alterable
@@ -150,13 +138,6 @@ void TIGLViewerWingWidget::init(ModificatorManager * associate ) {
     connect(checkBoxIsSpanConstant,SIGNAL(clicked(bool)), this, SLOT(setSpanConstant(bool)));
     connect(checkBoxIsARConstant,SIGNAL(clicked(bool)), this, SLOT(setARConstant(bool)));
 
-    // logical connection to remain std checkbox in a logical state
-    connect(checkBoxStdAirfoils,SIGNAL(clicked(bool)), this, SLOT(checkStdAirfoils(bool)));
-    connect(checkBoxStdSections,SIGNAL(clicked(bool)), this, SLOT(checkStdSections(bool)));
-    connect(checkBoxStdPositionings,SIGNAL(clicked(bool)), this, SLOT(checkStdPositionings(bool)));
-    connect(checkBoxStdAnchor,SIGNAL(clicked(bool)), this, SLOT(checkStdAnchor(bool)));
-    connect(comboBoxStdGlobal,SIGNAL(currentIndexChanged(int )), this, SLOT(setStdCheckBoxesFromComboBox(int)) );
-    callFromSetStdComboBox = false;
 }
 
 // inverse the visibility
@@ -178,11 +159,6 @@ void TIGLViewerWingWidget::expendSweepDetails(bool checked) {
 void TIGLViewerWingWidget::expendAirfoilDetails(bool checked) {
     widgetAirfoilDetails->setVisible( ! (widgetAirfoilDetails->isVisible()));
 }
-
-void TIGLViewerWingWidget::expendStandardizationDetails(bool checked) {
-    widgetStdDetails->setVisible( !(widgetStdDetails->isVisible()));
-}
-
 
 
 
@@ -215,82 +191,6 @@ void TIGLViewerWingWidget::setARConstant(bool checked) {
     spinBoxAR->setReadOnly(true);
 
 }
-
-
-void TIGLViewerWingWidget::checkStdAirfoils(bool checked) {
-    checkBoxStdAirfoils->setChecked(internalStdAirfoils || checked);
-    setStdComboBoxFromStdCheckBoxes();
-}
-
-void TIGLViewerWingWidget::checkStdSections(bool checked) {
-    checkBoxStdSections->setChecked(internalStdSections || checked);
-    if( checked == false && internalStdSections == false && checkBoxStdPositionings->isChecked()){
-        checkBoxStdPositionings->setChecked(false);     // we do no allow to have section not check an positioning checked
-    }
-    setStdComboBoxFromStdCheckBoxes();
-}
-
-void TIGLViewerWingWidget::checkStdPositionings(bool checked) {
-    checkBoxStdPositionings->setChecked(internalStdPositionings || checked);
-    if(! checkBoxStdSections->isChecked() && checked ){
-        checkBoxStdSections->setChecked(checked);   // positioning requier section std
-    }
-    setStdComboBoxFromStdCheckBoxes();
-}
-
-void TIGLViewerWingWidget::checkStdAnchor(bool checked) {
-    checkBoxStdAnchor->setChecked(internalStdAnchor || checked);
-    setStdComboBoxFromStdCheckBoxes();
-}
-
-
-void TIGLViewerWingWidget::setStdCheckBoxesFromComboBox(int idx) {
-    if(callFromSetStdComboBox) return; // we ignore the signal from "setStdComboBoxFromStdCheckBoxes" because it will overrie the correct value
-
-    if( comboBoxStdGlobal->currentText() == "Total"){
-        checkBoxStdAnchor->setChecked(true);
-        checkBoxStdSections->setChecked(true);
-        checkBoxStdPositionings->setChecked(true);
-        checkBoxStdAirfoils->setChecked(true);
-    }else{
-        checkBoxStdAnchor->setChecked(internalStdAnchor);
-        checkBoxStdSections->setChecked(internalStdSections);
-        checkBoxStdPositionings->setChecked(internalStdPositionings);
-        checkBoxStdAirfoils->setChecked(internalStdAirfoils);
-    }
-
-
-}
-
-void TIGLViewerWingWidget::setStdComboBoxFromStdCheckBoxes() {
-
-    callFromSetStdComboBox = true;
-    int stdCount = 0;
-    if(checkBoxStdAirfoils->isChecked()) stdCount += 1;
-    if(checkBoxStdPositionings->isChecked()) stdCount += 1;
-    if(checkBoxStdSections->isChecked()) stdCount += 1;
-    if(checkBoxStdAnchor->isChecked()) stdCount += 1;
-
-    QString stdG = "";
-    if( stdCount == 0 ) {
-        stdG = "None";
-    }else if ( stdCount < 4){
-        stdG = "Partial";
-    }else if( stdCount == 4){
-        stdG = "Total";
-    }
-
-    int index = comboBoxStdGlobal->findText(stdG);
-    if ( index == -1 ) { // -1 for not found
-        comboBoxStdGlobal->addItem(stdG);
-        index = comboBoxStdGlobal->findText(stdG);
-    }
-    comboBoxStdGlobal->setCurrentIndex(index);
-    callFromSetStdComboBox = false;
-}
-
-
-
 
 void TIGLViewerWingWidget::setWing(cpcr::CPACSTreeItem *wing) {
     wingItem = wing;
@@ -362,17 +262,6 @@ void TIGLViewerWingWidget::setWing(cpcr::CPACSTreeItem *wing) {
         comboBoxAirfoil->addItem(internalAirfoilUID);
     }
     comboBoxAirfoil->setCurrentIndex(idx);
-
-    // set standarization
-    associateManager->getAdapter()->getStdValues(wingItem, internalStdAirfoils, internalStdSections, internalStdPositionings, internalStdAnchor);
-    comboBoxStdGlobal->clear();
-    comboBoxStdGlobal->addItem("Total");
-    checkBoxStdAnchor->setChecked(internalStdAnchor);
-    checkBoxStdSections->setChecked(internalStdSections);
-    checkBoxStdPositionings->setChecked(internalStdPositionings);
-    checkBoxStdAirfoils->setChecked(internalStdAirfoils);
-    this->setStdComboBoxFromStdCheckBoxes();
-
 
 }
 
@@ -499,24 +388,6 @@ void TIGLViewerWingWidget::apply() {
         associateManager->getAdapter()->writeToFile();   // we do this here to update all the change at once in the file
     }
 
-    // we reset the internal values form the file, because standardization is not guarantee by the functions above
-    associateManager->getAdapter()->getStdValues(wingItem, internalStdAirfoils, internalStdSections, internalStdPositionings, internalStdAnchor);
-    bool stdardizationHasChanged = ( internalStdAirfoils != checkBoxStdAirfoils->isChecked()
-                                     || internalStdPositionings != checkBoxStdPositionings->isChecked()
-                                     || internalStdSections != checkBoxStdSections->isChecked()
-                                     || internalStdAnchor != checkBoxStdAnchor->isChecked() );
-
-    if( stdardizationHasChanged ){
-
-        internalStdAnchor = checkBoxStdAnchor->isChecked();
-        internalStdSections = checkBoxStdSections->isChecked();
-        internalStdPositionings = checkBoxStdPositionings->isChecked();
-        internalStdAirfoils = checkBoxStdAirfoils->isChecked();
-
-        associateManager->getAdapter()->setStdValues(wingItem, internalStdAirfoils, internalStdSections,
-                                                internalStdPositionings, internalStdAnchor);
-
-    }
 
 
 }
