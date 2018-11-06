@@ -161,7 +161,9 @@ namespace cpcr {
         for( auto p : children ){   // acces by value -> so it's a pointer to CPACSTreeItem object
            std::vector<CPACSTreeItem*> temp = p->findAllChildrenOfTypeRecursively(type);
            r.insert(r.end(), temp.begin(), temp.end());
-           if(p->getType() == type ) r.push_back(p);
+           if(p->getType() == type ){
+               r.push_back(p);
+           }
         }
 
         return r;

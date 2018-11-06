@@ -6589,7 +6589,6 @@
                 <toElementUID>Element_7e351c92ce9545b</toElementUID>
               </segment>
             </segments>
-            <parentUID>MainFus</parentUID>
             <componentSegments>
               <componentSegment uID="CompSeg_a61b26834bf141d">
                 <name>Lower Wing Component Segment</name>
@@ -8304,7 +8303,6 @@
                 <toElementUID>Element_adc4ce52133945f</toElementUID>
               </segment>
             </segments>
-            <parentUID>MainFus</parentUID>
             <positionings>
               <positioning uID="VTP_Positioning_1">
                 <name>Positioning Name</name>

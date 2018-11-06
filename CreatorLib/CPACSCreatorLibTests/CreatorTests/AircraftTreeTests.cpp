@@ -1473,9 +1473,6 @@ TEST_F(AircraftTreeTest, airfoilWingNormalization ){
 TEST_F(AircraftTreeTest, setWingTransformation ) {
 
 
-
-
-
     setVariables("TestCases/d150.xml");
     std::string wingUID = "D150_VAMP_wing_W1";
 
@@ -1608,6 +1605,16 @@ TEST_F(AircraftTreeTest, setWingTransformation ) {
         EXPECT_TRUE( tEsA[u].isApprox(tEsB[u], 0.0001) ) ;
     }
 
+
+    setVariables("TestCases/boxwing2.xml");
+    wingUID = "MainWing";
+    CPACSTransformation idealT = tree.determineWingTransformation(wingUID);
+    tree.setWingTransformationKeepGeometry(wingUID, idealT);
+    Eigen::Vector3d expected ;
+    expected << 9,0,2;
+    EXPECT_TRUE(idealT.getTranslation().toEigen().isApprox(expected, 0.1) );
+    CPACSTransformation idealT3 = tree.determineWingTransformation(wingUID);
+    EXPECT_TRUE(idealT.getTranslation().toEigen().isApprox(expected, 0.1) );
 
 }
 
@@ -2906,6 +2913,7 @@ TEST_F(AircraftTreeTest, globalStandardization ) {
 
     bool isStd;
 
+    /*
     setVariables("simple-aircraft-fuselages.xml");
 
     isStd = tree.isAircraftStandardized();
@@ -2914,6 +2922,14 @@ TEST_F(AircraftTreeTest, globalStandardization ) {
     isStd = tree.isAircraftStandardized();
     EXPECT_TRUE(isStd);
 
+    setVariables("TestCases/boxWing.xml");
+
+    isStd = tree.isAircraftStandardized();
+    EXPECT_FALSE(isStd);
+    tree.standardizeAircraft();
+    isStd = tree.isAircraftStandardized();
+    EXPECT_TRUE(isStd);
+*/
 
     setVariables("TestCases/boxwing2.xml");
 

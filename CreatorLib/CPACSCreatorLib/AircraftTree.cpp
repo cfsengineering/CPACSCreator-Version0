@@ -1511,7 +1511,7 @@ void cpcr::AircraftTree::completeStandardizationForWing(cpcr::UID wingUID) {
         LOG(INFO) << " - The wing transformation is already conform to the creator standard";
     }else{
         LOG(INFO) << " - The wing transformation will be standardized";
-       wingTransformationStandardization(wingUID);
+        wingTransformationStandardization(wingUID);
     }
 
 
@@ -1537,7 +1537,7 @@ bool cpcr::AircraftTree::isWingStandardized(cpcr::UID wingUID) {
     r = r && checkIfAirfoilsAreStandardizedForWing(wingUID);
     r = r && checkExactlyOneElementPerSectionForWing(wingUID);
     r = r && checkIfWingTransformationIsStandardizedForWing(wingUID);
-    r = r && checkIfPositioningsAreStandardizedForWing(wingUID);
+§    r = r && checkIfPositioningsAreStandardizedForWing(wingUID);
 
     return r;
 }
@@ -2976,12 +2976,14 @@ void cpcr::AircraftTree::positioningsStandardization(cpcr::UID wingOrFuselage) {
         throw CreatorException("positioningsStandardizationForWing: required that the wing can be expressed into a standard graph!");
     }
 
-
+    // chains is not in the same order as the graph!
     std::map< CPACSTreeItem*, std::vector<std::pair<cpcr::CPACSTreeItem *, Eigen::Matrix4d>> > chains;
 
     for( CPACSTreeItem* e : graph){
         chains[e] = getTransformationChainForOneElement( e);
     }
+
+
 
     modifier.clearPositionings(wing->getXPath().toString() + "/positionings");
 
@@ -3122,13 +3124,13 @@ bool cpcr::AircraftTree::isAircraftStandardized() {
     bool isStd = true;
 
     // check the wings
-    std::vector<CPACSTreeItem *> wings = m_root->findAllChildrenOfTypeRecursively("wing");
+    std::vector<CPACSTreeItem *> wings = m_root->getChild(UniqueXPath("wings"))->findAllChildrenOfTypeRecursively("wing");
     for( CPACSTreeItem* w : wings){
         isStd = isStd & this->isWingStandardized(w->getUid());
     }
 
     // check the fuselages
-    std::vector<CPACSTreeItem* > fuselages = m_root->findAllChildrenOfTypeRecursively("fuselage");
+    std::vector<CPACSTreeItem* > fuselages = m_root->getChild(UniqueXPath("fuselages"))->findAllChildrenOfTypeRecursively("fuselage");
     for ( CPACSTreeItem* f: fuselages){
         isStd = isStd & this->isFuselageTransformationStandardized(f->getUid());
     }
@@ -3142,7 +3144,7 @@ void cpcr::AircraftTree::standardizeAircraft() {
     }
 
     // check the wings
-    std::vector<CPACSTreeItem *> wings = m_root->findAllChildrenOfTypeRecursively("wing");
+    std::vector<CPACSTreeItem *> wings = m_root->getChild(UniqueXPath("wings"))->findAllChildrenOfTypeRecursively("wing");
     std::vector<UID> wingUIDs = {};
 
     // first we need to get the uid because the tree item can change during the statardization // TODO: think to a better solution
@@ -3154,7 +3156,7 @@ void cpcr::AircraftTree::standardizeAircraft() {
     }
 
     // check the fuselages
-    std::vector<CPACSTreeItem* > fuselages = m_root->findAllChildrenOfTypeRecursively("fuselage");
+    std::vector<CPACSTreeItem* > fuselages = m_root->getChild(UniqueXPath("fuselages"))->findAllChildrenOfTypeRecursively("fuselage");
     std::vector<UID> fuselageUIDs = {};
     // first we need to get the uid because the tree item can change during the statardization // TODO: think to a better solution
     for( CPACSTreeItem* f : fuselages){
