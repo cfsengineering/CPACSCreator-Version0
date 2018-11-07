@@ -303,7 +303,7 @@ void TIGLViewerWindow::openRecentFile()
 }
 
 
-void TIGLViewerWindow::openFileNoCheckPointAdded(const QString& fileName) {
+void TIGLViewerWindow::openFileNoCheckPointAdded(const QString& fileName,  bool askForStd, bool stdValue ) {
 
     QString fileType;
     QFileInfo fileInfo;
@@ -341,29 +341,36 @@ void TIGLViewerWindow::openFileNoCheckPointAdded(const QString& fileName) {
                 standardizeAction->blockSignals(blockB);
             }
             else {
-                QMessageBox msgBox;
-                msgBox.setText(
-                        "The CPACS file does not use the Creator standard. Did you want to standardize the file?");
-                msgBox.setInformativeText("The Creator standard guaranty that creator functions work properly. "
-                                          "Otherwise, the Creator functions can have unexpected behavior. ");
-                msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-                msgBox.setDefaultButton(QMessageBox::Yes);
-                int ret = msgBox.exec();
-                if (ret == QMessageBox::Yes) {
+                bool needStd = stdValue;
+                if ( askForStd){
+                    QMessageBox msgBox;
+                    msgBox.setText(
+                            "The CPACS file does not use the Creator standard. Did you want to standardize the file?");
+                    msgBox.setInformativeText("The Creator standard guaranty that creator functions work properly. "
+                                              "Otherwise, the Creator functions can have unexpected behavior. ");
+                    msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+                    msgBox.setDefaultButton(QMessageBox::Yes);
+                    int ret = msgBox.exec();
+                    if (ret == QMessageBox::Yes) {
+                        needStd = true;
+                    } else if (ret == QMessageBox::No) {
+                        needStd = false;
+                    }  else {
+                        displayErrorMessage("Unexpected result from the previous message box", "Error");
+                    }
+                }
+
+                if( needStd){
                     // it safe to call standardize from the modificator because we have disconnect the cpacstree view
                     modificatorManager->standardizeCurrentFile();
                     bool blockB = standardizeAction->blockSignals(true);
                     standardizeAction->setChecked(true);
                     standardizeAction->blockSignals(blockB);
-                }
-                else if (ret == QMessageBox::No) {
+                }else{
                     modificatorManager->setUseCPACSStandard(false);
                     bool blockB = standardizeAction->blockSignals(true);
                     standardizeAction->setChecked(false);
                     standardizeAction->blockSignals(blockB);
-                }
-                else {
-                    displayErrorMessage("Unexpected result from the previous message box", "Error");
                 }
             }
             standardizeAction->setEnabled(true);
@@ -443,7 +450,7 @@ void TIGLViewerWindow::openFile(const QString& fileName)
 void TIGLViewerWindow::reopenCurrentFile()
 {
     QString baseFile = undoHelper.originalFile();
-    openFileNoCheckPointAdded(undoHelper.currentFile());
+    openFileNoCheckPointAdded(undoHelper.currentFile(), false, modificatorManager->useCPACSStandard() );
 }
 
 
@@ -926,11 +933,7 @@ void TIGLViewerWindow::updateCreatorInterfaceFromAdapter() // need a valid cpacs
 void TIGLViewerWindow::applyModifications()
 {
 
-    // we wants not that other routine are called before the end of this operation
-    bool blockB = watcher->blockSignals(true);
-    bool blockCpacsConfigUpdate = cpacsConfiguration->blockSignals(true);
-
-    // close cpacsConfiguration
+    // close cpacsConfiguration (delete watcher and cpacsConfiguration -> not signal emited)
     closeCpacsConfigurationOnly();
     // disconnect tree to not have tree access during this operation
     cpacsTreeView->disconnectAdapter();
@@ -945,9 +948,6 @@ void TIGLViewerWindow::applyModifications()
     // reopen cpacsConfiguration
     openCpacsConfigurationOnly(undoHelper.currentFile());
 
-
-    watcher->blockSignals(blockB);
-    cpacsConfiguration->blockSignals(blockCpacsConfigUpdate); // not necessary because the cpacsConfiguration is recreated
 }
 
 
@@ -957,17 +957,9 @@ void TIGLViewerWindow::undoCommit()
 
     if (undoHelper.undoIsAvailable()) {
 
-        // we wants not that other routine are called before the end of this operation
-        bool blockB = watcher->blockSignals(true);
-        bool blockCpacsConfigUpdate = cpacsConfiguration->blockSignals(true);
-
         QString fileToRestore = undoHelper.undo();
-
         // cpacsConfig + adapter + creator interface + tigl interface will be close and restored during the opening
-        openFileNoCheckPointAdded(fileToRestore);
-        watcher->blockSignals(blockB);
-        cpacsConfiguration->blockSignals(blockCpacsConfigUpdate);
-
+        openFileNoCheckPointAdded(fileToRestore, false, modificatorManager->useCPACSStandard());
     }
     else {
         LOG(WARNING) << "Undo unavaible!" << std::endl;
@@ -978,16 +970,9 @@ void TIGLViewerWindow::redoCommit()
 {
     if (undoHelper.redoIsAvailable()) {
 
-        // we wants not that other routine are called before the end of this operation
-        bool blockB = watcher->blockSignals(true);
-        bool blockCpacsConfigUpdate = cpacsConfiguration->blockSignals(true);
-
         QString fileToRestore = undoHelper.redo();
-
         // cpacsConfig + adapter + creator interface + tigl interface will be close and restored during the opening
-        openFileNoCheckPointAdded(fileToRestore);
-        watcher->blockSignals(blockB);
-
+        openFileNoCheckPointAdded(fileToRestore, false, modificatorManager->useCPACSStandard() );
     }
     else {
         LOG(WARNING) << "Redo unavaible!" << std::endl;
@@ -999,10 +984,6 @@ void TIGLViewerWindow::standardizeCurrentFile(bool standardize)
 
     if (modificatorManager != nullptr) {
         if (standardize) {
-
-            // we wants not that other routine are called before the end of this operation
-            bool blockB = watcher->blockSignals(true);
-            bool blockCpacsConfigUpdate = cpacsConfiguration->blockSignals(true);
 
             // close cpacsConfiguration
             closeCpacsConfigurationOnly();
@@ -1018,11 +999,6 @@ void TIGLViewerWindow::standardizeCurrentFile(bool standardize)
 
             // reopen cpacsConfiguration
             openCpacsConfigurationOnly(undoHelper.currentFile());
-
-            watcher->blockSignals(blockB);
-            cpacsConfiguration->blockSignals(blockCpacsConfigUpdate); // not necessary because the cpacsConfiguration is recreated
-
-
         }
         else {
             LOG(WARNING) << "Standardization function is unchecked! Nothing will happend directly, but"

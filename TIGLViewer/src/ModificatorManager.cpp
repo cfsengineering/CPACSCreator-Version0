@@ -145,6 +145,7 @@ void ModificatorManager::hideAll() {
 
 void ModificatorManager::standardizeCurrentFile() {
     adapter->standardize();
+    setUseCPACSStandard(true);
 }
 
 bool ModificatorManager::isStandardized() {

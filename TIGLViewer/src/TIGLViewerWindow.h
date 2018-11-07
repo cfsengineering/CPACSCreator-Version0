@@ -131,8 +131,9 @@ private:
     // close adapter and update profileDB, modificatorManager, cpacsTreeView
     void closeAdapter();
 
-    // close the accutal scene and open the new file with no addition to the undo manager
-    void openFileNoCheckPointAdded(const QString& fileName);
+    // close the accutal scene and open the new file without additional checkpoint (undoManager)
+    // if askForStd is set to false, the stdValue is used without asking the user if he wants to use creator std (undo case)
+    void openFileNoCheckPointAdded(const QString& fileName, bool askForStd = true, bool stdValue = true);
 
     // connect cpacsConfiguration and is actions
     void connectConfiguration();
