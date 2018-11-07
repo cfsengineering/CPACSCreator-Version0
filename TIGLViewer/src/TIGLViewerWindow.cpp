@@ -261,6 +261,7 @@ void TIGLViewerWindow::closeCpacsConfigurationOnly() {
         delete cpacsConfiguration;
         cpacsConfiguration = NULL;
     }
+    updateMenus();
 }
 
 void TIGLViewerWindow::openCpacsConfigurationOnly(QString filename ){
@@ -271,6 +272,10 @@ void TIGLViewerWindow::openCpacsConfigurationOnly(QString filename ){
         return;
     }
     cpacsConfiguration = config;
+
+    // reset the tigl interface
+    connectConfiguration();
+    updateMenus();
 }
 
 
@@ -301,15 +306,18 @@ void TIGLViewerWindow::openFileNoCheckPointAdded(const QString& fileName) {
     fileType = fileInfo.suffix();
 
     if (!fileName.isEmpty()) { // if the file is empty -> this is the case when the user press cancel.
-        // indirectly disconnect the watcher
-        watcher = new QFileSystemWatcher();
+
+        // clean previous scene
+        watcher = new QFileSystemWatcher();  // indirectly disconnect the watcher
+        closeCpacsConfigurationOnly();
+        closeAdapter();
 
         if (fileType.toLower() == tr("xml")) {
 
             // reset adapter
             adapter->resetFromFile(fileInfo.absoluteFilePath());
-            // set creator interface
-            updateCreatorInterfaceFromAdapter();
+            // set the manager
+            modificatorManager->resetAdapter(adapter);
 
             //Standardization process
             if (modificatorManager->isStandardized()) {
@@ -346,18 +354,14 @@ void TIGLViewerWindow::openFileNoCheckPointAdded(const QString& fileName) {
             }
             standardizeAction->setEnabled(true);
 
+            // update cpacsCreator interface;
+            updateCreatorInterfaceFromAdapter();
 
 
             // Init TIGLViewerDocument
-            TIGLViewerDocument* config = new TIGLViewerDocument(this);
-            TiglReturnCode tiglRet     = config->openCpacsConfiguration(fileInfo.absoluteFilePath());
-            if (tiglRet != TIGL_SUCCESS) {
-                delete config;
-                return;
-            }
-            delete cpacsConfiguration;
-            cpacsConfiguration = config;
-            ;
+            openCpacsConfigurationOnly(fileInfo.absoluteFilePath());
+
+
             // update tigl interface
             connectConfiguration();
             updateMenus();
@@ -939,9 +943,6 @@ void TIGLViewerWindow::applyModifications()
     // reopen cpacsConfiguration
     openCpacsConfigurationOnly(undoHelper.currentFile());
 
-    // reset the tigl interface
-    connectConfiguration();
-    updateMenus();
 
     watcher->blockSignals(blockB);
     cpacsConfiguration->blockSignals(blockCpacsConfigUpdate); // not necessary because the cpacsConfiguration is recreated
@@ -958,14 +959,9 @@ void TIGLViewerWindow::undoCommit()
         bool blockB = watcher->blockSignals(true);
         bool blockCpacsConfigUpdate = cpacsConfiguration->blockSignals(true);
 
-        // close cpacsConfiguration
-        closeCpacsConfigurationOnly();
-        // close the adapter and disconnect the tree
-        closeAdapter();
-
         QString fileToRestore = undoHelper.undo();
 
-        // cpacsConfig + adapter + creator interface + tigl interface will be restored during the opening
+        // cpacsConfig + adapter + creator interface + tigl interface will be close and restored during the opening
         openFileNoCheckPointAdded(fileToRestore);
         watcher->blockSignals(blockB);
         cpacsConfiguration->blockSignals(blockCpacsConfigUpdate);
@@ -984,16 +980,10 @@ void TIGLViewerWindow::redoCommit()
         bool blockB = watcher->blockSignals(true);
         bool blockCpacsConfigUpdate = cpacsConfiguration->blockSignals(true);
 
-        // close cpacsConfiguration
-        closeCpacsConfigurationOnly();
-        // close the adapter and disconnect the tree
-        closeAdapter();
-
         QString fileToRestore = undoHelper.redo();
 
+        // cpacsConfig + adapter + creator interface + tigl interface will be close and restored during the opening
         openFileNoCheckPointAdded(fileToRestore);
-        // the interface will be restored form the openFile function via updateCreatorInterface.
-
         watcher->blockSignals(blockB);
 
     }
@@ -1026,10 +1016,6 @@ void TIGLViewerWindow::standardizeCurrentFile(bool standardize)
 
             // reopen cpacsConfiguration
             openCpacsConfigurationOnly(undoHelper.currentFile());
-
-            // reset the tigl interface
-            connectConfiguration();
-            updateMenus();
 
             watcher->blockSignals(blockB);
             cpacsConfiguration->blockSignals(blockCpacsConfigUpdate); // not necessary because the cpacsConfiguration is recreated
