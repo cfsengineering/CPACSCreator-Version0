@@ -917,8 +917,9 @@ void TIGLViewerWindow::updateCreatorInterfaceFromAdapter() // need a valid cpacs
     }
     else{
         profilesDB->setAirfoilsFromCurrentCpacsFile(adapter->getAirfoilsUid());
-        cpacsTreeView->connectAdapter(adapter);
         modificatorManager->resetAdapter(adapter);
+        cpacsTreeView->connectAdapter(adapter);
+
     }
 }
 
