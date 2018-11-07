@@ -179,3 +179,7 @@ void UndoHelper::print() {
     LOG(WARNING) << "currentIdx:" << std::to_string(currentIdx) << std::endl;
 }
 
+QString UndoHelper::originalFile() {
+    return originFile.absoluteFilePath();
+}
+

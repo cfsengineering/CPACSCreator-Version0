@@ -95,7 +95,8 @@ private slots:
     void updateMenus();
     void newFile();
     void open();
-    void reopenFile();
+    void reopenOriginalFile();
+    void reopenCurrentFile();
     void openScript();
     void openRecentFile();
     void save();
@@ -122,17 +123,25 @@ private slots:
 
 private:
 
+    // delete cpacsConfiguration and updateMenus and connectConfiguration
     void closeCpacsConfigurationOnly();
+    // open cpacsConfiguration and updateMenus and connectConfiguration
     void openCpacsConfigurationOnly(QString filename);
+
+    // close adapter and update profileDB, modificatorManager, cpacsTreeView
     void closeAdapter();
-    //
+
+    // close the accutal scene and open the new file with no addition to the undo manager
     void openFileNoCheckPointAdded(const QString& fileName);
 
-    void connectSignals();
+    // connect cpacsConfiguration and is actions
     void connectConfiguration();
+    // update menu interface base on the current cpacsConfiguration
     void createMenus();
 
     void initCreatorInterface();
+
+    void connectSignals();
 
 
     void updateRecentFileActions();

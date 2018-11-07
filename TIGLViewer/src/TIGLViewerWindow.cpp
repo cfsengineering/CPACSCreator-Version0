@@ -84,6 +84,7 @@ TIGLViewerWindow::TIGLViewerWindow()
     myScene = new TIGLViewerContext();
     myOCC->setContext(myScene);
 
+    watcher = nullptr;
     // we create a timer to workaround QFileSystemWatcher bug,
     // which emits multiple signals in a few milliseconds. This caused
     // TIGLViewer to also open a document many times.
@@ -239,6 +240,8 @@ void TIGLViewerWindow::openScript(const QString& fileName)
 void TIGLViewerWindow::close()
 {
     closeCpacsConfigurationOnly();
+    closeAdapter();
+
     // desactivate the standardization option
     standardizeAction->setEnabled(false);
     // clean the undo helper
@@ -256,22 +259,34 @@ void TIGLViewerWindow::closeAdapter(){
 
 void TIGLViewerWindow::closeCpacsConfigurationOnly() {
 
+    if(watcher){
+        delete watcher;
+        watcher = nullptr;
+    }
+
     if (cpacsConfiguration) {
         getScene()->deleteAllObjects();
         delete cpacsConfiguration;
         cpacsConfiguration = NULL;
     }
+    connectConfiguration();
     updateMenus();
 }
 
 void TIGLViewerWindow::openCpacsConfigurationOnly(QString filename ){
+
     TIGLViewerDocument* config = new TIGLViewerDocument(this);
+
     TiglReturnCode tiglRet     = config->openCpacsConfiguration(filename);
     if (tiglRet != TIGL_SUCCESS) {
         delete config;
         return;
     }
     cpacsConfiguration = config;
+
+    watcher = new QFileSystemWatcher();
+    watcher->addPath(filename);
+    QObject::connect(watcher, SIGNAL(fileChanged(QString)), openTimer, SLOT(start()));
 
     // reset the tigl interface
     connectConfiguration();
@@ -308,7 +323,6 @@ void TIGLViewerWindow::openFileNoCheckPointAdded(const QString& fileName) {
     if (!fileName.isEmpty()) { // if the file is empty -> this is the case when the user press cancel.
 
         // clean previous scene
-        watcher = new QFileSystemWatcher();  // indirectly disconnect the watcher
         closeCpacsConfigurationOnly();
         closeAdapter();
 
@@ -361,11 +375,6 @@ void TIGLViewerWindow::openFileNoCheckPointAdded(const QString& fileName) {
             // Init TIGLViewerDocument
             openCpacsConfigurationOnly(fileInfo.absoluteFilePath());
 
-
-            // update tigl interface
-            connectConfiguration();
-            updateMenus();
-
             success = true;
         }
 
@@ -393,10 +402,14 @@ void TIGLViewerWindow::openFileNoCheckPointAdded(const QString& fileName) {
             else {
                 success = reader.importModel(fileInfo.absoluteFilePath(), format, *getScene());
             }
+
+            // in the case of a .xml file this is done in openCpacsConfigurationOnly
+            watcher = new QFileSystemWatcher();
+            watcher->addPath(fileInfo.absoluteFilePath());
+            QObject::connect(watcher, SIGNAL(fileChanged(QString)), openTimer, SLOT(start()));
+
         }
 
-        watcher->addPath(fileInfo.absoluteFilePath());
-        QObject::connect(watcher, SIGNAL(fileChanged(QString)), openTimer, SLOT(start()));
         setCurrentFile(fileInfo.absoluteFilePath()); // set the setting for the next opening
         myLastFolder = fileInfo.absolutePath();
         if (success) {
@@ -427,33 +440,21 @@ void TIGLViewerWindow::openFile(const QString& fileName)
 }
 
 
-
-void TIGLViewerWindow::reopenFile()
+void TIGLViewerWindow::reopenCurrentFile()
 {
-    QString fileType;
-    QFileInfo fileInfo;
-
-    fileInfo.setFile(undoHelper.currentFile());
-    fileType = fileInfo.suffix();
-
-    if (fileType.toLower() == tr("xml")){
-        TIGLViewerDocument* newConfig = new TIGLViewerDocument(this);
-        TiglReturnCode tiglRet     = newConfig->openCpacsConfiguration(undoHelper.currentFile());
-        if (tiglRet != TIGL_SUCCESS) {
-            delete newConfig;
-            LOG(WARNING)    << "TIGLViewerWindow::reopenFile: error in openCpacsConfiguration  for file: "
-                            << undoHelper.currentFile().toStdString() << std::endl;
-            return;
-        }
-        delete cpacsConfiguration;
-        cpacsConfiguration = newConfig;
-
-    }
-    else {
-        myScene->getContext()->EraseAll(Standard_False);
-        openFile(undoHelper.currentFile());
-    }
+    QString baseFile = undoHelper.originalFile();
+    openFileNoCheckPointAdded(undoHelper.currentFile());
 }
+
+
+// open the base file form undoHelper
+void TIGLViewerWindow::reopenOriginalFile()
+{
+    QString baseFile = undoHelper.originalFile();
+    close();
+    openFile(baseFile);
+}
+
 
 void TIGLViewerWindow::setCurrentFile(const QString& fileName)
 {
@@ -780,7 +781,7 @@ void TIGLViewerWindow::connectSignals()
     connect(openAction, SIGNAL(triggered()), this, SLOT(open()));
     connect(openScriptAction, SIGNAL(triggered()), this, SLOT(openScript()));
     connect(closeAction, SIGNAL(triggered()), this, SLOT(close()));
-    connect(refreshAction, SIGNAL(triggered()), this, SLOT(reopenFile()));
+    connect(refreshAction, SIGNAL(triggered()), this, SLOT(reopenOriginalFile()));
     connect(redoAction_2, SIGNAL(triggered()), this, SLOT(redoCommit()));
     connect(undoAction_2, SIGNAL(triggered()), this, SLOT(undoCommit()));
     connect(standardizeAction, SIGNAL(toggled(bool)), this, SLOT(standardizeCurrentFile(bool)));
@@ -847,7 +848,7 @@ void TIGLViewerWindow::connectSignals()
     showReflectionLinesAction->setEnabled(false);
 #endif
 
-    connect(openTimer, SIGNAL(timeout()), this, SLOT(reopenFile()));
+    connect(openTimer, SIGNAL(timeout()), this, SLOT(reopenCurrentFile()));
 
     // The co-ordinates from the view
     connect(myOCC, SIGNAL(mouseMoved(V3d_Coordinate, V3d_Coordinate, V3d_Coordinate)), this,

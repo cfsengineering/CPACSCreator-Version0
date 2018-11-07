@@ -117,6 +117,8 @@ public:
     bool isXmlFile();
 
 
+    QString originalFile();
+
 protected:
     QString generateFileName();
 
