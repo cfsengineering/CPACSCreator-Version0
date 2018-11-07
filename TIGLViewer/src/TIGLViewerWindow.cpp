@@ -545,12 +545,13 @@ TIGLViewerWidget* TIGLViewerWindow::getViewer()
     return myOCC;
 }
 
-void TIGLViewerWindow::save()
+void TIGLViewerWindow::saveAs()
 {
     QString fileName;
 
     statusBar()->showMessage(tr("Invoked File|Save"));
     fileName = QFileDialog::getSaveFileName(this, tr("Save as..."), myLastFolder,
+                                            tr("CPACS (*.xml);;") +
                                             tr("IGES Geometry (*.igs);;") + tr("STEP Geometry (*.stp);;") +
                                                 tr("STL Triangulation (*.stl);;") + tr("BRep Geometry (*.brep)"));
 
@@ -563,6 +564,11 @@ void TIGLViewerWindow::save()
         fileInfo.setFile(fileName);
         myLastFolder = fileInfo.absolutePath();
     }
+}
+
+
+void TIGLViewerWindow::saveInOriginal() {
+    undoHelper.saveInOriginal();
 }
 
 bool TIGLViewerWindow::saveFile(const QString& fileName)
@@ -583,6 +589,10 @@ bool TIGLViewerWindow::saveFile(const QString& fileName)
     }
     else if (fileType.toLower() == tr("stl")) {
         format = TIGLViewerInputOutput::FormatSTL;
+    }
+    else if (fileType.toLower() == tr("xml")){
+        undoHelper.saveInFile(fileName);
+        return true;
     }
     else {
         LOG(ERROR) << "Unknown file format " << fileType.toStdString();
@@ -788,7 +798,7 @@ void TIGLViewerWindow::connectSignals()
     connect(openAction, SIGNAL(triggered()), this, SLOT(open()));
     connect(openScriptAction, SIGNAL(triggered()), this, SLOT(openScript()));
     connect(closeAction, SIGNAL(triggered()), this, SLOT(close()));
-    connect(refreshAction, SIGNAL(triggered()), this, SLOT(reopenOriginalFile()));
+    connect(reopenOriginalFileAction, SIGNAL(triggered()), this, SLOT(reopenOriginalFile()));
     connect(redoAction_2, SIGNAL(triggered()), this, SLOT(redoCommit()));
     connect(undoAction_2, SIGNAL(triggered()), this, SLOT(undoCommit()));
     connect(standardizeAction, SIGNAL(toggled(bool)), this, SLOT(standardizeCurrentFile(bool)));
@@ -799,7 +809,9 @@ void TIGLViewerWindow::connectSignals()
         connect(recentFileActions[i], SIGNAL(triggered()), this, SLOT(openRecentFile()));
     }
 
-    connect(saveAction, SIGNAL(triggered()), this, SLOT(save()));
+
+    connect(saveInOriginalAction, SIGNAL(triggered()), this, SLOT(saveInOriginal()));
+    connect(saveAsAction, SIGNAL(triggered()), this, SLOT(saveAs()));
     connect(saveScreenshotAction, SIGNAL(triggered()), this, SLOT(makeScreenShot()));
     connect(setBackgroundAction, SIGNAL(triggered()), this, SLOT(setBackgroundImage()));
     connect(exitAction, SIGNAL(triggered()), this, SLOT(close()));

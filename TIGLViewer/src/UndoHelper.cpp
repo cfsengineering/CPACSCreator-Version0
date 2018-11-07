@@ -152,14 +152,37 @@ bool UndoHelper::isXmlFile() {
 }
 
 void UndoHelper::saveInOriginal() {
-
     if( isValid()){
+        // delete the old file
+        QFile::remove(originalFile());
+        // copy the temp file at the original place
         QFile::copy(backupFiles.at(currentIdx), originFile.absoluteFilePath());
     }
     else {
         LOG(WARNING) << "UndoHelper: this undo helper seems to be in an incorrect state, the saving is not performed " << std::endl;
     }
 }
+
+
+
+void UndoHelper::saveInFile(QString saveFilename) {
+    if( isValid()){
+        if(QFile::exists(saveFilename)){
+            QFile::remove(saveFilename);
+        }
+        QFile::copy(backupFiles.at(currentIdx), saveFilename );
+        originFile = QFileInfo(saveFilename);
+        if( ! (originFile.exists() && originFile.isFile() ) ){
+            LOG(WARNING) << "UndoHelper::saveInFile:: someting go wrong to save in file:" << saveFilename.toStdString() << std::endl;
+            return;
+        }
+    }
+    else {
+        LOG(WARNING) << "UndoHelper: this undo helper seems to be in an incorrect state, the saving is not performed " << std::endl;
+    }
+}
+
+
 
 bool UndoHelper::isValid() {
     bool fileExist = originFile.exists() && originFile.isFile();

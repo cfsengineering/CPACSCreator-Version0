@@ -145,9 +145,10 @@
     <addaction name="openScriptAction"/>
     <addaction name="separator"/>
     <addaction name="standardizeAction"/>
-    <addaction name="refreshAction"/>
+    <addaction name="reopenOriginalFileAction"/>
     <addaction name="separator"/>
-    <addaction name="saveAction"/>
+    <addaction name="saveInOriginalAction"/>
+    <addaction name="saveAsAction"/>
     <addaction name="saveScreenshotAction"/>
     <addaction name="tiglMenu"/>
     <addaction name="closeAction"/>
@@ -1858,11 +1859,11 @@
     <bool>false</bool>
    </attribute>
    <addaction name="openAction"/>
-   <addaction name="saveAction"/>
+   <addaction name="saveInOriginalAction"/>
    <addaction name="closeAction"/>
    <addaction name="separator"/>
    <addaction name="settingsAction"/>
-   <addaction name="refreshAction"/>
+   <addaction name="reopenOriginalFileAction"/>
    <addaction name="undoAction_2"/>
    <addaction name="redoAction_2"/>
   </widget>
@@ -1910,7 +1911,7 @@
     <string>blubb</string>
    </property>
   </action>
-  <action name="saveAction">
+  <action name="saveInOriginalAction">
    <property name="icon">
     <iconset resource="TIGLViewer.qrc">
      <normaloff>:/gfx/document-save.png</normaloff>:/gfx/document-save.png</iconset>
@@ -2933,9 +2934,12 @@
     <string>Ctrl+A</string>
    </property>
   </action>
-  <action name="refreshAction">
+  <action name="reopenOriginalFileAction">
    <property name="text">
-    <string>Refresh</string>
+    <string>ReOpen</string>
+   </property>
+   <property name="toolTip">
+    <string>Reopen the original file</string>
    </property>
    <property name="shortcut">
     <string>F5</string>
@@ -2994,6 +2998,18 @@
    </property>
    <property name="toolTip">
     <string>Standardize the CPACS file to follow the CPACSCreator strandard description</string>
+   </property>
+  </action>
+  <action name="saveAsAction">
+   <property name="icon">
+    <iconset resource="TIGLViewer.qrc">
+     <normaloff>:/gfx/document-save.png</normaloff>:/gfx/document-save.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save as</string>
+   </property>
+   <property name="toolTip">
+    <string>save or export the file in the wanted file</string>
    </property>
   </action>
  </widget>

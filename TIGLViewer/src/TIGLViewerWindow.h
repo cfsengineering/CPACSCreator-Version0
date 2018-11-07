@@ -99,7 +99,8 @@ private slots:
     void reopenCurrentFile();
     void openScript();
     void openRecentFile();
-    void save();
+    void saveInOriginal();
+    void saveAs();
     void setBackgroundImage();
     void about();
     void aboutQt();

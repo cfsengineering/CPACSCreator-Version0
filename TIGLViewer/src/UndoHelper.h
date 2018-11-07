@@ -98,6 +98,12 @@ public:
      */
     void saveInOriginal();
 
+    /***
+     * Save the current file in the given file name.
+     * Set the original file to this new file.
+     * @param filename
+     */
+    void saveInFile(QString filename);
 
 
     /***
@@ -119,15 +125,17 @@ public:
 
     QString originalFile();
 
-protected:
-    QString generateFileName();
-
     /***
      * Check if the UndoHelper is in a valid state.
      * This means that the original file is set and the current index reference a existing filename.
      * @return
      */
     bool isValid();
+
+protected:
+    QString generateFileName();
+
+
 
     void print();
 
