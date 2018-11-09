@@ -62,6 +62,16 @@ private:
     double internalCircumference;
 
 
+    // anchor interface
+    QDoubleSpinBox * spinBoxAnchorX ;
+    QDoubleSpinBox * spinBoxAnchorY ;
+    QDoubleSpinBox * spinBoxAnchorZ ;
+
+    // internal anchor
+    double internalAnchorX;
+    double internalAnchorY;
+    double internalAnchorZ;
+
 
 
 

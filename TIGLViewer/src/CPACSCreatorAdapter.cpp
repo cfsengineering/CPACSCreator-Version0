@@ -100,19 +100,42 @@ void CPACSCreatorAdapter::setTransformation(cpcr::CPACSTreeItem* item, cpcr::CPA
     LOG(INFO) << "Set transformation Values for xPath: ";
 }
 
-bool CPACSCreatorAdapter::testItem(cpcr::CPACSTreeItem* item, cpacsType type)
-{
 
-    bool pass = true;
+bool CPACSCreatorAdapter::testItem(cpcr::CPACSTreeItem * item, std::vector<cpacsType> acceptableTypes ) {
+
     if (item == nullptr) {
         LOG(WARNING) << "Adapter receive null pointer item";
-        pass = false;
+        return false;
     }
+
+    bool hasType = false;
+    cpacsType type = item->getType();
+    for ( cpacsType temp : acceptableTypes ){
+        if(temp == type ){
+            hasType = true;
+        }
+    }
+
+    if ( ! hasType ) {
+        LOG(WARNING) << "Adapter receive incorrect type";
+        return false;
+    }
+
+    return true;
+}
+
+bool CPACSCreatorAdapter::testItem(cpcr::CPACSTreeItem* item, cpacsType type)
+{
+    if (item == nullptr) {
+        LOG(WARNING) << "Adapter receive null pointer item";
+        return false;
+    }
+
     if (item->getType() != type) {
         LOG(WARNING) << "Adapter receive incorrect type";
-        pass = false;
+        return false;
     }
-    return pass;
+    return true;
 }
 
 void CPACSCreatorAdapter::close()
@@ -279,7 +302,7 @@ double CPACSCreatorAdapter::getWingAR(cpcr::CPACSTreeItem* item)
 void CPACSCreatorAdapter::getAnchorValues(cpcr::CPACSTreeItem* item, double& x, double& y, double& z)
 {
 
-    if (!testItem(item, "wing")) {
+    if (!testItem(item, std::vector<cpacsType>({"wing", "fuselage"}) ) ){
         return;
     }
     cpcr::CPACSTransformation wingT = getTransformation(item->getChild("transformation"));
@@ -292,7 +315,7 @@ void CPACSCreatorAdapter::getAnchorValues(cpcr::CPACSTreeItem* item, double& x, 
 void CPACSCreatorAdapter::setAnchorValues(cpcr::CPACSTreeItem* item, double x, double y, double z)
 {
 
-    if (!testItem(item, "wing")) {
+    if (!testItem(item, std::vector<cpacsType>({"wing", "fuselage"}) )) {
         return;
     }
     cpcr::CPACSTransformation wingT = getTransformation(item->getChild("transformation"));
@@ -543,3 +566,4 @@ void CPACSCreatorAdapter::standardize()
                      << std::endl;
     }
 }
+

@@ -129,6 +129,8 @@ public:
 
 protected:
 
+    bool testItem(cpcr::CPACSTreeItem * item, std::vector<cpacsType> acceptableTypes );
+
     bool testItem(cpcr::CPACSTreeItem * item, cpacsType type );
 
 private:

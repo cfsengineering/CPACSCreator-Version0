@@ -25,6 +25,16 @@ void TIGLViewerFuselageWidget::init(ModificatorManager * associate ) {
 
     widgetLengthDetails->hide();
 
+
+
+    // anchor interface
+    spinBoxAnchorX = this->findChild<QDoubleSpinBox*>("spinBoxFuselageAnchorX") ;
+    spinBoxAnchorY = this->findChild<QDoubleSpinBox*>("spinBoxFuselageAnchorY") ;
+    spinBoxAnchorZ = this->findChild<QDoubleSpinBox*>("spinBoxFuselageAnchorZ") ;
+
+
+
+
     // connect the extend buttons with their slot
     connect(btnExpendLengthDetails, SIGNAL(clicked(bool)), this, SLOT(expendLengthDetails(bool)) );
     connect(comboBoxLengthE1,SIGNAL(currentIndexChanged(int )), this, SLOT(setPartialLengthFromComboBoxes()));
@@ -117,13 +127,34 @@ void TIGLViewerFuselageWidget::setFuselage(cpcr::CPACSTreeItem *fuselageItem) {
     internalCircumference = associateManager->getAdapter()->getFuselageMaximalCircumference(this->fuselageItem);
     spinBoxCircumference->setValue(internalCircumference);
 
+
+    // anchor
+    // set anchor
+    associateManager->getAdapter()->getAnchorValues(this->fuselageItem, internalAnchorX, internalAnchorY, internalAnchorZ);
+    spinBoxAnchorX->setValue(internalAnchorX);
+    spinBoxAnchorY->setValue(internalAnchorY);
+    spinBoxAnchorZ->setValue(internalAnchorZ);
+
 }
 
 void TIGLViewerFuselageWidget::apply() {
+
+   bool anchorHasChanged = ( (!isApprox(internalAnchorX, spinBoxAnchorX->value()))
+                              || (! isApprox(internalAnchorY, spinBoxAnchorY->value()))
+                              || (! isApprox(internalAnchorZ , spinBoxAnchorZ->value())) );
+
    bool lengthHasChanged = ( (! isApprox(internalLength, spinBoxLength->value()) ) );
    bool partialLengthHasChanged = ( ! isApprox(internalPartialLength, spinBoxPartialLength->value() ) );
    bool isPartialCase = widgetLengthDetails->isVisible(); // if expend length details is shown, the details modifications prime on the main mofif
    bool circumferenceHasChanged = ( (! isApprox(internalCircumference, spinBoxCircumference->value())) );
+
+
+    if( anchorHasChanged ){
+        internalAnchorX = spinBoxAnchorX->value();
+        internalAnchorY = spinBoxAnchorY->value();
+        internalAnchorZ = spinBoxAnchorZ->value();
+        associateManager->getAdapter()->setAnchorValues(fuselageItem, internalAnchorX, internalAnchorY, internalAnchorZ);
+    }
 
    if(lengthHasChanged && (!isPartialCase)){
        internalLength = spinBoxLength->value();
@@ -141,7 +172,7 @@ void TIGLViewerFuselageWidget::apply() {
        associateManager->getAdapter()->setFuselageMaximalCircumference(fuselageItem, internalCircumference);
    }
 
-   if(lengthHasChanged || partialLengthHasChanged || circumferenceHasChanged ){
+   if(anchorHasChanged || lengthHasChanged || partialLengthHasChanged || circumferenceHasChanged ){
        associateManager->getAdapter()->writeToFile();
    }
 
