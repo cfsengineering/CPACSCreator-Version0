@@ -2491,8 +2491,8 @@
               </segment>
             </segments>
           </wing>
-          <wing uID="VertidfasdfasdfsdcalFin21" xsi:type="wingType">
-            <name>VerticalFin2</name>
+          <wing uID="VerticalFin" xsi:type="wingType">
+            <name>VerticalFin</name>
             <description>Wing Nb 2 of this aircraft.</description>
             <transformation xsi:type="transformationType" uID="VerticalFin_transformation1">
               <scaling type="pointType" uID="VerticalFin_transformation1_scaling1">
@@ -2512,43 +2512,43 @@
               </translation>
             </transformation>
             <sections xsi:type="wingSectionsType">
-              <section uID="Section0" xsi:type="wingSectionType">
-                <name>Section0</name>
+              <section uID="SectionV0" xsi:type="wingSectionType">
+                <name>SectionV0</name>
                 <description>Section Nb 1 of VerticalFin</description>
-                <transformation xsi:type="transformationType" uID="Section0_transformation2">
-                  <scaling type="pointType" uID="Section0_transformation2_scaling1">
+                <transformation xsi:type="transformationType" uID="SectionV0_transformation2">
+                  <scaling type="pointType" uID="SectionV0_transformation2_scaling1">
                     <x>1.0</x>
                     <y>1.0</y>
                     <z>1.0</z>
                   </scaling>
-                  <rotation type="pointType" uID="Section0_transformation2_rotation1">
+                  <rotation type="pointType" uID="SectionV0_transformation2_rotation1">
                     <x>0.0</x>
                     <y>0.0</y>
                     <z>5.0</z>
                   </rotation>
-                  <translation type="pointType" uID="Section0_transformation2_translation1">
+                  <translation type="pointType" uID="SectionV0_transformation2_translation1">
                     <x>-12.0</x>
                     <y>0.0</y>
                     <z>0.0</z>
                   </translation>
                 </transformation>
                 <elements xsi:type="wingElementsType">
-                  <element uID="Section0_Elem" xsi:type="wingElementType">
-                    <name>Section0_Elem</name>
+                  <element uID="SectionV0_Elem" xsi:type="wingElementType">
+                    <name>SectionV0_Elem</name>
                     <description>Element of Section Nb 1 of VerticalFin</description>
                     <airfoilUID>WingAirfoil14</airfoilUID>
-                    <transformation xsi:type="transformationType" uID="Section0_Elem_transformation2">
-                      <scaling type="pointType" uID="Section0_Elem_transformation2_scaling1">
+                    <transformation xsi:type="transformationType" uID="SectionV0_Elem_transformation2">
+                      <scaling type="pointType" uID="SectionV0_Elem_transformation2_scaling1">
                         <x>21.3</x>
                         <y>21.3</y>
                         <z>21.3</z>
                       </scaling>
-                      <rotation type="pointType" uID="Section0_Elem_transformation2_rotation1">
+                      <rotation type="pointType" uID="SectionV0_Elem_transformation2_rotation1">
                         <x>0.0</x>
                         <y>0.0</y>
                         <z>0.0</z>
                       </rotation>
-                      <translation type="pointType" uID="Section0_Elem_transformation2_translation1">
+                      <translation type="pointType" uID="SectionV0_Elem_transformation2_translation1">
                         <x>0.0</x>
                         <y>0.0</y>
                         <z>0.0</z>
@@ -2557,43 +2557,43 @@
                   </element>
                 </elements>
               </section>
-              <section uID="Section1" xsi:type="wingSectionType">
-                <name>Section1</name>
+              <section uID="SectionV1" xsi:type="wingSectionType">
+                <name>SectionV1</name>
                 <description>Section Nb 2 of VerticalFin</description>
-                <transformation xsi:type="transformationType" uID="Section1_transformation2">
-                  <scaling type="pointType" uID="Section1_transformation2_scaling1">
+                <transformation xsi:type="transformationType" uID="SectionV1_transformation2">
+                  <scaling type="pointType" uID="SectionV1_transformation2_scaling1">
                     <x>1.0</x>
                     <y>1.0</y>
                     <z>1.0</z>
                   </scaling>
-                  <rotation type="pointType" uID="Section1_transformation2_rotation1">
+                  <rotation type="pointType" uID="SectionV1_transformation2_rotation1">
                     <x>-0.0</x>
                     <y>-0.0</y>
                     <z>0.0</z>
                   </rotation>
-                  <translation type="pointType" uID="Section1_transformation2_translation1">
+                  <translation type="pointType" uID="SectionV1_transformation2_translation1">
                     <x>-4.37029</x>
                     <y>2.5</y>
                     <z>-3.18132e-10</z>
                   </translation>
                 </transformation>
                 <elements xsi:type="wingElementsType">
-                  <element uID="Section1_Elem" xsi:type="wingElementType">
-                    <name>Section1_Elem</name>
+                  <element uID="SectionV1_Elem" xsi:type="wingElementType">
+                    <name>SectionV1_Elem</name>
                     <description>Element of Section Nb 2 of VerticalFin</description>
                     <airfoilUID>WingAirfoil14</airfoilUID>
-                    <transformation xsi:type="transformationType" uID="Section1_Elem_transformation2">
-                      <scaling type="pointType" uID="Section1_Elem_transformation2_scaling1">
+                    <transformation xsi:type="transformationType" uID="SectionV1_Elem_transformation2">
+                      <scaling type="pointType" uID="SectionV1_Elem_transformation2_scaling1">
                         <x>13.4619789124</x>
                         <y>13.4619789124</y>
                         <z>13.4619789124</z>
                       </scaling>
-                      <rotation type="pointType" uID="Section1_Elem_transformation2_rotation1">
+                      <rotation type="pointType" uID="SectionV1_Elem_transformation2_rotation1">
                         <x>0.0</x>
                         <y>0.0</y>
                         <z>0.0</z>
                       </rotation>
-                      <translation type="pointType" uID="Section1_Elem_transformation2_translation1">
+                      <translation type="pointType" uID="SectionV1_Elem_transformation2_translation1">
                         <x>0.0</x>
                         <y>0.0</y>
                         <z>0.0</z>
@@ -2602,43 +2602,43 @@
                   </element>
                 </elements>
               </section>
-              <section uID="Section2" xsi:type="wingSectionType">
-                <name>Section2</name>
+              <section uID="SectionV2" xsi:type="wingSectionType">
+                <name>SectionV2</name>
                 <description>Section Nb 3 of VerticalFin</description>
-                <transformation xsi:type="transformationType" uID="Section2_transformation2">
-                  <scaling type="pointType" uID="Section2_transformation2_scaling1">
+                <transformation xsi:type="transformationType" uID="SectionV2_transformation2">
+                  <scaling type="pointType" uID="SectionV2_transformation2_scaling1">
                     <x>1.0</x>
                     <y>1.0</y>
                     <z>1.0</z>
                   </scaling>
-                  <rotation type="pointType" uID="Section2_transformation2_rotation1">
+                  <rotation type="pointType" uID="SectionV2_transformation2_rotation1">
                     <x>-0.0</x>
                     <y>-0.0</y>
                     <z>0.0</z>
                   </rotation>
-                  <translation type="pointType" uID="Section2_transformation2_translation1">
+                  <translation type="pointType" uID="SectionV2_transformation2_translation1">
                     <x>-1.30945</x>
                     <y>3.4</y>
                     <z>-2.57353e-12</z>
                   </translation>
                 </transformation>
                 <elements xsi:type="wingElementsType">
-                  <element uID="Section2_Elem" xsi:type="wingElementType">
-                    <name>Section2_Elem</name>
+                  <element uID="SectionV2_Elem" xsi:type="wingElementType">
+                    <name>SectionV2_Elem</name>
                     <description>Element of Section Nb 3 of VerticalFin</description>
                     <airfoilUID>WingAirfoil14</airfoilUID>
-                    <transformation xsi:type="transformationType" uID="Section2_Elem_transformation2">
-                      <scaling type="pointType" uID="Section2_Elem_transformation2_scaling1">
+                    <transformation xsi:type="transformationType" uID="SectionV2_Elem_transformation2">
+                      <scaling type="pointType" uID="SectionV2_Elem_transformation2_scaling1">
                         <x>10.2039146423</x>
                         <y>10.2039146423</y>
                         <z>10.2039146423</z>
                       </scaling>
-                      <rotation type="pointType" uID="Section2_Elem_transformation2_rotation1">
+                      <rotation type="pointType" uID="SectionV2_Elem_transformation2_rotation1">
                         <x>0.0</x>
                         <y>0.0</y>
                         <z>0.0</z>
                       </rotation>
-                      <translation type="pointType" uID="Section2_Elem_transformation2_translation1">
+                      <translation type="pointType" uID="SectionV2_Elem_transformation2_translation1">
                         <x>0.0</x>
                         <y>0.0</y>
                         <z>0.0</z>
@@ -2647,43 +2647,43 @@
                   </element>
                 </elements>
               </section>
-              <section uID="Section3" xsi:type="wingSectionType">
-                <name>Section3</name>
+              <section uID="SectionV3" xsi:type="wingSectionType">
+                <name>SectionV3</name>
                 <description>Section Nb 4 of VerticalFin</description>
-                <transformation xsi:type="transformationType" uID="Section3_transformation2">
-                  <scaling type="pointType" uID="Section3_transformation2_scaling1">
+                <transformation xsi:type="transformationType" uID="SectionV3_transformation2">
+                  <scaling type="pointType" uID="SectionV3_transformation2_scaling1">
                     <x>1.0</x>
                     <y>1.0</y>
                     <z>1.0</z>
                   </scaling>
-                  <rotation type="pointType" uID="Section3_transformation2_rotation1">
+                  <rotation type="pointType" uID="SectionV3_transformation2_rotation1">
                     <x>-0.0</x>
                     <y>0.0</y>
                     <z>0.0</z>
                   </rotation>
-                  <translation type="pointType" uID="Section3_transformation2_translation1">
+                  <translation type="pointType" uID="SectionV3_transformation2_translation1">
                     <x>0.820183</x>
                     <y>4.3</y>
                     <z>-9.28895e-16</z>
                   </translation>
                 </transformation>
                 <elements xsi:type="wingElementsType">
-                  <element uID="Section3_Elem" xsi:type="wingElementType">
-                    <name>Section3_Elem</name>
+                  <element uID="SectionV3_Elem" xsi:type="wingElementType">
+                    <name>SectionV3_Elem</name>
                     <description>Element of Section Nb 4 of VerticalFin</description>
                     <airfoilUID>WingAirfoil14</airfoilUID>
-                    <transformation xsi:type="transformationType" uID="Section3_Elem_transformation2">
-                      <scaling type="pointType" uID="Section3_Elem_transformation2_scaling1">
+                    <transformation xsi:type="transformationType" uID="SectionV3_Elem_transformation2">
+                      <scaling type="pointType" uID="SectionV3_Elem_transformation2_scaling1">
                         <x>7.88262176514</x>
                         <y>7.88262176514</y>
                         <z>7.88262176514</z>
                       </scaling>
-                      <rotation type="pointType" uID="Section3_Elem_transformation2_rotation1">
+                      <rotation type="pointType" uID="SectionV3_Elem_transformation2_rotation1">
                         <x>0.0</x>
                         <y>0.0</y>
                         <z>0.0</z>
                       </rotation>
-                      <translation type="pointType" uID="Section3_Elem_transformation2_translation1">
+                      <translation type="pointType" uID="SectionV3_Elem_transformation2_translation1">
                         <x>0.0</x>
                         <y>0.0</y>
                         <z>0.0</z>
@@ -2692,43 +2692,43 @@
                   </element>
                 </elements>
               </section>
-              <section uID="Section4" xsi:type="wingSectionType">
-                <name>Section4</name>
+              <section uID="SectionV4" xsi:type="wingSectionType">
+                <name>SectionV4</name>
                 <description>Section Nb 5 of VerticalFin</description>
-                <transformation xsi:type="transformationType" uID="Section4_transformation2">
-                  <scaling type="pointType" uID="Section4_transformation2_scaling1">
+                <transformation xsi:type="transformationType" uID="SectionV4_transformation2">
+                  <scaling type="pointType" uID="SectionV4_transformation2_scaling1">
                     <x>1.0</x>
                     <y>1.0</y>
                     <z>1.0</z>
                   </scaling>
-                  <rotation type="pointType" uID="Section4_transformation2_rotation1">
+                  <rotation type="pointType" uID="SectionV4_transformation2_rotation1">
                     <x>-0.0</x>
                     <y>0.0</y>
                     <z>0.0</z>
                   </rotation>
-                  <translation type="pointType" uID="Section4_transformation2_translation1">
+                  <translation type="pointType" uID="SectionV4_transformation2_translation1">
                     <x>2.07283</x>
                     <y>5.3</y>
                     <z>2.04983e-10</z>
                   </translation>
                 </transformation>
                 <elements xsi:type="wingElementsType">
-                  <element uID="Section4_Elem" xsi:type="wingElementType">
-                    <name>Section4_Elem</name>
+                  <element uID="SectionV4_Elem" xsi:type="wingElementType">
+                    <name>SectionV4_Elem</name>
                     <description>Element of Section Nb 5 of VerticalFin</description>
                     <airfoilUID>WingAirfoil14</airfoilUID>
-                    <transformation xsi:type="transformationType" uID="Section4_Elem_transformation2">
-                      <scaling type="pointType" uID="Section4_Elem_transformation2_scaling1">
+                    <transformation xsi:type="transformationType" uID="SectionV4_Elem_transformation2">
+                      <scaling type="pointType" uID="SectionV4_Elem_transformation2_scaling1">
                         <x>6.42535018921</x>
                         <y>6.42535018921</y>
                         <z>6.42535018921</z>
                       </scaling>
-                      <rotation type="pointType" uID="Section4_Elem_transformation2_rotation1">
+                      <rotation type="pointType" uID="SectionV4_Elem_transformation2_rotation1">
                         <x>0.0</x>
                         <y>0.0</y>
                         <z>0.0</z>
                       </rotation>
-                      <translation type="pointType" uID="Section4_Elem_transformation2_translation1">
+                      <translation type="pointType" uID="SectionV4_Elem_transformation2_translation1">
                         <x>0.0</x>
                         <y>0.0</y>
                         <z>0.0</z>
@@ -2737,43 +2737,43 @@
                   </element>
                 </elements>
               </section>
-              <section uID="Section5" xsi:type="wingSectionType">
-                <name>Section5</name>
+              <section uID="SectionV5" xsi:type="wingSectionType">
+                <name>SectionV5</name>
                 <description>Section Nb 6 of VerticalFin</description>
-                <transformation xsi:type="transformationType" uID="Section5_transformation2">
-                  <scaling type="pointType" uID="Section5_transformation2_scaling1">
+                <transformation xsi:type="transformationType" uID="SectionV5_transformation2">
+                  <scaling type="pointType" uID="SectionV5_transformation2_scaling1">
                     <x>1.0</x>
                     <y>1.0</y>
                     <z>1.0</z>
                   </scaling>
-                  <rotation type="pointType" uID="Section5_transformation2_rotation1">
+                  <rotation type="pointType" uID="SectionV5_transformation2_rotation1">
                     <x>0.0</x>
                     <y>0.0</y>
                     <z>0.0</z>
                   </rotation>
-                  <translation type="pointType" uID="Section5_transformation2_translation1">
+                  <translation type="pointType" uID="SectionV5_transformation2_translation1">
                     <x>3.1373</x>
                     <y>6.2</y>
                     <z>0.0</z>
                   </translation>
                 </transformation>
                 <elements xsi:type="wingElementsType">
-                  <element uID="Section5_Elem" xsi:type="wingElementType">
-                    <name>Section5_Elem</name>
+                  <element uID="SectionV5_Elem" xsi:type="wingElementType">
+                    <name>SectionV5_Elem</name>
                     <description>Element of Section Nb 6 of VerticalFin</description>
                     <airfoilUID>WingAirfoil14</airfoilUID>
-                    <transformation xsi:type="transformationType" uID="Section5_Elem_transformation2">
-                      <scaling type="pointType" uID="Section5_Elem_transformation2_scaling1">
+                    <transformation xsi:type="transformationType" uID="SectionV5_Elem_transformation2">
+                      <scaling type="pointType" uID="SectionV5_Elem_transformation2_scaling1">
                         <x>5.1852</x>
                         <y>5.1852</y>
                         <z>5.1852</z>
                       </scaling>
-                      <rotation type="pointType" uID="Section5_Elem_transformation2_rotation1">
+                      <rotation type="pointType" uID="SectionV5_Elem_transformation2_rotation1">
                         <x>0.0</x>
                         <y>0.0</y>
                         <z>0.0</z>
                       </rotation>
-                      <translation type="pointType" uID="Section5_Elem_transformation2_translation1">
+                      <translation type="pointType" uID="SectionV5_Elem_transformation2_translation1">
                         <x>0.0</x>
                         <y>0.0</y>
                         <z>0.0</z>
@@ -2782,43 +2782,43 @@
                   </element>
                 </elements>
               </section>
-              <section uID="Section6" xsi:type="wingSectionType">
-                <name>Section6</name>
+              <section uID="SectionV6" xsi:type="wingSectionType">
+                <name>SectionV6</name>
                 <description>Section Nb 7 of VerticalFin</description>
-                <transformation xsi:type="transformationType" uID="Section6_transformation2">
-                  <scaling type="pointType" uID="Section6_transformation2_scaling1">
+                <transformation xsi:type="transformationType" uID="SectionV6_transformation2">
+                  <scaling type="pointType" uID="SectionV6_transformation2_scaling1">
                     <x>1.0</x>
                     <y>1.0</y>
                     <z>1.0</z>
                   </scaling>
-                  <rotation type="pointType" uID="Section6_transformation2_rotation1">
+                  <rotation type="pointType" uID="SectionV6_transformation2_rotation1">
                     <x>0.0</x>
                     <y>0.0</y>
                     <z>0.0</z>
                   </rotation>
-                  <translation type="pointType" uID="Section6_transformation2_translation1">
+                  <translation type="pointType" uID="SectionV6_transformation2_translation1">
                     <x>4.2951</x>
                     <y>7.2</y>
                     <z>0.0</z>
                   </translation>
                 </transformation>
                 <elements xsi:type="wingElementsType">
-                  <element uID="Section6_Elem" xsi:type="wingElementType">
-                    <name>Section6_Elem</name>
+                  <element uID="SectionV6_Elem" xsi:type="wingElementType">
+                    <name>SectionV6_Elem</name>
                     <description>Element of Section Nb 7 of VerticalFin</description>
                     <airfoilUID>WingAirfoil14</airfoilUID>
-                    <transformation xsi:type="transformationType" uID="Section6_Elem_transformation2">
-                      <scaling type="pointType" uID="Section6_Elem_transformation2_scaling1">
+                    <transformation xsi:type="transformationType" uID="SectionV6_Elem_transformation2">
+                      <scaling type="pointType" uID="SectionV6_Elem_transformation2_scaling1">
                         <x>3.8415</x>
                         <y>3.8415</y>
                         <z>3.8415</z>
                       </scaling>
-                      <rotation type="pointType" uID="Section6_Elem_transformation2_rotation1">
+                      <rotation type="pointType" uID="SectionV6_Elem_transformation2_rotation1">
                         <x>0.0</x>
                         <y>0.0</y>
                         <z>0.0</z>
                       </rotation>
-                      <translation type="pointType" uID="Section6_Elem_transformation2_translation1">
+                      <translation type="pointType" uID="SectionV6_Elem_transformation2_translation1">
                         <x>0.0</x>
                         <y>0.0</y>
                         <z>0.0</z>
@@ -2874,111 +2874,111 @@
               </section>
             </sections>
             <positionings xsi:type="positioningsType">
-              <positioning uID="Section0_Pos" xsi:type="positioningType">
-                <name>Section0_Pos</name>
+              <positioning uID="SectionV0_Pos" xsi:type="positioningType">
+                <name>SectionV0_Pos</name>
                 <length>0.0</length>
                 <sweepAngle>0.0</sweepAngle>
                 <dihedralAngle>0.0</dihedralAngle>
-                <toSectionUID>Section0</toSectionUID>
+                <toSectionUID>SectionV0</toSectionUID>
               </positioning>
-              <positioning uID="Section1_Pos" xsi:type="positioningType">
-                <name>Section1_Pos</name>
+              <positioning uID="SectionV1_Pos" xsi:type="positioningType">
+                <name>SectionV1_Pos</name>
                 <length>0.0</length>
                 <sweepAngle>0.0</sweepAngle>
                 <dihedralAngle>0.0</dihedralAngle>
-                <fromSectionUID>Section0</fromSectionUID>
-                <toSectionUID>Section1</toSectionUID>
+                <fromSectionUID>SectionV0</fromSectionUID>
+                <toSectionUID>SectionV1</toSectionUID>
               </positioning>
-              <positioning uID="Section2_Pos" xsi:type="positioningType">
-                <name>Section2_Pos</name>
+              <positioning uID="SectionV2_Pos" xsi:type="positioningType">
+                <name>SectionV2_Pos</name>
                 <length>0.0</length>
                 <sweepAngle>0.0</sweepAngle>
                 <dihedralAngle>0.0</dihedralAngle>
-                <fromSectionUID>Section1</fromSectionUID>
-                <toSectionUID>Section2</toSectionUID>
+                <fromSectionUID>SectionV1</fromSectionUID>
+                <toSectionUID>SectionV2</toSectionUID>
               </positioning>
-              <positioning uID="Section3_Pos" xsi:type="positioningType">
-                <name>Section3_Pos</name>
+              <positioning uID="SectionV3_Pos" xsi:type="positioningType">
+                <name>SectionV3_Pos</name>
                 <length>0.0</length>
                 <sweepAngle>0.0</sweepAngle>
                 <dihedralAngle>0.0</dihedralAngle>
-                <fromSectionUID>Section2</fromSectionUID>
-                <toSectionUID>Section3</toSectionUID>
+                <fromSectionUID>SectionV2</fromSectionUID>
+                <toSectionUID>SectionV3</toSectionUID>
               </positioning>
-              <positioning uID="Section4_Pos" xsi:type="positioningType">
-                <name>Section4_Pos</name>
+              <positioning uID="SectionV4_Pos" xsi:type="positioningType">
+                <name>SectionV4_Pos</name>
                 <length>0.0</length>
                 <sweepAngle>0.0</sweepAngle>
                 <dihedralAngle>0.0</dihedralAngle>
-                <fromSectionUID>Section3</fromSectionUID>
-                <toSectionUID>Section4</toSectionUID>
+                <fromSectionUID>SectionV3</fromSectionUID>
+                <toSectionUID>SectionV4</toSectionUID>
               </positioning>
-              <positioning uID="Section5_Pos" xsi:type="positioningType">
-                <name>Section5_Pos</name>
+              <positioning uID="SectionV5_Pos" xsi:type="positioningType">
+                <name>SectionV5_Pos</name>
                 <length>0.0</length>
                 <sweepAngle>0.0</sweepAngle>
                 <dihedralAngle>0.0</dihedralAngle>
-                <fromSectionUID>Section4</fromSectionUID>
-                <toSectionUID>Section5</toSectionUID>
+                <fromSectionUID>SectionV4</fromSectionUID>
+                <toSectionUID>SectionV5</toSectionUID>
               </positioning>
-              <positioning uID="Section6_Pos" xsi:type="positioningType">
-                <name>Section6_Pos</name>
+              <positioning uID="SectionV6_Pos" xsi:type="positioningType">
+                <name>SectionV6_Pos</name>
                 <length>0.0</length>
                 <sweepAngle>0.0</sweepAngle>
                 <dihedralAngle>0.0</dihedralAngle>
-                <fromSectionUID>Section5</fromSectionUID>
-                <toSectionUID>Section6</toSectionUID>
+                <fromSectionUID>SectionV5</fromSectionUID>
+                <toSectionUID>SectionV6</toSectionUID>
               </positioning>
               <positioning uID="TipSection_Pos" xsi:type="positioningType">
                 <name>TipSection_Pos</name>
                 <length>0.0</length>
                 <sweepAngle>0.0</sweepAngle>
                 <dihedralAngle>0.0</dihedralAngle>
-                <fromSectionUID>Section6</fromSectionUID>
+                <fromSectionUID>SectionV6</fromSectionUID>
                 <toSectionUID>TipSection</toSectionUID>
               </positioning>
             </positionings>
             <segments xsi:type="wingSegmentsType">
-              <segment uID="VerticalFin_Section1_Seg1" xsi:type="wingSegmentType">
-                <name>Section1_Seg</name>
+              <segment uID="VerticalFin_SectionV1_Seg1" xsi:type="wingSegmentType">
+                <name>SectionV1_Seg</name>
                 <description>This is a wing segment</description>
-                <fromElementUID>Section0_Elem</fromElementUID>
-                <toElementUID>Section1_Elem</toElementUID>
+                <fromElementUID>SectionV0_Elem</fromElementUID>
+                <toElementUID>SectionV1_Elem</toElementUID>
               </segment>
-              <segment uID="VerticalFin_Section2_Seg2" xsi:type="wingSegmentType">
-                <name>Section2_Seg</name>
+              <segment uID="VerticalFin_SectionV2_Seg2" xsi:type="wingSegmentType">
+                <name>SectionV2_Seg</name>
                 <description>This is a wing segment</description>
-                <fromElementUID>Section1_Elem</fromElementUID>
-                <toElementUID>Section2_Elem</toElementUID>
+                <fromElementUID>SectionV1_Elem</fromElementUID>
+                <toElementUID>SectionV2_Elem</toElementUID>
               </segment>
-              <segment uID="VerticalFin_Section3_Seg3" xsi:type="wingSegmentType">
-                <name>Section3_Seg</name>
+              <segment uID="VerticalFin_SectionV3_Seg3" xsi:type="wingSegmentType">
+                <name>SectionV3_Seg</name>
                 <description>This is a wing segment</description>
-                <fromElementUID>Section2_Elem</fromElementUID>
-                <toElementUID>Section3_Elem</toElementUID>
+                <fromElementUID>SectionV2_Elem</fromElementUID>
+                <toElementUID>SectionV3_Elem</toElementUID>
               </segment>
-              <segment uID="VerticalFin_Section4_Seg4" xsi:type="wingSegmentType">
-                <name>Section4_Seg</name>
+              <segment uID="VerticalFin_SectionV4_Seg4" xsi:type="wingSegmentType">
+                <name>SectionV4_Seg</name>
                 <description>This is a wing segment</description>
-                <fromElementUID>Section3_Elem</fromElementUID>
-                <toElementUID>Section4_Elem</toElementUID>
+                <fromElementUID>SectionV3_Elem</fromElementUID>
+                <toElementUID>SectionV4_Elem</toElementUID>
               </segment>
-              <segment uID="VerticalFin_Section5_Seg5" xsi:type="wingSegmentType">
-                <name>Section5_Seg</name>
+              <segment uID="VerticalFin_SectionV5_Seg5" xsi:type="wingSegmentType">
+                <name>SectionV5_Seg</name>
                 <description>This is a wing segment</description>
-                <fromElementUID>Section4_Elem</fromElementUID>
-                <toElementUID>Section5_Elem</toElementUID>
+                <fromElementUID>SectionV4_Elem</fromElementUID>
+                <toElementUID>SectionV5_Elem</toElementUID>
               </segment>
-              <segment uID="VerticalFin_Section6_Seg6" xsi:type="wingSegmentType">
-                <name>Section6_Seg</name>
+              <segment uID="VerticalFin_SectionV6_Seg6" xsi:type="wingSegmentType">
+                <name>SectionV6_Seg</name>
                 <description>This is a wing segment</description>
-                <fromElementUID>Section5_Elem</fromElementUID>
-                <toElementUID>Section6_Elem</toElementUID>
+                <fromElementUID>SectionV5_Elem</fromElementUID>
+                <toElementUID>SectionV6_Elem</toElementUID>
               </segment>
               <segment uID="VerticalFin_TipSection_Seg7" xsi:type="wingSegmentType">
                 <name>TipSection_Seg</name>
                 <description>This is a wing segment</description>
-                <fromElementUID>Section6_Elem</fromElementUID>
+                <fromElementUID>SectionV6_Elem</fromElementUID>
                 <toElementUID>TipSection_Elem</toElementUID>
               </segment>
             </segments>

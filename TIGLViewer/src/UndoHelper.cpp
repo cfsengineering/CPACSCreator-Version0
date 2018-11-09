@@ -30,6 +30,9 @@ void UndoHelper::init(QString fileName) {
     backupFiles.push_front(newFN);
     currentIdx = 0;
 
+    if(QFile::exists(newFN)){
+        QFile::remove(newFN);
+    }
     QFile::copy(originFile.absoluteFilePath(), this->currentFile());
 
 
