@@ -1,7 +1,5 @@
 
-message(gtest_SOURCE_DIR: ${gtest_SOURCE_DIR})
 
-include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 
 add_executable(runCPACSCreatorLibTests
         CreatorPointTest.cpp
@@ -24,6 +22,14 @@ add_executable(runCPACSCreatorLibTests
 
 target_include_directories(runCPACSCreatorLibTests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../../ThirdPartyLib/easyloggingpp-9.96.4/src/)
 target_sources( runCPACSCreatorLibTests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../../ThirdPartyLib/easyloggingpp-9.96.4/src/easylogging++.cc)
+
+# add includes for gtest
+message(gtest_SOURCE_DIR: ${gtest_SOURCE_DIR})
+target_include_directories(runCPACSCreatorLibTests PRIVATE  ${CMAKE_CURRENT_SOURCE_DIR}/../../../${gtest_SOURCE_DIR})
+target_include_directories(runCPACSCreatorLibTests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../../../${gtest_SOURCE_DIR}/include)
+
+
+
 
 # Copy the data file to execution folder (relative path usage)
 
