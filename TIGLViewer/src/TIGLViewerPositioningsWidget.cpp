@@ -63,7 +63,7 @@ void TIGLViewerPositioningsWidget::apply() {
     int numberOfChange = 0;
     int i = 0;
     bool hasChanged;
-    for (std::pair<cpcr::CPACSTreeItem *, cpcr::CPACSPositioning> p: internals) {
+    for (std::pair<cpcr::CPACSTreeItem *, cpcr::MCPACSPositioning> p: internals) {
 
         hasChanged = ( ! isApprox( p.second.getLength(), lengths[i]->value() ) )
                         || ( ! isApprox(p.second.getDihedralAngle(), dihedrals[i]->value() ))
@@ -97,7 +97,7 @@ void TIGLViewerPositioningsWidget::setPositionings(cpcr::CPACSTreeItem *item) {
 
     // creation of the spin boxes
     int count = 1;
-    for(std::pair<cpcr::CPACSTreeItem*,cpcr::CPACSPositioning> p: internals){
+    for(std::pair<cpcr::CPACSTreeItem*,cpcr::MCPACSPositioning> p: internals){
 
         QDoubleSpinBox *tempSweep = new QDoubleSpinBox;
         tempSweep->setRange(-360, 360);

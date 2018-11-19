@@ -21,7 +21,7 @@
 
 #include "CPACSCreatorAdapter.h"
 
-#include "CPACSCreatorLib/CPACSTransformation.h"
+#include "CPACSCreatorLib/MCPACSTransformation.h"
 
 #include "CPACSCreatorLib/CPACSTreeItem.h"
 
@@ -82,9 +82,9 @@ double CPACSCreatorAdapter::getSweepAngle(cpcr::CPACSTreeItem* item, double chor
     return angle;
 }
 
-cpcr::CPACSTransformation CPACSCreatorAdapter::getTransformation(cpcr::CPACSTreeItem* item)
+cpcr::MCPACSTransformation CPACSCreatorAdapter::getTransformation(cpcr::CPACSTreeItem* item)
 {
-    cpcr::CPACSTransformation r;
+    cpcr::MCPACSTransformation r;
     if (!testItem(item, "transformation"))
         return r;
 
@@ -92,7 +92,7 @@ cpcr::CPACSTransformation CPACSCreatorAdapter::getTransformation(cpcr::CPACSTree
     return r;
 }
 
-void CPACSCreatorAdapter::setTransformation(cpcr::CPACSTreeItem* item, cpcr::CPACSTransformation transformation)
+void CPACSCreatorAdapter::setTransformation(cpcr::CPACSTreeItem* item, cpcr::MCPACSTransformation transformation)
 {
 
     // TODO USE MODIFIER A LITTLE WIERD
@@ -242,31 +242,31 @@ void CPACSCreatorAdapter::setAllAirfoilsInWing(cpcr::CPACSTreeItem* item, QStrin
     }
 }
 
-std::list<std::pair<cpcr::CPACSTreeItem*, cpcr::CPACSPositioning>>
+std::list<std::pair<cpcr::CPACSTreeItem*, cpcr::MCPACSPositioning>>
 CPACSCreatorAdapter::getPositionings(cpcr::CPACSTreeItem* item)
 {
 
-    std::list<std::pair<cpcr::CPACSTreeItem*, cpcr::CPACSPositioning>> positionings;
+    std::list<std::pair<cpcr::CPACSTreeItem*, cpcr::MCPACSPositioning>> positionings;
 
     if (!testItem(item, "positionings")) {
         return positionings;
     }
 
-    cpcr::CPACSPositioning posTemp;
+    cpcr::MCPACSPositioning posTemp;
     for (cpcr::CPACSTreeItem* e : item->findAllChildrenOfTypeRecursively("positioning")) {
         posTemp = aircraftTree.getModifier()->getPositioning(e->getXPath());
-        positionings.push_back(std::pair<cpcr::CPACSTreeItem*, cpcr::CPACSPositioning>(e, posTemp));
+        positionings.push_back(std::pair<cpcr::CPACSTreeItem*, cpcr::MCPACSPositioning>(e, posTemp));
     }
 
-    positionings.sort([](const std::pair<cpcr::CPACSTreeItem*, cpcr::CPACSPositioning>& p1,
-                         const std::pair<cpcr::CPACSTreeItem*, cpcr::CPACSPositioning>& p2) {
+    positionings.sort([](const std::pair<cpcr::CPACSTreeItem*, cpcr::MCPACSPositioning>& p1,
+                         const std::pair<cpcr::CPACSTreeItem*, cpcr::MCPACSPositioning>& p2) {
         return p1.first->getTixiIndex() <= p2.first->getTixiIndex();
     });
 
     return positionings;
 }
 
-void CPACSCreatorAdapter::setPositioning(cpcr::CPACSTreeItem* item, cpcr::CPACSPositioning newPositioning)
+void CPACSCreatorAdapter::setPositioning(cpcr::CPACSTreeItem* item, cpcr::MCPACSPositioning newPositioning)
 {
 
     if (!isValid()) {
@@ -305,7 +305,7 @@ void CPACSCreatorAdapter::getAnchorValues(cpcr::CPACSTreeItem* item, double& x, 
     if (!testItem(item, std::vector<cpacsType>({"wing", "fuselage"}) ) ){
         return;
     }
-    cpcr::CPACSTransformation wingT = getTransformation(item->getChild("transformation"));
+    cpcr::MCPACSTransformation wingT = getTransformation(item->getChild("transformation"));
 
     x = wingT.getTranslation().x;
     y = wingT.getTranslation().y;
@@ -318,7 +318,7 @@ void CPACSCreatorAdapter::setAnchorValues(cpcr::CPACSTreeItem* item, double x, d
     if (!testItem(item, std::vector<cpacsType>({"wing", "fuselage"}) )) {
         return;
     }
-    cpcr::CPACSTransformation wingT = getTransformation(item->getChild("transformation"));
+    cpcr::MCPACSTransformation wingT = getTransformation(item->getChild("transformation"));
     wingT.setTranslation(cpcr::Point(x, y, z));
 
     setTransformation(item->getChild("transformation"), wingT);
@@ -333,7 +333,7 @@ QString CPACSCreatorAdapter::getWingOrientation(cpcr::CPACSTreeItem* item)
         return orientation;
     }
 
-    cpcr::CPACSTransformation wingT = getTransformation(item->getChild("transformation"));
+    cpcr::MCPACSTransformation wingT = getTransformation(item->getChild("transformation"));
 
     if (wingT.getRotation() == cpcr::Point(0, 0, 0)) {
         orientation = "horizontal";
@@ -354,7 +354,7 @@ void CPACSCreatorAdapter::setWingOrientation(cpcr::CPACSTreeItem* item, QString 
     if (!testItem(item, "wing")) {
         return;
     }
-    cpcr::CPACSTransformation wingT = getTransformation(item->getChild("transformation"));
+    cpcr::MCPACSTransformation wingT = getTransformation(item->getChild("transformation"));
 
     if (orientation == "horizontal") {
         wingT.setRotation(cpcr::Point(0, 0, 0));

@@ -21,7 +21,7 @@
 
 
 #include "gtest/gtest.h"
-#include "CPACSTransformation.h"
+#include "MCPACSTransformation.h"
 #include "Point.h"
 #include "easylogging++.h"
 
@@ -31,16 +31,16 @@
 
 using namespace cpcr;
 
-class CPACSTransformationTest : public testing::Test {
+class MCPACSTransformationTest : public testing::Test {
 
 };
 
 
-TEST_F(CPACSTransformationTest, constructSetGet){
+TEST_F(MCPACSTransformationTest, constructSetGet){
 
     Eigen::Matrix4d m;
 
-    cpcr::CPACSTransformation trans;
+    cpcr::MCPACSTransformation trans;
 
     EXPECT_TRUE(trans.getScaling() == cpcr::Point(1,1,1) );
     EXPECT_TRUE(trans.getRotation() == cpcr::Point(0,0,0) );
@@ -50,7 +50,7 @@ TEST_F(CPACSTransformationTest, constructSetGet){
     EXPECT_TRUE( trans.getTranslationAsMatrix().isApprox( Eigen::Matrix4d::Identity() ) );
 
 
-    cpcr::CPACSTransformation trans2(cpcr::Point(1,2,1), cpcr::Point(2,2,2), cpcr::Point(3,3,3) );
+    cpcr::MCPACSTransformation trans2(cpcr::Point(1,2,1), cpcr::Point(2,2,2), cpcr::Point(3,3,3) );
 
     EXPECT_TRUE(trans2.getScaling() == cpcr::Point(1,2,1) );
     EXPECT_TRUE(trans2.getRotation() == cpcr::Point(2,2,2) );
@@ -70,7 +70,7 @@ TEST_F(CPACSTransformationTest, constructSetGet){
     EXPECT_TRUE( trans2.getTranslationAsMatrix().isApprox( m ) );
 
 
-    cpcr::CPACSTransformation trans3(9,8,7,6,5,4,3,2,1 );
+    cpcr::MCPACSTransformation trans3(9,8,7,6,5,4,3,2,1 );
 
     EXPECT_TRUE(trans3.getScaling() == cpcr::Point(9,8,7) );
     EXPECT_TRUE(trans3.getRotation() == cpcr::Point(6,5,4) );
@@ -79,7 +79,7 @@ TEST_F(CPACSTransformationTest, constructSetGet){
 
     // test setters ang getters
 
-    cpcr::CPACSTransformation pos4;
+    cpcr::MCPACSTransformation pos4;
     cpcr::Point a(1.67,2,2);
 
     pos4.setScaling(a);
@@ -92,10 +92,10 @@ TEST_F(CPACSTransformationTest, constructSetGet){
     EXPECT_TRUE(pos4.getTranslation() == a);
 }
 
-TEST_F(CPACSTransformationTest, equalequal) {
+TEST_F(MCPACSTransformationTest, equalequal) {
 
-    cpcr::CPACSTransformation a;
-    cpcr::CPACSTransformation b;
+    cpcr::MCPACSTransformation a;
+    cpcr::MCPACSTransformation b;
     EXPECT_TRUE( a == b);
 
     b.setScaling(cpcr::Point(2,4.5,9));
@@ -119,9 +119,9 @@ TEST_F(CPACSTransformationTest, equalequal) {
 
 
 
-TEST_F(CPACSTransformationTest, getRotationAsQuaternion){
+TEST_F(MCPACSTransformationTest, getRotationAsQuaternion){
 
-    cpcr::CPACSTransformation a(1,1,1,0,0,0,0,0,0);
+    cpcr::MCPACSTransformation a(1,1,1,0,0,0,0,0,0);
 
     Eigen::Quaterniond r = a.getRotationAsQuaternion();
     Eigen::Quaterniond q = Eigen::Quaterniond().Identity();
@@ -149,15 +149,15 @@ TEST_F(CPACSTransformationTest, getRotationAsQuaternion){
 }
 
 
-TEST_F(CPACSTransformationTest, getTransforamtionAsMatrix ){
+TEST_F(MCPACSTransformationTest, getTransforamtionAsMatrix ){
 
 
-    cpcr::CPACSTransformation a, b;
+    cpcr::MCPACSTransformation a, b;
     Eigen::Matrix4d r ;
     Eigen::Matrix4d m, m2;
 
     // Test saling
-    a = cpcr::CPACSTransformation(3,1.45,7,0,0,0,0,0,0);
+    a = cpcr::MCPACSTransformation(3,1.45,7,0,0,0,0,0,0);
     r = a.getTransformationAsMatrix();
     m.row(0) << 3 , 0,0,0;
     m.row(1) <<0, 1.45, 0,0;
@@ -170,7 +170,7 @@ TEST_F(CPACSTransformationTest, getTransforamtionAsMatrix ){
 
 
     // Test rotation
-    a = cpcr::CPACSTransformation(1,1,1,4,7,8,0,0,0);
+    a = cpcr::MCPACSTransformation(1,1,1,4,7,8,0,0,0);
     r = a.getTransformationAsMatrix();
     m.row(0) << 0.9828867, -0.1381357,  0.1218693, 0;
     m.row(1) << 0.1472525,  0.9866727, -0.0692365, 0;
@@ -182,7 +182,7 @@ TEST_F(CPACSTransformationTest, getTransforamtionAsMatrix ){
     EXPECT_TRUE( m.isApprox(r, 0.00001 ));
 
     // test translation
-    a = cpcr::CPACSTransformation(1,1,1,0,0,0,17.3,-5,26);
+    a = cpcr::MCPACSTransformation(1,1,1,0,0,0,17.3,-5,26);
     r = a.getTransformationAsMatrix();
     m.row(0) << 1,0,0, 17.3;
     m.row(1) << 0,1,0, -5;
@@ -198,7 +198,7 @@ TEST_F(CPACSTransformationTest, getTransforamtionAsMatrix ){
     Eigen::Vector4d v, vr,ve;
     v << 1,0,0,1;
     ve << 2,0,0,1;
-    a = cpcr::CPACSTransformation(2,2,2,0,0,0,0,0,0);
+    a = cpcr::MCPACSTransformation(2,2,2,0,0,0,0,0,0);
     m = a.getTransformationAsMatrix();
     vr = m*v;
     LOG(INFO) << "\n" << vr;
@@ -207,7 +207,7 @@ TEST_F(CPACSTransformationTest, getTransforamtionAsMatrix ){
 
     v << 1,0,0,1;
     ve << 0,0,-2,1;
-    a = cpcr::CPACSTransformation(2,2,2,0,90,0,0,0,0);
+    a = cpcr::MCPACSTransformation(2,2,2,0,90,0,0,0,0);
     m = a.getTransformationAsMatrix();
     vr = m*v;
     LOG(INFO) << "\n" << vr;
@@ -216,7 +216,7 @@ TEST_F(CPACSTransformationTest, getTransforamtionAsMatrix ){
 
     v << 1,0,0,1;
     ve << 2,0,3,1;
-    a = cpcr::CPACSTransformation(2,2,2,0,0,0,0,0,3);
+    a = cpcr::MCPACSTransformation(2,2,2,0,0,0,0,0,3);
     m = a.getTransformationAsMatrix();
     vr = m*v;
     LOG(INFO) << "\n" << vr;
@@ -226,8 +226,8 @@ TEST_F(CPACSTransformationTest, getTransforamtionAsMatrix ){
     // Test order of transform application
     v << 1,0,0,1;
     ve << 2,0,3,1;
-    a = cpcr::CPACSTransformation(2,2,2,0,0,0,0,0,0);
-    b = cpcr::CPACSTransformation(1,1,1,0,0,0,0,0,3);
+    a = cpcr::MCPACSTransformation(2,2,2,0,0,0,0,0,0);
+    b = cpcr::MCPACSTransformation(1,1,1,0,0,0,0,0,3);
     m = a.getTransformationAsMatrix();
     m2 = b.getTransformationAsMatrix();
     vr = m*v;
@@ -238,8 +238,8 @@ TEST_F(CPACSTransformationTest, getTransforamtionAsMatrix ){
 
     v << 1,0,0,1;
     ve << 2,0,6,1;
-    a = cpcr::CPACSTransformation(2,2,2,0,0,0,0,0,0);
-    b = cpcr::CPACSTransformation(1,1,1,0,0,0,0,0,3);
+    a = cpcr::MCPACSTransformation(2,2,2,0,0,0,0,0,0);
+    b = cpcr::MCPACSTransformation(1,1,1,0,0,0,0,0,3);
     m = a.getTransformationAsMatrix();
     m2 = b.getTransformationAsMatrix();
     vr = m2 * v;
@@ -251,7 +251,7 @@ TEST_F(CPACSTransformationTest, getTransforamtionAsMatrix ){
 }
 
 
-TEST_F(CPACSTransformationTest, constructFromMatrix){
+TEST_F(MCPACSTransformationTest, constructFromMatrix){
 
     Eigen::Matrix4d inM;
     inM.row(0) << 3,0,0,6;
@@ -259,7 +259,7 @@ TEST_F(CPACSTransformationTest, constructFromMatrix){
     inM.row(2) << 0,0,5,8;
     inM.row(3) << 0,0,0,1;
 
-    CPACSTransformation c(inM);
+    MCPACSTransformation c(inM);
     EXPECT_TRUE(c.getTranslation() == Point(6,7,8) );
     EXPECT_TRUE(c.getScaling() == Point(3,2,5) );
 
@@ -267,8 +267,8 @@ TEST_F(CPACSTransformationTest, constructFromMatrix){
     s = Point(1,1,1);
     r = Point(23,44,66);
     t = Point(0,0,0);
-    CPACSTransformation temp(s, r, t );
-    CPACSTransformation c2(temp.getTransformationAsMatrix());
+    MCPACSTransformation temp(s, r, t );
+    MCPACSTransformation c2(temp.getTransformationAsMatrix());
     EXPECT_TRUE(s.toEigen().isApprox( c2.getScaling().toEigen(), 0.000001 ) );
     EXPECT_TRUE(t == c2.getTranslation());
     EXPECT_TRUE(r.toEigen().isApprox( c2.getRotation().toEigen() , 0.00001) );
@@ -276,8 +276,8 @@ TEST_F(CPACSTransformationTest, constructFromMatrix){
     s = Point(1,1,1);
     r = Point(23,-44,66);
     t = Point(0,0,0);
-    CPACSTransformation temp3(s, r, t );
-    CPACSTransformation c3(temp3.getTransformationAsMatrix());
+    MCPACSTransformation temp3(s, r, t );
+    MCPACSTransformation c3(temp3.getTransformationAsMatrix());
     EXPECT_TRUE(s.toEigen().isApprox( c3.getScaling().toEigen(), 0.000001 ) );
     EXPECT_TRUE(t == c3.getTranslation());
     EXPECT_TRUE(r.toEigen().isApprox( c3.getRotation().toEigen() , 0.00001) );
@@ -286,8 +286,8 @@ TEST_F(CPACSTransformationTest, constructFromMatrix){
     s = Point(1,1,1);
     r = Point(-230,44,-77);
     t = Point(0,0,0);
-    CPACSTransformation temp4(s, r, t );
-    CPACSTransformation c4(temp4.getTransformationAsMatrix());
+    MCPACSTransformation temp4(s, r, t );
+    MCPACSTransformation c4(temp4.getTransformationAsMatrix());
     EXPECT_TRUE(s.toEigen().isApprox( c4.getScaling().toEigen(), 0.000001 ) );
     EXPECT_TRUE(t == c4.getTranslation());
     // -230 is converted into 130
@@ -299,8 +299,8 @@ TEST_F(CPACSTransformationTest, constructFromMatrix){
     s = Point(1,1,1);
     r = Point(-23,44,-77);
     t = Point(0,0,0);
-    CPACSTransformation temp5(s, r, t );
-    CPACSTransformation c5(temp5.getTransformationAsMatrix());
+    MCPACSTransformation temp5(s, r, t );
+    MCPACSTransformation c5(temp5.getTransformationAsMatrix());
     EXPECT_TRUE(s.toEigen().isApprox( c5.getScaling().toEigen(), 0.000001 ) );
     EXPECT_TRUE(t == c5.getTranslation());
     // in this case the r is not the same because the first rotation is converted positivly by eigen
@@ -315,8 +315,8 @@ TEST_F(CPACSTransformationTest, constructFromMatrix){
     s = Point(1.1,1.2,2.2);
     r = Point(14,44,-77);
     t = Point(45,9,7);
-    CPACSTransformation temp6(s, r, t );
-    CPACSTransformation c6(temp6.getTransformationAsMatrix());
+    MCPACSTransformation temp6(s, r, t );
+    MCPACSTransformation c6(temp6.getTransformationAsMatrix());
     EXPECT_TRUE(s.toEigen().isApprox( c6.getScaling().toEigen(), 0.000001 ) );
     EXPECT_TRUE(t == c6.getTranslation());
     EXPECT_TRUE(r.toEigen().isApprox( c6.getRotation().toEigen() , 0.00001) );
@@ -325,8 +325,8 @@ TEST_F(CPACSTransformationTest, constructFromMatrix){
     s = Point(1000,12.2,2.2);
     r = Point(14,0.44,66);
     t = Point(3.3,9,7.7);
-    CPACSTransformation temp7(s, r, t );
-    CPACSTransformation c7(temp7.getTransformationAsMatrix());
+    MCPACSTransformation temp7(s, r, t );
+    MCPACSTransformation c7(temp7.getTransformationAsMatrix());
     EXPECT_TRUE(s.toEigen().isApprox( c7.getScaling().toEigen(), 0.000001 ) );
     EXPECT_TRUE(t == c7.getTranslation());
     EXPECT_TRUE(r.toEigen().isApprox( c7.getRotation().toEigen() , 0.00001) );
@@ -340,7 +340,7 @@ TEST_F(CPACSTransformationTest, constructFromMatrix){
     inM.row(1) << 0,1,0,7;
     inM.row(2) << 0,0,1,7;
     inM.row(3) << 0,0,0,1;
-    CPACSTransformation c8(inM);
+    MCPACSTransformation c8(inM);
     EXPECT_TRUE(s.toEigen().isApprox( c8.getScaling().toEigen(), 0.000001 ) );
     EXPECT_TRUE(t == c8.getTranslation());
     EXPECT_TRUE(r.toEigen().isApprox( c8.getRotation().toEigen() , 0.00001) );
@@ -356,9 +356,9 @@ TEST_F(CPACSTransformationTest, constructFromMatrix){
     inM.row(1) << 0,1,0,0;
     inM.row(2) << 0,0,1,0;
     inM.row(3) << 0,0,0,1;
-    CPACSTransformation c9(inM);
+    MCPACSTransformation c9(inM);
     // TODO: How we wnat to manage this case ?
-    //EXPECT_THROW(CPACSTransformation c9(inM), CreatorException);
+    //EXPECT_THROW(MMCPACSTransformation c9(inM), CreatorException);
 
 
 

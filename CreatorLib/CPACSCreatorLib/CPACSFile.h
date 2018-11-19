@@ -30,8 +30,8 @@
 #include <vector>
 
 #include "Point.h"
-#include "CPACSTransformation.h"
-#include "CPACSPositioning.h"
+#include "MCPACSTransformation.h"
+#include "MCPACSPositioning.h"
 #include "Eigen/Dense"
 
 #include "UniqueXPath.h"
@@ -72,18 +72,18 @@ public:
     void setPoint(UniqueXPath target, const Point& point );
     void createPoint(UniqueXPath target, const Point& point );
 
-    CPACSTransformation getTransformation(UniqueXPath target);
-    void setTransformation(UniqueXPath target, const CPACSTransformation& transform);
-    void createTransformation(UniqueXPath target, const CPACSTransformation& transform);
+    MCPACSTransformation getTransformation(UniqueXPath target);
+    void setTransformation(UniqueXPath target, const MCPACSTransformation& transform);
+    void createTransformation(UniqueXPath target, const MCPACSTransformation& transform);
 
-    CPACSPositioning getPositioning(UniqueXPath target);
-    void setPositioning(UniqueXPath target, const CPACSPositioning& positioning);
+    MCPACSPositioning getPositioning(UniqueXPath target);
+    void setPositioning(UniqueXPath target, const MCPACSPositioning& positioning);
     /***
      * @remark The aircraft tree is obvusly not updated by this function
      * @param target
      * @param positioning
      */
-    UniqueXPath createPositioning(UniqueXPath target, const CPACSPositioning& positioning);
+    UniqueXPath createPositioning(UniqueXPath target, const MCPACSPositioning& positioning);
     /***
      * Remove all positioning of poistionings
      */

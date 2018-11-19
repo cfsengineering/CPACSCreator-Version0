@@ -27,7 +27,7 @@
 
 #include <sstream>
 #include <iomanip>
-#include "CPACSTransformation.h"
+#include "MCPACSTransformation.h"
 
 namespace cpcr{
 
@@ -60,7 +60,7 @@ namespace cpcr{
      * @param cP
      * @return
      */
-    CPACSTransformation TransformChord(const Eigen::Vector4d& a, const Eigen::Vector4d& b,const Eigen::Vector4d& c,
+    MCPACSTransformation TransformChord(const Eigen::Vector4d& a, const Eigen::Vector4d& b,const Eigen::Vector4d& c,
                                        const Eigen::Vector4d& aP, const Eigen::Vector4d& bP,const Eigen::Vector4d& cP );
 
 

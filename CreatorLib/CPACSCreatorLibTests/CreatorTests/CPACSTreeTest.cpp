@@ -118,8 +118,8 @@ TEST_F(CPACSTreeTest, writeToFile){
 
     // set a new transform
     CPACSTreeItem * wingT = root->getChildByUid("Wing_transformation1");
-    CPACSTransformation originalT = modifer->getTransformation(wingT->getXPath());
-    CPACSTransformation newT(1.1,1.2,1.3, 2.1,2.2,2.3, 3.1,3.2,3.3);
+    MCPACSTransformation originalT = modifer->getTransformation(wingT->getXPath());
+    MCPACSTransformation newT(1.1,1.2,1.3, 2.1,2.2,2.3, 3.1,3.2,3.3);
     modifer->setTransformation(wingT->getXPath(), newT);
     // write to file
     tree.writeToFile();
@@ -127,7 +127,7 @@ TEST_F(CPACSTreeTest, writeToFile){
     // check if the file is correctly modified
     CPACSFile checker;
     checker.open(currentFile);
-    CPACSTransformation rT = checker.getTransformation(wingT->getXPath());
+    MCPACSTransformation rT = checker.getTransformation(wingT->getXPath());
     EXPECT_TRUE( rT == newT) ;
     checker.close();
 
@@ -137,7 +137,7 @@ TEST_F(CPACSTreeTest, writeToFile){
 
 
     // write to a other file
-    newT =  CPACSTransformation(5.1,5.2,5.3, 2.1,2.2,2.3, 3.1,3.2,3.3);
+    newT =  MCPACSTransformation(5.1,5.2,5.3, 2.1,2.2,2.3, 3.1,3.2,3.3);
     modifer->setTransformation(wingT->getXPath(), newT);
     std::string otherFileName = outFileName;
     tree.writeToFile(otherFileName);
@@ -150,7 +150,7 @@ TEST_F(CPACSTreeTest, writeToFile){
 
 
     // if a invalid file is given
-    newT =  CPACSTransformation(6.1,6.2,6.3, 2.1,2.2,2.3, 3.1,3.2,3.3);
+    newT =  MCPACSTransformation(6.1,6.2,6.3, 2.1,2.2,2.3, 3.1,3.2,3.3);
     modifer->setTransformation(wingT->getXPath(), newT);
     otherFileName =  DATA_DIR + "fsafdsa/out-CPACSTresasdeTest-writeToFile.xml";
     EXPECT_THROW( tree.writeToFile(otherFileName), CreatorException ) ;

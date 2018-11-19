@@ -105,7 +105,7 @@ cpcr::Point cpcr::LineLineStrictIntersect(const cpcr::Point &p1, const cpcr::Poi
 
 
 
-cpcr::CPACSTransformation
+cpcr::MCPACSTransformation
 cpcr::TransformChord(const Eigen::Vector4d &p1, const Eigen::Vector4d &p2, const Eigen::Vector4d &p3,
                      const Eigen::Vector4d &p1P, const Eigen::Vector4d &p2P, const Eigen::Vector4d &p3P) {
 
@@ -217,7 +217,7 @@ cpcr::TransformChord(const Eigen::Vector4d &p1, const Eigen::Vector4d &p2, const
 
     // create the transformation
     Eigen::Vector3d r = (rotM.block<3,3>(0,0)).eulerAngles(0,1,2);
-    cpcr::CPACSTransformation transformation(
+    cpcr::MCPACSTransformation transformation(
             scalM(0,0),scalM(1,1),scalM(2,2),
             RadianToDegree(r(0)), RadianToDegree(r(1)), RadianToDegree(r(2)),
             transM(0,3),transM(1,3),transM(2,3)

@@ -24,7 +24,7 @@
 
 #include <CPACSCreatorLib/CPACSTreeItem.h>
 #include "ModificatorWidget.h"
-#include <CPACSCreatorLib/CPACSPositioning.h>
+#include <CPACSCreatorLib/MCPACSPositioning.h>
 #include <QDoubleSpinBox>
 #include <QLabel>
 #include <QVBoxLayout>
@@ -54,7 +54,7 @@ protected:
 private:
 
     // Here we stock the values of the cpacs files, we use them to detect changes
-    std::list<std::pair<cpcr::CPACSTreeItem*, cpcr::CPACSPositioning >> internals;
+    std::list<std::pair<cpcr::CPACSTreeItem*, cpcr::MCPACSPositioning >> internals;
 
     // These vectors contains the spinBoxes with the values that are displayed and can be modify
     std::vector<QDoubleSpinBox*> sweeps;

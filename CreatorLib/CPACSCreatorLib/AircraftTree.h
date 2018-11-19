@@ -240,7 +240,7 @@ namespace cpcr{
          * @param fusleageUID
          * @return
          */
-        CPACSTransformation determineFuselageTransformation(UID fuselageUID);
+        MCPACSTransformation determineFuselageTransformation(UID fuselageUID);
 
 
         /***
@@ -250,7 +250,7 @@ namespace cpcr{
          * @param newTransformation
          * @remark The function will delete all positionings and modify the section and the element transformations of this fuselage
         */
-        void setFuselageTransformationKeepGeometry(UID fuselageUID, const CPACSTransformation &newTransformation);
+        void setFuselageTransformationKeepGeometry(UID fuselageUID, const MCPACSTransformation &newTransformation);
 
 
 
@@ -438,7 +438,7 @@ namespace cpcr{
          * @param newTransformation
          * @remark used in standardization, delete all positionings, change section and elements transformation of the fuselage
          */
-        void setWingTransformationKeepGeometry(UID wingUID, const CPACSTransformation &newTransformation);
+        void setWingTransformationKeepGeometry(UID wingUID, const MCPACSTransformation &newTransformation);
 
 
 
@@ -454,7 +454,7 @@ namespace cpcr{
          * @param wing
          * @return The new standardized transformation
          */
-        CPACSTransformation determineWingTransformation(UID wingUID);
+        MCPACSTransformation determineWingTransformation(UID wingUID);
 
 
 
@@ -669,7 +669,7 @@ namespace cpcr{
          * @param wantedOriginP the wanted origin position for the element in the world coordinate system
          * @return CPACSTransform that the element should have to be at the wanted position
          */
-        CPACSTransformation getTransformToPlaceElementByTranslationAt(const UID &elementUid,
+        MCPACSTransformation getTransformToPlaceElementByTranslationAt(const UID &elementUid,
                                                                       const Eigen::Vector4d &wantedOriginP);
 
 
@@ -799,7 +799,7 @@ namespace cpcr{
         * @param newTransformation
         * @remark used in standardization
         */
-        void setWingOrFuselageTransformationKeepGeometry(UID wingOrFuselageUID, const CPACSTransformation &newTransformation);
+        void setWingOrFuselageTransformationKeepGeometry(UID wingOrFuselageUID, const MCPACSTransformation &newTransformation);
 
 
         /***

@@ -19,50 +19,50 @@
 // Created by makem on 11/04/18.
 //
 
-#include "CPACSPositioning.h"
+#include "MCPACSPositioning.h"
 #include "Helper.h"
 
-double cpcr::CPACSPositioning::getDihedralAngle() const {
+double cpcr::MCPACSPositioning::getDihedralAngle() const {
     return dihedralAngle;
 }
 
-void cpcr::CPACSPositioning::setDihedralAngle(double dihedralAngle) {
-    CPACSPositioning::dihedralAngle = dihedralAngle;
+void cpcr::MCPACSPositioning::setDihedralAngle(double dihedralAngle) {
+    MCPACSPositioning::dihedralAngle = dihedralAngle;
 }
 
-const std::string &cpcr::CPACSPositioning::getFromSectionUID() const {
+const std::string &cpcr::MCPACSPositioning::getFromSectionUID() const {
     return fromSectionUID;
 }
 
-void cpcr::CPACSPositioning::setFromSectionUID(const std::string &fromSectionUID) {
-    CPACSPositioning::fromSectionUID = fromSectionUID;
+void cpcr::MCPACSPositioning::setFromSectionUID(const std::string &fromSectionUID) {
+    MCPACSPositioning::fromSectionUID = fromSectionUID;
 }
 
-double cpcr::CPACSPositioning::getLength() const {
+double cpcr::MCPACSPositioning::getLength() const {
     return length;
 }
 
-void cpcr::CPACSPositioning::setLength(double length) {
-    CPACSPositioning::length = length;
+void cpcr::MCPACSPositioning::setLength(double length) {
+    MCPACSPositioning::length = length;
 }
 
-double cpcr::CPACSPositioning::getSweepAngle() const {
+double cpcr::MCPACSPositioning::getSweepAngle() const {
     return sweepAngle;
 }
 
-void cpcr::CPACSPositioning::setSweepAngle(double sweepAngle) {
-    CPACSPositioning::sweepAngle = sweepAngle;
+void cpcr::MCPACSPositioning::setSweepAngle(double sweepAngle) {
+    MCPACSPositioning::sweepAngle = sweepAngle;
 }
 
-const std::string &cpcr::CPACSPositioning::getToSectionUID() const {
+const std::string &cpcr::MCPACSPositioning::getToSectionUID() const {
     return toSectionUID;
 }
 
-void cpcr::CPACSPositioning::setToSectionUID(const std::string &toSectionUID) {
-    CPACSPositioning::toSectionUID = toSectionUID;
+void cpcr::MCPACSPositioning::setToSectionUID(const std::string &toSectionUID) {
+    MCPACSPositioning::toSectionUID = toSectionUID;
 }
 
-cpcr::CPACSPositioning::CPACSPositioning() {
+cpcr::MCPACSPositioning::MCPACSPositioning() {
 
     dihedralAngle = 0;
     fromSectionUID = "";
@@ -72,7 +72,7 @@ cpcr::CPACSPositioning::CPACSPositioning() {
 
 }
 
-cpcr::CPACSPositioning::CPACSPositioning(double dihedral, std::string from, double l, double sweep, std::string to) {
+cpcr::MCPACSPositioning::MCPACSPositioning(double dihedral, std::string from, double l, double sweep, std::string to) {
 
     dihedralAngle = dihedral;
     fromSectionUID = from;
@@ -82,7 +82,7 @@ cpcr::CPACSPositioning::CPACSPositioning(double dihedral, std::string from, doub
 
 }
 
-bool cpcr::CPACSPositioning::operator==(const cpcr::CPACSPositioning &other) {
+bool cpcr::MCPACSPositioning::operator==(const cpcr::MCPACSPositioning &other) {
 
     bool r = true;
     r = r && ( other.fromSectionUID == fromSectionUID);
@@ -97,7 +97,7 @@ bool cpcr::CPACSPositioning::operator==(const cpcr::CPACSPositioning &other) {
 
 
 
-Eigen::Matrix4d cpcr::CPACSPositioning::getPositioningAsMatrix() {
+Eigen::Matrix4d cpcr::MCPACSPositioning::getPositioningAsMatrix() {
 
     Eigen::Vector3d t = this->getPositioningAsTranslationVector();
     Eigen::Matrix4d mt;
@@ -112,7 +112,7 @@ Eigen::Matrix4d cpcr::CPACSPositioning::getPositioningAsMatrix() {
 }
 
 
-Eigen::Vector3d cpcr::CPACSPositioning::getPositioningAsTranslationVector() {
+Eigen::Vector3d cpcr::MCPACSPositioning::getPositioningAsTranslationVector() {
 
     Eigen::Vector3d v ;
     v << 0, length, 0;
@@ -129,7 +129,7 @@ Eigen::Vector3d cpcr::CPACSPositioning::getPositioningAsTranslationVector() {
 
 
 
-void cpcr::CPACSPositioning::setFromVector(Eigen::Vector3d v) {
+void cpcr::MCPACSPositioning::setFromVector(Eigen::Vector3d v) {
 
 
     length = v.norm();
@@ -160,7 +160,7 @@ void cpcr::CPACSPositioning::setFromVector(Eigen::Vector3d v) {
 
 }
 
-void cpcr::CPACSPositioning::roundValues() {
+void cpcr::MCPACSPositioning::roundValues() {
 
     // trick to get the special value to 90, 0 // todo generalize
     if( IsApprox(dihedralAngle, 0, 0.001)) {

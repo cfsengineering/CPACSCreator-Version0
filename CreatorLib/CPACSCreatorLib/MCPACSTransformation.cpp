@@ -20,11 +20,11 @@
 //
 
 #include "easylogging++.h"
-#include "CPACSTransformation.h"
+#include "MCPACSTransformation.h"
 #include "Helper.h"
 #include "CreatorException.h"
 
-cpcr::CPACSTransformation::CPACSTransformation() {
+cpcr::MCPACSTransformation::MCPACSTransformation() {
 
     s = Point(1,1,1);
     r = Point(0,0,0);
@@ -33,14 +33,14 @@ cpcr::CPACSTransformation::CPACSTransformation() {
 
 }
 
-cpcr::CPACSTransformation::CPACSTransformation(cpcr::Point scaling, cpcr::Point rotation, cpcr::Point translation) {
+cpcr::MCPACSTransformation::MCPACSTransformation(cpcr::Point scaling, cpcr::Point rotation, cpcr::Point translation) {
     s = scaling;
     r = rotation;
     t = translation;
 
 }
 
-cpcr::CPACSTransformation::CPACSTransformation(double sx, double sy, double sz,
+cpcr::MCPACSTransformation::MCPACSTransformation(double sx, double sy, double sz,
                                                double rx, double ry, double rz,
                                                double tx, double ty, double tz) {
 
@@ -52,7 +52,7 @@ cpcr::CPACSTransformation::CPACSTransformation(double sx, double sy, double sz,
 
 }
 
-bool cpcr::CPACSTransformation::operator==(const cpcr::CPACSTransformation &other) {
+bool cpcr::MCPACSTransformation::operator==(const cpcr::MCPACSTransformation &other) {
     return ( s == other.s && r == other.r && t == other.t );
 }
 
@@ -62,7 +62,7 @@ bool cpcr::CPACSTransformation::operator==(const cpcr::CPACSTransformation &othe
  * We first apply the scale, then rotation, then the translation
  * The rotation is done first around x axis, then y axis, then z axis
  */
-Eigen::Matrix4d cpcr::CPACSTransformation::getTransformationAsMatrix() const {
+Eigen::Matrix4d cpcr::MCPACSTransformation::getTransformationAsMatrix() const {
 
 
     Eigen::Matrix4d r, ms, mr, mt;
@@ -76,7 +76,7 @@ Eigen::Matrix4d cpcr::CPACSTransformation::getTransformationAsMatrix() const {
     return r;
 }
 
-Eigen::Quaterniond cpcr::CPACSTransformation::getRotationAsQuaternion() const {
+Eigen::Quaterniond cpcr::MCPACSTransformation::getRotationAsQuaternion() const {
 
     Eigen::Quaterniond q ;
 
@@ -88,7 +88,7 @@ Eigen::Quaterniond cpcr::CPACSTransformation::getRotationAsQuaternion() const {
     return q;
 }
 
-Eigen::Matrix4d cpcr::CPACSTransformation::getScalingAsMatrix() const{
+Eigen::Matrix4d cpcr::MCPACSTransformation::getScalingAsMatrix() const{
 
     Eigen::Matrix4d ms;
     ms = ms.Identity();
@@ -101,7 +101,7 @@ Eigen::Matrix4d cpcr::CPACSTransformation::getScalingAsMatrix() const{
 }
 
 
-Eigen::Matrix4d cpcr::CPACSTransformation::getRotationAsMatrix() const{
+Eigen::Matrix4d cpcr::MCPACSTransformation::getRotationAsMatrix() const{
 
     Eigen::Matrix4d mr;
     mr = mr.Identity();
@@ -113,7 +113,7 @@ Eigen::Matrix4d cpcr::CPACSTransformation::getRotationAsMatrix() const{
     return mr;
 }
 
-Eigen::Matrix4d cpcr::CPACSTransformation::getTranslationAsMatrix() const{
+Eigen::Matrix4d cpcr::MCPACSTransformation::getTranslationAsMatrix() const{
 
     Eigen::Matrix4d mt;
     mt = mt.Identity();
@@ -125,7 +125,7 @@ Eigen::Matrix4d cpcr::CPACSTransformation::getTranslationAsMatrix() const{
     return mt;
 }
 
-cpcr::CPACSTransformation::CPACSTransformation(const Eigen::Matrix4d &inMatrix) {
+cpcr::MCPACSTransformation::MCPACSTransformation(const Eigen::Matrix4d &inMatrix) {
 
     Eigen::Transform<double, 3, Eigen::Affine> tempEigenTransform(inMatrix);
     t.x = tempEigenTransform.translation()(0);
@@ -156,7 +156,7 @@ cpcr::CPACSTransformation::CPACSTransformation(const Eigen::Matrix4d &inMatrix) 
 
 }
 
-bool cpcr::CPACSTransformation::isApprox(const cpcr::CPACSTransformation &other, double precision) {
+bool cpcr::MCPACSTransformation::isApprox(const cpcr::MCPACSTransformation &other, double precision) {
 
     return other.getTranslationAsMatrix().isApprox( this->getTransformationAsMatrix() , precision) ;
 

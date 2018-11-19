@@ -215,11 +215,11 @@ namespace cpcr {
 
     }
 
-    CPACSTransformation CPACSFile::getTransformation(UniqueXPath xpathObj) {
+    MCPACSTransformation CPACSFile::getTransformation(UniqueXPath xpathObj) {
 
         std::string xpath = xpathObj.toString();
 
-        CPACSTransformation value;
+        MCPACSTransformation value;
 
         if( ! isValidWithWarning() ){
             return value;
@@ -240,14 +240,14 @@ namespace cpcr {
         tempXpath = xpath + "/translation";
         Point t = getPoint(tempXpath);
 
-        value = CPACSTransformation(s,r,t);
+        value = MCPACSTransformation(s,r,t);
         return value;
     }
 
 
 
 
-    void CPACSFile::setTransformation(UniqueXPath xpathObj, const CPACSTransformation& transform) {
+    void CPACSFile::setTransformation(UniqueXPath xpathObj, const MCPACSTransformation& transform) {
 
         std::string xpath = xpathObj.toString();
 
@@ -277,7 +277,7 @@ namespace cpcr {
 
 
 
-    void CPACSFile::createTransformation(UniqueXPath target, const CPACSTransformation &transform) {
+    void CPACSFile::createTransformation(UniqueXPath target, const MCPACSTransformation &transform) {
 
 
         if( ! isValidWithWarning() ){
@@ -313,11 +313,11 @@ namespace cpcr {
 
 
 
-    CPACSPositioning CPACSFile::getPositioning(UniqueXPath xpathObj) {
+    MCPACSPositioning CPACSFile::getPositioning(UniqueXPath xpathObj) {
 
         std::string xpath = xpathObj.toString();
 
-        CPACSPositioning pos ;
+        MCPACSPositioning pos ;
 
         std::string tempXpath = xpath + "/dihedralAngle";
         pos.setDihedralAngle( retrieve<double>(tempXpath, 0));
@@ -339,7 +339,7 @@ namespace cpcr {
     }
 
 
-    void CPACSFile::setPositioning(UniqueXPath xpathObj, const CPACSPositioning &positioning) {
+    void CPACSFile::setPositioning(UniqueXPath xpathObj, const MCPACSPositioning &positioning) {
 
         std::string xpath  = xpathObj.toString();
 
@@ -374,7 +374,7 @@ namespace cpcr {
     }
 
 
-    UniqueXPath CPACSFile::createPositioning(UniqueXPath target, const CPACSPositioning &positioning) {
+    UniqueXPath CPACSFile::createPositioning(UniqueXPath target, const MCPACSPositioning &positioning) {
 
 
         if( ! isValidWithWarning() ){
@@ -722,7 +722,7 @@ namespace cpcr {
         tixi::TixiCreateElement(tixiHandle, newWingX.toString() + "/positionings" );
         tixi::TixiCreateElement(tixiHandle, newWingX.toString() + "/sections" );
         tixi::TixiCreateElement(tixiHandle, newWingX.toString() + "/segments" );
-        this->createTransformation( newWingX.toString() + "/transformation", CPACSTransformation() );
+        this->createTransformation( newWingX.toString() + "/transformation", MCPACSTransformation() );
         tixi::TixiSaveAttribute(tixiHandle, newWingX.toString() + "/transformation", "uID", wingUID + "_transformation1" );
 
 
@@ -807,7 +807,7 @@ namespace cpcr {
 
         tixi::TixiCreateElement(tixiHandle, newSectionX.toString() + "/name" );
 
-        this->createTransformation( newSectionX.toString() + "/transformation", CPACSTransformation());
+        this->createTransformation( newSectionX.toString() + "/transformation", MCPACSTransformation());
 
         tixi::TixiCreateElement(tixiHandle, newSectionX.toString() + "/elements" );
 
@@ -848,7 +848,7 @@ namespace cpcr {
 
         tixi::TixiCreateElement(tixiHandle, newSegmentX.toString() + "/name" );
 
-        this->createTransformation( newSegmentX.toString() + "/transformation", CPACSTransformation());
+        this->createTransformation( newSegmentX.toString() + "/transformation", MCPACSTransformation());
 
     }
 
@@ -953,7 +953,7 @@ namespace cpcr {
 
         tixi::TixiCreateElement(tixiHandle, newSegmentX.toString() + "/name" );
 
-        this->createTransformation( newSegmentX.toString() + "/transformation", CPACSTransformation());
+        this->createTransformation( newSegmentX.toString() + "/transformation", MCPACSTransformation());
     }
 
 

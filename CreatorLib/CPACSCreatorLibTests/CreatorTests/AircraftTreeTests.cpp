@@ -332,20 +332,20 @@ TEST_F(AircraftTreeTest, getTransformToPlaceElementAt ){
     wantedP << 30,14,3, 1;
     UID elementToPlace = "Wing_section1_element1";
 
-    CPACSTransformation e(1,1,1,0,0,0,30,14,-2);
-    CPACSTransformation t = tree.getTransformToPlaceElementByTranslationAt(elementToPlace, wantedP);
+    MCPACSTransformation e(1,1,1,0,0,0,30,14,-2);
+    MCPACSTransformation t = tree.getTransformToPlaceElementByTranslationAt(elementToPlace, wantedP);
     EXPECT_TRUE( t == e);
 
     wantedP << 0,10,0, 1;
     elementToPlace = "Wing_section2_element1";
-    e = CPACSTransformation(1,1,1,0,0,0,0,7.0710678118654,-7.0710678118654);
+    e = MCPACSTransformation(1,1,1,0,0,0,0,7.0710678118654,-7.0710678118654);
     t = tree.getTransformToPlaceElementByTranslationAt(elementToPlace, wantedP);
     EXPECT_TRUE( t.getTransformationAsMatrix().isApprox(e.getTransformationAsMatrix(), 0.0001) );
 
 
     wantedP << 0,0,0, 1;
     elementToPlace = "Wing_section3_element1";
-    e = CPACSTransformation(1,1,1,0,0,0,4.22-1,7.84-1,4.53-0);
+    e = MCPACSTransformation(1,1,1,0,0,0,4.22-1,7.84-1,4.53-0);
     t = tree.getTransformToPlaceElementByTranslationAt(elementToPlace, wantedP);
     EXPECT_TRUE( t.getTransformationAsMatrix().isApprox(e.getTransformationAsMatrix(), 0.01) );
 
@@ -359,7 +359,7 @@ TEST_F(AircraftTreeTest, getTransformationChainForOneElement){
 
     setVariables("AircraftTreeTest6-positionings.xml");
 
-    CPACSTransformation identity, expected;
+    MCPACSTransformation identity, expected;
 
 
     // Case 1 (basic)
@@ -373,16 +373,16 @@ TEST_F(AircraftTreeTest, getTransformationChainForOneElement){
     EXPECT_TRUE(r[3].second.isApprox( identity.getTransformationAsMatrix()) );
 
 
-    expected = CPACSTransformation(1,1,1,0,0,0,0,3.3,0);
+    expected = MCPACSTransformation(1,1,1,0,0,0,0,3.3,0);
     EXPECT_EQ(r[2].first->getUid(), "pos1");
     EXPECT_TRUE(r[2].second.isApprox( expected.getTransformationAsMatrix()) );
 
 
-    expected = CPACSTransformation(0.5,1,1,0,0,0,0,0,0);
+    expected = MCPACSTransformation(0.5,1,1,0,0,0,0,0,0);
     EXPECT_EQ(r[1].first->getUid(), "Wing_section2_transformation1");
     EXPECT_TRUE(r[1].second.isApprox( expected.getTransformationAsMatrix()) );
 
-    expected = CPACSTransformation(2,1,1,0,0,0,0,3,0);
+    expected = MCPACSTransformation(2,1,1,0,0,0,0,3,0);
     EXPECT_EQ(r[0].first->getUid(), "Wing_section2_element1_transformation1");
     EXPECT_TRUE(r[0].second.isApprox( expected.getTransformationAsMatrix()) );
 
@@ -401,11 +401,11 @@ TEST_F(AircraftTreeTest, getTransformationChainForOneElement){
     EXPECT_TRUE(r[2].second.isApprox( identity.getTransformationAsMatrix()) );
 
 
-    expected = CPACSTransformation(1,1,1,0,0,0,0,-0.5,0);
+    expected = MCPACSTransformation(1,1,1,0,0,0,0,-0.5,0);
     EXPECT_EQ(r[1].first->getUid(), "Wing_section1_transformation1");
     EXPECT_TRUE(r[1].second.isApprox( expected.getTransformationAsMatrix()) );
 
-    expected = CPACSTransformation(2.2,1,1,0,0,0,0,0,0);
+    expected = MCPACSTransformation(2.2,1,1,0,0,0,0,0,0);
     EXPECT_EQ(r[0].first->getUid(), "Wing_section1_element1_transformation1");
     EXPECT_TRUE(r[0].second.isApprox( expected.getTransformationAsMatrix()) );
 
@@ -421,7 +421,7 @@ TEST_F(AircraftTreeTest, getTransformationChainForOneElement){
     EXPECT_EQ(r[3].first->getUid(), "Wing2_transformation1");
     EXPECT_TRUE(r[3].second.isApprox( identity.getTransformationAsMatrix()) );
 
-    expected = CPACSTransformation(1,1,1,0,0,0,4.22,7.84,4.53);
+    expected = MCPACSTransformation(1,1,1,0,0,0,4.22,7.84,4.53);
     EXPECT_EQ(r[2].first->getUid(), "Wing2_positioning1" );
     EXPECT_TRUE(r[2].second.isApprox( expected.getTransformationAsMatrix(), 0.05) );
 
@@ -440,7 +440,7 @@ TEST_F(AircraftTreeTest, getTransformationChainForOneElement){
     EXPECT_EQ(r[3].first->getUid(), "Wing2_transformation1");
     EXPECT_TRUE(r[3].second.isApprox( identity.getTransformationAsMatrix()) );
 
-    expected = CPACSTransformation(1,1,1,0,0,0,7.07,5.42,4.54);
+    expected = MCPACSTransformation(1,1,1,0,0,0,7.07,5.42,4.54);
     EXPECT_EQ(r[2].first->getUid(), "Wing2_positioning2");
     EXPECT_TRUE(r[2].second.isApprox( expected.getTransformationAsMatrix(), 0.01) );
 
@@ -459,7 +459,7 @@ TEST_F(AircraftTreeTest, getTransformationChainForOneElement){
     EXPECT_EQ(r[3].first->getUid(), "Wing2_transformation1");
     EXPECT_TRUE(r[3].second.isApprox( identity.getTransformationAsMatrix()) );
 
-    expected = CPACSTransformation(1,1,1,0,0,0,11.29,13.25,9.07);
+    expected = MCPACSTransformation(1,1,1,0,0,0,11.29,13.25,9.07);
     EXPECT_EQ(r[2].first->getUid(), "Wing2_positioning3");
     EXPECT_TRUE(r[2].second.isApprox( expected.getTransformationAsMatrix(), 0.02) );
 
@@ -480,11 +480,11 @@ TEST_F(AircraftTreeTest, getTransformationChainForOneElement){
 
     EXPECT_EQ(r.size(), 4);
 
-    expected = CPACSTransformation(1,0.5,0.5,0,0,0,0,0,0);
+    expected = MCPACSTransformation(1,0.5,0.5,0,0,0,0,0,0);
     EXPECT_EQ(r[3].first->getUid(), "SimpleFuselage_transformation1");
     EXPECT_TRUE(r[3].second.isApprox( expected.getTransformationAsMatrix(), 0.001) );
 
-    expected = CPACSTransformation(1,1,1,0,0,0,-0.5,0,0);
+    expected = MCPACSTransformation(1,1,1,0,0,0,-0.5,0,0);
     EXPECT_EQ(r[2].first->getUid(), "D150_Fuselage_1Positioning1ID");
     EXPECT_TRUE(r[2].second.isApprox( expected.getTransformationAsMatrix(), 0.02) );
 
@@ -501,18 +501,18 @@ TEST_F(AircraftTreeTest, getTransformationChainForOneElement){
 
     EXPECT_EQ(r.size(), 4);
 
-    expected = CPACSTransformation(1,0.5,0.5,0,0,0,0,3,0);
+    expected = MCPACSTransformation(1,0.5,0.5,0,0,0,0,3,0);
     EXPECT_EQ(r[3].first->getUid(), "FuselageUnconventionalOrdering_transformation1");
     EXPECT_TRUE(r[3].second.isApprox( expected.getTransformationAsMatrix(), 0.001) );
 
-    expected = CPACSTransformation(1,1,1,0,0,0,1.5,0,0);
+    expected = MCPACSTransformation(1,1,1,0,0,0,1.5,0,0);
     EXPECT_EQ(r[2].first->getUid(), "D150_Fuselage_2Positioning3ID");
     EXPECT_TRUE(r[2].second.isApprox( expected.getTransformationAsMatrix(), 0.02) );
 
     EXPECT_EQ(r[1].first->getUid(), "D150_Fuselage_2Section3ID_transformation1");
     EXPECT_TRUE(r[1].second.isApprox( identity.getTransformationAsMatrix()) );
 
-    expected = CPACSTransformation(1,1,1,0,0,0,0.5,0,0);
+    expected = MCPACSTransformation(1,1,1,0,0,0,0.5,0,0);
     EXPECT_EQ(r[0].first->getUid(), "D150_Fuselage_2Section3IDElement1_transformation1");
     EXPECT_TRUE(r[0].second.isApprox( expected.getTransformationAsMatrix()) );
 
@@ -1481,7 +1481,7 @@ TEST_F(AircraftTreeTest, setWingTransformation ) {
     std::map<cpcr::UID, Eigen::Vector4d> tEsB = tree.getChordPointsOfElementsInWing(wingUID, 1);
 
 
-    CPACSTransformation trans;
+    MCPACSTransformation trans;
     trans.setRotation(Point(0,45,0));
     trans.setTranslation(Point(0,5,0));
     trans.setScaling(Point(2,2,2));
@@ -1499,7 +1499,7 @@ TEST_F(AircraftTreeTest, setWingTransformation ) {
     }
 
 
-    CPACSTransformation dT = tree.determineWingTransformation(wingUID);
+    MCPACSTransformation dT = tree.determineWingTransformation(wingUID);
     EXPECT_TRUE(dT.getRotation() == Point(0,0,0));
     EXPECT_TRUE(dT.getScaling() == Point(1,1,1));
     EXPECT_TRUE(dT.getTranslation() == Point(12.745585588751897,0,-1.1362781709599128));
@@ -1608,12 +1608,12 @@ TEST_F(AircraftTreeTest, setWingTransformation ) {
 
     setVariables("TestCases/boxwing2.xml");
     wingUID = "MainWing";
-    CPACSTransformation idealT = tree.determineWingTransformation(wingUID);
+    MCPACSTransformation idealT = tree.determineWingTransformation(wingUID);
     tree.setWingTransformationKeepGeometry(wingUID, idealT);
     Eigen::Vector3d expected ;
     expected << 9,0,2;
     EXPECT_TRUE(idealT.getTranslation().toEigen().isApprox(expected, 0.1) );
-    CPACSTransformation idealT3 = tree.determineWingTransformation(wingUID);
+    MCPACSTransformation idealT3 = tree.determineWingTransformation(wingUID);
     EXPECT_TRUE(idealT.getTranslation().toEigen().isApprox(expected, 0.1) );
 
 }
@@ -1648,7 +1648,7 @@ TEST_F(AircraftTreeTest, positioningsStandardization  ) {
 
 
     // temp varaibles
-   CPACSTransformation newWingT;
+   MCPACSTransformation newWingT;
     std::string filename;
     std::string wingUID;
 
@@ -1695,7 +1695,7 @@ TEST_F(AircraftTreeTest, completeNormalization  ) {
 
     // temp varaibles
 
-    CPACSTransformation newWingT;
+    MCPACSTransformation newWingT;
     std::string filename;
     std::string wingUID;
 
@@ -2761,7 +2761,7 @@ TEST_F(AircraftTreeTest, fuselageTransformation){
 
     setVariables("simple-aircraft-fuselages.xml");
     UID fuselageUID;
-    CPACSTransformation ideal, expected;
+    MCPACSTransformation ideal, expected;
     bool isStd;
 
     expected.setTranslation( Point(-0.5,0,-0.002) ) ;

@@ -27,14 +27,14 @@
 
 namespace  cpcr{
 
-    class CPACSTransformation {
+    class MCPACSTransformation {
 
     public:
 
-        CPACSTransformation();
-        CPACSTransformation(Point scaling , Point rotation, Point translation);
-        CPACSTransformation(double sx, double sy, double sz, double rx, double ry, double rz, double tx, double ty, double tz);
-        CPACSTransformation(const Eigen::Matrix4d& inMatrix);
+        MCPACSTransformation();
+        MCPACSTransformation(Point scaling , Point rotation, Point translation);
+        MCPACSTransformation(double sx, double sy, double sz, double rx, double ry, double rz, double tx, double ty, double tz);
+        MCPACSTransformation(const Eigen::Matrix4d& inMatrix);
 
 
 
@@ -56,9 +56,9 @@ namespace  cpcr{
 
         Eigen::Matrix4d getTransformationAsMatrix() const;   // not implemented
 
-        bool operator==(const CPACSTransformation &other) ;
+        bool operator==(const MCPACSTransformation &other) ;
 
-        bool  isApprox( const CPACSTransformation &other , double precision = 0.0001);
+        bool  isApprox( const MCPACSTransformation &other , double precision = 0.0001);
         Eigen::Quaterniond getRotationAsQuaternion() const ;
 
 

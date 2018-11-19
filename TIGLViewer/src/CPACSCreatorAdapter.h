@@ -41,8 +41,8 @@ public:
 
     CPACSCreatorAdapter(ProfilesDBManager* profilesDBManager );
 
-    void setTransformation(cpcr::CPACSTreeItem *item, cpcr::CPACSTransformation transformation);
-    cpcr::CPACSTransformation getTransformation(cpcr::CPACSTreeItem *item );
+    void setTransformation(cpcr::CPACSTreeItem *item, cpcr::MCPACSTransformation transformation);
+    cpcr::MCPACSTransformation getTransformation(cpcr::CPACSTreeItem *item );
 
     double getSweepAngle(cpcr::CPACSTreeItem * item, double chordPercent);
 
@@ -51,8 +51,8 @@ public:
     double getDihedralAngle(cpcr::CPACSTreeItem * item, double chordPercent);
     void setDihedralAngle(cpcr::CPACSTreeItem *item, double angle, double chordPercent);
 
-    std::list<std::pair<cpcr::CPACSTreeItem*, cpcr::CPACSPositioning >> getPositionings(cpcr::CPACSTreeItem* item);
-    void setPositioning(cpcr::CPACSTreeItem* item, cpcr::CPACSPositioning );
+    std::list<std::pair<cpcr::CPACSTreeItem*, cpcr::MCPACSPositioning >> getPositionings(cpcr::CPACSTreeItem* item);
+    void setPositioning(cpcr::CPACSTreeItem* item, cpcr::MCPACSPositioning );
 
     // set the anchor values passed as argument
     void getAnchorValues(cpcr::CPACSTreeItem* item, double& x, double& y, double& z);

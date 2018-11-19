@@ -21,7 +21,7 @@
 
 
 #include "gtest/gtest.h"
-#include "CPACSPositioning.h"
+#include "MCPACSPositioning.h"
 #include "Helper.h"
 
 
@@ -36,7 +36,7 @@ class CPACSPositioningTest : public ::testing::Test {
 
 TEST_F(CPACSPositioningTest, getset){
 
-    cpcr::CPACSPositioning pos;
+    cpcr::MCPACSPositioning pos;
 
     EXPECT_EQ( pos.getDihedralAngle() , 0 );
     EXPECT_EQ(pos.getFromSectionUID(), "");
@@ -57,7 +57,7 @@ TEST_F(CPACSPositioningTest, getset){
     EXPECT_EQ(pos.getToSectionUID(), "cc");
 
 
-    cpcr::CPACSPositioning pos2(23,"aa", 3.3, 34,"bb") ;
+    cpcr::MCPACSPositioning pos2(23,"aa", 3.3, 34,"bb") ;
 
     EXPECT_EQ(pos2.getDihedralAngle() ,23 );
     EXPECT_EQ(pos2.getFromSectionUID(), "aa");
@@ -71,8 +71,8 @@ TEST_F(CPACSPositioningTest, getset){
 
 TEST_F(CPACSPositioningTest, equalequal){
 
-    cpcr::CPACSPositioning posA;
-    cpcr::CPACSPositioning posB;
+    cpcr::MCPACSPositioning posA;
+    cpcr::MCPACSPositioning posB;
 
     EXPECT_TRUE( posA == posB);
 
@@ -121,7 +121,7 @@ TEST_F(CPACSPositioningTest, equalequal){
 TEST_F(CPACSPositioningTest, getPositioningAsTranslationVector){
 
 
-    CPACSPositioning p ;
+    MCPACSPositioning p ;
 
     Eigen::Vector3d r, e ;
 
@@ -130,24 +130,24 @@ TEST_F(CPACSPositioningTest, getPositioningAsTranslationVector){
     // then the dihedral angle rotation is done around the X original axis
     // remark that this transformation are done in the world coordinate system but then it's transformed by the wing
     // coordinate system
-    p = CPACSPositioning(30, "", 10, 45, "");
+    p = MCPACSPositioning(30, "", 10, 45, "");
     e << 7.07,6.13,3.35;
     r = p.getPositioningAsTranslationVector();
     EXPECT_TRUE(r.isApprox(e, 0.02));
 
-    p = CPACSPositioning(0, "",9 , 0, "");
+    p = MCPACSPositioning(0, "",9 , 0, "");
     e << 0,9,0;
     r = p.getPositioningAsTranslationVector();
     EXPECT_TRUE(r.isApprox(e, 0.02));
 
 
-    p = CPACSPositioning(30, "",1 , 0, "");
+    p = MCPACSPositioning(30, "",1 , 0, "");
     e << 0,0.86,0.5;
     r = p.getPositioningAsTranslationVector();
     EXPECT_TRUE(r.isApprox(e, 0.02));
 
 
-    p = CPACSPositioning(0, "",1 , 30, "");
+    p = MCPACSPositioning(0, "",1 , 30, "");
     e << 0.5, 0.86, 0;
     r = p.getPositioningAsTranslationVector();
     EXPECT_TRUE(r.isApprox(e, 0.02));
@@ -162,11 +162,11 @@ TEST_F(CPACSPositioningTest, getPositioningAsTranslationVector){
 TEST_F(CPACSPositioningTest, getPositioningAsMatrix){
 
 
-    CPACSPositioning p ;
+    MCPACSPositioning p ;
 
     Eigen::Matrix4d r,e;
 
-    p = CPACSPositioning(30, "", 10, 45, "");
+    p = MCPACSPositioning(30, "", 10, 45, "");
     r = Eigen::Matrix4d::Identity();
     e = Eigen::Matrix4d::Identity();
     e.row(0).col(3) << 7.07;
@@ -187,7 +187,7 @@ TEST_F(CPACSPositioningTest, getPositioningAsMatrix){
 TEST_F(CPACSPositioningTest, setFromVector) {
 
 
-    CPACSPositioning p ;
+    MCPACSPositioning p ;
 
     Eigen::Vector3d v;
     v << 1,1,0;

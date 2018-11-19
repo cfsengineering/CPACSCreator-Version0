@@ -192,10 +192,10 @@ TEST_F(CPACSFileTest, setPoint) {
 
 TEST_F(CPACSFileTest, getSetTransformation ){
 
-    cpcr::CPACSTransformation defaultT ;
+    cpcr::MCPACSTransformation defaultT ;
 
     // not opened cpacsFile
-    cpcr::CPACSTransformation r = cpacsFile.getTransformation(UniqueXPath("ss"));
+    cpcr::MCPACSTransformation r = cpacsFile.getTransformation(UniqueXPath("ss"));
     EXPECT_TRUE( r == defaultT);
 
 
@@ -206,7 +206,7 @@ TEST_F(CPACSFileTest, getSetTransformation ){
     EXPECT_TRUE( r == defaultT );
 
     std::string xpath = "/cpacs/vehicles/aircraft/model[@uID=\"model\"]/fuselages/fuselage/transformation";
-    cpcr::CPACSTransformation t1(cpcr::Point(1,1.1,1.11),cpcr::Point(0,-2,0),cpcr::Point(13.1,13.2,13.3) );
+    cpcr::MCPACSTransformation t1(cpcr::Point(1,1.1,1.11),cpcr::Point(0,-2,0),cpcr::Point(13.1,13.2,13.3) );
     r = cpacsFile.getTransformation(xpath);
     EXPECT_TRUE(r == t1);
 
@@ -216,11 +216,11 @@ TEST_F(CPACSFileTest, getSetTransformation ){
 
     xpath = "/cpacs/vehicles/aircraft/model[@uID=\"model\"]/fuselages/fuselage/transformation";
 
-    cpcr::CPACSTransformation original = cpacsFile.getTransformation(xpath);
+    cpcr::MCPACSTransformation original = cpacsFile.getTransformation(xpath);
 
-    cpcr::CPACSTransformation newTransform( 1.1, 1.2, 1.3 ,2.1, 2.2, 2.3, 3.1,3.2, 3.3 );
+    cpcr::MCPACSTransformation newTransform( 1.1, 1.2, 1.3 ,2.1, 2.2, 2.3, 3.1,3.2, 3.3 );
     cpacsFile.setTransformation(xpath, newTransform);
-    cpcr::CPACSTransformation result = cpacsFile.getTransformation(xpath);
+    cpcr::MCPACSTransformation result = cpacsFile.getTransformation(xpath);
     EXPECT_TRUE(result == newTransform);
 
 
@@ -228,7 +228,7 @@ TEST_F(CPACSFileTest, getSetTransformation ){
     cpacsFile.save();
     // open with a other cpacsFileModifier and check the value
     cpacsFile2.open(DATA_DIR + "CPACSFileTest-getSetTransformation.cpacs.xml");
-    cpcr::CPACSTransformation t2 = cpacsFile2.getTransformation(xpath);
+    cpcr::MCPACSTransformation t2 = cpacsFile2.getTransformation(xpath);
     EXPECT_TRUE( t2 == newTransform);
     cpacsFile2.close();
 
@@ -250,9 +250,9 @@ TEST_F(CPACSFileTest, getPositioning){
     std::string baseXpath = "/cpacs/vehicles/aircraft/model[1]/";
     std::string xpath;
 
-    cpcr::CPACSPositioning d ;  // default
-    cpcr::CPACSPositioning r ;  // result
-    cpcr::CPACSPositioning temp;
+    cpcr::MCPACSPositioning d ;  // default
+    cpcr::MCPACSPositioning r ;  // result
+    cpcr::MCPACSPositioning temp;
 
 
     r = cpacsFile.getPositioning(UniqueXPath("fafas"));  // should return the default positioning with a warning
@@ -262,7 +262,7 @@ TEST_F(CPACSFileTest, getPositioning){
     r = cpacsFile.getPositioning(UniqueXPath("fafas"));  // should return the default positioning with a warning
     EXPECT_TRUE( r == d);
 
-    temp = cpcr::CPACSPositioning(-1.2, "", 0.9, 90, "D150_VAMP_FL1_Sec1");
+    temp = cpcr::MCPACSPositioning(-1.2, "", 0.9, 90, "D150_VAMP_FL1_Sec1");
     xpath = baseXpath + "fuselages/fuselage[1]/positionings/positioning[1]";
     r = cpacsFile.getPositioning(xpath);
     EXPECT_TRUE(r == temp);
@@ -278,20 +278,20 @@ TEST_F(CPACSFileTest, setPositioning){
     std::string baseXpath = "/cpacs/vehicles/aircraft/model[1]/";
     std::string xpath;
 
-    cpcr::CPACSPositioning d ;  // default
-    cpcr::CPACSPositioning r ;  // result
-    cpcr::CPACSPositioning temp;
-    cpcr::CPACSPositioning temp2;
-    cpcr::CPACSPositioning original;
+    cpcr::MCPACSPositioning d ;  // default
+    cpcr::MCPACSPositioning r ;  // result
+    cpcr::MCPACSPositioning temp;
+    cpcr::MCPACSPositioning temp2;
+    cpcr::MCPACSPositioning original;
 
 
     cpacsFile.open(fileName);
-    temp = cpcr::CPACSPositioning(-1.2, "", 0.9, 90, "D150_VAMP_FL1_Sec1");
+    temp = cpcr::MCPACSPositioning(-1.2, "", 0.9, 90, "D150_VAMP_FL1_Sec1");
     xpath = baseXpath + "fuselages/fuselage[1]/positionings/positioning[1]";
     r = cpacsFile.getPositioning(xpath);
     EXPECT_TRUE(r == temp);
 
-    temp2 = cpcr::CPACSPositioning(-1.3, "3", 0.93, 903, "D1530_VAMP_FL1_Sec1");
+    temp2 = cpcr::MCPACSPositioning(-1.3, "3", 0.93, 903, "D1530_VAMP_FL1_Sec1");
     xpath = baseXpath + "fuselages/fuselage[1]/positionings/positioning[1]";
     original = cpacsFile.getPositioning(xpath);
     cpacsFile.setPositioning(xpath, temp2);
@@ -318,7 +318,7 @@ TEST_F(CPACSFileTest, setPositioning){
     EXPECT_TRUE( r == temp2);
 
     // case where the optional element fromSectionUID exist and we remove it
-    temp2 = cpcr::CPACSPositioning(-1.3, "", 0.93, 903, "D1530_VAMP_FL1_Sec1");
+    temp2 = cpcr::MCPACSPositioning(-1.3, "", 0.93, 903, "D1530_VAMP_FL1_Sec1");
     cpacsFile.setPositioning(xpath, temp2);
     r = cpacsFile.getPositioning(xpath);
     EXPECT_TRUE( r == temp2);
@@ -495,21 +495,21 @@ TEST_F(CPACSFileTest, create ){
 
     // create transformation
 
-    CPACSTransformation t(1.1,1.2,1.3, 2.1,2.2,2.2,3.1,3.2,3.3);
+    MCPACSTransformation t(1.1,1.2,1.3, 2.1,2.2,2.2,3.1,3.2,3.3);
     x.setXPath(baseXpath + "fuselages/transformation");
     cpacsFile.createTransformation(x, t);
     cpacsFile.save();
-    CPACSTransformation rt = cpacsFile.getTransformation(x);
+    MCPACSTransformation rt = cpacsFile.getTransformation(x);
     EXPECT_TRUE(rt == t);
 
 
     // create postioning
 
-    CPACSPositioning pos(1, "a", 3, 45, "b" );
+    MCPACSPositioning pos(1, "a", 3, 45, "b" );
     x.setXPath(baseXpath + "wings/wing[1]/positionings/positioning[2]");
     cpacsFile.createPositioning(x , pos);
     cpacsFile.save();
-    CPACSPositioning rpos = cpacsFile.getPositioning(x);
+    MCPACSPositioning rpos = cpacsFile.getPositioning(x);
     EXPECT_TRUE(rpos == pos);
 
     // create segment

@@ -24,7 +24,7 @@
 
 #include "ModificatorWidget.h"
 #include "CPACSCreatorLib/CPACSTreeItem.h"
-#include "CPACSCreatorLib/CPACSTransformation.h"
+#include "CPACSCreatorLib/MCPACSTransformation.h"
 #include "CPACSCreatorLib/Point.h"
 #include <QDoubleSpinBox>
 
@@ -64,7 +64,7 @@ private:
     QDoubleSpinBox* boxTY;
     QDoubleSpinBox* boxTZ;
 
-    cpcr::CPACSTransformation transformation;
+    cpcr::MCPACSTransformation transformation;
 
 
 };

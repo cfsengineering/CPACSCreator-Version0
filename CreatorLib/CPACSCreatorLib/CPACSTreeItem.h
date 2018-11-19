@@ -34,7 +34,7 @@
 #include "Eigen/Dense"
 
 #include "CPACSFile.h"
-#include "CPACSTransformation.h"
+#include "MCPACSTransformation.h"
 #include "UniqueXPath.h"
 
 
@@ -95,7 +95,7 @@ namespace cpcr {
         // Todo: change place of this function put in tree
         // Return all the Transform in the path from the target to this node
         // If the target as transform child this will also be in the path
-        std::vector<CPACSTransformation> composeTransformRecursively(UniqueXPath target);
+        std::vector<MCPACSTransformation> composeTransformRecursively(UniqueXPath target);
 
 
 

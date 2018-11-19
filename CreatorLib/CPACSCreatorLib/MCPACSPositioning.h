@@ -28,13 +28,13 @@
 
 namespace  cpcr{
 
-    class CPACSPositioning {
+    class MCPACSPositioning {
 
 
     public:
 
-        CPACSPositioning();
-        CPACSPositioning(double dihaedral, std::string from, double l, double sweep, std::string to );
+        MCPACSPositioning();
+        MCPACSPositioning(double dihaedral, std::string from, double l, double sweep, std::string to );
 
         // transform the vector into length sweep and dihedral
         void setFromVector(Eigen::Vector3d);
@@ -54,7 +54,7 @@ namespace  cpcr{
         const std::string &getToSectionUID() const;
         void setToSectionUID(const std::string &toSectionUID);
 
-        bool operator==(const CPACSPositioning& other);
+        bool operator==(const MCPACSPositioning& other);
 
         // in fact a positioning is just a translation, so we que express it as a affine translation matrix
         Eigen::Matrix4d getPositioningAsMatrix();

@@ -13,6 +13,35 @@ target_include_directories(CPACSCreatorLib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/..
 target_sources( CPACSCreatorLib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../ThirdPartyLib/quartic/poly34.cpp)
 
 
+#Add tigl Lib
+
+# TIGL link
+
+# add all subdirectories to include path
+set(BASE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../..)
+
+set(TIGL_INCLUDES_MD ${BASE_DIR}/src/)
+subdirlist(SUBDIRS ${TIGL_INCLUDES_MD})
+foreach(subdir ${SUBDIRS})
+    set(TIGL_INCLUDES_MD ${TIGL_INCLUDES_MD} ${BASE_DIR}/src/${subdir}/)
+endforeach()
+
+target_include_directories(CPACSCreatorLib PUBLIC ${TIGL_INCLUDES_MD})
+target_link_libraries(CPACSCreatorLib tigl3_static)
+
+
+# boost
+include_directories(${BASE_DIR}/thirdparty/boost_1_63_0)
+
+#STRANGE
+include_directories( ${PROJECT_BINARY_DIR}/../../src/)
+
+#occ
+include_directories( ${OpenCASCADE_INCLUDE_DIR} )
+
+# opengl
+include_directories(${OPENGL_INCLUDE_DIR})
+
 
 # Add the third party header only library easylogging
 target_include_directories(CPACSCreatorLib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../ThirdPartyLib/eigen-eigen-5a0156e40feb/)
@@ -24,8 +53,8 @@ target_sources( CPACSCreatorLib
             ${CMAKE_CURRENT_SOURCE_DIR}/CPACSFile.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/CreatorException.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Point.cpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/CPACSTransformation.cpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/CPACSPositioning.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/MCPACSTransformation.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/MCPACSPositioning.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/LoggerSetUp.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/CPACSTreeItem.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/CPACSTree.cpp
@@ -35,6 +64,7 @@ target_sources( CPACSCreatorLib
             ${CMAKE_CURRENT_SOURCE_DIR}/CPACSPointsProfile.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/CPACSSegment.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/CPACSProfilesDB.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/ConfigWriter.cpp
         )
 
 
@@ -50,10 +80,6 @@ message(TIXI_PATH_MD ${TIXI_PATH_MD} )
 target_include_directories(CPACSCreatorLib PRIVATE ${TIXI_PATH_MD})
 
 
-
-# TIGL link
-target_include_directories(CPACSCreatorLib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../../src/api)
-target_link_libraries(CPACSCreatorLib tigl3)
 
 
 
