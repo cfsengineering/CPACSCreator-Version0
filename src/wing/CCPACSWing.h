@@ -2,10 +2,6 @@
 * Copyright (C) 2007-2013 German Aerospace Center (DLR/SC)
 *
 * Created: 2010-08-13 Markus Litz <Markus.Litz@dlr.de>
-* Changed: $Id$ 
-*
-* Version: $Revision$
-*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -38,6 +34,7 @@
 #include "CCPACSPositionings.h"
 #include "CTiglAbstractSegment.h"
 #include "CCPACSGuideCurve.h"
+#include "Cache.h"
 
 #include "TopoDS_Shape.hxx"
 #include "TopoDS_Compound.hxx"
@@ -62,9 +59,7 @@ public:
     TIGL_EXPORT void Invalidate();
 
     // Read CPACS wing elements
-    TIGL_EXPORT void ReadCPACS(TixiDocumentHandle tixiHandle, const std::string & wingXPath);
-
-    TIGL_EXPORT void SetUID(const std::string& uid) OVERRIDE;
+    TIGL_EXPORT void ReadCPACS(const TixiDocumentHandle& tixiHandle, const std::string& wingXPath) OVERRIDE;
 
     TIGL_EXPORT std::string GetDefaultedUID() const OVERRIDE;
 
@@ -155,11 +150,14 @@ public:
     // Get the guide curve segment (partial guide curve) with a given UID
     TIGL_EXPORT CCPACSGuideCurve& GetGuideCurveSegment(std::string uid);
 
+    // Returns all points that define the guide curves
+    TIGL_EXPORT std::vector<gp_Pnt> GetGuideCurvePoints();
+
     // Returns all guide curve wires as a compound
-    TIGL_EXPORT TopoDS_Compound& GetGuideCurveWires();
+    TIGL_EXPORT TopoDS_Compound GetGuideCurveWires() const;
 
 protected:
-    void BuildGuideCurveWires();
+    void BuildGuideCurveWires(TopoDS_Compound& cache) const;
 
     // Cleanup routine
     void Cleanup();
@@ -170,15 +168,15 @@ protected:
     void Update();
 
     // Adds all Segments of this wing to one shape
-    PNamedShape BuildFusedSegments(bool splitWingInUpperAndLower);
+    PNamedShape BuildFusedSegments(bool splitWingInUpperAndLower) const;
         
-    PNamedShape BuildLoft() OVERRIDE;
+    PNamedShape BuildLoft() const OVERRIDE;
         
     void BuildUpperLowerShells();
 
 private:
     // get short name for loft
-    std::string GetShortShapeName();
+    std::string GetShortShapeName() const;
 
 private:
     bool                           isRotorBlade;             /**< Indicates if this wing is a rotor blade */
@@ -186,7 +184,7 @@ private:
     TopoDS_Shape                   fusedSegmentWithEdge;     /**< All Segments in one shape plus modelled leading edge */ 
     TopoDS_Shape                   upperShape;
     TopoDS_Shape                   lowerShape;
-    TopoDS_Compound                guideCurves;
+    Cache<TopoDS_Compound, CCPACSWing> guideCurves;
     bool                           invalidated;              /**< Internal state flag */
     bool                           rebuildFusedSegments;     /**< Indicates if segmentation fusing need rebuild */
     bool                           rebuildFusedSegWEdge;     /**< Indicates if segmentation fusing need rebuild */

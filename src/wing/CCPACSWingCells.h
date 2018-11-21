@@ -30,19 +30,16 @@ class CCPACSWingCells : public generated::CPACSWingCells
 public:
     // Constructor
     TIGL_EXPORT CCPACSWingCells(CCPACSWingShell* parent, CTiglUIDManager* uidMgr);
-    
+
     TIGL_EXPORT void Invalidate();
 
     // Returns the total count of wing cells for that wing component segment
     TIGL_EXPORT int GetCellCount() const;
-    
+
     // Returns the wing cell for a given index.
-    TIGL_EXPORT CCPACSWingCell& GetCell(int index) const;
+    TIGL_EXPORT const CCPACSWingCell& GetCell(int index) const;
 
-    // Get parent wing shell element
-    TIGL_EXPORT CCPACSWingShell* GetParentElement() const;
-
-    TIGL_EXPORT CCPACSWingCell& GetCell(const std::string& UID) const;
+    TIGL_EXPORT const CCPACSWingCell& GetCell(const std::string& UID) const;
 };
 
 } // end namespace tigl

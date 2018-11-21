@@ -32,7 +32,23 @@ CCPACSWingCellPositionChordwise::InputType CCPACSWingCellPositionChordwise::GetI
         return Xsi;
     if (m_sparUID_choice1)
         return Spar;
-    return None;
+    throw CTiglError("Invalid chordwise cell positioning", TIGL_XML_ERROR);
+}
+
+void CCPACSWingCellPositionChordwise::SetXsi1(double xsi1)
+{
+    m_xsi1_choice2 = xsi1;
+    m_sparUID_choice1 = boost::none;
+
+    GetParent()->Invalidate();
+}
+
+void CCPACSWingCellPositionChordwise::SetXsi2(double xsi2)
+{
+    m_xsi2_choice2 = xsi2;
+    m_sparUID_choice1 = boost::none;
+
+    GetParent()->Invalidate();
 }
 
 void CCPACSWingCellPositionChordwise::SetXsi(double xsi1, double xsi2)
@@ -41,8 +57,6 @@ void CCPACSWingCellPositionChordwise::SetXsi(double xsi1, double xsi2)
     m_xsi2_choice2 = xsi2;
     m_sparUID_choice1 = boost::none;
 
-    //if (IsParent<CCPACSWingCell>())
-    //    GetParent<CCPACSWingCell>()->Invalidate();
     GetParent()->Invalidate();
 }
 
@@ -59,7 +73,7 @@ std::pair<double, double> CCPACSWingCellPositionChordwise::GetXsi() const
     if (GetInputType() != Xsi) {
         throw CTiglError("CCPACSWingCellPositionChordwise::GetXsi method called, but position is defined via sparUID!");
     }
-    return std::make_pair(*m_xsi1_choice2, *m_xsi2_choice2);
+    return std::make_pair(m_xsi1_choice2.value(), m_xsi2_choice2.value());
 }
 
 void CCPACSWingCellPositionChordwise::SetSparUId(std::string sparUId)
@@ -68,8 +82,6 @@ void CCPACSWingCellPositionChordwise::SetSparUId(std::string sparUId)
     m_xsi2_choice2 = boost::none;
     m_sparUID_choice1 = sparUId;
 
-    //if (IsParent<CCPACSWingCell>())
-    //    GetParent<CCPACSWingCell>()->Invalidate();
     GetParent()->Invalidate();
 }
 

@@ -2,10 +2,7 @@
 * Copyright (C) 2007-2013 German Aerospace Center (DLR/SC)
 *
 * Created: 2010-08-13 Markus Litz <Markus.Litz@dlr.de>
-* Changed: $Id$
-*
-* Version: $Revision$
-*
+
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -37,13 +34,16 @@
 #include "CCPACSGuideCurve.h"
 #include "CTiglPoint.h"
 #include "CTiglAbstractSegment.h"
+#include "Cache.h"
 #include "CCPACSTransformation.h"
 #include "math/CTiglPointTranslator.h"
 
+#include <TopoDS_Face.hxx>
 #include "TopoDS_Shape.hxx"
 #include "TopoDS_Wire.hxx"
 #include "TopTools_SequenceOfShape.hxx"
 #include "Geom_BSplineSurface.hxx"
+#include "Cache.h"
 
 
 namespace tigl
@@ -66,18 +66,19 @@ public:
     // Read CPACS segment elements
     TIGL_EXPORT void ReadCPACS(const TixiDocumentHandle& tixiHandle, const std::string& segmentXPath) OVERRIDE;
 
-    TIGL_EXPORT void SetUID(const std::string& uid) OVERRIDE;
-
     TIGL_EXPORT std::string GetDefaultedUID() const OVERRIDE;
 
     TIGL_EXPORT void SetFromElementUID(const std::string& value) OVERRIDE;
     TIGL_EXPORT void SetToElementUID(const std::string& value) OVERRIDE;
 
-    // Returns the wing this segment belongs to
-    TIGL_EXPORT CCPACSWing& GetWing() const;
+    TIGL_EXPORT TopoDS_Shape GetInnerClosure(TiglCoordinateSystem referenceCS = GLOBAL_COORDINATE_SYSTEM,
+                                             TiglShapeModifier mod            = UNMODIFIED_SHAPE) const;
+    TIGL_EXPORT TopoDS_Shape GetOuterClosure(TiglCoordinateSystem referenceCS = GLOBAL_COORDINATE_SYSTEM,
+                                             TiglShapeModifier mod            = UNMODIFIED_SHAPE) const;
 
-    TIGL_EXPORT TopoDS_Shape GetInnerClosure(TiglCoordinateSystem referenceCS = GLOBAL_COORDINATE_SYSTEM) const;
-    TIGL_EXPORT TopoDS_Shape GetOuterClosure(TiglCoordinateSystem referenceCS = GLOBAL_COORDINATE_SYSTEM) const;
+    // Returns points on the inner/outer profile without building the shape
+    TIGL_EXPORT gp_Pnt GetInnerProfilePoint(double xsi) const;
+    TIGL_EXPORT gp_Pnt GetOuterProfilePoint(double xsi) const;
 
     // Gets the upper point in relative wing coordinates for a given eta and xsi
     TIGL_EXPORT gp_Pnt GetUpperPoint(double eta, double xsi) const;
@@ -117,9 +118,11 @@ public:
 
     // Returns the starting(inner) Segment Connection
     TIGL_EXPORT CTiglWingConnection& GetInnerConnection();
+    TIGL_EXPORT const CTiglWingConnection& GetInnerConnection() const;
 
     // Return the end(outer) Segment Connection
     TIGL_EXPORT CTiglWingConnection& GetOuterConnection();
+    TIGL_EXPORT const CTiglWingConnection& GetOuterConnection() const;
 
     // Gets the count of segments connected to the inner section of this segment
     TIGL_EXPORT int GetInnerConnectedSegmentCount() const;
@@ -148,16 +151,13 @@ public:
                                       double eta4, double xsi4) const;
 
     // helper function to get the inner transformed chord line wire, used in GetLoft and when determining triangulation midpoints projection on segments in VtkExport
-    TIGL_EXPORT TopoDS_Wire GetInnerWire(TiglCoordinateSystem referenceCS = GLOBAL_COORDINATE_SYSTEM) const;
+    TIGL_EXPORT TopoDS_Wire GetInnerWire(TiglCoordinateSystem referenceCS = GLOBAL_COORDINATE_SYSTEM,
+                                         TiglShapeModifier mod            = UNMODIFIED_SHAPE) const;
 
     // helper function to get the outer transformed chord line wire, used in GetLoft and when determining triangulation midpoints projection on segments in VtkExport
-    TIGL_EXPORT TopoDS_Wire GetOuterWire(TiglCoordinateSystem referenceCS = GLOBAL_COORDINATE_SYSTEM) const;
+    TIGL_EXPORT TopoDS_Wire GetOuterWire(TiglCoordinateSystem referenceCS = GLOBAL_COORDINATE_SYSTEM,
+                                         TiglShapeModifier mod            = UNMODIFIED_SHAPE) const;
 
-    // Getter for inner wire of opened profile (containing trailing edge)
-    TIGL_EXPORT TopoDS_Wire GetInnerWireOpened(TiglCoordinateSystem referenceCS = GLOBAL_COORDINATE_SYSTEM) const;
-
-    // Getter for outer wire of opened profile (containing trailing edge)
-    TIGL_EXPORT TopoDS_Wire GetOuterWireOpened(TiglCoordinateSystem referenceCS = GLOBAL_COORDINATE_SYSTEM) const;
 
     // projects a point unto the wing and returns its coordinates
     TIGL_EXPORT void GetEtaXsi(gp_Pnt pnt, double& eta, double& xsi) const;
@@ -173,14 +173,23 @@ public:
     // by projecting the wing segment into the plane defined by the user
     TIGL_EXPORT double GetReferenceArea(TiglSymmetryAxis symPlane) const;
 
+    using CTiglAbstractSegment<CCPACSWingSegment>::GetLoft;
+    TIGL_EXPORT PNamedShape GetLoft(TiglShapeModifier mod) const;
+
     // Returns the lower Surface of this Segment
-    TIGL_EXPORT Handle(Geom_Surface) GetLowerSurface(TiglCoordinateSystem referenceCS = GLOBAL_COORDINATE_SYSTEM) const;
+    TIGL_EXPORT Handle(Geom_Surface) GetLowerSurface(TiglCoordinateSystem referenceCS = GLOBAL_COORDINATE_SYSTEM,
+                                                     TiglShapeModifier mod            = UNMODIFIED_SHAPE) const;
 
     // Returns the upper Surface of this Segment
-    TIGL_EXPORT Handle(Geom_Surface) GetUpperSurface(TiglCoordinateSystem referenceCS = GLOBAL_COORDINATE_SYSTEM) const;
+    TIGL_EXPORT Handle(Geom_Surface) GetUpperSurface(TiglCoordinateSystem referenceCS = GLOBAL_COORDINATE_SYSTEM,
+                                                     TiglShapeModifier mod            = UNMODIFIED_SHAPE) const;
 
-    TIGL_EXPORT TopoDS_Shape& GetUpperShape(TiglCoordinateSystem referenceCS = GLOBAL_COORDINATE_SYSTEM) const;
-    TIGL_EXPORT TopoDS_Shape& GetLowerShape(TiglCoordinateSystem referenceCS = GLOBAL_COORDINATE_SYSTEM) const;
+    TIGL_EXPORT TopoDS_Shape GetUpperShape(TiglCoordinateSystem referenceCS = GLOBAL_COORDINATE_SYSTEM,
+                                           TiglShapeModifier mod            = UNMODIFIED_SHAPE) const;
+    TIGL_EXPORT TopoDS_Shape GetLowerShape(TiglCoordinateSystem referenceCS = GLOBAL_COORDINATE_SYSTEM,
+                                           TiglShapeModifier mod            = UNMODIFIED_SHAPE) const;
+    TIGL_EXPORT TopoDS_Shape GetTrailingEdgeShape(TiglCoordinateSystem referenceCS = GLOBAL_COORDINATE_SYSTEM,
+                                                  TiglShapeModifier mod            = UNMODIFIED_SHAPE) const;
 
     // Returns an upper or lower point on the segment surface in
     // dependence of parameters eta and xsi, which range from 0.0 to 1.0.
@@ -205,6 +214,8 @@ public:
         return TIGL_COMPONENT_WINGSEGMENT | TIGL_COMPONENT_SEGMENT | TIGL_COMPONENT_LOGICAL;
     }
 
+    TIGL_EXPORT CTiglTransformation GetParentTransformation() const;
+
 protected:
     // Cleanup routine
     void Cleanup();
@@ -213,53 +224,44 @@ protected:
     void Update();
 
     // Builds the loft between the two segment sections
-    PNamedShape BuildLoft() OVERRIDE;
+    PNamedShape BuildLoft() const OVERRIDE;
 
 private:
-    // get short name for loft
-    std::string GetShortShapeName ();
-
-    // Builds upper and lower surfaces
-    void MakeSurfaces() const;
-
-    // Builds the chord surface
-    void MakeChordSurface() const;
-
-    // Returns the chord surface (and builds it if required)
-    CTiglPointTranslator& ChordFace() const;
-
-
-    // converts segment eta xsi coordinates to face uv koordinates
-    void etaXsiToUV(bool isFromUpper, double eta, double xsi, double& u, double& v) const;
-
-    CTiglWingConnection innerConnection;      /**< Inner segment connection (root)         */
-    CTiglWingConnection outerConnection;      /**< Outer segment connection (tip)          */
-    CCPACSWing*          wing;                 /**< Parent wing                             */
-    double               myVolume;             /**< Volume of this segment                  */
-
-    struct SurfaceCache
-    {
-        double               mySurfaceArea;    /**< Surface area of this segment            */
-        TopoDS_Shape         upperShape;       /**< Upper shape of this segment             */
-        TopoDS_Shape         lowerShape;       /**< Lower shape of this segment             */
-        TopoDS_Shape         upperShapeLocal;  /**< Upper shape of this segment in wing coordinate system */
-        TopoDS_Shape         lowerShapeLocal;  /**< Lower shape of this segment in wing coordinate system */
-        TopoDS_Shape         upperShapeOpened;
-        TopoDS_Shape         lowerShapeOpened;
-        TopoDS_Shape         trailingEdgeShape;
-        Handle(Geom_Surface) upperSurface;
-        Handle(Geom_Surface) lowerSurface;
-        Handle(Geom_Surface) upperSurfaceLocal;
-        Handle(Geom_Surface) lowerSurfaceLocal;
-    };
-    mutable boost::optional<SurfaceCache> surfaceCache;
-
     struct SurfaceCoordCache
     {
         CTiglPointTranslator cordSurface;
         Handle(Geom_Surface) cordFace;
     };
-    mutable boost::optional<SurfaceCoordCache> surfaceCoordCache;
+
+    // get short name for loft
+    std::string GetShortShapeName () const;
+
+    // Builds upper and lower surfaces
+    void ComputeArea(double& cache) const;
+
+    // Builds the chord surface
+    void MakeChordSurface(SurfaceCoordCache& cache) const;
+
+    void ComputeVolume(double& cache) const;
+
+    // Returns the chord surface (and builds it if required)
+    const CTiglPointTranslator& ChordFace() const;
+
+
+    // converts segment eta xsi coordinates to face uv koordinates
+    void etaXsiToUV(bool isFromUpper, double eta, double xsi, double& u, double& v) const;
+
+    CTiglWingConnection  innerConnection;      /**< Inner segment connection (root)         */
+    CTiglWingConnection  outerConnection;      /**< Outer segment connection (tip)          */
+
+    bool                 loftLinearly = false; /**< Set to true to speed up lofting of the
+                                                 * segment. This removes the dependency on
+                                                 * the fuselage loft at the price of a
+                                                 * nonsmooth fuselage                       */
+
+    Cache<SurfaceCoordCache, CCPACSWingSegment> surfaceCoordCache;
+    Cache<double, CCPACSWingSegment>            areaCache;
+    Cache<double, CCPACSWingSegment> volumeCache;
 
     unique_ptr<IGuideCurveBuilder> m_guideCurveBuilder;
 };

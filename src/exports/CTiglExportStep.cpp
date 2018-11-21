@@ -2,10 +2,6 @@
 * Copyright (C) 2007-2013 German Aerospace Center (DLR/SC)
 *
 * Created: 2013-02-28 Markus Litz <Markus.Litz@dlr.de>
-* Changed: $Id$ 
-*
-* Version: $Revision$
-*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -30,6 +26,8 @@
 #include "CCPACSWingSegment.h"
 #include "CTiglFusePlane.h"
 #include "tiglcommonfunctions.h"
+#include "CTiglExporterFactory.h"
+#include "CTiglTypeRegistry.h"
 
 #include "TopoDS_Shape.hxx"
 #include "STEPControl_Controller.hxx"
@@ -236,10 +234,27 @@ namespace
 namespace tigl 
 {
 
-// Constructor
-CTiglExportStep::CTiglExportStep()
+AUTORUN(CTiglExportStep)
 {
-    SetGroupMode(NAMED_COMPOUNDS);
+    static CCADExporterBuilder<CTiglExportStep> stepExporterBuilder;
+    CTiglExporterFactory::Instance().RegisterExporter(&stepExporterBuilder, StepOptions());
+    return true;
+}
+
+// Constructor
+CTiglExportStep::CTiglExportStep(const ExporterOptions& opt)
+    : CTiglCADExporter(opt)
+{
+}
+
+ExporterOptions CTiglExportStep::GetDefaultOptions() const
+{
+    return StepOptions();
+}
+
+ShapeExportOptions CTiglExportStep::GetDefaultShapeOptions() const
+{
+    return StepShapeOptions();
 }
 
 /**
@@ -303,7 +318,9 @@ bool CTiglExportStep::WriteImpl(const std::string& filename) const
 
     ListPNamedShape list;
     for (size_t ishape = 0; ishape < NShapes(); ++ishape) {
-        ListPNamedShape templist = GroupFaces(GetShape(ishape), _groupMode);
+        ShapeGroupMode groupMode = GlobalExportOptions().Get<ShapeGroupMode>("ShapeGroupMode");
+
+        ListPNamedShape templist = GroupFaces(GetShape(ishape), groupMode);
         for (ListPNamedShape::iterator it2 = templist.begin(); it2 != templist.end(); ++it2) {
             list.push_back(*it2);
         }
@@ -317,11 +334,6 @@ bool CTiglExportStep::WriteImpl(const std::string& filename) const
     }
 
     return stepWriter.Write(const_cast<char*>(filename.c_str())) <= IFSelect_RetDone;
-}
-
-void CTiglExportStep::SetGroupMode(ShapeGroupMode mode)
-{
-    _groupMode = mode;
 }
 
 } // end namespace tigl

@@ -2,10 +2,6 @@
 * Copyright (C) 2007-2013 German Aerospace Center (DLR/SC)
 *
 * Created: 2010-08-13 Markus Litz <Markus.Litz@dlr.de>
-* Changed: $Id$ 
-*
-* Version: $Revision$
-*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -37,6 +33,7 @@
 #include "TopoDS_Wire.hxx"
 #include "TopoDS_Edge.hxx"
 #include "PTiglWingProfileAlgo.h"
+#include "Cache.h"
 
 #include <gp_Pnt.hxx>
 
@@ -64,61 +61,44 @@ public:
     TIGL_EXPORT void Invalidate();
 
     // Returns the wing profile wire, splitted at the leading edge
-    TIGL_EXPORT TopoDS_Wire GetSplitWire();
-    
-    // Returns the wing profile wire
-    TIGL_EXPORT TopoDS_Wire GetWire();
-    
-    // Returns the wing profile wire with flat trailing edge
-    TIGL_EXPORT TopoDS_Wire GetWireOpened();
+    TIGL_EXPORT TopoDS_Wire GetSplitWire(TiglShapeModifier mod = UNMODIFIED_SHAPE) const;
 
-    // Returns the wing profile wire with pointed trailing edge
-    TIGL_EXPORT TopoDS_Wire GetWireClosed();
+    // Returns the wing profile wire
+    TIGL_EXPORT TopoDS_Wire GetWire(TiglShapeModifier mod = UNMODIFIED_SHAPE) const;
 
     // Returns ths wing upper and lower profile wire
-    TIGL_EXPORT TopoDS_Edge GetUpperWire();
-    TIGL_EXPORT TopoDS_Edge GetLowerWire();
-    TIGL_EXPORT TopoDS_Edge GetTrailingEdge();
-
-    // Returns the wing upper and lower profile wire for opened profile
-    TIGL_EXPORT TopoDS_Edge GetUpperWireOpened();
-    TIGL_EXPORT TopoDS_Edge GetLowerWireOpened();
-
-    // Returns the wing upper and lower profile wire for closed profile
-    TIGL_EXPORT TopoDS_Edge GetUpperWireClosed();
-    TIGL_EXPORT TopoDS_Edge GetLowerWireClosed();
-
-    // Returns the trailing edge for the opened profile
-    TIGL_EXPORT TopoDS_Edge GetTrailingEdgeOpened();
+    TIGL_EXPORT TopoDS_Edge GetUpperWire(TiglShapeModifier mod = UNMODIFIED_SHAPE) const;
+    TIGL_EXPORT TopoDS_Edge GetLowerWire(TiglShapeModifier mod = UNMODIFIED_SHAPE) const;
+    TIGL_EXPORT TopoDS_Edge GetTrailingEdge(TiglShapeModifier mod = UNMODIFIED_SHAPE) const;
 
     // Returns the leading edge point of the wing profile wire. The leading edge point
     // is already transformed by the wing profile element transformation.
-    TIGL_EXPORT gp_Pnt GetLEPoint();
+    TIGL_EXPORT gp_Pnt GetLEPoint() const;
 
     // Returns the trailing edge point of the wing profile wire. The trailing edge point
     // is already transformed by the wing profile element transformation.
-    TIGL_EXPORT gp_Pnt GetTEPoint();
+    TIGL_EXPORT gp_Pnt GetTEPoint() const;
 
     // Returns the chord line as a wire
-    TIGL_EXPORT TopoDS_Wire GetChordLineWire();
+    TIGL_EXPORT TopoDS_Wire GetChordLineWire() const;
 
     // Returns a point on the chord line between leading and trailing
     // edge as function of parameter xsi, which ranges from 0.0 to 1.0.
     // For xsi = 0.0 chord point is equal to leading edge, for xsi = 1.0
     // chord point is equal to trailing edge.
-    TIGL_EXPORT gp_Pnt GetChordPoint(double xsi);
+    TIGL_EXPORT gp_Pnt GetChordPoint(double xsi) const;
 
     // Returns a point on the upper wing profile as function of
     // parameter xsi, which ranges from 0.0 to 1.0.
     // For xsi = 0.0 point is equal to leading edge, for xsi = 1.0
     // point is equal to trailing edge.
-    TIGL_EXPORT gp_Pnt GetUpperPoint(double xsi);
+    TIGL_EXPORT gp_Pnt GetUpperPoint(double xsi) const;
 
     // Returns a point on the lower wing profile as function of
     // parameter xsi, which ranges from 0.0 to 1.0.
     // For xsi = 0.0 point is equal to leading edge, for xsi = 1.0
     // point is equal to trailing edge.
-    TIGL_EXPORT gp_Pnt GetLowerPoint(double xsi);
+    TIGL_EXPORT gp_Pnt GetLowerPoint(double xsi) const;
 
     // get profile algorithm type
     TIGL_EXPORT ITiglWingProfileAlgo* GetProfileAlgo();
@@ -131,18 +111,17 @@ protected:
     // Cleanup routine
     void Cleanup();
 
-    // Update the internal state, i.g. recalculates wire and le, te points
-    void Update();
-
     // Returns an upper or lower point on the wing profile in
     // dependence of parameter xsi, which ranges from 0.0 to 1.0.
     // For xsi = 0.0 point is equal to leading edge, for xsi = 1.0
     // point is equal to trailing edge. If fromUpper is true, a point
     // on the upper profile is returned, otherwise from the lower.
-    gp_Pnt GetPoint(double xsi, bool fromUpper);
+    gp_Pnt GetPoint(double xsi, bool fromUpper) const;
 
     // Helper function to determine the chord line between leading and trailing edge in the profile plane
-    Handle(Geom2d_TrimmedCurve) GetChordLine();
+    Handle(Geom2d_TrimmedCurve) GetChordLine() const;
+
+    void buildPointListAlgo(unique_ptr<CTiglWingProfilePointList>& cache) const;
 
 private:
     // Copy constructor
@@ -153,8 +132,7 @@ private:
 
 private:
     bool                                  isRotorProfile; /**< Indicates if this profile is a rotor profile */
-    bool                                  invalidated;    /**< Flag if element is invalid */
-    unique_ptr<CTiglWingProfilePointList> pointListAlgo;  // is created in case the wing profile alg is a point list, otherwise cst2d constructed in the base class is used
+    Cache<unique_ptr<CTiglWingProfilePointList>, CCPACSWingProfile> pointListAlgo;  // is created in case the wing profile alg is a point list, otherwise cst2d constructed in the base class is used
 
 }; // class CCPACSWingProfile
 

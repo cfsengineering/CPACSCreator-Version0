@@ -2133,7 +2133,7 @@
   </action>
   <action name="showAllWingsAndFuselagesAction">
    <property name="text">
-    <string>Show all Fuselages and Wings</string>
+    <string>Show the complete Aircraft</string>
    </property>
    <property name="statusTip">
     <string>Show all Fuselages and Wings</string>

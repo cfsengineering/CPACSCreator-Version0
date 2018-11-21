@@ -33,6 +33,7 @@ class CCPACSPositioning;
 namespace generated
 {
     // This class is used in:
+    // CPACSEnginePylon
     // CPACSFuselage
     // CPACSWing
 

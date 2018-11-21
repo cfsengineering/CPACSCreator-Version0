@@ -2,10 +2,6 @@
 * Copyright (C) 2007-2013 German Aerospace Center (DLR/SC)
 *
 * Created: 2010-08-13 Markus Litz <Markus.Litz@dlr.de>
-* Changed: $Id$ 
-*
-* Version: $Revision$
-*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -43,12 +39,7 @@
 #include "CCPACSWingSection.h"
 #include "CCPACSWingSegment.h"
 #include "CCPACSWingComponentSegment.h"
-#include "CTiglExportIges.h"
-#include "CTiglExportStep.h"
-#include "CTiglExportStl.h"
-#include "CTiglExportVtk.h"
-#include "CTiglExportCollada.h"
-#include "CTiglExportBrep.h"
+#include "CTiglExporterFactory.h"
 #include "CTiglLogging.h"
 #include "CCPACSFuselageSection.h"
 #include "CCPACSFuselageSectionElement.h"
@@ -58,6 +49,7 @@
 #include "CCPACSRotor.h"
 #include "CCPACSRotorBladeAttachment.h"
 #include "CTiglAttachedRotorBlade.h"
+#include "CGlobalExporterConfigs.h"
 
 #include "CTiglPoint.h"
 
@@ -4984,18 +4976,6 @@ TIGL_COMMON_EXPORT TiglReturnCode tiglGetCurveParameter (TiglCPACSConfigurationH
         LOG(ERROR) << "Null pointer for argument eta in tiglGetCurveParameter .";
         return TIGL_NULL_POINTER;
     }
-    if (!pointX) {
-        LOG(ERROR) << "Null pointer for argument pointX in tiglGetCurveParameter .";
-        return TIGL_NULL_POINTER;
-    }
-    if (!pointY) {
-        LOG(ERROR) << "Null pointer for argument pointY in tiglGetCurveParameter .";
-        return TIGL_NULL_POINTER;
-    }
-    if (!pointZ) {
-        LOG(ERROR) << "Null pointer for argument pointZ in tiglGetCurveParameter .";
-        return TIGL_NULL_POINTER;
-    }
     if (!curveID) {
         LOG(ERROR) << "Null pointer for argument curveID in tiglGetCurveParameter .";
         return TIGL_NULL_POINTER;
@@ -5042,9 +5022,9 @@ TIGL_COMMON_EXPORT TiglReturnCode tiglExportIGES(TiglCPACSConfigurationHandle cp
     try {
         tigl::CCPACSConfigurationManager& manager = tigl::CCPACSConfigurationManager::GetInstance();
         tigl::CCPACSConfiguration& config = manager.GetConfiguration(cpacsHandle);
-        tigl::CTiglExportIges exporter;
-        exporter.AddConfiguration(config);
-        bool ret = exporter.Write(filenamePtr);
+        tigl::PTiglCADExporter exporter = tigl::createExporter("iges");
+        exporter->AddConfiguration(config);
+        bool ret = exporter->Write(filenamePtr);
         return ret ? TIGL_SUCCESS : TIGL_WRITE_FAILED;
     }
     catch (const tigl::CTiglError& ex) {
@@ -5074,9 +5054,9 @@ TIGL_COMMON_EXPORT TiglReturnCode tiglExportFusedWingFuselageIGES(TiglCPACSConfi
     try {
         tigl::CCPACSConfigurationManager& manager = tigl::CCPACSConfigurationManager::GetInstance();
         tigl::CCPACSConfiguration& config = manager.GetConfiguration(cpacsHandle);
-        tigl::CTiglExportIges exporter;
-        exporter.AddFusedConfiguration(config);
-        bool ret = exporter.Write(filenamePtr);
+        tigl::PTiglCADExporter exporter = tigl::createExporter("iges");
+        exporter->AddFusedConfiguration(config);
+        bool ret = exporter->Write(filenamePtr);
         return ret ? TIGL_SUCCESS : TIGL_WRITE_FAILED;
     }
     catch (const tigl::CTiglError& ex) {
@@ -5105,9 +5085,9 @@ TIGL_COMMON_EXPORT TiglReturnCode tiglExportSTEP(TiglCPACSConfigurationHandle cp
     try {
         tigl::CCPACSConfigurationManager& manager = tigl::CCPACSConfigurationManager::GetInstance();
         tigl::CCPACSConfiguration& config = manager.GetConfiguration(cpacsHandle);
-        tigl::CTiglExportStep exporter;
-        exporter.AddConfiguration(config);
-        bool ret = exporter.Write(filenamePtr);
+        tigl::PTiglCADExporter exporter = tigl::createExporter("step");
+        exporter->AddConfiguration(config);
+        bool ret = exporter->Write(filenamePtr);
         return ret ? TIGL_SUCCESS : TIGL_WRITE_FAILED;
     }
     catch (const tigl::CTiglError& ex) {
@@ -5135,9 +5115,9 @@ TIGL_COMMON_EXPORT TiglReturnCode tiglExportFusedSTEP(TiglCPACSConfigurationHand
     try {
         tigl::CCPACSConfigurationManager& manager = tigl::CCPACSConfigurationManager::GetInstance();
         tigl::CCPACSConfiguration& config = manager.GetConfiguration(cpacsHandle);
-        tigl::CTiglExportStep exporter;
-        exporter.AddFusedConfiguration(config);
-        bool ret = exporter.Write(filenamePtr);
+        tigl::PTiglCADExporter exporter = tigl::createExporter("step");
+        exporter->AddFusedConfiguration(config);
+        bool ret = exporter->Write(filenamePtr);
         return ret ? TIGL_SUCCESS : TIGL_WRITE_FAILED;
     }
     catch (const tigl::CTiglError& ex) {
@@ -5175,9 +5155,9 @@ TIGL_COMMON_EXPORT TiglReturnCode tiglExportMeshedWingSTL(TiglCPACSConfiguration
         tigl::CCPACSWing& wing = config.GetWing(wingIndex);
         PNamedShape loft = wing.GetLoft();
         
-        tigl::CTiglExportStl exporter;
-        exporter.AddShape(loft, deflection);
-        bool ret = exporter.Write(filenamePtr);
+        tigl::PTiglCADExporter exporter = tigl::createExporter("stl");
+        exporter->AddShape(loft, tigl::TriangulatedExportOptions(deflection));
+        bool ret = exporter->Write(filenamePtr);
         return ret ? TIGL_SUCCESS : TIGL_WRITE_FAILED;
     }
     catch (const tigl::CTiglError& ex) {
@@ -5217,10 +5197,10 @@ TIGL_COMMON_EXPORT TiglReturnCode tiglExportMeshedWingSTLByUID(TiglCPACSConfigur
             tigl::CCPACSWing& wing = config.GetWing(iWing);
             if (wing.GetUID() == wingUID) {
                 PNamedShape loft = wing.GetLoft();
-                
-                tigl::CTiglExportStl exporter;
-                exporter.AddShape(loft, deflection);
-                bool ret = exporter.Write(filenamePtr);
+
+                tigl::PTiglCADExporter exporter = tigl::createExporter("stl");
+                exporter->AddShape(loft, tigl::TriangulatedExportOptions(deflection));
+                bool ret = exporter->Write(filenamePtr);
                 return ret ? TIGL_SUCCESS : TIGL_WRITE_FAILED;
             }
         }
@@ -5263,10 +5243,10 @@ TIGL_COMMON_EXPORT TiglReturnCode tiglExportMeshedFuselageSTL(TiglCPACSConfigura
         tigl::CCPACSConfiguration& config = manager.GetConfiguration(cpacsHandle);
         tigl::CCPACSFuselage& fuselage = config.GetFuselage(fuselageIndex);
         PNamedShape loft = fuselage.GetLoft();
-        
-        tigl::CTiglExportStl exporter;
-        exporter.AddShape(loft, deflection);
-        bool ret = exporter.Write(filenamePtr);
+
+        tigl::PTiglCADExporter exporter = tigl::createExporter("stl");
+        exporter->AddShape(loft, tigl::TriangulatedExportOptions(deflection));
+        bool ret = exporter->Write(filenamePtr);
         return ret ? TIGL_SUCCESS : TIGL_WRITE_FAILED;
     }
     catch (const tigl::CTiglError& ex) {
@@ -5309,9 +5289,9 @@ TIGL_COMMON_EXPORT TiglReturnCode tiglExportMeshedFuselageSTLByUID(TiglCPACSConf
             if (fuselage.GetUID() == fuselageUID) {
                 PNamedShape loft = fuselage.GetLoft();
                 
-                tigl::CTiglExportStl exporter;
-                exporter.AddShape(loft, deflection);
-                bool ret = exporter.Write(filenamePtr);
+                tigl::PTiglCADExporter exporter = tigl::createExporter("stl");
+                exporter->AddShape(loft, tigl::TriangulatedExportOptions(deflection));
+                bool ret = exporter->Write(filenamePtr);
                 return ret ? TIGL_SUCCESS : TIGL_WRITE_FAILED;
             }
         }
@@ -5346,14 +5326,10 @@ TIGL_COMMON_EXPORT TiglReturnCode tiglExportMeshedGeometrySTL(TiglCPACSConfigura
     try {
         tigl::CCPACSConfigurationManager& manager = tigl::CCPACSConfigurationManager::GetInstance();
         tigl::CCPACSConfiguration& config = manager.GetConfiguration(cpacsHandle);
-        tigl::CTiglExportStl exporter;
-        tigl::ExportOptions options;
-        options.deflection = deflection;
-        options.applySymmetries = true;
-        options.includeFarField = false;
+        tigl::PTiglCADExporter exporter = tigl::createExporter("stl");
 
-        exporter.AddConfiguration(config, options);
-        bool ret = exporter.Write(filenamePtr);
+        exporter->AddConfiguration(config, tigl::TriangulatedExportOptions(deflection));
+        bool ret = exporter->Write(filenamePtr);
         return ret ? TIGL_SUCCESS : TIGL_WRITE_FAILED;
     }
     catch (const tigl::CTiglError& ex) {
@@ -5366,38 +5342,6 @@ TIGL_COMMON_EXPORT TiglReturnCode tiglExportMeshedGeometrySTL(TiglCPACSConfigura
     }
     catch (...) {
         LOG(ERROR) << "Caught an exception in tiglExportMeshedGeometrySTL!";
-        return TIGL_ERROR;
-    }
-}
-
-TIGL_COMMON_EXPORT TiglReturnCode tiglExportVTKSetOptions(const char *key, const char *value)
-{
-    if (!key) {
-        LOG(ERROR) << "Error: Null pointer argument for key ";
-        LOG(ERROR) << "in function call to tiglExportVTKSetOptions." << std::endl;
-        return TIGL_NULL_POINTER;
-    }
-
-    if (!value) {
-        LOG(ERROR) << "Error: Null pointer argument for value ";
-        LOG(ERROR) << "in function call to tiglExportVTKSetOptions." << std::endl;
-        return TIGL_NULL_POINTER;
-    }
-
-    try {
-        tigl::CTiglExportVtk::SetOptions(key, value);
-        return TIGL_SUCCESS;
-    }
-    catch (tigl::CTiglError & ex) {
-        LOG(ERROR) << ex.what() << std::endl;
-        return ex.getCode();
-    }
-    catch (std::exception & ex) {
-        LOG(ERROR) << ex.what() << std::endl;
-        return TIGL_ERROR;
-    }
-    catch (...) {
-        LOG(ERROR) << "Caught an unknown exception in tiglExportVTKSetOptions" << std::endl;
         return TIGL_ERROR;
     }
 }
@@ -5420,10 +5364,10 @@ TIGL_COMMON_EXPORT TiglReturnCode tiglExportMeshedWingVTKByIndex(const TiglCPACS
         tigl::CCPACSConfigurationManager & manager = tigl::CCPACSConfigurationManager::GetInstance();
         tigl::CCPACSConfiguration& config = manager.GetConfiguration(cpacsHandle);
         tigl::CCPACSWing& wing = config.GetWing(wingIndex);
-        tigl::CTiglExportVtk exporter(config, tigl::SEGMENT_INFO);
+        tigl::PTiglCADExporter exporter = tigl::createExporter("vtk");
 
-        exporter.AddShape(wing.GetLoft(), deflection);
-        if (exporter.Write(filenamePtr)) {
+        exporter->AddShape(wing.GetLoft(), &config, tigl::TriangulatedExportOptions(deflection));
+        if (exporter->Write(filenamePtr)) {
             return TIGL_SUCCESS;
         }
         else {
@@ -5472,10 +5416,10 @@ TIGL_COMMON_EXPORT TiglReturnCode tiglExportMeshedWingVTKByUID(const TiglCPACSCo
         tigl::CCPACSConfigurationManager & manager = tigl::CCPACSConfigurationManager::GetInstance();
         tigl::CCPACSConfiguration& config = manager.GetConfiguration(cpacsHandle);
         tigl::CCPACSWing& wing = config.GetWing(wingUID);
-        tigl::CTiglExportVtk exporter(config, tigl::SEGMENT_INFO);
+        tigl::PTiglCADExporter exporter = tigl::createExporter("vtk");
 
-        exporter.AddShape(wing.GetLoft(), deflection);
-        if (exporter.Write(filenamePtr)) {
+        exporter->AddShape(wing.GetLoft(), &config, tigl::TriangulatedExportOptions(deflection));
+        if (exporter->Write(filenamePtr)) {
             return TIGL_SUCCESS;
         }
         else {
@@ -5524,9 +5468,9 @@ TIGL_COMMON_EXPORT TiglReturnCode tiglExportMeshedFuselageVTKByIndex(const TiglC
         tigl::CCPACSConfigurationManager& manager = tigl::CCPACSConfigurationManager::GetInstance();
         tigl::CCPACSConfiguration& config = manager.GetConfiguration(cpacsHandle);
         tigl::CCPACSFuselage& fuselage = config.GetFuselage(fuselageIndex);
-        tigl::CTiglExportVtk exporter(config, tigl::NO_INFO);
-        exporter.AddShape(fuselage.GetLoft(), deflection);
-        if (exporter.Write(filenamePtr)) {
+        tigl::PTiglCADExporter exporter = tigl::createExporter("vtk");
+        exporter->AddShape(fuselage.GetLoft(), tigl::TriangulatedExportOptions(deflection));
+        if (exporter->Write(filenamePtr)) {
             return TIGL_SUCCESS;
         }
         else {
@@ -5566,9 +5510,9 @@ TIGL_COMMON_EXPORT TiglReturnCode tiglExportMeshedFuselageVTKByUID(const TiglCPA
         tigl::CCPACSConfigurationManager& manager = tigl::CCPACSConfigurationManager::GetInstance();
         tigl::CCPACSConfiguration& config = manager.GetConfiguration(cpacsHandle);
         tigl::CCPACSFuselage& fuselage = config.GetFuselage(fuselageUID);
-        tigl::CTiglExportVtk exporter(config, tigl::NO_INFO);
-        exporter.AddShape(fuselage.GetLoft(), deflection);
-        if (exporter.Write(filenamePtr)) {
+        tigl::PTiglCADExporter exporter = tigl::createExporter("vtk");
+        exporter->AddShape(fuselage.GetLoft(), tigl::TriangulatedExportOptions(deflection));
+        if (exporter->Write(filenamePtr)) {
             return TIGL_SUCCESS;
         }
         else {
@@ -5603,12 +5547,9 @@ TIGL_COMMON_EXPORT TiglReturnCode tiglExportMeshedGeometryVTK(const TiglCPACSCon
         tigl::CCPACSConfigurationManager& manager = tigl::CCPACSConfigurationManager::GetInstance();
         tigl::CCPACSConfiguration& config = manager.GetConfiguration(cpacsHandle);
 
-        tigl::ExportOptions options(deflection);
-        options.applySymmetries = true;
-        options.includeFarField = false;
-        tigl::CTiglExportVtk exporter(config, tigl::SEGMENT_INFO);
-        exporter.AddFusedConfiguration(config, options);
-        if (exporter.Write(filenamePtr)) {
+        tigl::PTiglCADExporter exporter = tigl::createExporter("vtk");
+        exporter->AddFusedConfiguration(config, tigl::TriangulatedExportOptions(deflection));
+        if (exporter->Write(filenamePtr)) {
             return TIGL_SUCCESS;
         }
         else {
@@ -5650,10 +5591,12 @@ TIGL_COMMON_EXPORT TiglReturnCode tiglExportMeshedWingVTKSimpleByUID(const TiglC
         tigl::CCPACSConfigurationManager & manager = tigl::CCPACSConfigurationManager::GetInstance();
         tigl::CCPACSConfiguration& config = manager.GetConfiguration(cpacsHandle);
         tigl::CCPACSWing& wing = config.GetWing(wingUID);
-        tigl::CTiglExportVtk exporter(config, tigl::NO_INFO);
+        tigl::ExporterOptions exportOptions = tigl::getExportConfig("vtk");
+        exportOptions.Set("WriteMetaData", false);
+        tigl::PTiglCADExporter exporter = tigl::createExporter("vtk", exportOptions);
 
-        exporter.AddShape(wing.GetLoft(), deflection);
-        if (exporter.Write(filenamePtr)) {
+        exporter->AddShape(wing.GetLoft(), &config, tigl::TriangulatedExportOptions(deflection));
+        if (exporter->Write(filenamePtr)) {
             return TIGL_SUCCESS;
         }
         else {
@@ -5701,9 +5644,9 @@ TIGL_COMMON_EXPORT TiglReturnCode tiglExportFuselageColladaByUID(const TiglCPACS
         tigl::CCPACSConfigurationManager& manager = tigl::CCPACSConfigurationManager::GetInstance();
         tigl::CCPACSConfiguration& config = manager.GetConfiguration(cpacsHandle);
         tigl::CCPACSFuselage& fuselage = config.GetFuselage(fuselageUID);
-        tigl::CTiglExportCollada colladaWriter;
-        colladaWriter.AddShape(fuselage.GetLoft(), deflection);
-        bool ret = colladaWriter.Write(filenamePtr);
+        tigl::PTiglCADExporter colladaWriter = tigl::createExporter("dae");
+        colladaWriter->AddShape(fuselage.GetLoft(), tigl::TriangulatedExportOptions(deflection));
+        bool ret = colladaWriter->Write(filenamePtr);
         return ret ? TIGL_SUCCESS : TIGL_WRITE_FAILED;
     }
     catch (const tigl::CTiglError& ex) {
@@ -5737,9 +5680,9 @@ TIGL_COMMON_EXPORT TiglReturnCode tiglExportWingColladaByUID(const TiglCPACSConf
         tigl::CCPACSConfigurationManager& manager = tigl::CCPACSConfigurationManager::GetInstance();
         tigl::CCPACSConfiguration& config = manager.GetConfiguration(cpacsHandle);
         tigl::CCPACSWing& wing = config.GetWing(wingUID);
-        tigl::CTiglExportCollada colladaWriter;
-        colladaWriter.AddShape(wing.GetLoft(), deflection);
-        bool ret = colladaWriter.Write(filenamePtr);
+        tigl::PTiglCADExporter colladaWriter = tigl::createExporter("dae");
+        colladaWriter->AddShape(wing.GetLoft(), tigl::TriangulatedExportOptions(deflection));
+        bool ret = colladaWriter->Write(filenamePtr);
         return ret ? TIGL_SUCCESS : TIGL_WRITE_FAILED;
     }
     catch (const tigl::CTiglError& ex) {
@@ -5769,12 +5712,12 @@ TIGL_COMMON_EXPORT TiglReturnCode tiglExportMeshedGeometryVTKSimple(const TiglCP
     try {
         tigl::CCPACSConfigurationManager& manager = tigl::CCPACSConfigurationManager::GetInstance();
         tigl::CCPACSConfiguration& config = manager.GetConfiguration(cpacsHandle);
-        tigl::CTiglExportVtk exporter(config, tigl::NO_INFO);
-        tigl::ExportOptions options(deflection);
-        options.applySymmetries = true;
-        options.includeFarField = false;
-        exporter.AddFusedConfiguration(config, options);
-        if (exporter.Write(filenamePtr)) {
+        tigl::ExporterOptions expConfig = tigl::getExportConfig("vtk");
+        expConfig.Set("WriteMetaData", false);
+        tigl::PTiglCADExporter exporter = tigl::createExporter("vtk", expConfig);
+
+        exporter->AddFusedConfiguration(config, tigl::TriangulatedExportOptions(deflection));
+        if (exporter->Write(filenamePtr)) {
             return TIGL_SUCCESS;
         }
         else {
@@ -5806,9 +5749,9 @@ TIGL_COMMON_EXPORT TiglReturnCode tiglExportFusedBREP(TiglCPACSConfigurationHand
     try {
         tigl::CCPACSConfigurationManager& manager = tigl::CCPACSConfigurationManager::GetInstance();
         tigl::CCPACSConfiguration& config = manager.GetConfiguration(cpacsHandle);
-        tigl::CTiglExportBrep exporter;
-        exporter.AddFusedConfiguration(config);
-        bool ret = exporter.Write(filename);
+        tigl::PTiglCADExporter exporter = tigl::createExporter("brep");
+        exporter->AddFusedConfiguration(config);
+        bool ret = exporter->Write(filename);
         return ret == true? TIGL_SUCCESS : TIGL_WRITE_FAILED;
     }
     catch (const tigl::CTiglError& ex) {
@@ -5844,9 +5787,9 @@ TIGL_COMMON_EXPORT TiglReturnCode tiglExportFuselageBREPByUID(TiglCPACSConfigura
         tigl::CCPACSConfigurationManager& manager = tigl::CCPACSConfigurationManager::GetInstance();
         tigl::CCPACSConfiguration& config = manager.GetConfiguration(cpacsHandle);
         tigl::CCPACSFuselage& fuselage = config.GetFuselage(fuselageUID);
-        tigl::CTiglExportBrep writer;
-        writer.AddShape(fuselage.GetLoft());
-        bool ret = writer.Write(filenamePtr);
+        tigl::PTiglCADExporter writer = tigl::createExporter("brep");
+        writer->AddShape(fuselage.GetLoft());
+        bool ret = writer->Write(filenamePtr);
         return ret ? TIGL_SUCCESS : TIGL_WRITE_FAILED;
     }
     catch (const tigl::CTiglError& ex) {
@@ -5883,9 +5826,9 @@ TIGL_COMMON_EXPORT TiglReturnCode tiglExportWingBREPByUID(TiglCPACSConfiguration
         tigl::CCPACSConfigurationManager& manager = tigl::CCPACSConfigurationManager::GetInstance();
         tigl::CCPACSConfiguration& config = manager.GetConfiguration(cpacsHandle);
         tigl::CCPACSWing& wing = config.GetWing(wingUID);
-        tigl::CTiglExportBrep writer;
-        writer.AddShape(wing.GetLoft());
-        bool ret = writer.Write(filenamePtr);
+        tigl::PTiglCADExporter writer = tigl::createExporter("brep");
+        writer->AddShape(wing.GetLoft());
+        bool ret = writer->Write(filenamePtr);
         return ret ? TIGL_SUCCESS : TIGL_WRITE_FAILED;
     }
     catch (const tigl::CTiglError& ex) {
@@ -6869,7 +6812,7 @@ TIGL_COMMON_EXPORT TiglReturnCode tiglCheckPointInside(TiglCPACSConfigurationHan
         // get component
         tigl::ITiglGeometricComponent& component = config.GetUIDManager().GetGeometricComponent(componentUID);
 
-        const TopoDS_Shape& shape = component.GetLoft()->Shape();
+        const TopoDS_Shape shape = component.GetLoft()->Shape();
         *isInside = IsPointInsideShape(shape, gp_Pnt(px, py, pz)) ? TIGL_TRUE : TIGL_FALSE;
 
         return TIGL_SUCCESS;
@@ -6886,6 +6829,131 @@ TIGL_COMMON_EXPORT TiglReturnCode tiglCheckPointInside(TiglCPACSConfigurationHan
     }
     catch (...) {
         LOG(ERROR) << "Caught an exception in tiglCheckPointInside!";
+    }
+    return TIGL_ERROR;
+}
+
+TiglReturnCode tiglSetExportOptions(const char *exporter_name, const char *option_name, const char *option_value)
+{
+    if (!exporter_name) {
+        LOG(ERROR) << "Argument exporter_name is NULL in tiglSetExportOptions!";
+        return TIGL_NULL_POINTER;
+    }
+
+    if (!option_name) {
+        LOG(ERROR) << "Argument option_name is NULL in tiglSetExportOptions!";
+        return TIGL_NULL_POINTER;
+    }
+
+    if (!option_value) {
+        LOG(ERROR) << "Argument option_value is NULL in tiglSetExportOptions!";
+        return TIGL_NULL_POINTER;
+    }
+
+    try {
+        tigl::ExporterOptions& options = tigl::getExportConfig(exporter_name);
+        options.SetFromString(option_name, option_value);
+        return TIGL_SUCCESS;
+    }
+    catch (const tigl::CTiglError& ex) {
+        LOG(ERROR) << "In tiglSetExportOptions: " << ex.what();
+        return ex.getCode();
+    }
+    catch (std::exception& ex) {
+        LOG(ERROR) << "In tiglSetExportOptions: " << ex.what();
+    }
+    catch (...) {
+        LOG(ERROR) << "Caught an exception in tiglSetExportOptions!";
+    }
+    return TIGL_ERROR;
+}
+
+TiglReturnCode tiglExportComponent(TiglCPACSConfigurationHandle cpacsHandle, const char *uid, const char *fileName, double deflection)
+{
+    if (!uid) {
+        LOG(ERROR) << "Argument uid is NULL in tiglExportComponent!";
+        return TIGL_NULL_POINTER;
+    }
+
+    if (!fileName) {
+        LOG(ERROR) << "Argument fileName is NULL in tiglExportComponent!";
+        return TIGL_NULL_POINTER;
+    }
+
+    try {
+        const tigl::CCPACSConfigurationManager& manager = tigl::CCPACSConfigurationManager::GetInstance();
+        tigl::CCPACSConfiguration& config = manager.GetConfiguration(cpacsHandle);
+        tigl::ITiglGeometricComponent& component = config.GetUIDManager().GetGeometricComponent(uid);
+
+        std::string extension = FileExtension(fileName);
+        if (extension.empty()) {
+            LOG(ERROR) << "In tiglExportComponent: Cannot export to '" << fileName << "'. No file extension given.";
+            return TIGL_WRITE_FAILED;
+        }
+
+        tigl::PTiglCADExporter exporter = tigl::createExporter(extension);
+        exporter->AddShape(component.GetLoft(), &config, tigl::TriangulatedExportOptions(deflection));
+        if (exporter->Write(fileName) == true) {
+            return TIGL_SUCCESS;
+        }
+        else {
+            return TIGL_WRITE_FAILED;
+        }
+    }
+    catch (const tigl::CTiglError& ex) {
+        LOG(ERROR) << "In tiglExportComponent: " << ex.what();
+        return ex.getCode();
+    }
+    catch (std::exception& ex) {
+        LOG(ERROR) << "In tiglExportComponent: " << ex.what();
+    }
+    catch (...) {
+        LOG(ERROR) << "Caught an exception in tiglExportComponent!";
+    }
+    return TIGL_ERROR;
+}
+
+TiglReturnCode tiglExportConfiguration(TiglCPACSConfigurationHandle cpacsHandle, const char *fileName, TiglBoolean fuseAllShapes, double deflection)
+{
+    if (!fileName) {
+        LOG(ERROR) << "Argument fileName is NULL in tiglExportConfiguration!";
+        return TIGL_NULL_POINTER;
+    }
+
+    try {
+        const tigl::CCPACSConfigurationManager& manager = tigl::CCPACSConfigurationManager::GetInstance();
+        tigl::CCPACSConfiguration& config = manager.GetConfiguration(cpacsHandle);
+
+        std::string extension = FileExtension(fileName);
+        if (extension.empty()) {
+            LOG(ERROR) << "In tiglExportConfiguration: Cannot export to '" << fileName << "'. No file extension given.";
+            return TIGL_WRITE_FAILED;
+        }
+
+        tigl::PTiglCADExporter exporter = tigl::createExporter(extension);
+        if (fuseAllShapes) {
+            exporter->AddFusedConfiguration(config, tigl::TriangulatedExportOptions(deflection));
+        }
+        else {
+            exporter->AddConfiguration(config, tigl::TriangulatedExportOptions(deflection));
+        }
+
+        if (exporter->Write(fileName) == true) {
+            return TIGL_SUCCESS;
+        }
+        else {
+            return TIGL_WRITE_FAILED;
+        }
+    }
+    catch (const tigl::CTiglError& ex) {
+        LOG(ERROR) << "In tiglExportConfiguration: " << ex.what();
+        return ex.getCode();
+    }
+    catch (std::exception& ex) {
+        LOG(ERROR) << "In tiglExportConfiguration: " << ex.what();
+    }
+    catch (...) {
+        LOG(ERROR) << "Caught an exception in tiglExportConfiguration!";
     }
     return TIGL_ERROR;
 }

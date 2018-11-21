@@ -23,10 +23,12 @@
 #include "tigl_internal.h"
 #include "CCPACSWingCells.h"
 #include "CCPACSMaterialDefinition.h"
+#include "Cache.h"
 
 #include "tigl.h"
 
 #include <gp_Vec.hxx>
+#include <TopoDS_Shape.hxx>
 
 #include <string>
 
@@ -53,12 +55,7 @@ public:
     TIGL_EXPORT const CCPACSWingCSStructure& GetStructure() const;
     TIGL_EXPORT CCPACSWingCSStructure& GetStructure();
 
-    TIGL_EXPORT void ReadCPACS(TixiDocumentHandle tixiHandle, const std::string& shellXPath);
-
     TIGL_EXPORT void Invalidate();
-    TIGL_EXPORT bool IsValid() const;
-
-    TIGL_EXPORT void Update() const;
 
     TIGL_EXPORT TiglLoftSide GetLoftSide() const;
 
@@ -68,7 +65,10 @@ private:
     struct GeometryCache
     {
     };
-    mutable boost::optional<GeometryCache> geometryCache;
+
+    void BuildGeometry(GeometryCache& cache) const;
+
+    Cache<GeometryCache, CCPACSWingShell> m_geometryCache;
 };
 
 } // namespace tigl

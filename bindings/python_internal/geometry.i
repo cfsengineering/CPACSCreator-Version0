@@ -25,16 +25,9 @@
 
 %{
 #include<TopoDS.hxx>
-#include <math_Vector.hxx>
-#include <math_Matrix.hxx>
-#include <Handle_Geom_BSplineCurve.hxx>
 %}
 
-// Import python-occ definitions to
-// have a compatible interface
-%import math.i
-%import Geom.i
-%import TopoDS.i
+%include math_headers.i
 %import tmath.i
 %import core.i
 
@@ -63,6 +56,18 @@
 #include "CCPACSPointListXYZ.h"
 #include "CCPACSPointListRelXYZ.h"
 #include "generated/CPACSPointXYZ.h"
+#include "generated/CPACSPointX.h"
+#include "tiglcommonfunctions.h"
+#include "CTiglBSplineAlgorithms.h"
+#include "CTiglBSplineApproxInterp.h"
+#include "CTiglBSplineFit.h"
+#include "CPointsToLinearBSpline.h"
+#include "CTiglArcLengthReparameterization.h"
+#include "CTiglMakeLoft.h"
+#include "CTiglProjectOnLinearSpline.h"
+#include "CTiglInterpolateCurveNetwork.h"
+#include "CTiglPointsToBSplineInterpolation.h"
+#include "CTiglCurvesToSurface.h"
 %}
 
 
@@ -73,7 +78,28 @@
 %rename("%(undercase)s", %$isfunction) "";
 
 %template(CPointContainer) std::vector<gp_Pnt>;
+%template(BSplineCurveList) std::vector<Handle_Geom_BSplineCurve>;
+%template(CurveList) std::vector<Handle_Geom_Curve>;
 
+%boost_optional(tigl::CCPACSPointAbsRel)
+%boost_optional(tigl::CCPACSPoint)
+%boost_optional(tigl::ECPACSTranslationType)
+%boost_optional(tigl::generated::CPACSPointX)
+%boost_optional(tigl::generated::CPACSPointXYZ)
+%boost_optional(tigl::CCPACSPointListXYZ)
+
+%include "CTiglPointsToBSplineInterpolation.h"
+%include "CTiglInterpolateCurveNetwork.h"
+%include "CTiglCurvesToSurface.h"
+%include "tiglcommonfunctions.h"
+%include "CTiglProjectOnLinearSpline.h"
+%include "CTiglMakeLoft.h"
+%include "CTiglArcLengthReparameterization.h"
+%include "CPointsToLinearBSpline.h"
+%include "CTiglBSplineApproxInterp.h"
+%include "CTiglBSplineFit.h"
+%include "CTiglBSplineAlgorithms.h"
+%include "generated/CPACSPointX.h"
 %include "ECPACSTranslationType.h"
 %include "generated/CPACSPoint.h"
 %include "generated/CPACSPointAbsRel.h"
@@ -81,7 +107,17 @@
 %include "CCPACSPointAbsRel.h"
 %include "ECPACSTranslationType.h"
 %include "CTiglTransformation.h"
+
+// we want to replace Shape with another Shape function that returns by value
+// as returning by ref can cause crashes in python
+%extend CNamedShape {
+    TopoDS_Shape Shape() const {
+        return self->Shape();
+    }
+}
+%ignore CNamedShape::Shape;
 %include "CNamedShape.h"
+
 %include "CSharedPtr.h"
 %include "PNamedShape.h"
 %include "CTiglPoint.h"

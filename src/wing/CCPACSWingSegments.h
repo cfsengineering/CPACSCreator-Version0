@@ -2,10 +2,6 @@
 * Copyright (C) 2007-2013 German Aerospace Center (DLR/SC)
 *
 * Created: 2010-08-13 Markus Litz <Markus.Litz@dlr.de>
-* Changed: $Id$ 
-*
-* Version: $Revision$
-*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -32,12 +28,14 @@
 namespace tigl
 {
 class CCPACSWing;
+class CTiglRelativelyPositionedComponent;
 
 class CCPACSWingSegments : public generated::CPACSWingSegments
 {
 public:
     // Constructor
     TIGL_EXPORT CCPACSWingSegments(CCPACSWing* parent, CTiglUIDManager* uidMgr);
+    TIGL_EXPORT CCPACSWingSegments(CCPACSEnginePylon* parent, CTiglUIDManager* uidMgr);
 
     // Invalidates internal state
     TIGL_EXPORT void Invalidate();
@@ -50,6 +48,14 @@ public:
 
     // Gets total segment count
     TIGL_EXPORT int GetSegmentCount() const;
+
+    const CTiglRelativelyPositionedComponent* GetParentComponent() const
+    {
+        return m_parentVariant;
+    }
+
+private:
+    CTiglRelativelyPositionedComponent* m_parentVariant;
 };
 
 } // end namespace tigl

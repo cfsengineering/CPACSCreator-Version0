@@ -40,7 +40,7 @@
 
 #include <cassert>
 
-#undef NO_EXPLICIT_TE_MODELING
+#define NO_EXPLICIT_TE_MODELING
 
 namespace tigl
 {
@@ -49,7 +49,7 @@ Standard_Boolean CreateSideCap(const TopoDS_Wire& W,
                                const Standard_Real presPln,
                                TopoDS_Face& theFace);
 
-CTiglWingBuilder::CTiglWingBuilder(CCPACSWing& wing)
+CTiglWingBuilder::CTiglWingBuilder(const CCPACSWing& wing)
     : _wing(wing)
 {
 }
@@ -57,10 +57,10 @@ CTiglWingBuilder::CTiglWingBuilder(CCPACSWing& wing)
 #ifndef NO_EXPLICIT_TE_MODELING
 PNamedShape CTiglWingBuilder::BuildShape()
 {
-    CCPACSWingSegments& segments = _wing.m_segments;
+    const CCPACSWingSegments& segments = _wing.m_segments;
 
     // check whether we have a blunt TE or not
-    CCPACSWingProfile& innerProfile = segments.GetSegment(1).GetInnerConnection().GetProfile();
+    const CCPACSWingProfile& innerProfile = segments.GetSegment(1).GetInnerConnection().GetProfile();
 
     TopoDS_Compound guideCurves = _wing.GetGuideCurveWires();
 
@@ -97,9 +97,8 @@ PNamedShape CTiglWingBuilder::BuildShape()
             }
             TopoDS_Wire aeroProfile = wireMaker.Wire();
             lofter.addProfiles(aeroProfile);
-            upperTEPoints.push_back(WireGetLastPoint(aeroProfile));
-            lowerTEPoints.push_back(WireGetFirstPoint(aeroProfile));
-
+            upperTEPoints.push_back(GetLastPoint(aeroProfile));
+            lowerTEPoints.push_back(GetFirstPoint(aeroProfile));
         }
         else {
             lofter.addProfiles(startWire);
@@ -121,11 +120,8 @@ PNamedShape CTiglWingBuilder::BuildShape()
         }
         TopoDS_Wire aeroProfile = wireMaker.Wire();
         lofter.addProfiles(aeroProfile);
-
-        // add the trailing edge points
-        upperTEPoints.push_back(WireGetLastPoint(aeroProfile));
-        lowerTEPoints.push_back(WireGetFirstPoint(aeroProfile));
-
+        upperTEPoints.push_back(GetLastPoint(aeroProfile));
+        lowerTEPoints.push_back(GetFirstPoint(aeroProfile));
     }
     else {
         lofter.addProfiles(endWire);
@@ -188,6 +184,8 @@ PNamedShape CTiglWingBuilder::BuildShape()
 
     sewingAlgo.Perform();
     TopoDS_Shape shellClosed  = sewingAlgo.SewedShape();
+    if (shellClosed.ShapeType() != TopAbs_SHELL)
+        throw CTiglError("Expected sewing algo to construct a shell when building wing loft");
     shellClosed.Closed(Standard_True);
 
     // make solid from shell
@@ -200,14 +198,13 @@ PNamedShape CTiglWingBuilder::BuildShape()
     BRepClass3d_SolidClassifier clas3d(solid);
     clas3d.PerformInfinitePoint(Precision::Confusion());
     if (clas3d.State() == TopAbs_IN) {
-        solidMaker.MakeSolid(solid);
+     solidMaker.MakeSolid(solid);
         TopoDS_Shape aLocalShape = shellClosed.Reversed();
         solidMaker.Add(solid, TopoDS::Shell(aLocalShape));
     }
 
     solid.Closed(Standard_True);
     BRepLib::EncodeRegularity(solid);
-
 
     std::string loftName = _wing.GetUID();
     std::string loftShortName = _wing.GetShortShapeName();
@@ -219,8 +216,8 @@ PNamedShape CTiglWingBuilder::BuildShape()
 #else
 PNamedShape CTiglWingBuilder::BuildShape()
 {
-    CCPACSWingSegments& segments = _wing.segments;
-    CCPACSWingProfile& innerProfile = segments.GetSegment(1).GetInnerConnection().GetProfile();
+    const CCPACSWingSegments& segments = _wing.GetSegments();
+    const CCPACSWingProfile& innerProfile = segments.GetSegment(1).GetInnerConnection().GetProfile();
 
     // we assume, that all profiles of one wing are either blunt or not
     // this is checked during cpacs loading of each wing segment
@@ -244,7 +241,7 @@ PNamedShape CTiglWingBuilder::BuildShape()
     std::string loftName = _wing.GetUID();
     std::string loftShortName = _wing.GetShortShapeName();
     PNamedShape loft(new CNamedShape(loftShape, loftName.c_str(), loftShortName.c_str()));
-    SetFaceTraits(loft, hasBluntTE);
+    SetFaceTraits(_wing.GetUID(), loft, hasBluntTE);
     return loft;
 }
 #endif
@@ -302,7 +299,7 @@ void CTiglWingBuilder::SetFaceTraits (const std::string& wingUID, PNamedShape lo
     }
 #else
     // remove trailing edge name if there is no trailing edge
-    if (hasBluntTE) {
+    if (!hasBluntTE) {
         names.pop_back();
     }
     // assign "Top" and "Bottom" to face traits

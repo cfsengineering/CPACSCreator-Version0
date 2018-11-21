@@ -2,10 +2,6 @@
 * Copyright (C) 2007-2013 German Aerospace Center (DLR/SC)
 *
 * Created: 2010-08-13 Markus Litz <Markus.Litz@dlr.de>
-* Changed: $Id$ 
-*
-* Version: $Revision$
-*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -190,10 +186,10 @@ TEST(TiglFuselageGetPointBugs, getPointAngleTranslated)
 
     // this always worked
     ASSERT_EQ(TIGL_SUCCESS, tiglFuselageGetPointAngleTranslated(tiglHandle, 1, 29, 0.5,  8.1795,  0.19097, 0.027451, &x, &y, &z));
-    ASSERT_NEAR(-0.088553, y, 1e-5);
+    ASSERT_NEAR(-0.088661, y, 1e-5);
 
     // this was buggy
     ASSERT_EQ(TIGL_SUCCESS, tiglFuselageGetPointAngleTranslated(tiglHandle, 1, 29, 0.5, -8.1795, -0.19097, 0.027451, &x, &y, &z));
-    ASSERT_NEAR(0.088553, y, 1e-5);
+    ASSERT_NEAR(0.088661, y, 1e-5);
 }
 

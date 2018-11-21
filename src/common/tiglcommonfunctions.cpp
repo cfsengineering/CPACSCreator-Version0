@@ -39,6 +39,7 @@
 #include "ListPNamedShape.h"
 #include "CNamedShape.h"
 #include "PNamedShape.h"
+#include "CTiglRelativelyPositionedComponent.h"
 
 #include "Geom_Curve.hxx"
 #include "Geom_Surface.hxx"
@@ -99,13 +100,15 @@
 #include <TopTools_ListIteratorOfListOfShape.hxx>
 #include <Standard_Version.hxx>
 
-#include "ShapeAnalysis_FreeBounds.hxx"
+#include <ShapeAnalysis_FreeBounds.hxx>
 
 
 #include <list>
 #include <algorithm>
 #include <cassert>
 #include <limits>
+
+#include "Debugging.h"
 
 namespace
 {
@@ -119,16 +122,17 @@ namespace
 
         double _tol;
     };
+
 } // anonymous namespace
 
 // calculates a wire's circumference
-Standard_Real GetWireLength(const TopoDS_Wire& wire)
+Standard_Real GetLength(const TopoDS_Wire& wire)
 {
     BRepAdaptor_CompCurve aCompoundCurve(wire, Standard_True);
     return GCPnts_AbscissaPoint::Length( aCompoundCurve );
 }
 
-Standard_Real GetEdgeLength(const TopoDS_Edge &edge)
+Standard_Real GetLength(const TopoDS_Edge &edge)
 {
     Standard_Real umin, umax;
     Handle(Geom_Curve) curve = BRep_Tool::Curve(edge, umin, umax);
@@ -281,7 +285,7 @@ Standard_Real ProjectPointOnWire(const TopoDS_Wire& wire, gp_Pnt p)
     }
 
     // return relative coordinate
-    double normalizedLength = partLength/GetWireLength(wire);
+    double normalizedLength = partLength/GetLength(wire);
     if (normalizedLength > 1.0) {
         normalizedLength = 1.0;
     }
@@ -495,7 +499,7 @@ int GetComponentHashCode(tigl::ITiglGeometricComponent& component)
 // Creates an Edge from the given Points by B-Spline interpolation
 TopoDS_Edge EdgeSplineFromPoints(const std::vector<gp_Pnt>& points)
 {
-    unsigned int pointCount = points.size();
+    unsigned int pointCount = static_cast<int>(points.size());
     
     Handle(TColgp_HArray1OfPnt) hpoints = new TColgp_HArray1OfPnt(1, pointCount);
     for (unsigned int j = 0; j < pointCount; j++) {
@@ -546,42 +550,57 @@ Handle(Geom_BSplineCurve) GetBSplineCurve(const TopoDS_Edge& e)
     return bspl;
 }
 
-bool GetIntersectionPoint(const TopoDS_Face& face, const TopoDS_Edge& edge, gp_Pnt& dst)
-{
-    BRepIntCurveSurface_Inter faceCurveInter;
+namespace {
+    bool GetIntersectionPoint_impl(const TopoDS_Face& face, const TopoDS_Edge& edge, gp_Pnt& dst, double tolerance)
+    {
+        BRepIntCurveSurface_Inter faceCurveInter;
 
-    double umin = 0., umax = 0.;
-    const Handle(Geom_Curve)& curve = BRep_Tool::Curve(edge, umin, umax);
+        double umin = 0., umax = 0.;
+        const Handle(Geom_Curve)& curve = BRep_Tool::Curve(edge, umin, umax);
 
-    faceCurveInter.Init(face, GeomAdaptor_Curve(curve, umin, umax), Precision::Confusion());
+        faceCurveInter.Init(face, GeomAdaptor_Curve(curve, umin, umax), tolerance);
 
 
-    if ( faceCurveInter.More() ) {
-        dst = faceCurveInter.Pnt();
-        faceCurveInter.Next();
-        while (faceCurveInter.More()) {
-           if ( !dst.IsEqual(faceCurveInter.Pnt(), Precision::Confusion()) ) {
-               LOG(WARNING) << "Multiple Intersections found in GetIntersectionPoint";
-           }
-           faceCurveInter.Next();
+        if (faceCurveInter.More()) {
+            dst = faceCurveInter.Pnt();
+            faceCurveInter.Next();
+            while (faceCurveInter.More()) {
+                if (!dst.IsEqual(faceCurveInter.Pnt(), Precision::Confusion())) {
+                    LOG(WARNING) << "Multiple Intersections found in GetIntersectionPoint";
+                }
+                faceCurveInter.Next();
+            }
+            return true;
         }
-        return true;
+
+        return false;
     }
-    else {
-        LOG(WARNING) << "No Intersections found in GetIntersectionPoint";
-    }
-    return false;
 }
 
-bool GetIntersectionPoint(const TopoDS_Face& face, const TopoDS_Wire& wire, gp_Pnt& dst)
+bool GetIntersectionPoint(const TopoDS_Face& face, const TopoDS_Edge& edge, gp_Pnt& dst, double tolerance)
 {
+    const bool intersection = GetIntersectionPoint_impl(face, edge, dst, tolerance);
+    if (!intersection) {
+        LOG(WARNING) << "No Intersections found in GetIntersectionPoint";
+    }
+    return intersection;
+}
+
+
+bool GetIntersectionPoint(const TopoDS_Face& face, const TopoDS_Wire& wire, gp_Pnt& dst, double tolerance)
+{
+    DEBUG_SCOPE(debug);
+    debug.addShape(face, "face");
+    debug.addShape(wire, "wire");
     BRepTools_WireExplorer wireExp;
     for (wireExp.Init(wire); wireExp.More(); wireExp.Next()) {
         const TopoDS_Edge& edge = wireExp.Current();
-        if (GetIntersectionPoint(face, edge, dst)) {
+        if (GetIntersectionPoint_impl(face, edge, dst, tolerance)) {
             return true;
         }
     }
+
+    LOG(WARNING) << "No Intersections found in GetIntersectionPoint(face, wire)";
     return false;
 }
 
@@ -697,18 +716,37 @@ bool IsFileReadable(const std::string& filename)
 #endif
 }
 
-/**
- * @brief Returns the starting point of the wire
- */
-gp_Pnt WireGetFirstPoint(const TopoDS_Wire& w)
+std::string FileExtension(const std::string &filename)
+{
+    if(filename.find_last_of(".") != std::string::npos) {
+        return filename.substr(filename.find_last_of(".")+1);
+    }
+    else {
+        return "";
+    }
+}
+
+gp_Pnt GetFirstPoint(const TopoDS_Shape& wireOrEdge)
+{
+    if (wireOrEdge.ShapeType() == TopAbs_WIRE)
+        return GetFirstPoint(TopoDS::Wire(wireOrEdge));
+    if (wireOrEdge.ShapeType() == TopAbs_EDGE)
+        return GetFirstPoint(TopoDS::Edge(wireOrEdge));
+    throw tigl::CTiglError("Shape must be wire or edge");
+}
+
+gp_Pnt GetFirstPoint(const TopoDS_Wire& w)
 {
     TopTools_IndexedMapOfShape wireMap;
-    TopExp::MapShapes(w,TopAbs_EDGE, wireMap);
+    TopExp::MapShapes(w, TopAbs_EDGE, wireMap);
     TopoDS_Edge e = TopoDS::Edge(wireMap(1));
+    return GetFirstPoint(e);
+}
 
+gp_Pnt GetFirstPoint(const TopoDS_Edge& e)
+{
     double u1, u2;
     Handle_Geom_Curve c = BRep_Tool::Curve(e, u1, u2);
-
 
     if (e.Orientation() == TopAbs_REVERSED) {
         return c->Value(u2);
@@ -718,18 +756,27 @@ gp_Pnt WireGetFirstPoint(const TopoDS_Wire& w)
     }
 }
 
-/**
- * @brief Returns the endpoint of the wire
- */
-gp_Pnt WireGetLastPoint(const TopoDS_Wire& w)
+gp_Pnt GetLastPoint(const TopoDS_Shape& wireOrEdge)
+{
+    if (wireOrEdge.ShapeType() == TopAbs_WIRE)
+        return GetLastPoint(TopoDS::Wire(wireOrEdge));
+    if (wireOrEdge.ShapeType() == TopAbs_EDGE)
+        return GetLastPoint(TopoDS::Edge(wireOrEdge));
+    throw tigl::CTiglError("Shape must be wire or edge");
+}
+
+gp_Pnt GetLastPoint(const TopoDS_Wire& w)
 {
     TopTools_IndexedMapOfShape wireMap;
-    TopExp::MapShapes(w,TopAbs_EDGE, wireMap);
+    TopExp::MapShapes(w, TopAbs_EDGE, wireMap);
     TopoDS_Edge e = TopoDS::Edge(wireMap(wireMap.Extent()));
+    return GetLastPoint(e);
+}
 
+gp_Pnt GetLastPoint(const TopoDS_Edge& e)
+{
     double u1, u2;
     Handle_Geom_Curve c = BRep_Tool::Curve(e, u1, u2);
-
 
     if (e.Orientation() == TopAbs_REVERSED) {
         return c->Value(u1);
@@ -738,6 +785,7 @@ gp_Pnt WireGetLastPoint(const TopoDS_Wire& w)
         return c->Value(u2);
     }
 }
+
 TiglContinuity getEdgeContinuity(const TopoDS_Edge& edge1, const TopoDS_Edge& edge2)
 {
     // **********************************************************************************
@@ -1188,6 +1236,18 @@ void GetListOfShape(const TopoDS_Shape& shape, TopAbs_ShapeEnum type, TopTools_L
     }
 }
 
+std::vector<TopoDS_Shape> GetSubShapes(const TopoDS_Shape& shape, TopAbs_ShapeEnum type) {
+    std::vector<TopoDS_Shape> result;
+
+    TopTools_IndexedMapOfShape typeMap;
+    TopExp::MapShapes(shape, type, typeMap);
+    for (int i = 1; i <= typeMap.Extent(); i++) {
+        result.push_back(typeMap.FindKey(i));
+    }
+
+    return result;
+}
+
 TopoDS_Shape CutShapes(const TopoDS_Shape& shape1, const TopoDS_Shape& shape2)
 {
     BRepAlgoAPI_Section cutter(shape1, shape2, Standard_False);
@@ -1203,27 +1263,58 @@ TopoDS_Shape CutShapes(const TopoDS_Shape& shape1, const TopoDS_Shape& shape2)
 
 TopoDS_Shape SplitShape(const TopoDS_Shape& src, const TopoDS_Shape& tool)
 {
-    GEOMAlgo_Splitter splitter;
-    splitter.AddArgument(src);
-    splitter.AddTool(tool);
-    try {
-        splitter.Perform();
-    }
-    catch (const Standard_Failure& f) {
-        std::stringstream ss;
-        ss << "ERROR: splitting of shapes failed: " << f.GetMessageString();
-        LOG(ERROR) << ss.str();
-        throw tigl::CTiglError(ss.str());
-    }
-#if OCC_VERSION_HEX >= VERSION_HEX_CODE(7,2,0)
-    if (splitter.HasErrors()) {
-#else
-    if (splitter.ErrorStatus() != 0) {
+    double fuzzyValue = Precision::Confusion();
+
+    const int c_tries = 3;
+    for (int i = 0;; i++) {
+        GEOMAlgo_Splitter splitter;
+        splitter.AddArgument(src);
+        splitter.AddTool(tool);
+#if OCC_VERSION_HEX >= VERSION_HEX_CODE(6,9,0)
+        splitter.SetFuzzyValue(fuzzyValue);
 #endif
-        LOG(ERROR) << "unable to split passed shapes!";
-        throw tigl::CTiglError("unable to split passed shapes!");
+        try {
+            splitter.Perform();
+        }
+        catch (const Standard_Failure& f) {
+            std::stringstream ss;
+            ss << "ERROR: splitting of shapes failed: " << f.GetMessageString();
+            LOG(ERROR) << ss.str();
+            throw tigl::CTiglError(ss.str());
+        }
+
+#if OCC_VERSION_HEX >= VERSION_HEX_CODE(7,2,0)
+        if (splitter.HasErrors()) {
+            if (i < c_tries - 1) {
+                fuzzyValue *= 10;
+                LOG(WARNING) << "SplitShape failed, retrying with fuzzyValue: " << fuzzyValue;
+                continue;
+            }
+
+            std::ostringstream oss;
+            splitter.GetReport()->Dump(oss);
+            LOG(ERROR) << "unable to split passed shapes: " << oss.str();
+            throw tigl::CTiglError("unable to split passed shapes: " + oss.str());
+        }
+#elif OCC_VERSION_HEX >= VERSION_HEX_CODE(6,9,0)
+        if (splitter.ErrorStatus() != 0) {
+            if (i < c_tries - 1) {
+                fuzzyValue *= 10;
+                LOG(WARNING) << "SplitShape failed, retrying with fuzzyValue: " << fuzzyValue;
+                continue;
+            }
+
+            LOG(ERROR) << "unable to split passed shapes!";
+            throw tigl::CTiglError("unable to split passed shapes!");
+        }
+#else
+        if (splitter.ErrorStatus() != 0) {
+            LOG(ERROR) << "unable to split passed shapes!";
+            throw tigl::CTiglError("unable to split passed shapes!");
+        }
+#endif
+        return splitter.Shape();
     }
-    return splitter.Shape();
 }
 
 void FindAllConnectedEdges(const TopoDS_Edge& edge, TopTools_ListOfShape& edgeList, TopTools_ListOfShape& targetList)
@@ -1426,4 +1517,115 @@ bool IsPointInsideShape(const TopoDS_Shape &solid, gp_Pnt point)
     algo.Perform(point, 1e-3);
 
     return ((algo.State() == TopAbs_IN) != shapeIsReversed ) || (algo.State() == TopAbs_ON);
+}
+
+std::vector<double> LinspaceWithBreaks(double umin, double umax, size_t n_values, const std::vector<double>& breaks)
+{
+    double du = (umax - umin) / static_cast<double>(n_values - 1);
+
+    std::vector<double> result(n_values);
+    for (int i = 0; i < n_values; ++i) {
+        result[i] = i * du + umin;
+    }
+
+    // now insert the break
+
+    double eps = 0.3;
+    // remove points, that are closer to each break point than du*eps
+    for (std::vector<double>::const_iterator it = breaks.begin(); it != breaks.end(); ++it) {
+        double breakpoint = *it;
+        std::vector<double>::iterator pos = std::find_if(result.begin(), result.end(), IsInsideTolerance(breakpoint, du*eps));
+        if (pos != result.end()) {
+            // point found, replace it
+            *pos = breakpoint;
+        }
+        else {
+            // find closest element
+            pos = std::find_if(result.begin(), result.end(), IsInsideTolerance(breakpoint, (0.5 + 1e-8)*du));
+
+            if (*pos > breakpoint) {
+                result.insert(pos, breakpoint);
+            }
+            else {
+                result.insert(pos+1, breakpoint);
+            }
+        }
+    }
+
+    return result;
+}
+
+template <class T>
+T Clamp(T val, T min, T max)
+{
+    if (min > max) {
+        throw tigl::CTiglError("Minimum may not be larger than maximum in clamp!");
+    }
+    
+    return std::max(min, std::min(val, max));
+}
+
+double Clamp(double val, double min, double max)
+{
+    return Clamp<>(val, min, max);
+}
+
+int Clamp(int val, int min, int max)
+{
+    return Clamp<>(val, min, max);
+}
+
+size_t Clamp(size_t val, size_t min, size_t max)
+{
+    return Clamp<>(val, min, max);
+}
+
+TopoDS_Shape TransformedShape(const tigl::CTiglTransformation& transformationToGlobal, TiglCoordinateSystem cs, const TopoDS_Shape& shape)
+{
+    switch (cs) {
+    case WING_COORDINATE_SYSTEM:
+    case FUSELAGE_COORDINATE_SYSTEM:
+        return shape;
+    case GLOBAL_COORDINATE_SYSTEM:
+        return transformationToGlobal.Transform(shape);
+    default:
+        throw tigl::CTiglError("Invalid coordinate system");
+    }
+}
+
+TopoDS_Shape TransformedShape(const tigl::CTiglRelativelyPositionedComponent& component, TiglCoordinateSystem cs, const TopoDS_Shape& shape)
+{
+    return TransformedShape(component.GetTransformationMatrix(), cs, shape);
+}
+
+TopoDS_Shape GetFacesByName(const PNamedShape shape, const std::string &name)
+{
+    std::vector<TopoDS_Face> faces;
+    for (int i = 0; i < static_cast<int>(shape->GetFaceCount()); i++) {
+        if (shape->GetFaceTraits(i).Name() == name) {
+            faces.push_back(GetFace(shape->Shape(), i));
+        }
+    }
+    
+    if (faces.empty())
+        throw tigl::CTiglError("Could not find faces named " + name);
+    if (faces.size() == 1)
+        return faces[0];
+    
+    TopoDS_Compound c;
+    TopoDS_Builder b;
+    b.MakeCompound(c);
+    for (std::size_t i = 0; i < faces.size(); i++)
+        b.Add(c, faces[i]);
+    return c;
+}
+
+TIGL_EXPORT Handle(TColgp_HArray1OfPnt) OccArray(const std::vector<gp_Pnt>& pnts)
+{
+    Handle(TColgp_HArray1OfPnt) result = new TColgp_HArray1OfPnt(1, static_cast<int>(pnts.size()));
+    int idx = 1;
+    for (std::vector<gp_Pnt>::const_iterator it = pnts.begin(); it != pnts.end(); ++it, ++idx) {
+        result->SetValue(idx, *it);
+    }
+    return result;
 }

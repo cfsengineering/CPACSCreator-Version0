@@ -2,10 +2,6 @@
 * Copyright (C) 2007-2013 German Aerospace Center (DLR/SC)
 *
 * Created: 2010-08-13 Markus Litz <Markus.Litz@dlr.de>
-* Changed: $Id$ 
-*
-* Version: $Revision$
-*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -29,6 +25,8 @@
 #include "CCPACSConfigurationManager.h"
 #include "CCPACSWing.h"
 #include "CCPACSWingSegment.h"
+#include "CCPACSWingSegments.h"
+#include "tiglcommonfunctions.h"
 
 /***************************************************************************************************/
 
@@ -1121,4 +1119,28 @@ TEST_F(WingSegmentSimple, getSegmentVolume)
     double volume = 0.;
     ASSERT_EQ(TIGL_SUCCESS, tiglWingGetSegmentVolume(tiglSimpleHandle, 1, 2, &volume));
     ASSERT_GT(volume, 0.);
+}
+
+
+TEST_F(WingSegmentSimple, segmentIndexFromUID)
+{
+    // now we have do use the internal interface as we currently have no public api for this
+    tigl::CCPACSConfigurationManager & manager = tigl::CCPACSConfigurationManager::GetInstance();
+    tigl::CCPACSConfiguration & config = manager.GetConfiguration(tiglSimpleHandle);
+    tigl::CCPACSWing& wing = config.GetWing(1);
+    
+    EXPECT_EQ(0, IndexFromUid(
+        wing.GetSegments().GetSegments(),
+        "Cpacs2Test_Wing_Seg_1_2")
+    );
+    
+    EXPECT_EQ(1, IndexFromUid(
+        wing.GetSegments().GetSegments(),
+        "Cpacs2Test_Wing_Seg_2_3")
+    );
+    
+    EXPECT_GT(IndexFromUid(
+        wing.GetSegments().GetSegments(),
+        "Unknown"), 1
+    );
 }

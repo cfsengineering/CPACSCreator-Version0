@@ -24,6 +24,7 @@
 #include "Standard.hxx"
 #include "gp_Pnt.hxx"
 #include "gp_Vec.hxx"
+#include "gp_Pln.hxx"
 #include "TopoDS_Shape.hxx"
 #include <TopoDS_Edge.hxx>
 #include "PNamedShape.h"
@@ -34,26 +35,50 @@
 #include <TopoDS_Edge.hxx>
 #include <Geom_BSplineCurve.hxx>
 #include <TopTools_ListOfShape.hxx>
+#include "TColgp_HArray1OfPnt.hxx"
 
 #include <map>
 #include <string>
+#include <vector>
+#include <algorithm>
+#include "UniquePtr.h"
 
 typedef std::map<std::string, PNamedShape> ShapeMap;
 
-// calculates a wire's circumfence
-TIGL_EXPORT Standard_Real GetWireLength(const class TopoDS_Wire& wire);
+// helper function for std::find
+struct IsInsideTolerance
+{
+    IsInsideTolerance(double value, double tolerance = 1e-15)
+        : _a(value), _tol(tolerance)
+    {}
 
-TIGL_EXPORT Standard_Real GetEdgeLength(const class TopoDS_Edge& edge);
+    bool operator()(double v)
+    {
+        return (fabs(_a - v) <= _tol);
+    }
+
+    double _a;
+    double _tol;
+};
+
+// calculates a wire's circumfence
+TIGL_EXPORT Standard_Real GetLength(const TopoDS_Wire& wire);
+
+TIGL_EXPORT Standard_Real GetLength(const TopoDS_Edge& edge);
 
 // returns a point on the wire (0 <= alpha <= 1)
 TIGL_EXPORT gp_Pnt WireGetPoint(const TopoDS_Wire& wire, double alpha);
 TIGL_EXPORT void WireGetPointTangent(const TopoDS_Wire& wire, double alpha, gp_Pnt& point, gp_Vec& normal);
 
-// returns the starting point of the wire
-TIGL_EXPORT gp_Pnt WireGetFirstPoint(const TopoDS_Wire& w);
+// returns the starting point of the wire/edge
+TIGL_EXPORT gp_Pnt GetFirstPoint(const TopoDS_Shape& wireOrEdge);
+TIGL_EXPORT gp_Pnt GetFirstPoint(const TopoDS_Wire& w);
+TIGL_EXPORT gp_Pnt GetFirstPoint(const TopoDS_Edge& e);
 
-// returns the end point of the wire
-TIGL_EXPORT gp_Pnt WireGetLastPoint(const TopoDS_Wire& w);
+// returns the end point of the wire/edge
+TIGL_EXPORT gp_Pnt GetLastPoint(const TopoDS_Shape& wireOrEdge);
+TIGL_EXPORT gp_Pnt GetLastPoint(const TopoDS_Wire& w);
+TIGL_EXPORT gp_Pnt GetLastPoint(const TopoDS_Edge& e);
 
 TIGL_EXPORT gp_Pnt EdgeGetPoint(const TopoDS_Edge& edge, double alpha);
 TIGL_EXPORT void EdgeGetPointTangent(const TopoDS_Edge& edge, double alpha, gp_Pnt& point, gp_Vec& normal);
@@ -97,6 +122,8 @@ TIGL_EXPORT gp_Pnt GetCentralFacePoint(const class TopoDS_Face& face);
 // Maps all compounds with its name in the map
 TIGL_EXPORT ListPNamedShape GroupFaces(const PNamedShape shape, tigl::ShapeGroupMode groupType);
 
+TIGL_EXPORT TopoDS_Shape GetFacesByName(const PNamedShape shape, const std::string& name);
+
 // Returns the coordinates of the bounding box of the shape
 TIGL_EXPORT void GetShapeExtension(const TopoDS_Shape& shape,
                                    double& minx, double& maxx,
@@ -110,10 +137,10 @@ TIGL_EXPORT int GetComponentHashCode(tigl::ITiglGeometricComponent&);
 TIGL_EXPORT TopoDS_Edge EdgeSplineFromPoints(const std::vector<gp_Pnt>& points);
 
 // Computes the intersection point of a face and an edge
-TIGL_EXPORT bool GetIntersectionPoint(const TopoDS_Face& face, const TopoDS_Edge& edge, gp_Pnt& dst);
+TIGL_EXPORT bool GetIntersectionPoint(const TopoDS_Face& face, const TopoDS_Edge& edge, gp_Pnt& dst, double tolerance = Precision::Confusion());
 
 // Computes the intersection point of a face and a wire
-TIGL_EXPORT bool GetIntersectionPoint(const TopoDS_Face& face, const TopoDS_Wire& wire, gp_Pnt& dst);
+TIGL_EXPORT bool GetIntersectionPoint(const TopoDS_Face& face, const TopoDS_Wire& wire, gp_Pnt& dst, double tolerance = Precision::Confusion());
 
 // Comuptes the intersection points of two wires
 TIGL_EXPORT bool GetIntersectionPoint(const TopoDS_Wire& wire1, const TopoDS_Wire& wire2, intersectionPointList& intersectionPoints, const double tolerance=Precision::SquareConfusion());
@@ -133,6 +160,8 @@ TIGL_EXPORT bool IsPathRelative(const std::string&);
 
 // Returns true, if a file is readable
 TIGL_EXPORT bool IsFileReadable(const std::string& filename);
+
+TIGL_EXPORT std::string FileExtension(const std::string& filename);
 
 // get the continuity of two edges which share a common vertex
 TIGL_EXPORT TiglContinuity getEdgeContinuity(const TopoDS_Edge& edge1, const TopoDS_Edge& edge2);
@@ -188,6 +217,9 @@ TIGL_EXPORT bool GetMinMaxPoint(const TopoDS_Shape& shape, const gp_Vec& dir, gp
 // Returns the list of shapes of the passed type from the passed shape
 TIGL_EXPORT void GetListOfShape(const TopoDS_Shape& shape, TopAbs_ShapeEnum type, TopTools_ListOfShape& result);
 
+// Returns all shapes with the given type contained in the given shape
+TIGL_EXPORT std::vector<TopoDS_Shape> GetSubShapes(const TopoDS_Shape& shape, TopAbs_ShapeEnum type);
+
 // Cuts two shapes and returns the common geometry (e.g. intersection edges)
 // Throws an exception in case the interesection failed
 TIGL_EXPORT TopoDS_Shape CutShapes(const TopoDS_Shape& shape1, const TopoDS_Shape& shape2);
@@ -224,5 +256,42 @@ TIGL_EXPORT double GetArea(const TopoDS_Shape &shape);
 // NOTE: THIS METHOD ONLY CHECKS THE VERTEX POSITIONS, AND THE MIDDLE POINT 
 //       OF THE EDGES, BUT DOES NOT COMPARE THE CURVES EXACTLY
 TIGL_EXPORT TopoDS_Shape RemoveDuplicateEdges(const TopoDS_Shape& shape);
+
+inline double Radians(double degree)
+{
+    return degree / 180. * M_PI;
+}
+
+// Clamps val between min and max
+TIGL_EXPORT int Clamp(int val, int min, int max);
+TIGL_EXPORT double Clamp(double val, double min, double max);
+TIGL_EXPORT size_t Clamp(size_t val, size_t min, size_t max);
+
+// Creates a linear spaces array but with some additional breaking points
+// If the breaking points are very close to a point, the point will be replaced
+// Else, the breaking point will be inserted
+TIGL_EXPORT std::vector<double> LinspaceWithBreaks(double umin, double umax, size_t n_values, const std::vector<double>& breaks);
+
+// Transforms a shape accourding to the given coordinate transformation
+TIGL_EXPORT TopoDS_Shape TransformedShape(const tigl::CTiglTransformation& transformationToGlobal, TiglCoordinateSystem cs, const TopoDS_Shape& shape);
+TIGL_EXPORT TopoDS_Shape TransformedShape(const tigl::CTiglRelativelyPositionedComponent& component, TiglCoordinateSystem cs, const TopoDS_Shape& shape);
+
+TIGL_EXPORT Handle(TColgp_HArray1OfPnt) OccArray(const std::vector<gp_Pnt>& pnts);
+
+template <typename T>
+size_t IndexFromUid(const std::vector<tigl::unique_ptr<T> >& vectorOfPointers, const std::string& uid)
+{
+    struct is_uid { 
+        is_uid(const std::string& uid) : m_uid(uid){}
+        bool operator()(const tigl::unique_ptr<T>& ptr)
+        { 
+            return ptr->GetUID() == m_uid;
+        }
+        std::string m_uid;
+    }; 
+    
+    typename std::vector<tigl::unique_ptr<T> >::const_iterator found = std::find_if(vectorOfPointers.begin(), vectorOfPointers.end(), is_uid(uid));
+    return found - vectorOfPointers.begin();
+}
 
 #endif // TIGLCOMMONFUNCTIONS_H

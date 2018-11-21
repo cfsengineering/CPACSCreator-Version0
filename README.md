@@ -1,4 +1,3 @@
-
 # About CPACSCreator
 
 The CPACSCreator framework can be used for the computation, the modification 

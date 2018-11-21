@@ -43,7 +43,9 @@ namespace generated
 
         TIGL_EXPORT virtual ~CPACSSheetList();
 
-        TIGL_EXPORT CPACSStructuralProfile* GetParent() const;
+        TIGL_EXPORT CPACSStructuralProfile* GetParent();
+
+        TIGL_EXPORT const CPACSStructuralProfile* GetParent() const;
 
         TIGL_EXPORT CTiglUIDManager& GetUIDManager();
         TIGL_EXPORT const CTiglUIDManager& GetUIDManager() const;
@@ -78,7 +80,7 @@ namespace generated
     };
 } // namespace generated
 
-// CPACSSheetList is customized, use type CCPACSStructuralProfileSheets directly
+// CPACSSheetList is customized, use type CCPACSSheetList directly
 
 // Aliases in tigl namespace
 #ifdef HAVE_CPP11

@@ -2,10 +2,6 @@
 * Copyright (C) 2007-2013 German Aerospace Center (DLR/SC)
 *
 * Created: 2010-08-13 Markus Litz <Markus.Litz@dlr.de>
-* Changed: $Id$ 
-*
-* Version: $Revision$
-*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -32,6 +28,8 @@
 #include "CNamedShape.h"
 #include "tiglcommonfunctions.h"
 #include "CTiglFusePlane.h"
+#include "CTiglExporterFactory.h"
+#include "CTiglTypeRegistry.h"
 
 #include "TopoDS_Shape.hxx"
 #include "TopoDS_Edge.hxx"
@@ -233,17 +231,37 @@ namespace
         WriteIGESShapeNames(writer, shape, level);
     }
 
+    int GetBRepMode(const tigl::CTiglExportIges& writer) {
+        return writer.GlobalExportOptions().HasOption("IGES5.3") ? writer.GlobalExportOptions().Get<bool>("IGES5.3") : 1;
+    }
+    
 } //namespace
 
 namespace tigl
 {
 
-// Constructor
-CTiglExportIges::CTiglExportIges()
+AUTORUN(CTiglExportIges)
 {
-    _groupMode = NAMED_COMPOUNDS;
+    static CCADExporterBuilder<CTiglExportIges> igesExporterBuilder;
+    CTiglExporterFactory::Instance().RegisterExporter(&igesExporterBuilder, IgesOptions());
+    return true;
 }
 
+// Constructor
+CTiglExportIges::CTiglExportIges(const ExporterOptions& opt)
+    : CTiglCADExporter(opt)
+{
+}
+
+ExporterOptions CTiglExportIges::GetDefaultOptions() const
+{
+    return IgesOptions();
+}
+
+ShapeExportOptions CTiglExportIges::GetDefaultShapeOptions() const
+{
+    return IgesShapeOptions();
+}
 
 void CTiglExportIges::SetTranslationParameters() const
 {
@@ -256,7 +274,7 @@ void CTiglExportIges::SetTranslationParameters() const
      * However, in order to fix Issue #182, BRep entities are
      * necessary.
      */
-    Interface_Static::SetIVal("write.iges.brep.mode", 1);
+    Interface_Static::SetIVal("write.iges.brep.mode", GetBRepMode(*this));
     Interface_Static::SetCVal("write.iges.header.author", "TiGL");
     Interface_Static::SetCVal("write.iges.header.company", "German Aerospace Center (DLR), SC");
 }
@@ -286,33 +304,40 @@ bool CTiglExportIges::WriteImpl(const std::string& filename) const
         }
     }
 
+    size_t iShape = 0;
+    size_t iLevel = 0;
     ListPNamedShape list;
+    std::vector<size_t> levels;
     for (it = shapeScaled.begin(); it != shapeScaled.end(); ++it) {
-        ListPNamedShape templist = GroupFaces(*it, _groupMode);
+        ShapeGroupMode groupMode = GlobalExportOptions().GroupMode();
+        ListPNamedShape templist = GroupFaces(*it, groupMode);
+
+        if (GetOptions(iShape).HasOption("Layer")) {
+            int level = GetOptions(iShape).Get<int>("Layer");
+            if (level >= 0) {
+                iLevel = static_cast<size_t>(level);
+            }
+        }
+
         for (ListPNamedShape::iterator it2 = templist.begin(); it2 != templist.end(); ++it2) {
             list.push_back(*it2);
+            levels.push_back(iLevel);
         }
+        iShape++;
+        iLevel++;
     }
 
+    IGESControl_Writer igesWriter("MM", GetBRepMode(*this));
     SetTranslationParameters();
-
-    IGESControl_Writer igesWriter("MM", 1);
     igesWriter.Model()->ApplyStatic();
 
-    int level = 0;
-    for (it = list.begin(); it != list.end(); ++it) {
-        PNamedShape pshape = *it;
-        AddToIges(pshape, igesWriter, level++);
+    for (size_t i = 0; i < list.size(); ++i) {
+        AddToIges(list[i], igesWriter, static_cast<int>(levels[i]));
     }
 
     igesWriter.ComputeModel();
 
     return toBool(igesWriter.Write(const_cast<char*>(filename.c_str())));
-}
-
-void CTiglExportIges::SetGroupMode(ShapeGroupMode mode)
-{
-    _groupMode = mode;
 }
 
 /**

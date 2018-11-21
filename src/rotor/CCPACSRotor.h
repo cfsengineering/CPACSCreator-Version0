@@ -68,10 +68,8 @@ public:
     // Read CPACS rotor elements
     TIGL_EXPORT void ReadCPACS(const TixiDocumentHandle& tixiHandle, const std::string& rotorXPath) OVERRIDE;
 
-    TIGL_EXPORT void SetUID(const std::string& uid) OVERRIDE;
-
     // Returns the Translation
-    TIGL_EXPORT CTiglPoint GetTranslation();
+    TIGL_EXPORT CTiglPoint GetTranslation() const OVERRIDE;
 
     // Returns the type of the rotor
     TIGL_EXPORT TiglRotorType GetDefaultedType() const;
@@ -131,7 +129,7 @@ protected:
 
     // Returns the geometry of the whole rotor (assembly of all rotor blades).
     // Implementation for abstract base class CTiglAbstractGeometricComponent
-    PNamedShape BuildLoft() OVERRIDE;
+    PNamedShape BuildLoft() const OVERRIDE;
 
 private:
     bool                   invalidated;                 /**< Internal state flag  */

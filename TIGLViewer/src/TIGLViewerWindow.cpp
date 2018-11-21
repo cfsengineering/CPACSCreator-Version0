@@ -76,7 +76,7 @@ TIGLViewerWindow::TIGLViewerWindow()
 {
     setupUi(this);
 
-    setWindowTitle(QString("CPACSCreator"));
+    setTiglWindowTitle(QString("TiGL Viewer %1").arg(TIGL_MAJOR_VERSION));
 
     tiglViewerSettings = &TIGLViewerSettings::Instance();
     settingsDialog     = new TIGLViewerSettingsDialog(*tiglViewerSettings, this);
@@ -269,8 +269,21 @@ void TIGLViewerWindow::closeCpacsConfigurationOnly() {
         delete cpacsConfiguration;
         cpacsConfiguration = NULL;
     }
+
     connectConfiguration();
     updateMenus();
+    setTiglWindowTitle(QString("TiGL Viewer %1").arg(TIGL_MAJOR_VERSION));
+}
+
+void TIGLViewerWindow::setTiglWindowTitle(const QString &title, bool forceTitle)
+{
+    if (forceTitle) {
+        QMainWindow::setWindowTitle(title);
+        preferredTitle = title;
+    }
+    else if (preferredTitle.isEmpty()) {
+        QMainWindow::setWindowTitle(title);
+    }
 }
 
 void TIGLViewerWindow::openCpacsConfigurationOnly(QString filename ){
@@ -452,7 +465,6 @@ void TIGLViewerWindow::reopenCurrentFile()
     QString baseFile = undoHelper.originalFile();
     openFileNoCheckPointAdded(undoHelper.currentFile(), false, modificatorManager->useCPACSStandard() );
 }
-
 
 // open the base file form undoHelper
 void TIGLViewerWindow::reopenOriginalFile()
@@ -663,6 +675,7 @@ void TIGLViewerWindow::about()
     text += "&copy; 2017 German Aerospace Center (DLR) <br/>";
     text += "&copy; 2018 CFS Engineering ";
 
+
     QMessageBox::about(this, tr("About CPACSCreator"), text);
 }
 
@@ -715,9 +728,10 @@ void TIGLViewerWindow::connectConfiguration()
     connect(drawWingStructureAction, SIGNAL(triggered(bool)), cpacsConfiguration, SLOT(drawWingStructure()));
 
     // CPACS Aircraft Actions
-    connect(showAllWingsAndFuselagesAction, SIGNAL(triggered()), cpacsConfiguration, SLOT(drawAllFuselagesAndWings()));
-    connect(showAllWingsAndFuselagesSurfacePointsAction, SIGNAL(triggered()), cpacsConfiguration,
-            SLOT(drawAllFuselagesAndWingsSurfacePoints()));
+
+    connect(showAllWingsAndFuselagesAction, SIGNAL(triggered()), cpacsConfiguration, SLOT(drawConfiguration()));
+    connect(showAllWingsAndFuselagesSurfacePointsAction, SIGNAL(triggered()), cpacsConfiguration, SLOT(drawAllFuselagesAndWingsSurfacePoints()));
+
     connect(drawFusedAircraftAction, SIGNAL(triggered()), cpacsConfiguration, SLOT(drawFusedAircraft()));
     connect(drawIntersectionAction, SIGNAL(triggered()), cpacsConfiguration, SLOT(drawIntersectionLine()));
     connect(showFusedAirplaneTriangulation, SIGNAL(triggered()), cpacsConfiguration,
@@ -873,7 +887,8 @@ void TIGLViewerWindow::connectSignals()
     connect(myOCC, SIGNAL(mouseMoved(V3d_Coordinate, V3d_Coordinate, V3d_Coordinate)), this,
             SLOT(xyzPosition(V3d_Coordinate, V3d_Coordinate, V3d_Coordinate)));
 
-    connect(myOCC, SIGNAL(sendStatus(const QString)), this, SLOT(statusMessage(const QString)));
+    connect( myOCC, SIGNAL(sendStatus(const QString)), this,  SLOT  (statusMessage(const QString)) );
+    connect( myOCC, SIGNAL(initialized()), this, SIGNAL(windowInitialized()));
 
     connect(stdoutStream, SIGNAL(sendString(QString)), console, SLOT(output(QString)));
     connect(errorStream, SIGNAL(sendString(QString)), console, SLOT(output(QString)));

@@ -2,10 +2,6 @@
 * Copyright (C) 2007-2013 German Aerospace Center (DLR/SC)
 *
 * Created: 2010-08-13 Markus Litz <Markus.Litz@dlr.de>
-* Changed: $Id$ 
-*
-* Version: $Revision$
-*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -29,6 +25,9 @@
 namespace tigl
 {
 CCPACSWingSections::CCPACSWingSections(CCPACSWing* parent, CTiglUIDManager* uidMgr)
+    : generated::CPACSWingSections(parent, uidMgr) {}
+
+CCPACSWingSections::CCPACSWingSections(CCPACSEnginePylon* parent, CTiglUIDManager* uidMgr)
     : generated::CPACSWingSections(parent, uidMgr) {}
 
 // Get section count

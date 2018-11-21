@@ -2,10 +2,6 @@
 * Copyright (C) 2007-2013 German Aerospace Center (DLR/SC)
 *
 * Created: 2010-08-13 Markus Litz <Markus.Litz@dlr.de>
-* Changed: $Id$ 
-*
-* Version: $Revision$
-*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -46,6 +42,8 @@
 #include "CTiglPoint.h"
 #include "CTiglPointTranslator.h"
 #include "CCPACSTransformation.h"
+#include "CTiglShapeGeomComponentAdaptor.h"
+#include "Cache.h"
 
 namespace tigl
 {
@@ -53,7 +51,6 @@ namespace tigl
 class CCPACSWing;
 class CCPACSWingSegment;
 class CTiglWingChordface;
-class CTiglShapeGeomComponentAdaptor;
 
 typedef std::vector<const CCPACSMaterialDefinition*> MaterialList;
 typedef std::vector<CCPACSWingSegment*>              SegmentList;
@@ -71,29 +68,30 @@ public:
     TIGL_EXPORT void Invalidate();
 
     // Read CPACS segment elements
-    TIGL_EXPORT void ReadCPACS(TixiDocumentHandle tixiHandle, const std::string & segmentXPath);
+    TIGL_EXPORT void ReadCPACS(const TixiDocumentHandle& tixiHandle, const std::string& segmentXPath) OVERRIDE;
 
     TIGL_EXPORT std::string GetDefaultedUID() const OVERRIDE;
 
     TIGL_EXPORT CCPACSWing& GetWing() const;
 
     // Getter for upper Shape
-    TIGL_EXPORT TopoDS_Shape GetUpperShape();
+    TIGL_EXPORT PNamedShape GetUpperShape() const;
 
     // Getter for lower Shape
-    TIGL_EXPORT TopoDS_Shape GetLowerShape();
+    TIGL_EXPORT PNamedShape GetLowerShape() const;
 
     // Getter for inner segment face
-    TIGL_EXPORT TopoDS_Face GetInnerFace();
+    TIGL_EXPORT TopoDS_Face GetInnerFace() const;
 
     // Getter for outer segment face
-    TIGL_EXPORT TopoDS_Face GetOuterFace();
+    TIGL_EXPORT TopoDS_Face GetOuterFace() const;
 
     // Gets a point in relative wing coordinates for a given eta and xsi
     TIGL_EXPORT gp_Pnt GetPoint(double eta, double xsi, TiglCoordinateSystem referenceCS = GLOBAL_COORDINATE_SYSTEM) const;
 
     // Returns the eta xsi coordinates of a points projected onto the midplane / chordface
-    TIGL_EXPORT void GetEtaXsi(const gp_Pnt& p, double& eta, double& xsi) const;
+    TIGL_EXPORT void GetEtaXsi(const gp_Pnt& globalPoint, double& eta, double& xsi) const;
+    TIGL_EXPORT void GetEtaXsiLocal(const gp_Pnt& localPoint, double& eta, double& xsi) const;
 
     // Getter for leading edge point at the relative position, which must be
     // defined between 0 (inner point on leadinge edge) and 1 (outer point)
@@ -105,11 +103,6 @@ public:
 
     // Getter for section element face
     TIGL_EXPORT TopoDS_Face GetSectionElementFace(const std::string& sectionElementUID) const;
-
-    // Getter for eta and xsi for passed point
-    // Passed point must be in wing coordinate system
-    // TODO (siggel): remove this function as it duplicates GetEtaXsi
-    TIGL_EXPORT void GetMidplaneEtaXsi(const gp_Pnt& p, double& eta, double& xsi) const;
 
     // Getter for eta direction of midplane (no X-component)
     TIGL_EXPORT gp_Vec GetMidplaneEtaDir(double eta) const;
@@ -131,15 +124,14 @@ public:
 
     // Returns the segment to a given point on the componentSegment and the nearest point projected onto the loft.
     // Returns null if the point is not an that wing, i.e. deviates more than 1 cm from the wing
-    TIGL_EXPORT const CCPACSWingSegment* findSegment(double x, double y, double z, gp_Pnt& nearestPoint, double& deviation) const;
+    TIGL_EXPORT const CCPACSWingSegment* findSegment(double x, double y, double z, gp_Pnt& nearestPoint, double& deviation, double maxDeviation = 1.e-2) const;
 
     TIGL_EXPORT TiglGeometricComponentType GetComponentType() const OVERRIDE { return TIGL_COMPONENT_WINGCOMPSEGMENT | TIGL_COMPONENT_SEGMENT | TIGL_COMPONENT_LOGICAL; }
 
     TIGL_EXPORT MaterialList GetMaterials(double eta, double xsi, TiglStructureType);
 
     // returns a list of segments that belong to this component segment
-    // TODO: return const-reference to avoid potential harmful modification of wingSegments member
-    TIGL_EXPORT SegmentList& GetSegmentList() const;
+    TIGL_EXPORT const SegmentList& GetSegmentList() const;
         
     // creates an (iso) component segment line 
     TIGL_EXPORT TopoDS_Wire GetCSLine(double eta1, double xsi1, double eta2, double xsi2, int NSTEPS=101);
@@ -191,8 +183,25 @@ public:
     // computes the xsi coordinate on a straight line in global space, given an eta coordinate
     TIGL_EXPORT void InterpolateOnLine(double csEta1, double csXsi1, double csEta2, double csXsi2, double eta, double &xsi, double &errorDistance);
 
-    TIGL_EXPORT CTiglWingChordface& GetChordface() const;
-protected:
+    TIGL_EXPORT const CTiglWingChordface& GetChordface() const;
+
+private:
+    struct GeometryCache {
+        TopoDS_Shape loftShape;
+        TopoDS_Face innerFace;     ///< [[CAS_AES]] added inner segment face
+        TopoDS_Face outerFace;     ///< [[CAS_AES]] added outer segment face
+        PNamedShape upperShape;
+        PNamedShape lowerShape;
+        double      myVolume;      ///< Volume of this segment
+        double      mySurfaceArea; ///< Surface area of this segment
+    };
+
+    struct LinesCache {
+        TopoDS_Wire  etaLine;                  // 2d version (in YZ plane) of leadingEdgeLine
+        TopoDS_Wire  leadingEdgeLine;          // leading edge as wire
+        TopoDS_Wire  trailingEdgeLine;         // trailing edge as wire
+    };
+
     // Cleanup routine
     void Cleanup();
 
@@ -200,14 +209,15 @@ protected:
     void Update();
 
     // Builds the loft between the two segment sections
-    PNamedShape BuildLoft() OVERRIDE;
+    PNamedShape BuildLoft() const OVERRIDE;
 
-    // Method for building wires for eta-, leading edge-, trailing edge-lines
-    void BuildLines() const;
+    void BuildWingSegments(SegmentList& cache) const;
+    void BuildGeometry(GeometryCache& cache) const;
+    void BuildLines(LinesCache& cache) const; // Method for building wires for eta-, leading edge-, trailing edge-lines
 
 private:
     // get short name for loft
-    std::string GetShortShapeName();
+    std::string GetShortShapeName() const;
 
     std::vector<int> findPath(const std::string& fromUid, const::std::string& toUID, const std::vector<int>& curPath, bool forward) const;
 
@@ -217,24 +227,16 @@ private:
     // Returns the trailing edge direction of the segment with the passed UID
     gp_Vec GetTrailingEdgeDirection(const std::string& segmentUID) const;
 
-    void UpdateChordFace() const;
-
 
 private:
-    CCPACSWing*          wing;                 /**< Parent wing                             */
-    double               myVolume;             /**< Volume of this segment                  */
-    double               mySurfaceArea;        /**< Surface area of this segment            */
-    unique_ptr<CTiglShapeGeomComponentAdaptor> upperShape; /**< Upper shape of this componentSegment */
-    unique_ptr<CTiglShapeGeomComponentAdaptor> lowerShape; /**< Lower shape of this componentSegment */
-    mutable SegmentList  wingSegments;         /**< List of segments belonging to the component segment */
-    TopoDS_Face          innerFace;            /**< [[CAS_AES]] added inner segment face    */
-    TopoDS_Face          outerFace;            /**< [[CAS_AES]] added outer segment face    */
-    mutable unique_ptr<CTiglWingChordface> chordFace;
-
-    mutable TopoDS_Wire  etaLine;                  // 2d version (in YZ plane) of leadingEdgeLine
-    mutable TopoDS_Wire  leadingEdgeLine;          // leading edge as wire
-    mutable TopoDS_Wire  trailingEdgeLine;         // trailing edge as wire
-    mutable bool         linesAreValid;
+    typedef CTiglShapeGeomComponentAdaptor<CCPACSWingComponentSegment> ShapeAdaptor;
+    CCPACSWing*          wing;           /**< Parent wing                             */
+    unique_ptr<ShapeAdaptor> upperShape; /**< Upper shape of this componentSegment */
+    unique_ptr<ShapeAdaptor> lowerShape; /**< Lower shape of this componentSegment */
+    unique_ptr<CTiglWingChordface> chordFace;
+    Cache<SegmentList, CCPACSWingComponentSegment> wingSegments; ///< List of segments belonging to the component segment
+    Cache<GeometryCache, CCPACSWingComponentSegment> geomCache;
+    Cache<LinesCache, CCPACSWingComponentSegment> linesCache;
 };
 
 inline std::vector<tigl::CCPACSWingSegment*> getSortedSegments(const CCPACSWingComponentSegment& cs)

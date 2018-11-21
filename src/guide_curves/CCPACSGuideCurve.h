@@ -26,16 +26,15 @@
 #include "tigl_internal.h"
 #include "tixi.h"
 #include "CSharedPtr.h"
-
 #include "generated/CPACSGuideCurve.h"
+#include "generated/UniquePtr.h"
+#include "Cache.h"
 
 #include <gp_Pnt.hxx>
 #include <TopoDS_Edge.hxx>
 
 #include <vector>
 #include <string>
-
-#include "generated/UniquePtr.h"
 
 namespace tigl
 {
@@ -47,6 +46,12 @@ class IGuideCurveBuilder;
 
 class CCPACSGuideCurve : public generated::CPACSGuideCurve
 {
+public:
+    enum FromDefinition
+    {
+        UID,
+        CIRCUMFERENCE
+    };
 
 private:
     // Typedefs for a container to store the coordinates of a guide curve element.
@@ -59,11 +64,10 @@ public:
     // Virtual Destructor
     TIGL_EXPORT ~CCPACSGuideCurve(void) OVERRIDE;
 
-    TIGL_EXPORT const TopoDS_Edge& GetCurve();
+    TIGL_EXPORT FromDefinition GetFromDefinition() const;
 
-    // Connects the current guide curve segment with another segment guide
-    // This implies, that guide.fromGuideCurveUID == this.uid
-    TIGL_EXPORT void ConnectToCurve(CCPACSGuideCurve* guide);
+    TIGL_EXPORT std::vector<gp_Pnt> GetCurvePoints() const;
+    TIGL_EXPORT TopoDS_Edge GetCurve() const;
 
     TIGL_EXPORT CCPACSGuideCurve* GetConnectedCurve() const;
 
@@ -79,18 +83,18 @@ private:
     // Assignment operator
     void operator=(const CCPACSGuideCurve&);
 
-    TopoDS_Edge guideCurveTopo;           /**< Actual topological entity of the curve */
-    CCPACSGuideCurve* nextGuideSegment;   /**< Pointer to a guide curve segment that is connected to this segment */
+    void BuildCurve(TopoDS_Edge& cache) const;
+
+    Cache<TopoDS_Edge, CCPACSGuideCurve> guideCurveTopo; /**< Actual topological entity of the curve */
 
     IGuideCurveBuilder* m_builder;
-    bool isBuild;                         /**< Checks whether the guide curve is already built */
 
 };
 
 class IGuideCurveBuilder
 {
 public:
-    virtual TopoDS_Edge BuildGuideCurve(CCPACSGuideCurve*) = 0;
+    virtual std::vector<gp_Pnt> BuildGuideCurvePnts(const CCPACSGuideCurve*) const = 0;
 };
 
 } // end namespace tigl

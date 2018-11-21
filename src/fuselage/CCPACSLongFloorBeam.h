@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2018 RISC Software GmbH
+* Copyright (c) 2018 Airbus Defence and Space and RISC Software GmbH
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -16,19 +16,35 @@
 
 #pragma once
 
+#include <TopoDS_Shape.hxx>
+
 #include "generated/CPACSLongFloorBeam.h"
+#include "ITiglGeometricComponent.h"
+#include "Cache.h"
 
 namespace tigl
 {
-class CCPACSLongFloorBeam : public generated::CPACSLongFloorBeam
+class CCPACSLongFloorBeam : public generated::CPACSLongFloorBeam, public ITiglGeometricComponent
 {
 public:
     TIGL_EXPORT CCPACSLongFloorBeam(CCPACSLongFloorBeamsAssembly* parent, CTiglUIDManager* uidMgr);
 
+    TIGL_EXPORT std::string GetDefaultedUID() const OVERRIDE;
+    TIGL_EXPORT PNamedShape GetLoft() const OVERRIDE;
+    TIGL_EXPORT TiglGeometricComponentType GetComponentType() const OVERRIDE;
+
     TIGL_EXPORT void Invalidate();
 
+    TIGL_EXPORT TopoDS_Shape GetGeometry(bool just1DElements, TiglCoordinateSystem cs = GLOBAL_COORDINATE_SYSTEM) const;
+
 private:
-    bool invalidated = true;
+    void BuildGeometry1D(TopoDS_Shape& cache) const;
+    void BuildGeometry3D(TopoDS_Shape& cache) const;
+    void BuildGeometry(TopoDS_Shape& cache, bool just1DElements) const;
+
+private:
+    Cache<TopoDS_Shape, CCPACSLongFloorBeam> m_geometry1D;
+    Cache<TopoDS_Shape, CCPACSLongFloorBeam> m_geometry3D;
 };
 
 } // namespace tigl

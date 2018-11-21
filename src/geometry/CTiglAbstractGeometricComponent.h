@@ -2,10 +2,6 @@
 * Copyright (C) 2007-2013 German Aerospace Center (DLR/SC)
 *
 * Created: 2010-08-13 Markus Litz <Markus.Litz@dlr.de>
-* Changed: $Id$ 
-*
-* Version: $Revision$
-*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -31,6 +27,7 @@
 
 #include "PNamedShape.h"
 #include "ITiglGeometricComponent.h"
+#include "Cache.h"
 
 namespace tigl
 {
@@ -47,7 +44,7 @@ public:
     TIGL_EXPORT virtual TiglSymmetryAxis GetSymmetryAxis() const;
 
     // Gets the loft of a geometric component
-    TIGL_EXPORT PNamedShape GetLoft() OVERRIDE;
+    TIGL_EXPORT PNamedShape GetLoft() const OVERRIDE;
 
     // Get the loft mirrored at the mirror plane
     TIGL_EXPORT virtual PNamedShape GetMirroredLoft();
@@ -60,13 +57,15 @@ public:
     TIGL_EXPORT bool GetIsOnMirrored(const gp_Pnt &pnt);
 
 protected:
-    virtual PNamedShape BuildLoft() = 0;
+    virtual PNamedShape BuildLoft() const = 0;
 
-    PNamedShape loft;
+    Cache<PNamedShape, CTiglAbstractGeometricComponent> loft;
 
 private:
     CTiglAbstractGeometricComponent(const CTiglAbstractGeometricComponent&);
     void operator=(const CTiglAbstractGeometricComponent&);
+
+    void BuildLoft(PNamedShape& cache) const;
 };
 
 } // end namespace tigl
