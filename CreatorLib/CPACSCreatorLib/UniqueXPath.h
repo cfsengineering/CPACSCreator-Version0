@@ -71,6 +71,16 @@ namespace cpcr {
 
         inline bool operator==(const std::string& string) { return string == xpath; };
 
+        /**
+         * Check if the first element is of the given type.
+         * If yes, return the tixi idx of the first elment and remove the first element.
+         * If no, throw a CreatorException.
+         * The naming comes form the fact that we walk though the path safely.
+         *
+         * @param type
+         * @return
+         */
+        int walkSafely(std::string type);
 
     protected:
         // return the first particle of the path, basic the string before the first /

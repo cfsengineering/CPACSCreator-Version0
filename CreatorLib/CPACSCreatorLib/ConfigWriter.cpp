@@ -5,6 +5,7 @@
 #include "ConfigWriter.h"
 #include "CreatorException.h"
 #include "CCPACSFuselageSection.h"
+#include "CCPACSWingSection.h"
 
 
 cpcr::ConfigWriter::ConfigWriter() {
@@ -17,6 +18,7 @@ cpcr::ConfigWriter::ConfigWriter() {
 void cpcr::ConfigWriter::open(std::string filename, UID modelUID) {
 
     this->filename = filename;
+    this->modelUID = modelUID;
 
     tixiHandle = tixi::TixiOpenDocument(filename);
 
@@ -29,7 +31,7 @@ void cpcr::ConfigWriter::open(std::string filename, UID modelUID) {
 }
 
 
-tigl::CCPACSConfiguration &cpcr::ConfigWriter::GetConfiguration() {
+tigl::CCPACSConfiguration &cpcr::ConfigWriter::getConfiguration() {
     tigl::CCPACSConfigurationManager& manager = tigl::CCPACSConfigurationManager::GetInstance();
     return manager.GetConfiguration(tiglHandle);
 }
@@ -38,61 +40,119 @@ tigl::CCPACSConfiguration &cpcr::ConfigWriter::GetConfiguration() {
 
 tigl::CTiglTransformation cpcr::ConfigWriter::getTransformation(cpcr::UniqueXPath xpath) {
 
-    tigl::CTiglTransformation trans;
+    tigl::CTiglTransformation r;
 
+    try {
+        r = this->getTransformationReference(xpath).getTransformationMatrix();
+    }
+    catch( const CreatorException& e){
+        LOG(ERROR)  << "ConfigWriter::getTransformation throw error with message: "
+                    << e.what()
+                    << " Default CTiglTransformation will be returned!"
+                    << std::endl;
+
+    }
+    return r;
+}
+
+
+
+
+void cpcr::ConfigWriter::setTransformation(cpcr::UniqueXPath xpath, tigl::CTiglTransformation newTransformation) {
+
+
+    try {
+
+        tigl::CCPACSTransformation& refTransformation = this->getTransformationReference(xpath);
+        refTransformation.setTransformationMatrix(newTransformation);
+        getConfiguration().WriteCPACS(modelUID);
+    }
+    catch( const CreatorException& e){
+        LOG(ERROR)  << "ConfigWriter::getTransformation throw error with message: "
+                    << e.what()
+                    << " Nothing has changed!"
+                    << std::endl;
+    }
+
+}
+
+
+
+tigl::CCPACSTransformation &cpcr::ConfigWriter::getTransformationReference(cpcr::UniqueXPath xpath) {
+
+    // go down until fuselages or wings
     while( (! xpath.isEmpty() )  && xpath.getFirstElementType() != "fuselages"  && xpath.getFirstElementType() != "wings" )  {
         xpath.popFirst();
     }
 
     if (xpath.isEmpty()){
-        LOG(WARNING) << "ConfigWriter::getTransformation: XPATH NOT VALID";
-        return trans;
+        throw CreatorException("ConfigWriter::GetTransformationReference: Invalid xpath");
     }
 
 
-    tigl::CCPACSConfiguration & config = GetConfiguration();
+    tigl::CCPACSConfiguration & config = getConfiguration();
 
+    // fuselages cases
     if( xpath.getFirstElementType() == "fuselages"){
 
-        xpath.popFirst();
-        if( xpath.getFirstElementType() != "fuselage"){
-            throw CreatorException("ConfigWriter::getTransformation: invalid path");
-        }
-        int fuselageIdx = xpath.getFirstElementIndex();
-        xpath.popFirst();
+        xpath.walkSafely("fuselages");
+        int fuselageIdx = xpath.walkSafely("fuselage");
 
+        // fuselage[idx] transformation
         if(xpath.isEmpty()){
-            trans = config.GetFuselage(fuselageIdx).GetTransformation().getTransformationMatrix();
-        }else {
-            if( xpath.getFirstElementType() != "sections"){
-                throw CreatorException("ConfigWriter::getTransformation: invalid path");
-            }
-            xpath.popFirst();
-
-            if( xpath.getFirstElementType() != "section"){
-                throw CreatorException("ConfigWriter::getTransformation: invalid path");
-            }
-            int sectionIdx = xpath.getFirstElementIndex();
-            xpath.popFirst();
-            if (xpath.isEmpty()){
-                trans = config.GetFuselage(fuselageIdx).GetSections().GetSection(sectionIdx).GetTransformation().getTransformationMatrix();
-            }
-
-
-
+            return config.GetFuselage(fuselageIdx).GetTransformation();
         }
 
+        xpath.walkSafely("sections");
+        int sectionIdx = xpath.walkSafely("section");
 
+        // fuselage[idx]/sections/section[idx] transformation
+        if (xpath.isEmpty()){
+            return config.GetFuselage(fuselageIdx).GetSections().GetSection(sectionIdx).GetTransformation();
+        }
+
+        xpath.walkSafely("elements");
+        int elementIdx = xpath.walkSafely("element");
+
+
+        // fuselage[idx]/sections/section[idx]/elements/element[idx] transformation
+        if(xpath.isEmpty()){
+            return config.GetFuselage(fuselageIdx).GetSections().GetSection(sectionIdx).GetElements().GetSectionElement(elementIdx).GetTransformation();
+        }
+
+        throw CreatorException("ConfigWriter::GetTransformationReference: Invalid xpath");
     }
+
 
     if( xpath.getFirstElementType() == "wings"){
-        xpath.popFirst();
-        xpath.getFirstElementType();
-        int wingIdx = xpath.getFirstElementIndex();
-        trans = config.GetWing(wingIdx).GetTransformation().getTransformationMatrix();
+        xpath.walkSafely("wings");
+        int wingIdx = xpath.walkSafely("wing");
+
+        // wing[idx] transformation
+        if(xpath.isEmpty()){
+            return config.GetWing(wingIdx).GetTransformation();
+        }
+
+        xpath.walkSafely("sections");
+        int sectionIdx = xpath.walkSafely("section");
+
+        // wing[idx]/sections/section[idx] transformation
+        if (xpath.isEmpty()){
+            return config.GetWing(wingIdx).GetSections().GetSection(sectionIdx).GetTransformation();
+        }
+
+        xpath.walkSafely("elements");
+        int elementIdx = xpath.walkSafely("element");
+
+        // wing[idx]/sections/section[idx]/elements/element[idx] transformation
+        if(xpath.isEmpty()){
+            return config.GetWing(wingIdx).GetSections().GetSection(sectionIdx).GetElements().GetSectionElement(elementIdx).GetTransformation();
+        }
+
+        throw CreatorException("ConfigWriter::GetTransformationReference: Invalid xpath");
     }
 
-    return trans;
-}
+    throw CreatorException("ConfigWriter::GetTransformationReference: Invalid xpath");
 
+}
 

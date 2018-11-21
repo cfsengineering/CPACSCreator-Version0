@@ -123,6 +123,9 @@ public:
     // Getter for matrix values
     TIGL_EXPORT double GetValue(int row, int col) const;
 
+    // compare the values of this CTiglTransformation with another one
+    TIGL_EXPORT bool IsEqual(const CTiglTransformation& other);
+
 private:
     bool IsUniform() const;
 

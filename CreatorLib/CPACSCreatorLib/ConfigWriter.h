@@ -25,15 +25,31 @@ namespace cpcr {
 
         void open(std::string filename, UID modelUID);
 
-        tigl::CTiglTransformation getTransformation(UniqueXPath xpath); 
- 
+        tigl::CTiglTransformation getTransformation(UniqueXPath xpath);
+
+        void setTransformation(UniqueXPath xpath, tigl::CTiglTransformation t);
+
+
 
     protected:
-        tigl::CCPACSConfiguration&  GetConfiguration();
+        tigl::CCPACSConfiguration&  getConfiguration();
+
+        /**
+         * Return the CCPACSTransformation pointed by the given xpath by reference.
+         * @remark because the CCPACSTransformation is geven by reference modify it wil change the value store by
+         * the element that has this transformation.
+         * @param xpath
+         * @return
+         */
+        tigl::CCPACSTransformation& getTransformationReference(UniqueXPath xpath);
+
+
+
 
     private:
 
         std::string filename;
+        UID modelUID;
         TixiDocumentHandle           tixiHandle;
         TiglCPACSConfigurationHandle tiglHandle;
 

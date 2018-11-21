@@ -20,7 +20,7 @@
 //
 
 #include "UniqueXPath.h"
-
+#include "CreatorException.h"
 
 #include "easylogging++.h"
 
@@ -214,6 +214,16 @@ cpcr::UniqueXPath cpcr::UniqueXPath::relativeTo(const cpcr::UniqueXPath &other) 
 void cpcr::UniqueXPath::replaceLastTixiIndexByUidAttribute(std::string attribute) {
     this->xpath = removeBrackets(this->xpath);
     this->xpath = this->xpath + "[@uID=\"" + attribute + "\"]";
+}
+
+int cpcr::UniqueXPath::walkSafely(std::string type) {
+
+    if( this->getFirstElementType() != type){
+        throw CreatorException("UniqueXPath::walkSafely: the first element of the xpath: " + this->toString() + " is not of the required type, required type: " + type + " actual time: " + this->getFirstElementType() );
+    }
+    int idx = this->getFirstElementIndex();
+    this->popFirst();
+    return idx;
 }
 
 

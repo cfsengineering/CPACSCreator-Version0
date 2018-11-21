@@ -34,49 +34,97 @@ TEST_F(ConfigWriterTests, getTransformation){
     UID uid = "Cpacs2Test";
     std::string currentFileName = "simple-aircraft-3.xml";
     UniqueXPath xPath;
+    tigl::CTiglTransformation  current, expected;
 
     ConfigWriter cw;
     cw.open( DATA_DIR + currentFileName , uid);
 
     xPath.setXPath("/cpacs/vehicles/aircraft/model/wings/wing[1]");
 
-    tigl::CTiglTransformation  t = cw.getTransformation(xPath);
-    tigl::CTiglTransformation expected ;
+    current = cw.getTransformation(xPath);
+    expected.SetIdentity();
     expected.AddScaling(1.1,2.2,3.3);
-
-    for(int i =  0; i < 3; i++ ){
-        for(int j =  0; j < 3; j++ ) {
-            EXPECT_TRUE( expected.GetValue(i,j) == t.GetValue(i,j));
-        }
-    }
+    EXPECT_TRUE( current.IsEqual(expected));
 
 
 
     xPath.setXPath("/cpacs/vehicles/aircraft/model/fuselages/fuselage[1]");
 
-    t = cw.getTransformation(xPath);
+    current = cw.getTransformation(xPath);
     expected.SetIdentity();
     expected.AddScaling(1,0.5,0.5);
-    for(int i =  0; i < 3; i++ ){
-        for(int j =  0; j < 3; j++ ) {
-            EXPECT_TRUE( expected.GetValue(i,j) == t.GetValue(i,j));
-        }
-    }
-
+    EXPECT_TRUE( current.IsEqual(expected));
 
 
     xPath.setXPath("/cpacs/vehicles/aircraft/model/fuselages/fuselage[1]/sections/section[2]");
 
-    t = cw.getTransformation(xPath);
+    current = cw.getTransformation(xPath);
     expected.SetIdentity();
     expected.AddTranslation(0.5,0,0);
-    for(int i =  0; i < 3; i++ ){
-        for(int j =  0; j < 3; j++ ) {
-            EXPECT_TRUE( expected.GetValue(i,j) == t.GetValue(i,j));
-        }
-    }
+    EXPECT_TRUE( current.IsEqual(expected));
 
 
-    EXPECT_TRUE(true);
+}
+
+
+
+TEST_F(ConfigWriterTests, setTransformation) {
+
+    UID uid = "Cpacs2Test";
+    std::string currentFileName = "simple-aircraft-3.xml";
+    UniqueXPath xPath;
+    ConfigWriter cw;
+    tigl::CTiglTransformation  after, forced;
+
+    cw.open( DATA_DIR + currentFileName , uid);
+
+    xPath.setXPath("/cpacs/vehicles/aircraft/model/wings/wing[1]");
+
+    forced.AddScaling(3,4,5);
+    forced.AddTranslation(13,23,56);
+    forced.AddRotationX(3);
+    forced.AddRotationY(7);
+    forced.AddRotationZ(8);
+
+    cw.setTransformation(xPath, forced);
+    after = cw.getTransformation(xPath);
+
+    EXPECT_TRUE(after.IsEqual(forced));
+    after.AddTranslation(3,3,3);
+    EXPECT_FALSE(after.IsEqual(forced));
+
+
+    xPath.setXPath("/cpacs/vehicles/aircraft/model/wings/wing[1]/sections/section[2]");
+
+    forced.SetIdentity();
+    forced.AddScaling(2,2,2);
+    forced.AddTranslation(-1,-1,-1);
+    forced.AddRotationX(3);
+    forced.AddRotationY(3);
+    forced.AddRotationZ(3);
+
+    cw.setTransformation(xPath, forced);
+    after = cw.getTransformation(xPath);
+
+    EXPECT_TRUE(after.IsEqual(forced));
+
+
+
+    xPath.setXPath("/cpacs/vehicles/aircraft/model/wings/wing[1]/sections/section[2]/elements/element[1]");
+
+    forced.SetIdentity();
+    forced.AddScaling(2,2,2);
+    forced.AddTranslation(-1,-1,-1);
+    forced.AddRotationX(3);
+    forced.AddRotationY(3);
+    forced.AddRotationZ(3);
+
+    cw.setTransformation(xPath, forced);
+    after = cw.getTransformation(xPath);
+
+    EXPECT_TRUE(after.IsEqual(forced));
+
+    
+
 
 }

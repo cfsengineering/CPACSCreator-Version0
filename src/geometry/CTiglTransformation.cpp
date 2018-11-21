@@ -526,6 +526,16 @@ double CTiglTransformation::GetValue(int row, int col) const
     return m_matrix[row][col];
 }
 
+bool CTiglTransformation::IsEqual(const tigl::CTiglTransformation &other) {
+    bool equal = true;
+    for(int i =  0; i < 4; i++ ){
+        for(int j =  0; j < 4; j++ ) {
+            equal = equal && (this->GetValue(i,j) == other.GetValue(i,j) )  ;
+        }
+    }
+    return equal;
+}
+
 std::ostream& operator<<(std::ostream& os, const CTiglTransformation& t)
 {
     for (int i = 0; i < 4; ++i) {
