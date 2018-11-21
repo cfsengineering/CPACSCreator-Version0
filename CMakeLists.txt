@@ -251,6 +251,7 @@ if(TIGL_BUILD_TESTS)
   set (gtest_SOURCE_DIR "thirdparty/gtest-1.7.0")
   add_subdirectory (${gtest_SOURCE_DIR})
   add_subdirectory(tests)
+  add_subdirectory(CreatorLib/CPACSCreatorLibTests)
 endif(TIGL_BUILD_TESTS)
 
 include(createDoc)
