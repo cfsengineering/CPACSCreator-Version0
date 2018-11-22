@@ -80,16 +80,20 @@ protected:
      void dropEvent(QDropEvent *ev) OVERRIDE;
      void dragEnterEvent(QDragEnterEvent *ev) OVERRIDE;
 
+signals:
+     void windowInitialized();
+
 public slots:
     // open the file adding a checkpoint for undo manager
     void openFile(const QString& fileName);
     void openScript(const QString& scriptFileName);
     bool saveFile(const QString& fileName);
     void close();
+    void setTiglWindowTitle(const QString& title, bool forceTitle=false);
     
     TIGLViewerWidget*   getViewer();
     TIGLViewerContext*  getScene() { return myScene; }
-    TIGLViewerDocument* getDocument() { return cpacsConfiguration; }
+    TIGLViewerDocument* getDocument() { return cpacsConfiguration; } 
 
 private slots:
     void updateMenus();
@@ -171,6 +175,7 @@ private:
 
     UndoHelper undoHelper;  // manage the file names for undo function
     QString controlFileName;
+    QString preferredTitle;
     QFileSystemWatcher *watcher;
     class QDebugStream * stdoutStream, * errorStream;
     CSharedPtr<TIGLViewerLogHistory> logHistory;

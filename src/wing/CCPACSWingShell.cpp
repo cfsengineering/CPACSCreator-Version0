@@ -21,13 +21,17 @@
 #include "CCPACSWingCSStructure.h"
 #include "CTiglError.h"
 #include "CCPACSWingCell.h"
+#include "tiglcommonfunctions.h"
 
 
-namespace tigl 
+namespace tigl
 {
 
 CCPACSWingShell::CCPACSWingShell(CCPACSWingCSStructure* parent, CTiglUIDManager* uidMgr)
-    : generated::CPACSWingShell(parent, uidMgr) {}
+    : generated::CPACSWingShell(parent, uidMgr)
+    , m_geometryCache(*this, &CCPACSWingShell::BuildGeometry)
+{
+}
 
 int CCPACSWingShell::GetCellCount() const
 {
@@ -68,31 +72,16 @@ CCPACSWingCSStructure& CCPACSWingShell::GetStructure()
     return *m_parent;
 }
 
-void CCPACSWingShell::ReadCPACS(TixiDocumentHandle tixiHandle, const std::string &shellXPath)
-{
-    generated::CPACSWingShell::ReadCPACS(tixiHandle, shellXPath);
-}
-
 void CCPACSWingShell::Invalidate()
 {
-    geometryCache = boost::none;
+    m_geometryCache.clear();
     if (m_cells)
         m_cells->Invalidate();
 }
 
-bool CCPACSWingShell::IsValid() const
+void CCPACSWingShell::BuildGeometry(GeometryCache& cache) const
 {
-    return geometryCache.is_initialized();
-}
 
-void CCPACSWingShell::Update() const
-{
-    if (geometryCache) {
-        return;
-    }
-    geometryCache.emplace();
-
-    // TODO: build stringer geometry
 }
 
 TiglLoftSide CCPACSWingShell::GetLoftSide() const

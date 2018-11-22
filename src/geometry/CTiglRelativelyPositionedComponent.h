@@ -2,10 +2,6 @@
 * Copyright (C) 2007-2013 German Aerospace Center (DLR/SC)
 *
 * Created: 2010-08-13 Markus Litz <Markus.Litz@dlr.de>
-* Changed: $Id$ 
-*
-* Version: $Revision$
-*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -50,7 +46,8 @@ class CTiglRelativelyPositionedComponent : public CTiglAbstractGeometricComponen
 public:
     typedef std::vector<CTiglRelativelyPositionedComponent*> ChildContainerType;
 
-    TIGL_EXPORT CTiglRelativelyPositionedComponent(boost::optional<std::string>* parentUid, CCPACSTransformation* trans);
+    TIGL_EXPORT explicit CTiglRelativelyPositionedComponent(std::string* parentUid, CCPACSTransformation* trans);
+    TIGL_EXPORT explicit CTiglRelativelyPositionedComponent(boost::optional<std::string>* parentUid, CCPACSTransformation* trans);
     TIGL_EXPORT CTiglRelativelyPositionedComponent(boost::optional<std::string>* parentUid, CCPACSTransformation* trans, TiglSymmetryAxis* symmetryAxis);
     TIGL_EXPORT CTiglRelativelyPositionedComponent(boost::optional<std::string>* parentUid, CCPACSTransformation* trans, boost::optional<TiglSymmetryAxis>* symmetryAxis);
 
@@ -84,7 +81,7 @@ private:
 private:
     CTiglRelativelyPositionedComponent* _parent;
     ChildContainerType _children;
-    boost::optional<std::string>* _parentUID; ///< UID of the parent of this component, if supported by derived type
+    boost::variant<std::string*, boost::optional<std::string>*> _parentUID; ///< UID of the parent of this component, if supported by derived type
 
     CCPACSTransformation* _transformation;                                                 // references down to the transformation of the derived class (may be empty in case derived class does not have transformation)
     boost::variant<TiglSymmetryAxis*, boost::optional<TiglSymmetryAxis>*> _symmetryAxis;   // references down to the symmetryAxis of the derived class (may be empty in case derived class does not have symmetry)

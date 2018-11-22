@@ -14,7 +14,7 @@ INCLUDE_DIRECTORIES(${TIGL_INCLUDES})
 
 INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR} ${PROJECT_SOURCE_DIR}/src ${PROJECT_BINARY_DIR}/src ${PROJECT_BINARY_DIR}/src/api ${XML_INCLUDE_DIRS} ${TIXI_INCLUDE_DIRS} ${OpenCASCADE_INCLUDE_DIR})
 # boost
-INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/thirdparty/boost_1_63_0)
+INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/thirdparty/boost_1_67_0)
 
 LINK_DIRECTORIES(${LIBRARY_OUTPUT_PATH})
 ADD_EXECUTABLE(${test_BIN} ${test_SRCS} )
@@ -27,7 +27,7 @@ if(GLOG_FOUND)
 endif(GLOG_FOUND)
 
 # boost
-include_directories(${PROJECT_SOURCE_DIR}/thirdparty/boost_1_63_0)
+include_directories(${PROJECT_SOURCE_DIR}/thirdparty/boost_1_67_0)
 
 
 #Creator library dependencies
@@ -62,6 +62,7 @@ add_custom_command(
 #create directory to avoid crash in unit tests
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/TestData/export)
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/TestData/analysis)
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/TestData/bugs/505)
 
 configure_file (
   "${CMAKE_CURRENT_SOURCE_DIR}/runtests.sh.in"

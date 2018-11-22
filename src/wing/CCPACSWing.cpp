@@ -2,10 +2,6 @@
 * Copyright (C) 2007-2013 German Aerospace Center (DLR/SC)
 *
 * Created: 2010-08-13 Markus Litz <Markus.Litz@dlr.de>
-* Changed: $Id$ 
-*
-* Version: $Revision$
-*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -25,6 +21,7 @@
 
 #include <iostream>
 #include <algorithm>
+#include <map>
 
 #include "generated/CPACSRotorBlades.h"
 #include "CCPACSWing.h"
@@ -40,6 +37,8 @@
 #include "tiglcommonfunctions.h"
 #include "tiglmathfunctions.h"
 #include "CNamedShape.h"
+#include "CTiglCurveConnector.h"
+#include "CTiglBSplineAlgorithms.h"
 
 #include "BRepOffsetAPI_ThruSections.hxx"
 #include "BRepAlgoAPI_Fuse.hxx"
@@ -93,8 +92,9 @@ CCPACSWing::CCPACSWing(CCPACSWings* parent, CTiglUIDManager* uidMgr)
     , CTiglRelativelyPositionedComponent(&m_parentUID, &m_transformation, &m_symmetry)
     , rebuildFusedSegments(true)
     , rebuildFusedSegWEdge(true)
-    , rebuildShells(true) {
-
+    , rebuildShells(true)
+    , guideCurves(*this, &CCPACSWing::BuildGuideCurveWires)
+{
     if (parent->IsParent<CCPACSAircraftModel>())
         configuration = &parent->GetParent<CCPACSAircraftModel>()->GetConfiguration();
     else if (parent->IsParent<CCPACSRotorcraftModel>())
@@ -110,16 +110,15 @@ CCPACSWing::CCPACSWing(CCPACSRotorBlades* parent, CTiglUIDManager* uidMgr)
     , configuration(&parent->GetConfiguration())
     , rebuildFusedSegments(true)
     , rebuildFusedSegWEdge(true)
-    , rebuildShells(true) {
+    , rebuildShells(true)
+    , guideCurves(*this, &CCPACSWing::BuildGuideCurveWires)
+{
     Cleanup();
 }
 
 // Destructor
 CCPACSWing::~CCPACSWing()
 {
-    // unregister
-    configuration->GetUIDManager().RemoveGeometricComponent(GetUID());
-
     Cleanup();
 }
 
@@ -184,7 +183,7 @@ void CCPACSWing::Update()
 }
 
 // Read CPACS wing element
-void CCPACSWing::ReadCPACS(TixiDocumentHandle tixiHandle, const std::string& wingXPath)
+void CCPACSWing::ReadCPACS(const TixiDocumentHandle& tixiHandle, const std::string& wingXPath)
 {
     Cleanup();
     generated::CPACSWing::ReadCPACS(tixiHandle, wingXPath);
@@ -195,18 +194,7 @@ void CCPACSWing::ReadCPACS(TixiDocumentHandle tixiHandle, const std::string& win
 
     ConnectGuideCurveSegments();
 
-    // Register ourself at the unique id manager
-    configuration->GetUIDManager().AddGeometricComponent(m_uID, this);
-
     Update();
-}
-
-void CCPACSWing::SetUID(const std::string& uid) {
-    if (m_uidMgr) {
-        m_uidMgr->TryRemoveGeometricComponent(m_uID);
-        m_uidMgr->AddGeometricComponent(uid, this);
-    }
-    generated::CPACSWing::SetUID(uid);
 }
 
 std::string CCPACSWing::GetDefaultedUID() const {
@@ -326,11 +314,11 @@ TopoDS_Shape & CCPACSWing::GetLowerShape()
     
 
 // get short name for loft
-std::string CCPACSWing::GetShortShapeName() 
+std::string CCPACSWing::GetShortShapeName() const
 {
     unsigned int windex = 0;
     for (int i = 1; i <= GetConfiguration().GetWingCount(); ++i) {
-        tigl::CCPACSWing& w = GetConfiguration().GetWing(i);
+        const CCPACSWing& w = GetConfiguration().GetWing(i);
         if (GetUID() == w.GetUID()) {
             windex = i;
             std::stringstream shortName;
@@ -342,13 +330,13 @@ std::string CCPACSWing::GetShortShapeName()
 }
 
 // build loft
-PNamedShape CCPACSWing::BuildLoft()
+PNamedShape CCPACSWing::BuildLoft() const
 {
     return BuildFusedSegments(true);
 }
 
 // Builds a fused shape of all wing segments
-PNamedShape CCPACSWing::BuildFusedSegments(bool splitWingInUpperAndLower)
+PNamedShape CCPACSWing::BuildFusedSegments(bool splitWingInUpperAndLower) const
 {
     PNamedShape loft = CTiglWingBuilder(*this);
     return loft;
@@ -417,7 +405,7 @@ gp_Pnt CCPACSWing::GetChordPoint(int segmentIndex, double eta, double xsi)
 // Returns the volume of this wing
 double CCPACSWing::GetVolume()
 {
-    const TopoDS_Shape& fusedSegments = GetLoft()->Shape();
+    const TopoDS_Shape fusedSegments = GetLoft()->Shape();
 
     // Calculate volume
     GProp_GProps System;
@@ -429,7 +417,7 @@ double CCPACSWing::GetVolume()
 // Returns the surface area of this wing
 double CCPACSWing::GetSurfaceArea()
 {
-    const TopoDS_Shape& fusedSegments = GetLoft()->Shape();
+    const TopoDS_Shape fusedSegments = GetLoft()->Shape();
 
     // Calculate surface area
     GProp_GProps System;
@@ -453,7 +441,7 @@ double CCPACSWing::GetReferenceArea(TiglSymmetryAxis symPlane)
 
 double CCPACSWing::GetWettedArea(TopoDS_Shape parent)
 {
-    const TopoDS_Shape& loft = GetLoft()->Shape();
+    const TopoDS_Shape loft = GetLoft()->Shape();
 
     TopoDS_Shape wettedLoft = BRepAlgoAPI_Cut(loft, parent); 
 
@@ -495,7 +483,7 @@ double CCPACSWing::GetWingspan()
         gp_XYZ cumulatedDepthDirection(0, 0, 0);
         for (int i = 1; i <= GetSegmentCount(); ++i) {
             CCPACSWingSegment& segment = m_segments.GetSegment(i);
-            const TopoDS_Shape& segmentShape = segment.GetLoft()->Shape();
+            const TopoDS_Shape segmentShape = segment.GetLoft()->Shape();
             BRepBndLib::Add(segmentShape, boundingBox);
 
             gp_XYZ dirSpan  = segment.GetChordPoint(1,0).XYZ() - segment.GetChordPoint(0,0).XYZ();
@@ -736,34 +724,15 @@ CCPACSGuideCurve& CCPACSWing::GetGuideCurveSegment(std::string uid)
     throw tigl::CTiglError("Guide Curve with UID " + uid + " does not exists", TIGL_ERROR);
 }
 
-TopoDS_Compound& CCPACSWing::GetGuideCurveWires()
+TopoDS_Compound CCPACSWing::GetGuideCurveWires() const
 {
-    BuildGuideCurveWires();
-    return guideCurves;
+    return *guideCurves;
 }
 
-
-void CCPACSWing::BuildGuideCurveWires()
+std::vector<gp_Pnt> CCPACSWing::GetGuideCurvePoints()
 {
-    if (!guideCurves.IsNull()) {
-        return;
-    }
-    
-    guideCurves.Nullify();
-    BRep_Builder b;
-    b.MakeCompound(guideCurves);
-    
-    // check, if the wing has a blunt trailing edge
-    bool hasBluntTE = true;
-    if (GetSectionCount() > 0) {
-        CCPACSWingSegment& segment = m_segments.GetSegment(1);
-        hasBluntTE = !segment.GetInnerConnection().GetProfile().GetTrailingEdge().IsNull();
-    }
-    
-    // the guide curves will be sorted according to the inner
-    // from relativeCircumference
-    std::multimap<double, CCPACSGuideCurve*> roots;
-    
+    std::vector<gp_Pnt> points;
+
     // connect the belonging guide curve segments
     for (int isegment = 1; isegment <= GetSegmentCount(); ++isegment) {
         CCPACSWingSegment& segment = m_segments.GetSegment(isegment);
@@ -775,6 +744,52 @@ void CCPACSWing::BuildGuideCurveWires()
         CCPACSGuideCurves& segmentCurves = *segment.GetGuideCurves();
         for (int iguide = 1; iguide <=  segmentCurves.GetGuideCurveCount(); ++iguide) {
             CCPACSGuideCurve& curve = segmentCurves.GetGuideCurve(iguide);
+            std::vector<gp_Pnt> curPoints = curve.GetCurvePoints();
+            points.insert(points.end(), curPoints.begin(), curPoints.end());
+        }
+    }
+    return points;
+}
+
+
+void CCPACSWing::BuildGuideCurveWires(TopoDS_Compound& cache) const
+{
+    // check, if the wing has a blunt trailing edge
+    bool hasBluntTE = true;
+    if (GetSectionCount() > 0) {
+        const CCPACSWingSegment& segment = m_segments.GetSegment(1);
+        hasBluntTE = !segment.GetInnerConnection().GetProfile().GetTrailingEdge().IsNull();
+    }
+    
+    // the guide curves will be sorted according to the inner
+    // from relativeCircumference
+    std::map<double, const CCPACSGuideCurve*> roots;
+
+    // get chord centers on each section for the centripetal parametrization
+    std::vector<gp_Pnt> sectionCenters(GetSegmentCount()+1);
+
+    // get inner chord face center of first segment
+    const CCPACSWingSegment& innerSegment = m_segments.GetSegment(1);
+    sectionCenters[0] = innerSegment.GetInnerProfilePoint(0.);  // inner front
+    gp_Pnt back       = innerSegment.GetInnerProfilePoint(1.);  // inner back
+    back.BaryCenter(0.5, sectionCenters[0], 0.5);               // inner chord center
+    
+    // connect the belonging guide curve segments
+    for (int isegment = 1; isegment <= GetSegmentCount(); ++isegment) {
+        const CCPACSWingSegment& segment = m_segments.GetSegment(isegment);
+
+        if (!segment.GetGuideCurves()) {
+            continue;
+        }
+
+        // get outer chord face center of current segment
+        sectionCenters[isegment] = segment.GetOuterProfilePoint(0.);   // outer front
+        back                     = segment.GetOuterProfilePoint(1.);   // outer back
+        back.BaryCenter(0.5, sectionCenters[isegment], 0.5);           // outer chord center
+
+        const CCPACSGuideCurves& segmentCurves = *segment.GetGuideCurves();
+        for (int iguide = 1; iguide <=  segmentCurves.GetGuideCurveCount(); ++iguide) {
+            const CCPACSGuideCurve& curve = segmentCurves.GetGuideCurve(iguide);
             if (!curve.GetFromGuideCurveUID_choice1()) {
                 // this is a root curve
                 double fromRef = *curve.GetFromRelativeCircumference_choice2();
@@ -783,32 +798,15 @@ void CCPACSWing::BuildGuideCurveWires()
                 }
                 roots.insert(std::make_pair(fromRef, &curve));
             }
-            else {
-                CCPACSGuideCurve& fromCurve = GetGuideCurveSegment(*curve.GetFromGuideCurveUID_choice1());
-                fromCurve.ConnectToCurve(&curve);
-            }
         }
     }
-    
-    // connect belonging guide curves to wires
-    std::multimap<double, CCPACSGuideCurve*>::iterator it;
-    for (it = roots.begin(); it != roots.end(); ++it) {
-        CCPACSGuideCurve* curCurve = it->second;
-        BRepBuilderAPI_MakeWire wireMaker;
-        while (curCurve) {
-            const TopoDS_Edge& edge = curCurve->GetCurve();
-            wireMaker.Add(edge);
-            curCurve = curCurve->GetConnectedCurve();
-        }
-        TopoDS_Wire result = wireMaker.Wire();
-        // Fix Shape, might be necessary since the order of edges could be wrong
-        ShapeFix_Wire wireFixer;
-        wireFixer.Load(result);
-        wireFixer.FixReorder();
-        wireFixer.Perform();
-        result = wireFixer.Wire();
-        b.Add(guideCurves, result);
-    }
+
+    // get the parameters at the section centers
+    std::vector<double> sectionParams = CTiglBSplineAlgorithms::computeParamsBSplineCurve(OccArray(sectionCenters), 0., 1., 0.5);
+
+    // connect guide curve segments to a spline with given continuity conditions and tangents
+    CTiglCurveConnector connector(roots, sectionParams);
+    cache = connector.GetConnectedGuideCurves();
 }
 
 TopoDS_Shape transformWingProfileGeometry(const CTiglTransformation& wingTransform, const CTiglWingConnection& connection, const TopoDS_Shape& wire)

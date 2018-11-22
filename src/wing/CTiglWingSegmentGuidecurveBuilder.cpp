@@ -24,15 +24,31 @@
 #include "CCPACSConfiguration.h"
 #include "CCPACSGuideCurveAlgo.h"
 #include "CCPACSWingProfileGetPointAlgo.h"
+#include "CTiglRelativelyPositionedComponent.h"
+
+#include "tiglcommonfunctions.h"
 
 namespace tigl
 {
 
-TopoDS_Edge CTiglWingSegmentGuidecurveBuilder::BuildGuideCurve(CCPACSGuideCurve * guideCurve)
+CTiglWingSegmentGuidecurveBuilder::CTiglWingSegmentGuidecurveBuilder(CCPACSWingSegment &segment)
+    : m_segment(segment)
+{
+}
+
+CTiglWingSegmentGuidecurveBuilder::~CTiglWingSegmentGuidecurveBuilder()
+{
+}
+
+std::vector<gp_Pnt> CTiglWingSegmentGuidecurveBuilder::BuildGuideCurvePnts(const CCPACSGuideCurve * guideCurve) const
 {
     assert(guideCurve);
 
-    const tigl::CTiglTransformation& wingTransform = m_segment.GetWing().GetTransformationMatrix();
+    if (!m_segment.GetGuideCurves()) {
+        throw CTiglError("No guide curves defined for segment \"" + m_segment.GetUID() + "\".");
+    }
+
+    const tigl::CTiglTransformation& wingTransform = m_segment.GetParentTransformation();
 
     // get upper and lower part of inner profile in world coordinates
     CTiglWingConnection& innerConnection = m_segment.GetInnerConnection();
@@ -59,8 +75,8 @@ TopoDS_Edge CTiglWingSegmentGuidecurveBuilder::BuildGuideCurve(CCPACSGuideCurve 
     // get chord lengths for inner profile in word coordinates
     TopoDS_Wire innerChordLineWire = TopoDS::Wire(transformWingProfileGeometry(wingTransform, innerConnection, innerProfile.GetChordLineWire()));
     TopoDS_Wire outerChordLineWire = TopoDS::Wire(transformWingProfileGeometry(wingTransform, outerConnection, outerProfile.GetChordLineWire()));
-    double innerScale = GetWireLength(innerChordLineWire);
-    double outerScale = GetWireLength(outerChordLineWire);
+    double innerScale = GetLength(innerChordLineWire);
+    double outerScale = GetLength(outerChordLineWire);
 
 
     double fromRelativeCircumference;
@@ -73,7 +89,7 @@ TopoDS_Edge CTiglWingSegmentGuidecurveBuilder::BuildGuideCurve(CCPACSGuideCurve 
         // get neighboring guide curve UID
         std::string neighborGuideCurveUID = *guideCurve->GetFromGuideCurveUID_choice1();
         // get neighboring guide curve
-        const CCPACSGuideCurve& neighborGuideCurve = m_segment.GetWing().GetGuideCurveSegment(neighborGuideCurveUID);
+        const CCPACSGuideCurve& neighborGuideCurve = m_segment.GetGuideCurves()->GetGuideCurve(neighborGuideCurveUID);
         // get relative circumference from neighboring guide curve
         fromRelativeCircumference = neighborGuideCurve.GetToRelativeCircumference();
     }
@@ -85,8 +101,7 @@ TopoDS_Edge CTiglWingSegmentGuidecurveBuilder::BuildGuideCurve(CCPACSGuideCurve 
     // get relative circumference of inner profile
 
     // get guide curve profile
-    CCPACSConfiguration& config = m_segment.GetWing().GetConfiguration();
-    CCPACSGuideCurveProfile& guideCurveProfile = config.GetGuideCurveProfile(guideCurveProfileUID);
+    CCPACSGuideCurveProfile& guideCurveProfile = m_segment.GetUIDManager().ResolveObject<CCPACSGuideCurveProfile>(guideCurveProfileUID);
 
     // get local x-direction for the guide curve
     gp_Dir rxDir = gp_Dir(1., 0., 0.);
@@ -97,15 +112,15 @@ TopoDS_Edge CTiglWingSegmentGuidecurveBuilder::BuildGuideCurve(CCPACSGuideCurve 
     }
 
     // construct guide curve algorithm
-    TopoDS_Edge guideCurveEdge = CCPACSGuideCurveAlgo<CCPACSWingProfileGetPointAlgo> (concatenatedInnerWires,
-                                                                                      concatenatedOuterWires,
-                                                                                      fromRelativeCircumference,
-                                                                                      toRelativeCircumference,
-                                                                                      innerScale,
-                                                                                      outerScale,
-                                                                                      rxDir,
-                                                                                      guideCurveProfile);
-    return guideCurveEdge;
+    std::vector<gp_Pnt> guideCurvePnts = CCPACSGuideCurveAlgo<CCPACSWingProfileGetPointAlgo> (concatenatedInnerWires,
+                                                                                              concatenatedOuterWires,
+                                                                                              fromRelativeCircumference,
+                                                                                              toRelativeCircumference,
+                                                                                              innerScale,
+                                                                                              outerScale,
+                                                                                              rxDir,
+                                                                                              guideCurveProfile);
+    return guideCurvePnts;
 }
 
 } // namespace tigl

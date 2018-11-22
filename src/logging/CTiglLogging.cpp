@@ -2,10 +2,6 @@
 * Copyright (C) 2007-2013 German Aerospace Center (DLR/SC)
 *
 * Created: 2013-02-13 Markus Litz <Markus.Litz@dlr.de>
-* Changed: $Id$ 
-*
-* Version: $Revision$
-*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -64,6 +60,7 @@ CTiglLogging::~CTiglLogging()
 {
 #ifdef GLOG_FOUND
     // TODO (bgruber): this is problematic, as the application linking to TIGL may also use glog after TIGL has been shutdown
+    // TODO (bgruber): enabling this also causes an abort() at the end of the application if glog was linked statically by TIGL and the application
     google::ShutdownGoogleLogging();
 #endif
 }
@@ -98,6 +95,7 @@ CTiglLogging& CTiglLogging::Instance()
 void CTiglLogging::initLogger()
 {
 #ifdef GLOG_FOUND
+    // TODO (bgruber): this is problematic, as the application linking to TIGL may also use glog and initialize it itself
     // Initialize Google's logging library.
     google::InitGoogleLogging("TIGL-log");
 #endif

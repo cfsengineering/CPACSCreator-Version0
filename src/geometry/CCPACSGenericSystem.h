@@ -68,11 +68,11 @@ protected:
     void Cleanup();
 
     // Build the shape of the system
-    PNamedShape BuildLoft() OVERRIDE;
+    PNamedShape BuildLoft() const OVERRIDE;
 
 private:
     // get short name for loft
-    std::string GetShortShapeName();
+    std::string GetShortShapeName() const;
 
     // Copy constructor
     CCPACSGenericSystem(const CCPACSGenericSystem & );

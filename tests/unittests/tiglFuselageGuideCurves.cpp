@@ -43,6 +43,7 @@
 #include "CCPACSGuideCurveAlgo.h"
 #include "CCPACSFuselageSegment.h"
 #include "CTiglLogging.h"
+#include "tiglcommonfunctions.h"
 
 /******************************************************************************/
 
@@ -132,7 +133,7 @@ TEST_F(FuselageGuideCurve, tiglFuselageGuideCurve_CCPACSGuideCurveProfiles)
 {
     tigl::CCPACSGuideCurveProfiles guideCurves(NULL);
     guideCurves.ReadCPACS(tixiHandle, "/cpacs/vehicles/profiles/guideCurves");
-    ASSERT_EQ(guideCurves.GetGuideCurveProfileCount(), 11);
+    ASSERT_EQ(guideCurves.GetGuideCurveProfileCount(), 6);
     tigl::CCPACSGuideCurveProfile& guideCurve = guideCurves.GetGuideCurveProfile("GuideCurveModel_Fuselage_GuideCurveProfile_Middle_NonLinear");
     ASSERT_EQ(guideCurve.GetUID(), "GuideCurveModel_Fuselage_GuideCurveProfile_Middle_NonLinear");
     ASSERT_EQ(guideCurve.GetName(), "NonLinear Middle Guide Curve Profile for GuideCurveModel - Fuselage");
@@ -322,16 +323,17 @@ TEST_F(FuselageGuideCurve, tiglFuselageGuideCurve_CCPACSGuideCurveAlgo)
     tigl::CCPACSGuideCurveProfile guideCurveProfile(NULL);
     guideCurveProfile.ReadCPACS(tixiHandle, "/cpacs/vehicles/profiles/guideCurves/guideCurveProfile[2]");
 
-    TopoDS_Edge guideCurveEdge;
+    std::vector<gp_Pnt> guideCurvePnts;
     // instantiate guideCurveAlgo
-    guideCurveEdge = tigl::CCPACSGuideCurveAlgo<tigl::CCPACSFuselageProfileGetPointAlgo> (wireContainer1, wireContainer2, 0.5, 0.5, 2*radius1, 2*radius2, gp_Dir(0.0, 0.0, 1.0), guideCurveProfile);
+    guideCurvePnts = tigl::CCPACSGuideCurveAlgo<tigl::CCPACSFuselageProfileGetPointAlgo> (wireContainer1, wireContainer2, 0.5, 0.5, 2*radius1, 2*radius2, gp_Dir(0.0, 0.0, 1.0), guideCurveProfile);
+    TopoDS_Edge guideCurveEdge = EdgeSplineFromPoints(guideCurvePnts);
 
     // check if guide curve runs through sample points
     // get curve
     Standard_Real u1, u2;
     Handle(Geom_Curve) curve =  BRep_Tool::Curve(guideCurveEdge, u1, u2);
     // set predicted sample points from cpacs file
-    const double temp[] = {0.0, 0.0, 0.01, 0.03, 0.09, 0.08, 0.07, 0.06, 0.02, 0.0, 0.0};
+    const double temp[] = {0, 0, 0.012, 0.037, 0.110, 0.098, 0.086, 0.073, 0.024, 0, 0};
     std::vector<double> predictedSamplePointsY (temp, temp + sizeof(temp) / sizeof(temp[0]) );
     for (unsigned int i = 0; i <= 10; ++i) {
         // get intersection point of the guide curve with planes parallel to the y-z plane located at a
@@ -375,7 +377,7 @@ TEST_F(FuselageGuideCurve, tiglFuselageGuideCurve_CCPACSFuselageSegment)
     Standard_Real u1, u2;
     Handle(Geom_Curve) curve =  BRep_Tool::Curve(guideCurveWire, u1, u2);
     // gamma values of cpacs data points
-    const double temp[] = {0.0, 0.0, 0.01, 0.03, 0.09, 0.08, 0.07, 0.06, 0.02, 0.0, 0.0};
+    const double temp[] = {0, 0, 0.012, 0.037, 0.110, 0.098, 0.086, 0.073, 0.024, 0, 0};
     std::vector<double> gammaDeviation (temp, temp + sizeof(temp) / sizeof(temp[0]) );
     // number of sample points
     unsigned int N=10;

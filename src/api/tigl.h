@@ -2,10 +2,6 @@
 * Copyright (C) 2007-2013 German Aerospace Center (DLR/SC)
 *
 * Created: 2010-08-13 Markus Litz <Markus.Litz@dlr.de>
-* Changed: $Id$ 
-*
-* Version: $Revision$
-*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -195,19 +191,26 @@ enum TiglAlgorithmCode
 */
 typedef unsigned int TiglGeometricComponentType;
 
-#define  TIGL_COMPONENT_PHYSICAL        1        /**< A phyisical component like a fuselage, wing, nacelle, something you could touch */
-#define  TIGL_COMPONENT_LOGICAL         2        /**< A logical component, like a wing segment */
-#define  TIGL_COMPONENT_PLANE           4        /**< The whole aircraft */
-#define  TIGL_COMPONENT_FUSELAGE        8        /**< The Component is a fuselage */
-#define  TIGL_COMPONENT_WING            16       /**< The Component is a wing */
-#define  TIGL_COMPONENT_SEGMENT         32       /**< The Component is a general segment */
-#define  TIGL_COMPONENT_WINGSEGMENT     64       /**< The Component is a wing segment */
-#define  TIGL_COMPONENT_FUSELSEGMENT    128      /**< The Component is a fuselage segment */
-#define  TIGL_COMPONENT_WINGCOMPSEGMENT 256      /**< The Component is a wing component segment */
-#define  TIGL_COMPONENT_WINGSHELL       512      /**< The Component is a face of the wing (e.g. upper wing surface) */
-#define  TIGL_COMPONENT_GENERICSYSTEM   1024     /**< The Component is a generic system */
-#define  TIGL_COMPONENT_ROTOR           2048     /**< The Component is a rotor */
-#define  TIGL_COMPONENT_ROTORBLADE      4096     /**< The Component is a rotor blade */
+#define  TIGL_COMPONENT_PHYSICAL          1        /**< A phyisical component like a fuselage, wing, nacelle, something you could touch */
+#define  TIGL_COMPONENT_LOGICAL           2        /**< A logical component, like a wing segment */
+#define  TIGL_COMPONENT_PLANE             4        /**< The whole aircraft */
+#define  TIGL_COMPONENT_FUSELAGE          8        /**< The Component is a fuselage */
+#define  TIGL_COMPONENT_WING              16       /**< The Component is a wing */
+#define  TIGL_COMPONENT_SEGMENT           32       /**< The Component is a general segment */
+#define  TIGL_COMPONENT_WINGSEGMENT       64       /**< The Component is a wing segment */
+#define  TIGL_COMPONENT_FUSELSEGMENT      128      /**< The Component is a fuselage segment */
+#define  TIGL_COMPONENT_WINGCOMPSEGMENT   256      /**< The Component is a wing component segment */
+#define  TIGL_COMPONENT_WINGSHELL         512      /**< The Component is a face of the wing (e.g. upper wing surface) */
+#define  TIGL_COMPONENT_GENERICSYSTEM     1024     /**< The Component is a generic system */
+#define  TIGL_COMPONENT_ROTOR             2048     /**< The Component is a rotor */
+#define  TIGL_COMPONENT_ROTORBLADE        4096     /**< The Component is a rotor blade */
+#define  TIGL_COMPONENT_PRESSURE_BULKHEAD 8192     /**< The Component is a pressure bulkhead */
+#define  TIGL_COMPONENT_CROSS_BEAM_STRUT  16384    /**< The Component is a cross beam strut */
+
+#define  TIGL_COMPONENT_CARGO_DOOR        32768    /**< The Component is a cargo door */
+
+#define  TIGL_COMPONENT_LONG_FLOOR_BEAM   65536    /**< The Component is a long floor beam */
+#define  TIGL_COMPONENT_ENGINE_PYLON      131072   /**< The Component is a engine pylon */
 
 enum TiglStructureType 
 {
@@ -236,6 +239,15 @@ enum TiglCoordinateSystem
 };
 
 typedef enum TiglCoordinateSystem TiglCoordinateSystem;
+
+enum TiglShapeModifier
+{
+    UNMODIFIED_SHAPE   = 0,
+    SHARP_TRAILINGEDGE = 1,
+    BLUNT_TRAILINGEDGE = 2
+};
+
+typedef enum TiglShapeModifier TiglShapeModifier;
 
 enum TiglContinuity
 {
@@ -3339,6 +3351,108 @@ TIGL_COMMON_EXPORT TiglReturnCode tiglGetCurveParameter (TiglCPACSConfigurationH
 
 /*@{*/
 
+/**
+* @brief Sets options for the geometry export
+* 
+* Generic options for all exporters:
+*   - ApplySymmetries (Values: "true", "false"): Whether symmetric cpacs objects (e.g. wings) should be written.
+*   - IncludeFarfield (Values: "true", "false"): Whether to include the far field into the export or not.
+*   - ShapeGroupMode  (Values: "WHOLE_SHAPE", "NAMED_COMPOUNDS", "FACES"): Adjust, how shapes are grouped.
+* 
+* Exporter-specific options:
+*  - VTK:
+*    - WriteNormals (Values: "true", "false"): Whether to write normal vectors or not.
+*      To avoid duplicate vertices, normals should be disabled.
+*    - MultiplePieces (Values: "true", "false"): Whether to export the shapes into multiple vtk pieces.
+*    - WriteMetaData (Values: "true", "false"): Whether to add meta data (e.g. wing segments etc...)
+*  - IGES:
+*    - IGES5.3 (Values: "true", "false"): Whether to use IGES 5.3 format, that supports shells and solids.
+*      Note: Some software do not yet implement this standard. E.g. Catia might only load this, when set to false!
+*
+* Example: The IGES export normally does only write half-models. It does not apply symmetries.
+* to change this, just call 
+  @verbatim
+  tiglSetExportOptions("iges", "ApplySymmetries", "true");
+  @endverbatim
+* 
+* @param[in] exporter_name File format of the export. E.g. "vtk", "iges", "step", "collada", "brep" or "stl"
+* @param[in] option_name   Name of the option to be set
+* @param[in] option_value  Value of the options to be set
+*
+* @return 
+*   - TIGL_SUCCESS if no error occurred
+*   - TIGL_NOT_FOUND if the specified exporter or the option does not exist
+*   - TIGL_NULL_POINTER if exporter_name, option_name or option_value is a null pointer
+*   - TIGL_ERROR if some other error occurred
+*/
+TIGL_COMMON_EXPORT TiglReturnCode tiglSetExportOptions(const char* exporter_name, const char* option_name, const char* option_value);
+
+/**
+* @brief Exports a geometric component (e.g. a wing, a fuselage etc.)
+* 
+* The component to be exported is definied via its uid. The export format
+* is specified with the file extension of fileName.
+* 
+* The export can be configured in more detail using ::tiglSetExportOptions.
+* 
+* Supported file formats are: STEP (*.stp), IGES (*.igs), VTK (*.vtp), Collada (*.dae), STL (*.stl) and BREP (*.brep)
+* 
+* Example: Export a wing to IGES format
+  @verbatim
+  tiglExportComponent(handle, "MyWingUID", "wing.igs", 0.);
+  @endverbatim
+* 
+* @param[in] cpacsHandle Handle for the CPACS configuration
+* @param[in] uid         Uid of the component to be exported
+* @param[in] fileName    File name of the exported file
+* @param[in] deflection  Deflection parameter. This is only used for meshed exports (e.g. VTK, STL, Collada).
+*
+* @return 
+*   - TIGL_SUCCESS if no error occurred
+*   - TIGL_NOT_FOUND if no exporter is found for the specified file name
+*   - TIGL_NULL_POINTER if uid or fileName is a null pointer
+*   - TIGL_WRITE_FAILED if the file could not be written
+*   - TIGL_ERROR if some other error occurred
+*/
+TIGL_COMMON_EXPORT TiglReturnCode tiglExportComponent(TiglCPACSConfigurationHandle cpacsHandle,
+                                                      const char* uid,
+                                                      const char* fileName,
+                                                      double deflection);
+
+
+/**
+* @brief Exports the whole configuration into a file.
+* 
+* It can be specified, whether the configuration should be exported as a fused geometry (i.e.
+* all shapes are trimmed with each other). The export format is specified with the
+* file extension of fileName.
+* 
+* The export can be configured in more detail using ::tiglSetExportOptions.
+* 
+* Supported file formats are: STEP (*.stp), IGES (*.igs), VTK (*.vtp), Collada (*.dae), STL (*.stl) and BREP (*.brep)
+* 
+* Example: Export the fused configuration to STEP format
+  @verbatim
+  tiglExportConfiguration(handle, "aircraft.stp", TIGL_TRUE, 0.);
+  @endverbatim
+*
+* @param[in] cpacsHandle   Handle for the CPACS configuration
+* @param[in] fileName      File name of the exported file
+* @param[in] fuseAllShapes Whether to fuse the geometry of not. Fusing can take a lot of time!
+* @param[in] deflection    Deflection parameter. This is only used for meshed exports (e.g. VTK, STL, Collada).
+*
+* @return 
+*   - TIGL_SUCCESS if no error occurred
+*   - TIGL_NOT_FOUND if no exporter is found for the specified file name
+*   - TIGL_NULL_POINTER if fileName is a null pointer
+*   - TIGL_WRITE_FAILED if the file could not be written
+*   - TIGL_ERROR if some other error occurred
+*/
+TIGL_COMMON_EXPORT TiglReturnCode tiglExportConfiguration(TiglCPACSConfigurationHandle cpacsHandle,
+                                                          const char* fileName,
+                                                          TiglBoolean fuseAllShapes,
+                                                          double deflection);
+
 
 /**
 * @brief Exports the geometry of a CPACS configuration to IGES format.
@@ -3357,7 +3471,6 @@ TIGL_COMMON_EXPORT TiglReturnCode tiglGetCurveParameter (TiglCPACSConfigurationH
 */
 TIGL_COMMON_EXPORT TiglReturnCode tiglExportIGES(TiglCPACSConfigurationHandle cpacsHandle,
                                                  const char* filenamePtr);
-
 
 /**
 * @brief Exports the boolean fused geometry of a CPACS configuration to IGES format.
@@ -3524,27 +3637,6 @@ TIGL_COMMON_EXPORT TiglReturnCode tiglExportMeshedFuselageSTLByUID(TiglCPACSConf
 TIGL_COMMON_EXPORT TiglReturnCode tiglExportMeshedGeometrySTL(TiglCPACSConfigurationHandle cpacsHandle, 
                                                               const char* filenamePtr,
                                                               double deflection);
-
-
-/**
- * @brief Sets options for the VTK Export
- *
- * **Available Settings**:
- *
- *   - *key*: "normals_enabled" *valid values*: "0 or 1" *default*: "1".
- *
- *       Enables or disables the output of normal vectors.
- *       A Normal vector and a vertex belong to the same logical structure. If there
- *       are two identical vertices but with different normal vectors, the VTK export stores
- *       them as two entries. Thus, a VTK file may have "duplicate" vertices. To disable this
- *       behavior, set "normal_enabled" to "0".
- *
- * @return
- *   - TIGL_SUCCESS if no error occurred
- *   - TIGL_NULL_POINTER if key or value are a null pointer
- *   - TIGL_ERROR if the specified key/value pair is invalid
- */
-TIGL_COMMON_EXPORT TiglReturnCode tiglExportVTKSetOptions(const char* key, const char* value);
 
 /**
 * @brief Exports the boolean fused geometry of a wing (selected by id) meshed to VTK format.

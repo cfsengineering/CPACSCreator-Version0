@@ -70,7 +70,7 @@ signals:
 public slots:
 
     // Aircraft slots
-    void drawAllFuselagesAndWings();
+    void drawConfiguration();
     void drawAllFuselagesAndWingsSurfacePoints();
     void drawFusedAircraft();
     void drawFusedAircraftTriangulation();
@@ -166,9 +166,6 @@ private slots:
     QString dlgGetFuselageSelection();
     QString dlgGetFuselageSegmentSelection();
     QString dlgGetFuselageProfileSelection();
-
-    // Other selection dialogs
-    QString dlgGetComponentSelection();
 
 private: 
     TiglCPACSConfigurationHandle            m_cpacsHandle;

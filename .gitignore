@@ -9,4 +9,8 @@ cmake-build-debug/*
 *.txt.user
 *.directory
 *.autosave
- 
+examples/python_internal/.idea/
+.vscode
+*.patch
+/.vs
+

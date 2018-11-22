@@ -2,10 +2,6 @@
 * Copyright (C) 2007-2013 German Aerospace Center (DLR/SC)
 *
 * Created: 2010-08-13 Markus Litz <Markus.Litz@dlr.de>
-* Changed: $Id$ 
-*
-* Version: $Revision$
-*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -59,7 +55,8 @@ public:
     TIGL_EXPORT int GetSectionElementIndex() const;
 
     // Returns the fuselage profile referenced by this connection
-    TIGL_EXPORT CCPACSFuselageProfile& GetProfile() const;
+    TIGL_EXPORT CCPACSFuselageProfile& GetProfile();
+    TIGL_EXPORT const CCPACSFuselageProfile& GetProfile() const;
 
     // Returns the positioning transformation (segment transformation) for the referenced section
     TIGL_EXPORT boost::optional<CTiglTransformation> GetPositioningTransformation() const;

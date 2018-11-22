@@ -40,10 +40,6 @@ public:
     TIGL_EXPORT CCPACSAircraftModel(CCPACSConfiguration* config = NULL);
     TIGL_EXPORT CCPACSAircraftModel(CTiglUIDManager* config);
 
-    TIGL_EXPORT void ReadCPACS(const TixiDocumentHandle& tixiHandle, const std::string& xpath) OVERRIDE;
-
-    TIGL_EXPORT void SetUID(const std::string& uid) OVERRIDE;
-
     TIGL_EXPORT std::string GetDefaultedUID() const OVERRIDE;
 
     // Returns the Geometric type of this component, e.g. Wing or Fuselage
@@ -54,7 +50,7 @@ public:
     void Invalidate();
 
 protected:
-    PNamedShape BuildLoft() OVERRIDE;
+    PNamedShape BuildLoft() const OVERRIDE;
 
     CCPACSConfiguration* config;
 };

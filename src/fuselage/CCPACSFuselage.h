@@ -2,10 +2,6 @@
 * Copyright (C) 2007-2013 German Aerospace Center (DLR/SC)
 *
 * Created: 2010-08-13 Markus Litz <Markus.Litz@dlr.de>
-* Changed: $Id$ 
-*
-* Version: $Revision$
-*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -38,14 +34,17 @@
 #include "CTiglRelativelyPositionedComponent.h"
 #include "CCPACSGuideCurve.h"
 #include "CTiglFuselageConnection.h"
+#include "Cache.h"
 
 #include "TopoDS_Shape.hxx"
 #include "TopoDS_Compound.hxx"
 #include "BRep_Builder.hxx"
+#include <gp_Lin.hxx>
 
 namespace tigl
 {
 class CCPACSConfiguration;
+class CCPACSFuselageStringerFramePosition;
 
 class CCPACSFuselage : public generated::CPACSFuselage, public CTiglRelativelyPositionedComponent
 {
@@ -60,14 +59,14 @@ public:
     TIGL_EXPORT void Invalidate();
 
     // Read CPACS fuselage elements
-    TIGL_EXPORT void ReadCPACS(TixiDocumentHandle tixiHandle, const std::string& fuselageXPath);
-
-    TIGL_EXPORT void SetUID(const std::string& uid) OVERRIDE;
+    TIGL_EXPORT void ReadCPACS(const TixiDocumentHandle& tixiHandle, const std::string& fuselageXPath) OVERRIDE;
 
     // Returns the parent configuration
     TIGL_EXPORT CCPACSConfiguration & GetConfiguration() const;
 
     TIGL_EXPORT std::string GetDefaultedUID() const OVERRIDE;
+
+    TIGL_EXPORT PNamedShape GetLoft(TiglCoordinateSystem cs = GLOBAL_COORDINATE_SYSTEM) const;
 
     // Get section count
     TIGL_EXPORT int GetSectionCount() const;
@@ -80,6 +79,7 @@ public:
 
     // Returns the segment for a given index
     TIGL_EXPORT CCPACSFuselageSegment& GetSegment(const int index);
+    TIGL_EXPORT const CCPACSFuselageSegment& GetSegment(const int index) const;
 
     // Returns the segment for a given UID
     TIGL_EXPORT CCPACSFuselageSegment& GetSegment(std::string uid);
@@ -111,12 +111,24 @@ public:
 
     // Get the guide curve segment(partial guide curve) with a given UID
     TIGL_EXPORT CCPACSGuideCurve& GetGuideCurveSegment(std::string uid);
+    TIGL_EXPORT const CCPACSGuideCurve& GetGuideCurveSegment(std::string uid) const;
 
     // Returns all guide curve wires as a compound
-    TIGL_EXPORT TopoDS_Compound& GetGuideCurveWires();
+    TIGL_EXPORT const TopoDS_Compound& GetGuideCurveWires() const;
+
+    // Returns all guide curve points
+    TIGL_EXPORT std::vector<gp_Pnt> GetGuideCurvePoints() const;
+
+    // create the line intersecting the fuselage for the stringer/frame profile
+    TIGL_EXPORT gp_Lin Intersection(gp_Pnt pRef, double angleRef) const;
+    TIGL_EXPORT gp_Lin Intersection(const CCPACSFuselageStringerFramePosition& pos) const;
+
+    // project the edge/wire onto the fuselage loft
+    TIGL_EXPORT TopoDS_Wire projectConic(TopoDS_Shape wireOrEdge, gp_Pnt origin) const;
+    TIGL_EXPORT TopoDS_Wire projectParallel(TopoDS_Shape wireOrEdge, gp_Dir direction) const;
 
 protected:
-    void BuildGuideCurves();
+    void BuildGuideCurves(TopoDS_Compound& cache) const;
 
     void ConnectGuideCurveSegments();
 
@@ -124,20 +136,20 @@ protected:
     void Cleanup();
 
     // Adds all segments of this fuselage to one shape
-    PNamedShape BuildLoft() OVERRIDE;
+    PNamedShape BuildLoft() const OVERRIDE;
 
-    void SetFaceTraits(PNamedShape loft, bool hasSymmetryPlane, bool smoothSurface);
+    void SetFaceTraits(PNamedShape loft) const;
 
 private:
     // get short name for loft
-    std::string GetShortShapeName();
+    std::string GetShortShapeName() const;
 
 private:
     CCPACSConfiguration*       configuration;        /**< Parent configuration    */
     FusedElementsContainerType fusedElements;        /**< Stores already fused segments */
 
     TopoDS_Compound            aCompound;
-    TopoDS_Compound            guideCurves;
+    Cache<TopoDS_Compound, CCPACSFuselage> guideCurves;
     BRep_Builder               aBuilder;
     double                     myVolume;             /**< Volume of this fuselage              */
 

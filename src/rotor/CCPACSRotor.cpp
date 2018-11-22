@@ -80,18 +80,7 @@ void CCPACSRotor::ReadCPACS(const TixiDocumentHandle& tixiHandle, const std::str
 {
     Cleanup();
     generated::CPACSRotor::ReadCPACS(tixiHandle, rotorXPath);
-    if (m_uidMgr) {
-        m_uidMgr->AddGeometricComponent(m_uID, this);
-    }
     Update();
-}
-
-void CCPACSRotor::SetUID(const std::string& uid) {
-    if (m_uidMgr) {
-        m_uidMgr->TryRemoveGeometricComponent(m_uID);
-        m_uidMgr->AddGeometricComponent(uid, this);
-    }
-    generated::CPACSRotor::SetUID(uid);
 }
 
 // Get the Transformation object
@@ -102,9 +91,9 @@ CTiglTransformation CCPACSRotor::GetTransformationMatrix() const
 }
 
 // Get Translation
-CTiglPoint CCPACSRotor::GetTranslation()
+CTiglPoint CCPACSRotor::GetTranslation() const
 {
-    Update();
+    const_cast<CCPACSRotor&>(*this).Update();
     return m_transformation.getTranslationVector();
 }
 
@@ -169,7 +158,7 @@ PNamedShape CCPACSRotor::GetRotorDisk()
 }
 
 // Returns the geometry of the whole rotor (assembly of all rotor blades)
-PNamedShape CCPACSRotor::BuildLoft()
+PNamedShape CCPACSRotor::BuildLoft() const
 {
     // Create rotor assembly
     TopoDS_Compound rotorGeometry;

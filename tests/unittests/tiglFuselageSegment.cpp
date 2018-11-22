@@ -2,10 +2,6 @@
 * Copyright (C) 2007-2013 German Aerospace Center (DLR/SC)
 *
 * Created: 2010-08-13 Markus Litz <Markus.Litz@dlr.de>
-* Changed: $Id$ 
-*
-* Version: $Revision$
-*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -652,8 +648,8 @@ TEST_F(TiglFuselageSegmentSimple, getSectionCenter)
     ASSERT_NE(TIGL_NULL_POINTER, tiglFuselageGetSectionCenter(tiglHandle, "segmentD150_Fuselage_1Segment2ID", eta, &pointX, &pointY, &pointZ));
     ASSERT_EQ(TIGL_SUCCESS, tiglFuselageGetSectionCenter(tiglHandle, "segmentD150_Fuselage_1Segment2ID", eta, &pointX, &pointY, &pointZ));
     EXPECT_NEAR(-0.5, pointX, 1e-15);
-    EXPECT_NEAR(0, pointY, 1e-2);
-    EXPECT_NEAR(0, pointZ, 1e-2);
+    EXPECT_NEAR(0, pointY, 1e-6);
+    EXPECT_NEAR(0, pointZ, 1e-6);
 
     eta = 0.5;
 

@@ -2,10 +2,6 @@
 * Copyright (C) 2007-2013 German Aerospace Center (DLR/SC)
 *
 * Created: 2010-08-13 Markus Litz <Markus.Litz@dlr.de>
-* Changed: $Id$ 
-*
-* Version: $Revision$
-*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -35,16 +31,34 @@
 namespace tigl 
 {
 
+class StlOptions : public ExporterOptions
+{
+public:
+    StlOptions()
+    {
+        Set("ApplySymmetries", true);
+        Set("IncludeFarfield", false);
+    }
+};
+
 class CTiglExportStl : public CTiglCADExporter
 {
 
 public:
     // Constructor
-    TIGL_EXPORT CTiglExportStl();
+    TIGL_EXPORT CTiglExportStl(const ExporterOptions& opt = DefaultExporterOption());
+
+    TIGL_EXPORT ExporterOptions GetDefaultOptions() const OVERRIDE;
+    TIGL_EXPORT ShapeExportOptions GetDefaultShapeOptions() const OVERRIDE;
 
 private:
 
     bool WriteImpl(const std::string& filename) const OVERRIDE;
+
+    std::string SupportedFileTypeImpl() const OVERRIDE
+    {
+        return "stl";
+    }
 
     // Assignment operator
     void operator=(const CTiglExportStl& ) { /* Do nothing */ }

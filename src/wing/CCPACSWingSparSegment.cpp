@@ -32,9 +32,19 @@
 #include <TopoDS_Edge.hxx>
 #include <TopTools_ListIteratorOfListOfShape.hxx>
 #include <TopTools_ListOfShape.hxx>
+#include <TopTools_IndexedMapOfShape.hxx>
+#include <TopExp.hxx>
+#include <TopoDS.hxx>
+#include <BRepAdaptor_Surface.hxx>
+#include <ShapeAnalysis_Surface.hxx>
+#include <GeomLProp_SLProps.hxx>
+#include <BRep_Tool.hxx>
+#include <BRepTools.hxx>
+
 
 #include "CCPACSWing.h"
 #include "CCPACSWingRibsDefinition.h"
+#include "CCPACSWingSegment.h"
 #include "CCPACSWingRibsPositioning.h"
 #include "CCPACSWingSparPosition.h"
 #include "CCPACSWingSpars.h"
@@ -45,28 +55,33 @@
 #include "tigletaxsifunctions.h"
 #include "CNamedShape.h"
 
-
-// TODO: const sparsNode
-TopoDS_Shape ApplyWingTransformation(tigl::CCPACSWingSpars& sparsNode, const TopoDS_Shape& shape)
-{
-    return sparsNode.GetParent()->GetWingStructureReference().GetWing().GetTransformationMatrix().Transform(shape);
-}
-
 namespace tigl
 {
+TopoDS_Shape ApplyWingTransformation(const CCPACSWingSpars& sparsNode, const TopoDS_Shape& shape)
+{
+    return CTiglWingStructureReference(*sparsNode.GetParent()).GetWing().GetTransformationMatrix().Transform(shape);
+}
+gp_Pnt ApplyWingTransformation(const CCPACSWingSpars& sparsNode, const gp_Pnt& p)
+{
+    return CTiglWingStructureReference(*sparsNode.GetParent()).GetWing().GetTransformationMatrix().Transform(p);
+}
 
 CCPACSWingSparSegment::CCPACSWingSparSegment(CCPACSWingSparSegments* sparSegments, CTiglUIDManager* uidMgr)
     : generated::CPACSSparSegment(sparSegments, uidMgr), sparsNode(*sparSegments->GetParent())
+    , auxGeomCache(*this, &CCPACSWingSparSegment::BuildAuxiliaryGeometry)
+    , geometryCache(*this, &CCPACSWingSparSegment::BuildGeometry)
+    , splittedGeomCache(*this, &CCPACSWingSparSegment::BuildSplittedSparGeometry)
+    , sparCapsCache(*this, &CCPACSWingSparSegment::BuildSparCapsGeometry)
 {
     Invalidate();
 }
 
 void CCPACSWingSparSegment::Invalidate()
 {
-    auxGeomCache = boost::none;
-    geometryCache = boost::none;
-    splittedGeomCache = boost::none;
-    sparCapsCache = boost::none;
+    auxGeomCache.clear();
+    geometryCache.clear();
+    splittedGeomCache.clear();
+    sparCapsCache.clear();
 }
 
 CCPACSWingSparPosition& CCPACSWingSparSegment::GetSparPosition(std::string uID)
@@ -139,7 +154,7 @@ void CCPACSWingSparSegment::GetEtaXsi(int positionIndex, double& eta, double& xs
     else if (sparPosition.GetInputType() == CCPACSWingSparPosition::ElementUID) {
         gp_Pnt sparPositionPoint = GetMidplanePoint(sparPositionUID);
         double dummy;
-        sparsNode.GetParent()->GetWingStructureReference().GetMidplaneEtaXsi(sparPositionPoint, eta, dummy);
+        CTiglWingStructureReference(*sparsNode.GetParent()).GetEtaXsiLocal(sparPositionPoint, eta, dummy);
         assert(fabs(dummy - xsi) < 1.E-6);
     }
     else {
@@ -150,27 +165,17 @@ void CCPACSWingSparSegment::GetEtaXsi(int positionIndex, double& eta, double& xs
 
 TopoDS_Wire CCPACSWingSparSegment::GetSparMidplaneLine() const
 {
-    if (!auxGeomCache) {
-        BuildAuxiliaryGeometry();
-    }
-    assert(auxGeomCache);
-
-    return auxGeomCache.value().sparMidplaneLine;
+    return auxGeomCache->sparMidplaneLine;
 }
 
 TopoDS_Shape CCPACSWingSparSegment::GetSparGeometry(TiglCoordinateSystem referenceCS) const
 {
-    if (!geometryCache) {
-        BuildGeometry();
-    }
-    assert(geometryCache);
-
     switch (referenceCS) {
     case WING_COORDINATE_SYSTEM:
-        return geometryCache.value().shape;
+        return geometryCache->shape;
         break;
     case GLOBAL_COORDINATE_SYSTEM:
-        return ApplyWingTransformation(sparsNode, geometryCache.value().shape);
+        return ApplyWingTransformation(sparsNode, geometryCache->shape);
         break;
     default:
         throw CTiglError("Unsupported Coordinate System passed to CCPACSWingSparSegment::GetSparGeometry!");
@@ -179,13 +184,8 @@ TopoDS_Shape CCPACSWingSparSegment::GetSparGeometry(TiglCoordinateSystem referen
 
 TopoDS_Shape CCPACSWingSparSegment::GetSplittedSparGeometry(TiglCoordinateSystem referenceCS) const
 {
-    if (!splittedGeomCache) {
-        BuildSplittedSparGeometry();
-    }
-    assert(splittedGeomCache);
-
     TopoDS_Shape splittedSparShape;
-    splittedSparShape = splittedGeomCache.value().shape;
+    splittedSparShape = splittedGeomCache->shape;
 
     switch (referenceCS) {
     case WING_COORDINATE_SYSTEM:
@@ -201,17 +201,12 @@ TopoDS_Shape CCPACSWingSparSegment::GetSplittedSparGeometry(TiglCoordinateSystem
 
 TopoDS_Shape CCPACSWingSparSegment::GetSparCutGeometry(TiglCoordinateSystem referenceCS) const
 {
-    if (!auxGeomCache) {
-        BuildAuxiliaryGeometry();
-    }
-    assert(auxGeomCache);
-
     switch (referenceCS) {
     case WING_COORDINATE_SYSTEM:
-        return auxGeomCache.value().sparCutShape;
+        return auxGeomCache->sparCutShape;
         break;
     case GLOBAL_COORDINATE_SYSTEM:
-        return ApplyWingTransformation(sparsNode, auxGeomCache.value().sparCutShape);
+        return ApplyWingTransformation(sparsNode, auxGeomCache->sparCutShape);
         break;
     default:
         throw CTiglError("Unsupported Coordinate System passed to CCPACSWingSparSegment::GetSparCutGeometry!");
@@ -234,17 +229,12 @@ bool CCPACSWingSparSegment::HasCap(SparCapSide side) const
 
 TopoDS_Shape CCPACSWingSparSegment::GetSparCapsGeometry(SparCapSide side, TiglCoordinateSystem referenceCS) const
 {
-    if (!sparCapsCache) {
-        BuildSparCapsGeometry();
-    }
-    assert(sparCapsCache);
-
     TopoDS_Shape capsShape;
     if (side == UPPER) {
-        capsShape = sparCapsCache.value().upperCapsShape;
+        capsShape = sparCapsCache->upperCapsShape;
     }
     else { // side == LOWER
-        capsShape = sparCapsCache.value().lowerCapsShape;
+        capsShape = sparCapsCache->lowerCapsShape;
     }
 
     switch (referenceCS) {
@@ -259,17 +249,32 @@ TopoDS_Shape CCPACSWingSparSegment::GetSparCapsGeometry(SparCapSide side, TiglCo
     }
 }
 
+std::string CCPACSWingSparSegment::GetDefaultedUID() const
+{
+    if (GetUID().is_initialized()) {
+        return GetUID().value();
+    }
+    else {
+        return "Unknown_Spar_Segment";
+    }
+}
+
+TiglGeometricComponentType CCPACSWingSparSegment::GetComponentType() const
+{
+    return TIGL_COMPONENT_PHYSICAL;
+}
+
 // Builds the cutting geometry for the spar as well as the midplane line
-void CCPACSWingSparSegment::BuildAuxiliaryGeometry() const
+void CCPACSWingSparSegment::BuildAuxiliaryGeometry(AuxiliaryGeomCache& cache) const
 {
     // get assigned componentsegment
-    CTiglWingStructureReference wingStructureReference = sparsNode.GetParent()->GetWingStructureReference();
+    const CTiglWingStructureReference wsr(*sparsNode.GetParent());
 
     // build compound for cut geometry
     BRepBuilderAPI_Sewing cutGeomSewer;
 
     // get bounding box of loft
-    TopoDS_Shape loft = wingStructureReference.GetLoft()->Shape();
+    TopoDS_Shape loft = wsr.GetLoft()->Shape();
     Bnd_Box bbox;
     BRepBndLib::Add(loft, bbox);
     double bboxSize = sqrt(bbox.SquareExtent());
@@ -340,27 +345,26 @@ void CCPACSWingSparSegment::BuildAuxiliaryGeometry() const
         cutGeomSewer.Add(sparCutFace);
 
         // STEP 5: compute part of midplane line (required by rib definition)
-        TopoDS_Wire sparMidplaneLinePart = wingStructureReference.GetMidplaneLine(innerPoint, outerPoint);
+        TopoDS_Wire sparMidplaneLinePart = wsr.GetMidplaneLine(innerPoint, outerPoint);
         sparMidplaneLineBuilder.Add(sparMidplaneLinePart);
     }
 
-    auxGeomCache.emplace();
     // store spar midplane line (required for rib position computation)
-    auxGeomCache->sparMidplaneLine = sparMidplaneLineBuilder.Wire();
+    cache.sparMidplaneLine = sparMidplaneLineBuilder.Wire();
     // and generate sewed cut geometry
     cutGeomSewer.Perform();
-    auxGeomCache->sparCutShape = cutGeomSewer.SewedShape();
+    cache.sparCutShape = cutGeomSewer.SewedShape();
 }
 
-void CCPACSWingSparSegment::BuildGeometry() const
+void CCPACSWingSparSegment::BuildGeometry(GeometryCache& cache) const
 {
-    CTiglWingStructureReference wingStructureReference = sparsNode.GetParent()->GetWingStructureReference();
+    CTiglWingStructureReference wsr(*sparsNode.GetParent());
 
     // build compound for spar geometry
     BRepBuilderAPI_Sewing sewing;
 
     // get bounding box of loft
-    TopoDS_Shape loft = wingStructureReference.GetLoft()->Shape();
+    TopoDS_Shape loft = wsr.GetLoft()->Shape();
     Bnd_Box bbox;
     BRepBndLib::Add(loft, bbox);
     double bboxSize = sqrt(bbox.SquareExtent());
@@ -370,7 +374,7 @@ void CCPACSWingSparSegment::BuildGeometry() const
     TopExp_Explorer exp;
     for (exp.Init(sparCutGeometry, TopAbs_FACE); exp.More(); exp.Next()) {
         TopoDS_Face sparCutFace = TopoDS::Face(exp.Current());
-            
+
         // intersect spar cut face with loft
         TopoDS_Shape sparCutEdges = CutShapes(loft, sparCutFace);
 
@@ -396,46 +400,65 @@ void CCPACSWingSparSegment::BuildGeometry() const
 
     // return spar geometry
     sewing.Perform();
-    geometryCache.emplace();
-    geometryCache->shape = sewing.SewedShape();
+    cache.shape = sewing.SewedShape();
 }
 
 // Builds the spar geometry splitted with the ribs
-void CCPACSWingSparSegment::BuildSplittedSparGeometry() const
+void CCPACSWingSparSegment::BuildSplittedSparGeometry(SplittedGeomCache& cache) const
 {
-    // first build the spar geometry itself
-    if (!geometryCache) {
-        BuildGeometry();
-    }
-    assert(geometryCache);
     // initialize splitted spar geometry with unsplitted one
-    TopoDS_Shape splittedSparGeometry = geometryCache.value().shape;
+    TopoDS_Shape splittedSparGeometry = geometryCache->shape;
 
     // next iterate over all ribs from the component segment
     const CCPACSWingCSStructure& structure = *sparsNode.GetParent();
     int numRibs = structure.GetRibsDefinitionCount();
-    BRep_Builder builder;
-    TopoDS_Compound compound;
-    builder.MakeCompound(compound);
+    // NOTE: changed implementation to separate splitting because
+    //       of problems with OCC7.1 when using compound
+    //BRep_Builder builder;
+    //TopoDS_Compound compound;
+    //builder.MakeCompound(compound);
     for (int i = 1; i <= numRibs; i++) {
         // get the split geometry from the ribs
         const tigl::CCPACSWingRibsDefinition& ribsDefinition = structure.GetRibsDefinition(i);
         for (int k = 0; k < ribsDefinition.GetNumberOfRibs(); k++) {
             const tigl::CCPACSWingRibsDefinition::CutGeometry& cutGeom = ribsDefinition.GetRibCutGeometry(k + 1);
-            builder.Add(compound, cutGeom.shape);
+            //builder.Add(compound, cutGeom.shape);
+            // split the spar geometry with the rib split geometry
+            splittedSparGeometry = SplitShape(splittedSparGeometry, cutGeom.shape);
+        }
+    }
+    //// split the spar geometry with the rib split geometry
+    //splittedSparGeometry = SplitShape(splittedSparGeometry, compound);
+
+    // split spar geometry with all other Spars
+    Bnd_Box bBoxBorder1, bBoxBorder2;
+    bBoxBorder1 = Bnd_Box();
+    BRepBndLib::Add(geometryCache->shape, bBoxBorder1);
+
+    int numSpars = structure.GetSparSegmentCount();
+
+    for (int i = 1; i <= numSpars; i++)
+    {
+        const tigl::CCPACSWingSparSegment& otherSegment = structure.GetSparSegment(i);
+
+        if (m_uID == otherSegment.GetUID())
+            continue;
+
+        bBoxBorder2 = Bnd_Box();
+        BRepBndLib::Add(otherSegment.GetSparGeometry(WING_COORDINATE_SYSTEM), bBoxBorder2);
+
+        if (!bBoxBorder1.IsOut(bBoxBorder2))
+        {
+            splittedSparGeometry = SplitShape(splittedSparGeometry, otherSegment.GetSparCutGeometry(WING_COORDINATE_SYSTEM));
         }
     }
 
-    // split the spar geometry with the rib split geometry
-    splittedSparGeometry = SplitShape(splittedSparGeometry, compound);
-
-    splittedGeomCache.emplace();
-    splittedGeomCache->shape = splittedSparGeometry;
+    cache.shape = splittedSparGeometry;
 }
 
-void CCPACSWingSparSegment::BuildSparCapsGeometry() const
+void CCPACSWingSparSegment::BuildSparCapsGeometry(SparCapsCache& cache) const
 {
-    CTiglWingStructureReference wingStructureReference = sparsNode.GetParent()->GetWingStructureReference();
+    const CTiglWingStructureReference wsr(*sparsNode.GetParent());
     TopoDS_Compound upperCompound;
     TopoDS_Compound lowerCompound;
     BRep_Builder builder;
@@ -445,7 +468,7 @@ void CCPACSWingSparSegment::BuildSparCapsGeometry() const
     TopoDS_Shape sparCutting = GetSparCutGeometry(WING_COORDINATE_SYSTEM);
 
     if (m_sparCrossSection.GetUpperCap()) {
-        TopoDS_Shape loft = wingStructureReference.GetUpperShape();
+        TopoDS_Shape loft = wsr.GetUpperShape();
 
         // Get the cutting edge of the spar cutting plane and the loft
         TopExp_Explorer ExpEdges;
@@ -459,7 +482,7 @@ void CCPACSWingSparSegment::BuildSparCapsGeometry() const
     }
 
     if (m_sparCrossSection.GetLowerCap()) {
-        TopoDS_Shape loft = wingStructureReference.GetLowerShape();
+        TopoDS_Shape loft = wsr.GetLowerShape();
 
         // Get the cutting edge of the spar cutting plane and the loft
         TopExp_Explorer ExpEdges;
@@ -472,24 +495,23 @@ void CCPACSWingSparSegment::BuildSparCapsGeometry() const
         }
     }
 
-    sparCapsCache.emplace();
-    sparCapsCache->upperCapsShape = upperCompound;
-    sparCapsCache->lowerCapsShape = lowerCompound;
+    cache.upperCapsShape = upperCompound;
+    cache.lowerCapsShape = lowerCompound;
 }
 
 // Builds the cutting geometry for the spar as well as the midplane line
 gp_Pnt CCPACSWingSparSegment::GetMidplanePoint(const std::string& positionUID) const
 {
     gp_Pnt midplanePoint;
-    CCPACSWingSparPosition& position = sparsNode.GetSparPositions().GetSparPosition(positionUID);
-    CTiglWingStructureReference wingStructureReference = sparsNode.GetParent()->GetWingStructureReference();
+    CCPACSWingSparPosition& sparPosition               = sparsNode.GetSparPositions().GetSparPosition(positionUID);
+    CTiglWingStructureReference wsr(*sparsNode.GetParent());
 
-    if (position.GetInputType() == CCPACSWingSparPosition::ElementUID) {
-        CCPACSWingComponentSegment& componentSegment = wingStructureReference.GetWingComponentSegment();
-        midplanePoint = getSectionElementChordlinePoint(componentSegment, position.GetElementUID(), position.GetXsi());
+    if (sparPosition.GetInputType() == CCPACSWingSparPosition::ElementUID) {
+            const CCPACSWingComponentSegment& componentSegment = wsr.GetWingComponentSegment();
+        midplanePoint = getSectionElementChordlinePoint(componentSegment, sparPosition.GetElementUID(), sparPosition.GetXsi());
     }
-    else if (position.GetInputType() == CCPACSWingSparPosition::Eta) {
-        midplanePoint = wingStructureReference.GetPoint(position.GetEta(), position.GetXsi(), WING_COORDINATE_SYSTEM);
+    else if (sparPosition.GetInputType() == CCPACSWingSparPosition::Eta) {
+        midplanePoint = wsr.GetPoint(sparPosition.GetEta(), sparPosition.GetXsi(), WING_COORDINATE_SYSTEM);
     }
     else {
         throw CTiglError("Unkwnonw SparPosition InputType found in CCPACSWingSparSegment::GetMidplanePoint");
@@ -499,25 +521,24 @@ gp_Pnt CCPACSWingSparSegment::GetMidplanePoint(const std::string& positionUID) c
 
 gp_Vec CCPACSWingSparSegment::GetUpVector(const std::string& positionUID, gp_Pnt midplanePnt) const
 {
-    gp_Vec upVec;
-    CCPACSWingSparPosition& position = sparsNode.GetSparPositions().GetSparPosition(positionUID);
-    CTiglWingStructureReference wingStructureReference = sparsNode.GetParent()->GetWingStructureReference();
+    const CCPACSWingSparPosition& position = sparsNode.GetSparPositions().GetSparPosition(positionUID);
+    const CTiglWingStructureReference wsr(*sparsNode.GetParent());
 
     if (position.GetInputType() == CCPACSWingSparPosition::ElementUID) {
         // get componentSegment required for getting chordline points of sections
-        CCPACSWingComponentSegment& componentSegment = wingStructureReference.GetWingComponentSegment();
+        const CCPACSWingComponentSegment& componentSegment = wsr.GetWingComponentSegment();
 
         // compute bounding box of section element face
-        TopoDS_Shape sectionFace = componentSegment.GetSectionElementFace(position.GetElementUID());
+        const TopoDS_Shape sectionFace = componentSegment.GetSectionElementFace(position.GetElementUID());
         Bnd_Box bbox;
         BRepBndLib::Add(sectionFace, bbox);
         double sectionFaceSize = sqrt(bbox.SquareExtent());
 
         // generate a cut face aligned in the YZ plane
-        gp_Pnt p1 = midplanePnt.Translated(gp_Vec(0, -sectionFaceSize, -sectionFaceSize));
-        gp_Pnt p2 = midplanePnt.Translated(gp_Vec(0, -sectionFaceSize,  sectionFaceSize));
-        gp_Pnt p3 = midplanePnt.Translated(gp_Vec(0,  sectionFaceSize, -sectionFaceSize));
-        gp_Pnt p4 = midplanePnt.Translated(gp_Vec(0,  sectionFaceSize,  sectionFaceSize));
+        const gp_Pnt p1 = midplanePnt.Translated(gp_Vec(0, -sectionFaceSize, -sectionFaceSize));
+        const gp_Pnt p2 = midplanePnt.Translated(gp_Vec(0, -sectionFaceSize, sectionFaceSize));
+        const gp_Pnt p3 = midplanePnt.Translated(gp_Vec(0, sectionFaceSize, -sectionFaceSize));
+        const gp_Pnt p4 = midplanePnt.Translated(gp_Vec(0, sectionFaceSize, sectionFaceSize));
 
         // build face for cutting with the section face
         TopoDS_Shape cutFace = BuildFace(p1, p2, p3, p4);
@@ -534,11 +555,11 @@ gp_Vec CCPACSWingSparSegment::GetUpVector(const std::string& positionUID, gp_Pnt
         }
         const TopoDS_Vertex& vCut1 = TopoDS::Vertex(endVertices.First());
         const TopoDS_Vertex& vCut2 = TopoDS::Vertex(endVertices.Last());
-        gp_Pnt pCut1 = BRep_Tool::Pnt(vCut1);
-        gp_Pnt pCut2 = BRep_Tool::Pnt(vCut2);
+        const gp_Pnt pCut1               = BRep_Tool::Pnt(vCut1);
+        const gp_Pnt pCut2               = BRep_Tool::Pnt(vCut2);
 
         // build the up vector based on the end points, and ensure correct orientation
-        upVec = gp_Vec(pCut1, pCut2).Normalized();
+        gp_Vec upVec = gp_Vec(pCut1, pCut2).Normalized();
         if (upVec.Dot(gp_Vec(0, 0, 1)) < 0) {
             upVec.Reverse();
         }
@@ -549,22 +570,22 @@ gp_Vec CCPACSWingSparSegment::GetUpVector(const std::string& positionUID, gp_Pnt
     // BUG #149 and #152
     // because of issues with the spar up vectors in adjacent component
     // segments the up vector is set to the z direction
-    upVec = gp_Vec(0,0,1);
+    gp_Vec upVec = gp_Vec(0, 0, 1);
     /*
     // determine up-vector based on midplane line of inner spar point
     double eta = position.GetEta();
-    gp_Pnt pl = componentSegment.GetMidplanePoint(eta, 0);
-    gp_Pnt pt = componentSegment.GetMidplanePoint(eta, 1);
+    gp_Pnt pl = cs.GetMidplanePoint(eta, 0);
+    gp_Pnt pt = cs.GetMidplanePoint(eta, 1);
     gp_Vec chordLine(pl, pt);
     // determine default segment, in case of inner/outer eta value
     // (required for extended eta line)
     std::string defaultSegmentUID;
     if (eta < 0.5) {
-        defaultSegmentUID = componentSegment.GetInnerSegmentUID();
+        defaultSegmentUID = cs.GetInnerSegmentUID();
     } else {
-        defaultSegmentUID = componentSegment.GetOuterSegmentUID();
+        defaultSegmentUID = cs.GetOuterSegmentUID();
     }
-    gp_Vec leDir = componentSegment.GetLeadingEdgeDirection(pl, defaultSegmentUID);
+    gp_Vec leDir = cs.GetLeadingEdgeDirection(pl, defaultSegmentUID);
     leDir.SetX(0);
     leDir.Normalize();
     double rotation = sparCrossSection->GetRotation() * M_PI / 180.0;
@@ -575,6 +596,86 @@ gp_Vec CCPACSWingSparSegment::GetUpVector(const std::string& positionUID, gp_Pnt
     */
     
     return upVec;
+}
+
+PNamedShape CCPACSWingSparSegment::BuildLoft() const
+{
+    return PNamedShape(new CNamedShape(GetSparGeometry(GLOBAL_COORDINATE_SYSTEM), GetDefaultedUID()));
+}
+
+bool PointIsInfrontSparGeometry(gp_Dir nNormal, gp_Pnt nTestPoint, TopoDS_Shape nSparSegments)
+{
+    TopTools_IndexedMapOfShape faceMap;
+    TopExp::MapShapes(nSparSegments, TopAbs_FACE, faceMap);
+    double u_min = 0., u_max = 0., v_min = 0., v_max = 0.;
+
+    // for symmetry
+    nTestPoint.SetY(fabs(nTestPoint.Y()));
+
+    for (int f = 1; f <= faceMap.Extent(); f++) {
+        TopoDS_Face loftFace = TopoDS::Face(faceMap(f));
+        BRepAdaptor_Surface surf(loftFace);
+        Handle(Geom_Surface) geomSurf = BRep_Tool::Surface(loftFace);
+
+        BRepTools::UVBounds(TopoDS::Face(faceMap(f)), u_min, u_max, v_min, v_max);
+
+        gp_Pnt startPnt = surf.Value(u_min, v_min + ((v_max - v_min) / 2));
+        gp_Pnt endPnt   = surf.Value(u_max, v_min + ((v_max - v_min) / 2));
+
+        // if the U / V direction of the spar plane is changed
+        gp_Ax1 a1Test0   = gp_Ax1(startPnt, gp_Vec(startPnt, endPnt));
+        gp_Ax1 a1TestZ   = gp_Ax1(startPnt, gp_Vec(gp_Pnt(0., 0., 0.), gp_Pnt(0., 0., 1.)));
+        gp_Ax1 a1Test_mZ = gp_Ax1(startPnt, gp_Vec(gp_Pnt(0., 0., 0.), gp_Pnt(0., 0., -1.)));
+
+        if (a1Test0.Angle(a1TestZ) < Radians(20.0) || a1Test0.Angle(a1Test_mZ) < Radians(20.0)) {
+            startPnt = surf.Value(u_min + ((u_max - u_min) / 2), v_min);
+            endPnt   = surf.Value(u_min + ((u_max - u_min) / 2), v_max);
+        }
+
+        // Here it is checked if the stringer is in the Y area of the corresponding spar face
+
+        if (endPnt.Y() > startPnt.Y()) {
+            if (startPnt.Y() > nTestPoint.Y() || endPnt.Y() < nTestPoint.Y()) {
+                continue;
+            }
+        }
+        else {
+            if (startPnt.Y() < fabs(nTestPoint.Y()) || endPnt.Y() > fabs(nTestPoint.Y())) {
+                continue;
+            }
+        }
+
+        // project test point onto the surface
+        Handle(ShapeAnalysis_Surface) SA_surf = new ShapeAnalysis_Surface(geomSurf);
+        gp_Pnt2d uv                           = SA_surf->ValueOfUV(nTestPoint, 0.0);
+        gp_Pnt pTestProj                      = surf.Value(uv.X(), uv.Y());
+
+        GeomLProp_SLProps prop(geomSurf, uv.X(), uv.Y(), 1, 0.01);
+        gp_Dir normal = prop.Normal();
+
+        gp_Ax1 planeNormal(pTestProj, normal);
+
+        if (nNormal.Angle(planeNormal.Direction()) > Radians(90.0)) {
+            planeNormal = planeNormal.Reversed();
+        }
+
+        gp_Vec vTest = gp_Vec(pTestProj, nTestPoint);
+
+        if (vTest.Magnitude() == 0.) {
+            continue;
+        }
+
+        gp_Ax1 a1Test = gp_Ax1(pTestProj, vTest);
+
+        if (a1Test.Angle(planeNormal) < Radians(89.0)) {
+            return true;
+        }
+        else {
+            continue;
+        }
+    }
+
+    return false;
 }
 
 } // end namespace tigl

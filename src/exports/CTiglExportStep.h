@@ -2,10 +2,6 @@
 * Copyright (C) 2007-2013 German Aerospace Center (DLR/SC)
 *
 * Created: 2013-02-28 Markus Litz <Markus.Litz@dlr.de>
-* Changed: $Id$ 
-*
-* Version: $Revision$
-*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -38,25 +34,45 @@ namespace tigl
 
 class CCPACSConfiguration;
 
+class StepOptions : public ExporterOptions
+{
+public:
+    StepOptions()
+    {
+        Set("ApplySymmetries", false);
+        Set("IncludeFarfield", true);
+        Set("ShapeGroupMode", NAMED_COMPOUNDS);
+    }
+};
+
+class StepShapeOptions : public ShapeExportOptions
+{
+public:
+    StepShapeOptions(){}
+};
+
 class CTiglExportStep : public CTiglCADExporter
 {
 
 public:
     // Constructor
-    TIGL_EXPORT CTiglExportStep();
+    TIGL_EXPORT CTiglExportStep(const ExporterOptions& opt = DefaultExporterOption());
 
-    // Sets the type of storing shapes to iges
-    TIGL_EXPORT void SetGroupMode(ShapeGroupMode mode);
-
+    TIGL_EXPORT ExporterOptions GetDefaultOptions() const OVERRIDE;
+    TIGL_EXPORT ShapeExportOptions GetDefaultShapeOptions() const OVERRIDE;
 
 private:
     // Writes the step file
     TIGL_EXPORT bool WriteImpl(const std::string& filename) const OVERRIDE;
 
+    std::string SupportedFileTypeImpl() const OVERRIDE
+    {
+        return "step;stp";
+    }
+
     // Assignment operator
     void operator=(const CTiglExportStep& ) { /* Do nothing */ }
 
-    ShapeGroupMode                _groupMode;    /**< Type specifying how to group faces in the step file */
     void AddToStep(PNamedShape shape, STEPControl_Writer &writer) const;
 };
 

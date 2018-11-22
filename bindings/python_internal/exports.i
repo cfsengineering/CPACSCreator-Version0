@@ -19,9 +19,18 @@
 %module (package="tigl3") exports
 
 %include common.i
+%include math_headers.i
 
-%import core.i
+%shared_ptr(tigl::CTiglCADExporter)
+%shared_ptr(tigl::CTiglExportBrep)
+%shared_ptr(tigl::CTiglExportStep)
+%shared_ptr(tigl::CTiglExportIges)
+%shared_ptr(tigl::CTiglExportStl)
+%shared_ptr(tigl::CTiglExportCollada)
+%shared_ptr(tigl::CTiglExportVtk)
+
 %import geometry.i
+%import core.i
 
 
 %{
@@ -33,6 +42,8 @@
 #include "CTiglExportVtk.h"
 #include "CTiglExportCollada.h"
 #include "CCPACSImportExport.h"
+#include "CTiglExporterFactory.h"
+#include "CGlobalExporterConfigs.h"
 %}
 
 %template(ListPNamedShape) std::vector<PNamedShape>;
@@ -42,9 +53,19 @@
 // rename file methods to python pep8 style
 %rename("%(undercase)s", %$isfunction) "";
 
-
-%include "CCPACSImportExport.h"
+%include "COptionList.h"
+namespace tigl
+{
+    enum ShapeGroupMode
+    {
+        WHOLE_SHAPE,
+        NAMED_COMPOUNDS,
+        FACES
+    };
+}
 %include "CTiglCADExporter.h"
+%include "CGlobalExporterConfigs.h"
+%include "CTiglExporterFactory.h"
 %include "CTiglExportBrep.h"
 %include "CTiglExportStep.h"
 %include "CTiglExportIges.h"

@@ -20,7 +20,7 @@
 #include <boost/optional.hpp>
 #include <boost/utility/in_place_factory.hpp>
 #include <CCPACSPointListXY.h>
-#include <CCPACSStructuralProfileSheets.h>
+#include <CCPACSSheetList.h>
 #include <string>
 #include <tixi.h>
 #include "tigl_internal.h"
@@ -43,7 +43,9 @@ namespace generated
 
         TIGL_EXPORT virtual ~CPACSStructuralProfile();
 
-        TIGL_EXPORT CCPACSStructuralProfiles* GetParent() const;
+        TIGL_EXPORT CCPACSStructuralProfiles* GetParent();
+
+        TIGL_EXPORT const CCPACSStructuralProfiles* GetParent() const;
 
         TIGL_EXPORT CTiglUIDManager& GetUIDManager();
         TIGL_EXPORT const CTiglUIDManager& GetUIDManager() const;
@@ -63,19 +65,19 @@ namespace generated
         TIGL_EXPORT virtual const CCPACSPointListXY& GetPointList() const;
         TIGL_EXPORT virtual CCPACSPointListXY& GetPointList();
 
-        TIGL_EXPORT virtual const CCPACSStructuralProfileSheets& GetSheetList() const;
-        TIGL_EXPORT virtual CCPACSStructuralProfileSheets& GetSheetList();
+        TIGL_EXPORT virtual const CCPACSSheetList& GetSheetList() const;
+        TIGL_EXPORT virtual CCPACSSheetList& GetSheetList();
 
     protected:
         CCPACSStructuralProfiles* m_parent;
 
         CTiglUIDManager* m_uidMgr;
 
-        std::string                   m_uID;
-        std::string                   m_name;
-        boost::optional<std::string>  m_description;
-        CCPACSPointListXY             m_pointList;
-        CCPACSStructuralProfileSheets m_sheetList;
+        std::string                  m_uID;
+        std::string                  m_name;
+        boost::optional<std::string> m_description;
+        CCPACSPointListXY            m_pointList;
+        CCPACSSheetList              m_sheetList;
 
     private:
 #ifdef HAVE_CPP11

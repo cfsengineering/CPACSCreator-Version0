@@ -17,7 +17,7 @@
 */
 
 /* 
-* This file is automatically created from tigl.h on 2018-02-27.
+* This file is automatically created from tigl.h on 2018-04-09.
 * If you experience any bugs please contact the authors
 */
 
@@ -137,6 +137,9 @@ public class TiglNativeInterface {
     public static native int tiglIntersectGetPoint(int cpacsHandle, String intersectionID, int lineIdx, double eta, DoubleByReference pointX, DoubleByReference pointY, DoubleByReference pointZ);
     public static native int tiglGetCurveIntersectionPoint(int cpacsHandle, String intersectionID, int pointIdx, DoubleByReference pointX, DoubleByReference pointY, DoubleByReference pointZ);
     public static native int tiglGetCurveParameter(int cpacsHandle, String curveID, int curveIdx, double pointX, double pointY, double pointZ, DoubleByReference eta);
+    public static native int tiglSetExportOptions(String exporter_name, String option_name, String option_value);
+    public static native int tiglExportComponent(int cpacsHandle, String uid, String fileName, double deflection);
+    public static native int tiglExportConfiguration(int cpacsHandle, String fileName, int fuseAllShapes, double deflection);
     public static native int tiglExportIGES(int cpacsHandle, String filenamePtr);
     public static native int tiglExportFusedWingFuselageIGES(int cpacsHandle, String filenamePtr);
     public static native int tiglExportSTEP(int cpacsHandle, String filenamePtr);
@@ -146,7 +149,6 @@ public class TiglNativeInterface {
     public static native int tiglExportMeshedFuselageSTL(int cpacsHandle, int fuselageIndex, String filenamePtr, double deflection);
     public static native int tiglExportMeshedFuselageSTLByUID(int cpacsHandle, String fuselageUID, String filenamePtr, double deflection);
     public static native int tiglExportMeshedGeometrySTL(int cpacsHandle, String filenamePtr, double deflection);
-    public static native int tiglExportVTKSetOptions(String key, String value);
     public static native int tiglExportMeshedWingVTKByIndex(int cpacsHandle, int wingIndex, String filenamePtr, double deflection);
     public static native int tiglExportMeshedWingVTKByUID(int cpacsHandle, String wingUID, String filenamePtr, double deflection);
     public static native int tiglExportMeshedFuselageVTKByIndex(int cpacsHandle, int fuselageIndex, String filenamePtr, double deflection);

@@ -2,10 +2,6 @@
 * Copyright (C) 2007-2013 German Aerospace Center (DLR/SC)
 *
 * Created: 2010-08-13 Markus Litz <Markus.Litz@dlr.de>
-* Changed: $Id$ 
-*
-* Version: $Revision$
-*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -52,8 +48,8 @@ template <typename SegmentType>
 class CTiglAbstractSegment : public CTiglAbstractGeometricComponent
 {
 public:
-    TIGL_EXPORT CTiglAbstractSegment(const std::vector<unique_ptr<SegmentType>>& segments, const boost::optional<TiglSymmetryAxis>& parentSymmetry)
-        : _segments(segments), _parentSymmetry(parentSymmetry), _continuity(::C0) {}
+    TIGL_EXPORT CTiglAbstractSegment(const std::vector<unique_ptr<SegmentType>>& segments, const CTiglAbstractGeometricComponent* parentComponent)
+        : _segments(segments), _parentComponent(parentComponent), _continuity(::C0) {}
 
     // Returns the segment index of this segment
     int GetSegmentIndex() const
@@ -68,8 +64,8 @@ public:
 
     TiglSymmetryAxis GetSymmetryAxis() const OVERRIDE
     {
-        if (_parentSymmetry) {
-            return *_parentSymmetry;
+        if (_parentComponent) {
+            return _parentComponent->GetSymmetryAxis();
         }
         else {
             return TIGL_NO_SYMMETRY;
@@ -84,7 +80,7 @@ public:
 
 protected:
     const std::vector<unique_ptr<SegmentType>>& _segments;       /**< References the segment collection of the parent container element in the CPACS tree */
-    const boost::optional<TiglSymmetryAxis>&    _parentSymmetry; /**< References the symmetry of a parent element in the CPACS tree */
+    const CTiglAbstractGeometricComponent*      _parentComponent; /**< References the symmetry of a parent element in the CPACS tree */
     TiglContinuity                              _continuity;     /**< Continuity of the connection to the next segment */
 
 };  // end class CTiglAbstractSegment

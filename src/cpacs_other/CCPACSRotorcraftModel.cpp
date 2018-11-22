@@ -23,25 +23,10 @@
 namespace tigl
 {
 CCPACSRotorcraftModel::CCPACSRotorcraftModel(CCPACSConfiguration* config)
-    : generated::CPACSRotorcraftModel(config ? &config->GetUIDManager() : NULL), CTiglRelativelyPositionedComponent(NULL, NULL), config(config) {}
+    : generated::CPACSRotorcraftModel(config ? &config->GetUIDManager() : NULL), CTiglRelativelyPositionedComponent(static_cast<std::string*>(NULL), NULL), config(config) {}
 
 CCPACSRotorcraftModel::CCPACSRotorcraftModel(CTiglUIDManager* uidMgr)
-    : generated::CPACSRotorcraftModel(uidMgr), CTiglRelativelyPositionedComponent(NULL, NULL), config(NULL) {}
-
-void CCPACSRotorcraftModel::ReadCPACS(const TixiDocumentHandle& tixiHandle, const std::string& xpath) {
-    generated::CPACSRotorcraftModel::ReadCPACS(tixiHandle, xpath);
-    if (config) {
-        config->GetUIDManager().AddGeometricComponent(m_uID, this);
-    }
-}
-
-void CCPACSRotorcraftModel::SetUID(const std::string& uid) {
-    if (m_uidMgr) {
-        m_uidMgr->TryRemoveGeometricComponent(m_uID);
-        m_uidMgr->AddGeometricComponent(uid, this);
-    }
-    generated::CPACSRotorcraftModel::SetUID(uid);
-}
+    : generated::CPACSRotorcraftModel(uidMgr), CTiglRelativelyPositionedComponent(static_cast<std::string*>(NULL), NULL), config(NULL) {}
 
 std::string CCPACSRotorcraftModel::GetDefaultedUID() const {
     return generated::CPACSRotorcraftModel::GetUID();
@@ -53,10 +38,9 @@ TiglGeometricComponentType CCPACSRotorcraftModel::GetComponentType() const
     return (TIGL_COMPONENT_PHYSICAL | TIGL_COMPONENT_PLANE);
 }
 
-PNamedShape CCPACSRotorcraftModel::BuildLoft()
+PNamedShape CCPACSRotorcraftModel::BuildLoft() const
 {
-    // return empty loft
-    return loft;
+    return PNamedShape();
 }
 
 void CCPACSRotorcraftModel::Invalidate() {

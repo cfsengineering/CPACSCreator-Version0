@@ -2,10 +2,7 @@
 * Copyright (C) 2007-2013 German Aerospace Center (DLR/SC)
 *
 * Created: 2010-08-13 Markus Litz <Markus.Litz@dlr.de>
-* Changed: $Id$
-*
-* Version: $Revision$
-*
+
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -36,8 +33,15 @@ namespace tigl
 CTiglUIDManager::CTiglUIDManager()
     : invalidated(true), rootComponent(NULL) {}
 
-bool CTiglUIDManager::IsUIDRegistered(const std::string & uid) const {
+bool CTiglUIDManager::IsUIDRegistered(const std::string & uid) const
+{
     return cpacsObjects.find(uid) != cpacsObjects.end();
+}
+
+bool CTiglUIDManager::IsUIDRegistered(const std::string& uid, const std::type_info& typeInfo) const
+{
+    CPACSObjectMap::const_iterator it = cpacsObjects.find(uid);
+    return it != cpacsObjects.end() && it->second.type == &typeInfo;
 }
 
 void CTiglUIDManager::RegisterObject(const std::string& uid, void* object, const std::type_info& typeInfo)
@@ -88,6 +92,10 @@ bool CTiglUIDManager::TryUnregisterObject(const std::string& uid)
         return false;
     }
     cpacsObjects.erase(it);
+
+    // also remove the geometric component if it exists
+    TryRemoveGeometricComponent(uid);
+
     return true;
 }
 
@@ -161,14 +169,13 @@ bool CTiglUIDManager::TryRemoveGeometricComponent(const std::string & uid)
         return false;
     }
     allShapes.erase(it);
-    return true;
-}
 
-void CTiglUIDManager::RemoveGeometricComponent(const std::string &uid)
-{
-    if (!TryRemoveGeometricComponent(uid)) {
-        throw CTiglError("No shape is registered for uid \"" + uid + "\"");
+    const RelativeComponentContainerType::iterator it2 = relativeComponents.find(uid);
+    if (it2 != relativeComponents.end()) {
+        relativeComponents.erase(it2);
     }
+
+    return true;
 }
 
 // Checks if a UID already exists.
@@ -209,7 +216,6 @@ CTiglRelativelyPositionedComponent& CTiglUIDManager::GetRelativeComponent(const 
 
     return *it->second;
 }
-
 
 // Clears the uid store
 void CTiglUIDManager::Clear()

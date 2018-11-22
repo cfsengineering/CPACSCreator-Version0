@@ -25,10 +25,21 @@
 #include "CCPACSGuideCurveAlgo.h"
 #include "CCPACSFuselageProfileGetPointAlgo.h"
 
+#include "tiglcommonfunctions.h"
+
 namespace tigl
 {
 
-TopoDS_Edge CTiglFuselageSegmentGuidecurveBuilder::BuildGuideCurve(CCPACSGuideCurve * guideCurve)
+CTiglFuselageSegmentGuidecurveBuilder::CTiglFuselageSegmentGuidecurveBuilder(CCPACSFuselageSegment &segment)
+    : m_segment(segment)
+{
+}
+
+CTiglFuselageSegmentGuidecurveBuilder::~CTiglFuselageSegmentGuidecurveBuilder()
+{
+}
+
+std::vector<gp_Pnt> CTiglFuselageSegmentGuidecurveBuilder::BuildGuideCurvePnts(const CCPACSGuideCurve * guideCurve) const
 {
     assert(guideCurve);
 
@@ -55,8 +66,8 @@ TopoDS_Edge CTiglFuselageSegmentGuidecurveBuilder::BuildGuideCurve(CCPACSGuideCu
     // get chord lengths for inner profile in word coordinates
     TopoDS_Wire innerChordLineWire = TopoDS::Wire(transformFuselageProfileGeometry(m_segment.GetFuselage().GetTransformationMatrix(), startConnection, startProfile.GetDiameterWire()));
     TopoDS_Wire outerChordLineWire = TopoDS::Wire(transformFuselageProfileGeometry(m_segment.GetFuselage().GetTransformationMatrix(), endConnection, endProfile.GetDiameterWire()));
-    double innerScale = GetWireLength(innerChordLineWire);
-    double outerScale = GetWireLength(outerChordLineWire);
+    double innerScale = GetLength(innerChordLineWire);
+    double outerScale = GetLength(outerChordLineWire);
 
 
     double fromRelativeCircumference;
@@ -93,15 +104,15 @@ TopoDS_Edge CTiglFuselageSegmentGuidecurveBuilder::BuildGuideCurve(CCPACSGuideCu
 
 
     // construct guide curve algorithm
-    TopoDS_Edge guideCurveEdge = CCPACSGuideCurveAlgo<CCPACSFuselageProfileGetPointAlgo> (startWireContainer,
-                                                                                          endWireContainer,
-                                                                                          fromRelativeCircumference,
-                                                                                          toRelativeCircumference,
-                                                                                          innerScale,
-                                                                                          outerScale,
-                                                                                          rxDir,
-                                                                                          guideCurveProfile);
-    return guideCurveEdge;
+    std::vector<gp_Pnt> guideCurvePnts = CCPACSGuideCurveAlgo<CCPACSFuselageProfileGetPointAlgo> (startWireContainer,
+                                                                                                  endWireContainer,
+                                                                                                  fromRelativeCircumference,
+                                                                                                  toRelativeCircumference,
+                                                                                                  innerScale,
+                                                                                                  outerScale,
+                                                                                                  rxDir,
+                                                                                                  guideCurveProfile);
+    return guideCurvePnts;
 }
 
 } // namespace tigl

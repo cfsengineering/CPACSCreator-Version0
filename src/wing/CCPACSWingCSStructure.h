@@ -20,8 +20,6 @@
 #define CCPACSWINGCSSTRUCTURE_H
 
 #include "generated/CPACSWingComponentSegmentStructure.h"
-#include "tigl_internal.h"
-#include "CCPACSWingShell.h"
 #include "CTiglWingStructureReference.h"
 
 
@@ -37,10 +35,7 @@ class CCPACSWingCSStructure : public generated::CPACSWingComponentSegmentStructu
 {
 public:
     TIGL_EXPORT CCPACSWingCSStructure(CCPACSWingComponentSegment* parent, CTiglUIDManager* uidMgr);
-    //TIGL_EXPORT CCPACSWingCSStructure(CPACSTrailingEdgeDevice* parent, CTiglUIDManager* uidMgr);
-
-    TIGL_EXPORT CTiglWingStructureReference GetWingStructureReference();
-    TIGL_EXPORT const CTiglWingStructureReference GetWingStructureReference() const;
+    TIGL_EXPORT CCPACSWingCSStructure(CCPACSTrailingEdgeDevice* parent, CTiglUIDManager* uidMgr);
 
     // Returns number of spar segments
     TIGL_EXPORT int GetSparSegmentCount() const;

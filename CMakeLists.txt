@@ -61,6 +61,20 @@ endif(TIGL_NIGHTLY)
 
 set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR})
 
+if (MSVC)
+    option(TIGL_USE_CLCACHE "Use clcache if available (only nmake or ninja)" ON)
+    mark_as_advanced(TIGL_USE_CLCACHE)
+endif(MSVC)
+
+if (MSVC AND TIGL_USE_CLCACHE AND
+     (("${CMAKE_GENERATOR}" STREQUAL "NMake Makefiles") OR
+      ("${CMAKE_GENERATOR}" STREQUAL "Ninja")))
+  find_program(CLCACHE_FOUND clcache)
+  if(CLCACHE_FOUND)
+    set(CMAKE_CXX_COMPILER ${CLCACHE_FOUND})
+  endif(CLCACHE_FOUND)
+endif()
+
 # required opencascade libraries
 # please don't change the order of libraries as this can cause linking problems
 set (OCC_LIBS 
@@ -200,6 +214,9 @@ if(WIN32)
     endif(CMAKE_BUILD_TYPE STREQUAL "Debug")
 endif(WIN32)
 
+# disable auto linking for Boost, as we include the cpp files ourselves
+add_definitions(-DBOOST_ALL_NO_LIB)
+
 if(WIN32)
     # avoid export of oce/occt classes into tigl library
     add_definitions(-DStandard_EXPORT=)
@@ -229,7 +246,7 @@ if(TIGL_BUILD_TESTS)
   enable_testing()
   option(gtest_force_shared_crt "" ON)
   mark_as_advanced(gtest_force_shared_crt)
-  set (gtest_SOURCE_DIR "thirdparty/gtest-1.6.0")
+  set (gtest_SOURCE_DIR "thirdparty/gtest-1.7.0")
   add_subdirectory (${gtest_SOURCE_DIR})
   add_subdirectory(tests)
 endif(TIGL_BUILD_TESTS)

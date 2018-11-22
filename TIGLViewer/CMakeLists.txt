@@ -72,7 +72,6 @@ endforeach()
 include_directories(${TIGL_INCLUDES})
 
 set(tv_src
-    CommandLineParameters.cpp
     ISession_Point.cpp
     ISession_Direction.cpp
     ISession_Text.cpp
@@ -119,8 +118,10 @@ set(tv_src
     TIGLViewerFuselageWidget.cpp
     UndoHelper.cpp
     CPACSTreeView.cpp
+    TIGLViewerApp.cpp
+    TIGLGeometryChoserDialog.cpp
+)
 
-        )
 	
 # normal header files
 set(tv_hdr
@@ -166,19 +167,21 @@ set(tv_hdr_qobj
 	TIGLViewerScreenshotDialog.h
 	TIGLViewerVTKExportDialog.h
 	TIGLSliderDialog.h
-    TIGLPointWidget.h
+	TIGLPointWidget.h
 
-    CPACSAbstractModel.h
-    CPACSCreatorAdapter.h
-    TIGLViewerTransformationWidget.h
-    ModificatorManager.h
-    TIGLViewerWingWidget.h
-    ModificatorWidget.h
-    ProfilesDBManager.h
-    TIGLViewerPositioningsWidget.h
-    TIGLViewerFuselageWidget.h
-    CPACSTreeView.h
+	CPACSAbstractModel.h
+	CPACSCreatorAdapter.h
+	TIGLViewerTransformationWidget.h
+	ModificatorManager.h
+	TIGLViewerWingWidget.h
+	ModificatorWidget.h
+	ProfilesDBManager.h
+	TIGLViewerPositioningsWidget.h
+	TIGLViewerFuselageWidget.h
+	CPACSTreeView.h
 
+	TIGLViewerApp.h
+	TIGLGeometryChoserDialog.h
 
 )
 
@@ -193,6 +196,7 @@ set(tv_ui_comp
 	src/TIGLViewerDrawVectorDialog.ui
 	src/TIGLViewerVTKExportDialog.ui
 	src/TIGLSliderDialog.ui
+	src/TIGLGeometryChoserDialog.ui
 )
 
 foreach ( _fname ${tv_src})
@@ -219,7 +223,7 @@ include_directories( ${OpenCASCADE_INCLUDE_DIR} ${TIXI_INCLUDE_DIRS})
 include_directories(${OPENGL_INCLUDE_DIR})
 
 # boost
-include_directories(${PROJECT_SOURCE_DIR}/thirdparty/boost_1_63_0)
+include_directories(${PROJECT_SOURCE_DIR}/thirdparty/boost_1_67_0)
 
 include_directories( ${PROJECT_SOURCE_DIR}/src ${CMAKE_CURRENT_SOURCE_DIR}/src ${PROJECT_BINARY_DIR}/src)
 

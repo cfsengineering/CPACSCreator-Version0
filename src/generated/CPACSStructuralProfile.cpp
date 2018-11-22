@@ -41,7 +41,12 @@ namespace generated
         if (m_uidMgr) m_uidMgr->TryUnregisterObject(m_uID);
     }
 
-    CCPACSStructuralProfiles* CPACSStructuralProfile::GetParent() const
+    const CCPACSStructuralProfiles* CPACSStructuralProfile::GetParent() const
+    {
+        return m_parent;
+    }
+
+    CCPACSStructuralProfiles* CPACSStructuralProfile::GetParent()
     {
         return m_parent;
     }
@@ -181,12 +186,12 @@ namespace generated
         return m_pointList;
     }
 
-    const CCPACSStructuralProfileSheets& CPACSStructuralProfile::GetSheetList() const
+    const CCPACSSheetList& CPACSStructuralProfile::GetSheetList() const
     {
         return m_sheetList;
     }
 
-    CCPACSStructuralProfileSheets& CPACSStructuralProfile::GetSheetList()
+    CCPACSSheetList& CPACSStructuralProfile::GetSheetList()
     {
         return m_sheetList;
     }

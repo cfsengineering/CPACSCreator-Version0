@@ -81,21 +81,9 @@ void CCPACSExternalObject::ReadCPACS(const TixiDocumentHandle& tixiHandle, const
 
     // test if file can be read
     if (!IsFileReadable(_filePath)) {
+        if (m_uidMgr && !m_uID.empty()) m_uidMgr->UnregisterObject(m_uID);
         throw tigl::CTiglError("File " + _filePath + " can not be read!", TIGL_OPEN_FAILED);
     }
-
-    // Register ourself at the unique id manager
-    if (!m_uID.empty() && m_uidMgr) {
-        m_uidMgr->AddGeometricComponent(m_uID, this);
-    }
-}
-
-void CCPACSExternalObject::SetUID(const std::string& uid) {
-    if (m_uidMgr) {
-        m_uidMgr->TryRemoveGeometricComponent(m_uID);
-        m_uidMgr->AddGeometricComponent(uid, this);
-    }
-    generated::CPACSGenericGeometricComponent::SetUID(uid);
 }
 
 const std::string& CCPACSExternalObject::GetFilePath() const
@@ -108,7 +96,7 @@ TiglGeometricComponentType CCPACSExternalObject::GetComponentType() const
     return TIGL_COMPONENT_PHYSICAL;
 }
 
-PNamedShape CCPACSExternalObject::BuildLoft()
+PNamedShape CCPACSExternalObject::BuildLoft() const
 {
     if (m_linkToFile.GetFormat()) {
         const std::string& fileType = CPACSLinkToFileType_formatToString(*m_linkToFile.GetFormat());
@@ -117,8 +105,8 @@ PNamedShape CCPACSExternalObject::BuildLoft()
             ListPNamedShape shapes = importer->Read(_filePath);
             PNamedShape shapeGroup = CGroupShapes(shapes);
             if (shapeGroup) {
-                shapeGroup->SetName(GetUID().c_str());
-                shapeGroup->SetShortName(GetUID().c_str());
+                shapeGroup->SetName(GetUID());
+                shapeGroup->SetShortName(GetUID());
 
                 // Apply transformation
                 TopoDS_Shape sh = GetTransformationMatrix().Transform(shapeGroup->Shape());
@@ -132,7 +120,7 @@ PNamedShape CCPACSExternalObject::BuildLoft()
         }
     }
     else {
-        throw CTiglError("Cannot open externalComponent. No file format given");
+        throw CTiglError("Cannot open externalComponent. No file format given", TIGL_XML_ERROR);
     }
 }
 

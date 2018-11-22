@@ -2,10 +2,6 @@
 * Copyright (C) 2007-2013 German Aerospace Center (DLR/SC)
 *
 * Created: 2010-08-13 Markus Litz <Markus.Litz@dlr.de>
-* Changed: $Id$ 
-*
-* Version: $Revision$
-*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -60,8 +56,6 @@ public:
     // Read CPACS segment elements
     TIGL_EXPORT void ReadCPACS(const TixiDocumentHandle& tixiHandle, const std::string& segmentXPath) OVERRIDE;
 
-    TIGL_EXPORT void SetUID(const std::string& uid) OVERRIDE;
-
     TIGL_EXPORT std::string GetDefaultedUID() const OVERRIDE;
 
     TIGL_EXPORT void SetFromElementUID(const std::string& value) OVERRIDE;
@@ -115,16 +109,21 @@ public:
     TIGL_EXPORT int GetEndConnectedSegmentIndex(int n);
 
     // helper function to get the wire of the start section
-    TIGL_EXPORT TopoDS_Wire GetStartWire();
+    TIGL_EXPORT TopoDS_Wire GetStartWire(TiglCoordinateSystem referenceCS = GLOBAL_COORDINATE_SYSTEM) const;
 
     // helper function to get the wire of the end section
-    TIGL_EXPORT TopoDS_Wire GetEndWire();
+    TIGL_EXPORT TopoDS_Wire GetEndWire(TiglCoordinateSystem referenceCS = GLOBAL_COORDINATE_SYSTEM) const;
 
     // Gets a point on the fuselage segment in dependence of parameters eta and zeta with
     // 0.0 <= eta <= 1.0 and 0.0 <= zeta <= 1.0. For eta = 0.0 the point lies on the start
     // profile of the segment, for eta = 1.0 on the end profile of the segment. For zeta = 0.0
     // the point is the start point of the profile wire, for zeta = 1.0 the last profile wire point.
     TIGL_EXPORT gp_Pnt GetPoint(double eta, double zeta);
+
+    // Gets the origin (0, 0, 0) of the inner & outer profiles after trafo
+    // These should be a good approximation for the center point
+    TIGL_EXPORT gp_Pnt GetTransformedProfileOriginStart() const;
+    TIGL_EXPORT gp_Pnt GetTransformedProfileOriginEnd() const;
 
     TIGL_EXPORT int GetNumPointsOnYPlane(double eta, double ypos);
     TIGL_EXPORT gp_Pnt GetPointOnYPlane(double eta, double ypos, int pointIndex);
@@ -140,7 +139,7 @@ public:
 
     // Gets the volume of this segment
     TIGL_EXPORT double GetVolume();
-        
+
     // Gets the surface area of this segment
     TIGL_EXPORT double GetSurfaceArea();
 
@@ -158,23 +157,37 @@ public:
 
     TIGL_EXPORT TiglGeometricComponentType GetComponentType() const OVERRIDE { return TIGL_COMPONENT_FUSELSEGMENT | TIGL_COMPONENT_SEGMENT | TIGL_COMPONENT_LOGICAL; }
 
-protected:
+    // Returns the number of faces in the loft. This depends on the number of guide curves as well as if the fuselage has a symmetry plane.
+    TIGL_EXPORT int GetNumberOfLoftFaces() const;
+
+private:
+    struct SurfacePropertiesCache {
+        double myVolume;      ///< Volume of this segment
+        double mySurfaceArea; ///< Surface Area of this segment
+    };
+
     // Cleanup routine
     void Cleanup();
 
     // Builds the loft between the two segment sections
-    PNamedShape BuildLoft() OVERRIDE;
+    PNamedShape BuildLoft() const OVERRIDE;
 
-    void SetFaceTraits(PNamedShape loft, bool hasSymmetryPlane);
+    void SetFaceTraits(PNamedShape loft) const;
+
+    void UpdateSurfaceProperties(SurfacePropertiesCache& cache) const;
+
 private:
     // get short name for loft
-    std::string GetShortShapeName();
+    std::string GetShortShapeName() const;
 
-    CTiglFuselageConnection startConnection;       /**< Start segment connection                */
-    CTiglFuselageConnection endConnection;         /**< End segment connection                  */
+    CTiglFuselageConnection startConnection;      /**< Start segment connection                */
+    CTiglFuselageConnection endConnection;        /**< End segment connection                  */
     CCPACSFuselage*         fuselage;             /**< Parent fuselage                         */
-    double                  myVolume;             /**< Volume of this segment                  */
-    double                  mySurfaceArea;        /**< Surface Area of this segment            */
+    Cache<SurfacePropertiesCache, CCPACSFuselageSegment> surfacePropertiesCache;
+    bool                    loftLinearly = false; /**< Set to true to speed up lofting of the
+                                                    * segment. This removes the dependency on
+                                                    * the fuselage loft at the price of a
+                                                    * nonsmooth fuselage                       */
 
     unique_ptr<IGuideCurveBuilder> m_guideCurveBuilder;
 };

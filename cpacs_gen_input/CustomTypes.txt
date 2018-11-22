@@ -86,10 +86,8 @@ CPACSPressureBulkhead                     CCPACSPressureBulkhead
 CPACSPressureBulkheadAssembly             CCPACSPressureBulkheadAssembly
 CPACSPressureBulkheadAssemblyPosition     CCPACSPressureBulkheadAssemblyPosition
 CPACSPressureBulkheads                    CCPACSPressureBulkheads
-CPACSProfileBasedStructuralElements       CCPACSProfileBasedStructuralElements
 CPACSProfileBasedStructuralElement        CCPACSProfileBasedStructuralElement
-CPACSSheetBasedStructuralElements         CCPACSSheetBasedStructuralElements
-CPACSSheetList                            CCPACSStructuralProfileSheets
+CPACSSheetList                            CCPACSSheetList
 CPACSStructuralProfiles                   CCPACSStructuralProfiles
 CPACSCrossBeamAssemblyPosition            CCPACSCrossBeamAssemblyPosition
 CPACSCargoCrossBeamsAssembly              CCPACSCargoCrossBeamsAssembly
@@ -106,3 +104,20 @@ CPACSFuselageStructure                    CCPACSFuselageStructure
 CPACSStringer                             CCPACSFuselageStringer
 CPACSPointXY                              CCPACSPointXY
 CPACSStringerFramePosition                CCPACSFuselageStringerFramePosition
+CPACSSkinSegment                          CCPACSSkinSegment
+
+// control surfaces
+CPACSControlSurfaces                      CCPACSControlSurfaces
+CPACSControlSurfaceSkinCutOut             CCPACSControlSurfaceSkinCutout
+CPACSControlSurfaceSteps                  CCPACSControlSurfaceSteps
+CPACSControlSurfaceStep                   CCPACSControlSurfaceStep
+CPACSControlSurfaceHingePoint             CCPACSControlSurfaceHingePoint
+CPACSControlSurfaceTrackType              CCPACSControlSurfaceTrackType
+CPACSControlSurfaceBorderTrailingEdge     CCPACSControlSurfaceBorderTrailingEdge
+CPACSControlSurfaceSkinCutOutBorder       CCPACSControlSurfaceSkinCutOutBorder
+CPACSTrailingEdgeDevice                   CCPACSTrailingEdgeDevice
+CPACSTrailingEdgeDevices                  CCPACSTrailingEdgeDevices
+
+// Pylons
+CPACSEnginePylon                         CCPACSEnginePylon
+CPACSEnginePylons                        CCPACSEnginePylons

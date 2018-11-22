@@ -2,10 +2,6 @@
 * Copyright (C) 2007-2013 German Aerospace Center (DLR/SC)
 *
 * Created: 2010-08-13 Markus Litz <Markus.Litz@dlr.de>
-* Changed: $Id$ 
-*
-* Version: $Revision$
-*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
@@ -25,6 +21,8 @@
 
 #include "CTiglExportStl.h"
 #include "CCPACSConfiguration.h"
+#include "CTiglExporterFactory.h"
+#include "CTiglTypeRegistry.h"
 
 #include "TopoDS_Shape.hxx"
 #include "Standard_CString.hxx"
@@ -42,18 +40,35 @@
 namespace tigl 
 {
 
+AUTORUN(CTiglExportStl)
+{
+    static CCADExporterBuilder<CTiglExportStl> stlExporterBuilder;
+    CTiglExporterFactory::Instance().RegisterExporter(&stlExporterBuilder, StlOptions());
+    return true;
+}
+
 // Constructor
-CTiglExportStl::CTiglExportStl()
+CTiglExportStl::CTiglExportStl(const ExporterOptions& opt)
+    : CTiglCADExporter(opt)
 {
 }
 
+ExporterOptions CTiglExportStl::GetDefaultOptions() const
+{
+    return StlOptions();
+}
+
+ShapeExportOptions CTiglExportStl::GetDefaultShapeOptions() const
+{
+    return TriangulatedExportOptions(0.001);
+}
 
 bool CTiglExportStl::WriteImpl(const std::string& filename) const
 {
     for (size_t ishape = 0; ishape < NShapes(); ++ishape) {
         PNamedShape shape = GetShape(ishape);
         if (shape) {
-            BRepMesh_IncrementalMesh(shape->Shape(), GetOptions(ishape).deflection);
+            BRepMesh_IncrementalMesh(shape->Shape(), GetOptions(ishape).Get<double>("Deflection"));
         }
     }
 
