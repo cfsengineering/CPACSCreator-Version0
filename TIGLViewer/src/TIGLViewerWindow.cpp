@@ -58,7 +58,7 @@
 #include "CCPACSConfigurationManager.h"
 
 #include "CPACSAbstractModel.h"
-#include "CPACSCreatorLib/CPACSTreeItem.h"
+#include "CPACSTreeItem.h"
 
 #include <cstdlib>
 

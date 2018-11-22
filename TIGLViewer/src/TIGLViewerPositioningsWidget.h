@@ -22,9 +22,9 @@
 #ifndef TIGL_TIGLVIEWERPOSITIONINGSWIDGET_H
 #define TIGL_TIGLVIEWERPOSITIONINGSWIDGET_H
 
-#include <CPACSCreatorLib/CPACSTreeItem.h>
+#include "CPACSTreeItem.h"
 #include "ModificatorWidget.h"
-#include <CPACSCreatorLib/MCPACSPositioning.h>
+#include "MCPACSPositioning.h"
 #include <QDoubleSpinBox>
 #include <QLabel>
 #include <QVBoxLayout>

@@ -274,22 +274,6 @@ target_link_libraries(${PROGNAME}
 
 # cpacscreatorlib ######################################################################################################
 
-target_link_libraries( ${PROGNAME}
-        CPACSCreatorLib
-)
-
-target_include_directories( ${PROGNAME} PUBLIC
-       ${CMAKE_CURRENT_SOURCE_DIR}/../CreatorLib/
-)
-
-# Copy config log file to the executable dir
-add_custom_command(
-        TARGET  ${PROGNAME}
-        POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy
-        ${CMAKE_SOURCE_DIR}/CreatorLib/CPACSCreatorLib/logger.conf
-        $<TARGET_FILE_DIR:${PROGNAME}>
-)
 
 # Copy the profiles DB data to the executable dir
 add_custom_command(
@@ -300,10 +284,8 @@ add_custom_command(
         "$<TARGET_FILE_DIR:${PROGNAME}>/AirfoilDB"
 )
 
-
-SET(EIGEN_LOCATION   ${CMAKE_CURRENT_SOURCE_DIR}/../CreatorLib/CPACSCreatorLib/ThirdPartyLib/eigen-eigen-5a0156e40feb/)
-message(EIGEN_LOCATION: ${EIGEN_LOCATION})
-target_include_directories(${PROGNAME}  PUBLIC ${EIGEN_LOCATION})
+# Add the third party header only library eigen
+target_include_directories( ${PROGNAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../thirdparty/eigen-eigen-5a0156e40feb/)
 
 
 

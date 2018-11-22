@@ -687,5 +687,10 @@ const CCPACSWings& CCPACSConfiguration::GetWings() const
         throw CTiglError("No configuration loaded");
     }
 }
+
+
+
+
+
 } // end namespace tigl
 

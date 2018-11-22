@@ -209,6 +209,11 @@ public:
 
     TIGL_EXPORT CCPACSACSystems& GetACSystems();
 
+
+protected:
+
+
+
 private:
     // Copy constructor
     CCPACSConfiguration(const CCPACSConfiguration&);

@@ -21,13 +21,13 @@
 
 #include "CPACSCreatorAdapter.h"
 
-#include "CPACSCreatorLib/MCPACSTransformation.h"
+#include "MCPACSTransformation.h"
 
-#include "CPACSCreatorLib/CPACSTreeItem.h"
+#include "CPACSTreeItem.h"
 
 #include "TIGLViewerException.h"
 
-#include "CPACSCreatorLib/CreatorException.h"
+#include "CreatorException.h"
 
 
 CPACSCreatorAdapter::CPACSCreatorAdapter(ProfilesDBManager* profilesDBManager)

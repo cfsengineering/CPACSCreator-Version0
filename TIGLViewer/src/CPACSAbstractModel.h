@@ -30,8 +30,8 @@
 #include "CPACSCreatorAdapter.h"
 
 
-#include "CPACSCreatorLib/AircraftTree.h"
-#include "CPACSCreatorLib/CPACSTreeItem.h"
+#include "AircraftTree.h"
+#include "CPACSTreeItem.h"
 
 
 class CPACSAbstractModel: public QAbstractItemModel {

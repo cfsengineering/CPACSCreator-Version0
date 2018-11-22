@@ -23,9 +23,9 @@
 #define TIGL_TIGLVIEWERTRANSFORMATIONWIDGET_H
 
 #include "ModificatorWidget.h"
-#include "CPACSCreatorLib/CPACSTreeItem.h"
-#include "CPACSCreatorLib/MCPACSTransformation.h"
-#include "CPACSCreatorLib/Point.h"
+#include "CPACSTreeItem.h"
+#include "MCPACSTransformation.h"
+#include "Point.h"
 #include <QDoubleSpinBox>
 
 class TIGLViewerTransformationWidget : public ModificatorWidget

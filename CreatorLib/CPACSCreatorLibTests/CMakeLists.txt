@@ -1,2 +1,0 @@
-project(CPACSCreatorLibTest)
-add_subdirectory(CreatorTests)

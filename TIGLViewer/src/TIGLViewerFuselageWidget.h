@@ -6,7 +6,7 @@
 #define TIGL_TIGLVIEWERFUSELAGEWIDGET_H
 
 #include "ModificatorWidget.h"
-#include "CPACSCreatorLib/CPACSTreeItem.h"
+#include "CPACSTreeItem.h"
 #include <QDoubleSpinBox>
 #include <QPushButton>
 #include <QComboBox>

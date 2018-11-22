@@ -30,6 +30,8 @@ include_directories(${OpenCASCADE_INCLUDE_DIR}
                     ${TIGL_INCLUDES}
 )
 
+
+
 # boost
 include_directories(${PROJECT_SOURCE_DIR}/thirdparty/boost_1_63_0)
 file(GLOB_RECURSE BOOST_SRC ${PROJECT_SOURCE_DIR}/thirdparty/boost_1_63_0/libs/*)
@@ -118,3 +120,30 @@ install (FILES
   DESTINATION ${CONFIG_INSTALL_DIR})
 
 AddToCheckstyle()
+
+
+#Creator library dependencies
+
+# Add the third party library quartic
+target_include_directories(tigl3 PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../thirdparty/quartic/)
+target_sources( tigl3 PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../thirdparty/quartic/poly34.cpp)
+
+# Add the third party header only library eigen
+target_include_directories(tigl3 PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../thirdparty/eigen-eigen-5a0156e40feb/)
+
+target_include_directories(tigl3_static PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../thirdparty/quartic/)
+target_sources( tigl3_static PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../thirdparty/quartic/poly34.cpp)
+
+# Add the third party header only library eigen
+target_include_directories(tigl3_static PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../thirdparty/eigen-eigen-5a0156e40feb/)
+
+
+get_target_property(SOURCES_TEMP tigl3 SOURCES)
+message("SOURCES USED TO BUILD tigl3:" ${SOURCES_TEMP})
+
+
+get_target_property(INCLUDE_DIRS_TEMP tigl3 INCLUDE_DIRECTORIES)
+message("INCLUDE DIRS USED TO BUILD tigl3:" ${INCLUDE_DIRS_TEMP})
+
+
+#End Creator library dependencies

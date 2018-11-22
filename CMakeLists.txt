@@ -221,8 +221,6 @@ add_subdirectory(bindings)
 add_subdirectory(examples)
 
 
-add_subdirectory(CreatorLib)
-
 
 #create gtests, override gtest standard setting
 option(TIGL_BUILD_TESTS "Build TIGL Testsuite" OFF)
@@ -234,7 +232,6 @@ if(TIGL_BUILD_TESTS)
   set (gtest_SOURCE_DIR "thirdparty/gtest-1.6.0")
   add_subdirectory (${gtest_SOURCE_DIR})
   add_subdirectory(tests)
-  add_subdirectory(CreatorLib/CPACSCreatorLibTests)
 endif(TIGL_BUILD_TESTS)
 
 include(createDoc)

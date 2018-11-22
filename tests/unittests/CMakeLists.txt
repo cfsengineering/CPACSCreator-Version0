@@ -29,6 +29,14 @@ endif(GLOG_FOUND)
 # boost
 include_directories(${PROJECT_SOURCE_DIR}/thirdparty/boost_1_63_0)
 
+
+#Creator library dependencies
+
+# Add the third party header only library eigen
+include_directories(${PROJECT_SOURCE_DIR}/thirdparty/eigen-eigen-5a0156e40feb/)
+
+
+
 ADD_CUSTOM_TARGET(check ${test_BIN} --gtest_output=xml DEPENDS ${test_BIN} COMMENT "Executing unit tests..." VERBATIM SOURCES ${test_SRCS})
 
 ADD_TEST(
@@ -40,6 +48,16 @@ ADD_TEST(
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/TestData DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/pythonwrapper-tests.py DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test_logging.py DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+
+
+# Copy the data file to execution folder (relative path usage)
+add_custom_command(
+        TARGET  ${test_BIN}
+        POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/CreatorTests/Data  "$<TARGET_FILE_DIR:${test_BIN}>/Data"
+        COMMAND ${CMAKE_COMMAND} -E echo "Data directory is copyied"
+)
+
 
 #create directory to avoid crash in unit tests
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/TestData/export)

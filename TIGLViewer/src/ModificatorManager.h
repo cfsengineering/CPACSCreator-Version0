@@ -23,7 +23,7 @@
 #define TIGL_MODIFICATORMANAGER_H
 
 
-#include <CPACSCreatorLib/CPACSTreeItem.h>
+#include "CPACSTreeItem.h"
 #include <QPushButton>
 #include "TIGLViewerTransformationWidget.h"
 #include "CPACSCreatorAdapter.h"

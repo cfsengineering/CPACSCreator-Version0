@@ -27,7 +27,7 @@
 #include "QPushButton"
 #include "QWidget"
 #include "QComboBox"
-#include "CPACSCreatorLib/CPACSTreeItem.h"
+#include "CPACSTreeItem.h"
 #include "QCheckBox"
 
 class TIGLViewerWingWidget : public ModificatorWidget {

@@ -27,8 +27,8 @@
 
 #include "TIGLViewerDocument.h"
 
-#include "CPACSCreatorLib/AircraftTree.h"
-#include "CPACSCreatorLib/CPACSTreeItem.h"
+#include "AircraftTree.h"
+#include "CPACSTreeItem.h"
 #include "ProfilesDBManager.h"
 
 typedef std::string cpacsType;
