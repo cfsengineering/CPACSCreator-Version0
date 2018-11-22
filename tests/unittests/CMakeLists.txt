@@ -31,7 +31,6 @@ include_directories(${PROJECT_SOURCE_DIR}/thirdparty/boost_1_67_0)
 
 
 #Creator library dependencies
-
 # Add the third party header only library eigen
 include_directories(${PROJECT_SOURCE_DIR}/thirdparty/eigen-eigen-5a0156e40feb/)
 

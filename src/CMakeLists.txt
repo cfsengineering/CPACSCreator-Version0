@@ -22,7 +22,16 @@ include_directories(${OpenCASCADE_INCLUDE_DIR}
                     ${TIGL_INCLUDES}
 )
 
+# # mD: add eigen includes
+set ( EIGEN_DIR ${PROJECT_SOURCE_DIR}/thirdparty/eigen-eigen-5a0156e40feb)
+include_directories( ${EIGEN_DIR})
 
+# mD: add quartic includes
+set( QUARTIC_DIR  ${PROJECT_SOURCE_DIR}/thirdparty/quartic)
+include_directories(${QUARTIC_DIR})
+set(QUARTIC_SRC
+    ${QUARTIC_DIR}/poly34.cpp
+)
 
 # boost
 set  (BOOST_DIR ${PROJECT_SOURCE_DIR}/thirdparty/boost_1_67_0)
@@ -75,6 +84,10 @@ file(GLOB_RECURSE TIGL_SRC
 )
 set(TIGL_SRC ${TIGL_SRC} ${BOOST_SRC})
 
+# mD: add quartic source
+set(TIGL_SRC ${TIGL_SRC} ${QUARTIC_SRC})
+
+
 option(TIGL_CONCAT_GENERATED_FILES "Concatenate all generated files into one. This speeds up compilation." ON)
 if (TIGL_CONCAT_GENERATED_FILES)
     # Building the generated source files takes a lot of time
@@ -125,13 +138,25 @@ add_library(tigl3_objects OBJECT ${TIGL_SRC})
 set_property(TARGET tigl3_objects PROPERTY POSITION_INDEPENDENT_CODE ON) # needed for shared libraries
 target_compile_definitions(tigl3_objects PRIVATE -Dtigl3_EXPORTS)
 
+
 # tigl dll/so library
 add_library(tigl3 SHARED $<TARGET_OBJECTS:tigl3_objects>)
+
+## Add the third party library quartic
+#target_include_directories(tigl3 PRIVATE ${PROJECT_SOURCE_DIR}/thirdparty/quartic/)
+#target_sources( tigl3 PRIVATE ${PROJECT_SOURCE_DIR}/thirdparty/quartic/poly34.cpp)
+#
+## Add the third party header only library eigen
+#message(PROJECT_SOURCE_DIR ${PROJECT_SOURCE_DIR})
+#target_include_directories(tigl3 PRIVATE ${PROJECT_SOURCE_DIR}/thirdparty/eigen-eigen-5a0156e40feb/)
+#
 
 if(GLOG_FOUND)
   include_directories(${GLOG_INCLUDE_DIR})
   target_link_libraries (TIGL ${GLOG_LIBRARIES})
 endif(GLOG_FOUND)
+
+message( glob ${GLOG_INCLUDE_DIR})
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
   add_definitions(-DDEBUG)
@@ -191,23 +216,6 @@ install (FILES
   DESTINATION ${CONFIG_INSTALL_DIR})
 
 AddToCheckstyle()
-
-
-#Creator library dependencies
-
-# Add the third party library quartic
-target_include_directories(tigl3 PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../thirdparty/quartic/)
-target_sources( tigl3 PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../thirdparty/quartic/poly34.cpp)
-
-# Add the third party header only library eigen
-target_include_directories(tigl3 PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../thirdparty/eigen-eigen-5a0156e40feb/)
-
-target_include_directories(tigl3_static PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../thirdparty/quartic/)
-target_sources( tigl3_static PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../thirdparty/quartic/poly34.cpp)
-
-# Add the third party header only library eigen
-target_include_directories(tigl3_static PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../thirdparty/eigen-eigen-5a0156e40feb/)
-
 
 get_target_property(SOURCES_TEMP tigl3 SOURCES)
 message("SOURCES USED TO BUILD tigl3:" ${SOURCES_TEMP})
