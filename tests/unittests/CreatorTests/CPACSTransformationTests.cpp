@@ -360,7 +360,46 @@ TEST_F(MCPACSTransformationTest, constructFromMatrix){
     // TODO: How we wnat to manage this case ?
     //EXPECT_THROW(MMCPACSTransformation c9(inM), CreatorException);
 
+}
 
+
+
+TEST_F(MCPACSTransformationTest, limiteCaseOfMatrixDecomposition){
+
+
+
+    MCPACSTransformation t1;
+    t1.setScaling( Point(4,77,2)) ;
+    t1.setRotation( Point(40,20,10) );
+    t1.setTranslation(Point(-3,-3,-3));
+
+    Eigen::Matrix4d ms, mr, mt;
+    ms.setIdentity();
+    ms <<   4,0,0,0,
+            0,77,0,0,
+            0,0,2,0,
+            0,0,0,1;
+
+    // x40, y:20 ,z:10
+    mr <<   0.9254166, -0.1631759,  0.3420202, 0,
+            0.3495286,  0.7162306, -0.6040228, 0,
+            -0.1464033,  0.6785185,  0.7198463, 0,
+            0,0,0,1 ;
+
+    mt <<   1,0,0,-3,
+            0,1,0,-3,
+            0,0,1,-3,
+            0,0,0,1;
+
+    MCPACSTransformation t2( mt*mr*ms);
+    EXPECT_TRUE(t1.isApprox(t2,0.001));
+
+    // we change the order (first rotation, then scaling)
+    // this seems to be impossible to represent as a mt'*mr'*ms' composition with a non uniform scaling (is it the case?)
+    MCPACSTransformation t4( mt*ms*mr);
+    EXPECT_FALSE(t4.getTransformationAsMatrix().isApprox(mt*mr*ms));
+    std::cout << mt*mr*ms << std::endl;
+    std::cout << t4.getTransformationAsMatrix() << std::endl;
 
 
 }

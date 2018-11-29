@@ -137,7 +137,7 @@ cpcr::MCPACSTransformation::MCPACSTransformation(const Eigen::Matrix4d &inMatrix
     // use eigen to decompose the matrix (using SVD inside)
     tempEigenTransform.computeRotationScaling( &mr , &ms);
 
-    // set the scaling as the diagonal of the scaling matrix
+     // set the scaling as the diagonal of the scaling matrix
     s.x = ms(0,0);
     s.y = ms(1,1);
     s.z = ms(2,2);
@@ -149,8 +149,9 @@ cpcr::MCPACSTransformation::MCPACSTransformation(const Eigen::Matrix4d &inMatrix
 
     Eigen::Matrix4d newM = this->getTransformationAsMatrix();
     if( ! inMatrix.isApprox(newM, 0.001) ){
-        LOG(ERROR) << "CPACSTransfomation: The matrix given as input seem impossible to decompose in scale, rotation "
-                "and translation transform or the decomposition was not performed correctly";
+        LOG(ERROR) << "CPACSTransfomation: The matrix given as input seem impossible to decompose in scale, rotation, translation."
+                "The decomposition was not performed correctly!"
+                "It probably need one more rotation matrix to represent this transformation (decomposable in rotation, scale, rotation, translation) ";
     }
 
 
@@ -158,7 +159,7 @@ cpcr::MCPACSTransformation::MCPACSTransformation(const Eigen::Matrix4d &inMatrix
 
 bool cpcr::MCPACSTransformation::isApprox(const cpcr::MCPACSTransformation &other, double precision) {
 
-    return other.getTranslationAsMatrix().isApprox( this->getTransformationAsMatrix() , precision) ;
+    return other.getTransformationAsMatrix().isApprox( this->getTransformationAsMatrix() , precision) ;
 
 }
 
