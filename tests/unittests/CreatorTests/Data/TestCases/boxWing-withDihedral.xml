@@ -3597,7 +3597,6 @@
           <wing symmetry="x-z-plane" uID="D150_VAMP_W1">
             <name>Wing</name>
             <description>Wing</description>
-            <parentUID isLink="True">D150_VAMP_FL1</parentUID>
             <transformation uID="D150_VAMP_W1_transformation1">
               <scaling uID="D150_VAMP_W1_transformation1_scaling1">
                 <x>1.00000</x>
@@ -4023,7 +4022,7 @@
           <wing uID="D150_VAMP_SL1" xsi:type="wingType">
             <name>Seitenleitwerk</name>
             <description>Seitenleitwerk</description>
-            <parentUID isLink="True">D150_VAMP_FL1</parentUID>
+      
             <transformation xsi:type="transformationType" uID="D150_VAMP_SL1_transformation1">
               <scaling xsi:type="pointType" uID="D150_VAMP_SL1_transformation1_scaling1">
                 <x>1.0</x>
@@ -4291,7 +4290,7 @@
         </engines>
         <enginePylons>
           <enginePylon uID="D150_Pylon">
-            <parentUID isLink="True">D150_wing_1</parentUID>
+            <parentUID isLink="True">D150_VAMP_W1</parentUID>
             <transformation uID="D150_Pylon_transformation1"/>
             <loadCarryingStructure>
               <pylonBox uID="P1box">

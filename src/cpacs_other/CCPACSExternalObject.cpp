@@ -116,11 +116,11 @@ PNamedShape CCPACSExternalObject::BuildLoft() const
             return shapeGroup;
         }
         else {
-            throw CTiglError("Cannot open externalComponent. Unknown file format " + fileType);
+            throw CTiglError("Cannot setTiglHandle externalComponent. Unknown file format " + fileType);
         }
     }
     else {
-        throw CTiglError("Cannot open externalComponent. No file format given", TIGL_XML_ERROR);
+        throw CTiglError("Cannot setTiglHandle externalComponent. No file format given", TIGL_XML_ERROR);
     }
 }
 

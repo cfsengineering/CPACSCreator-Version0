@@ -907,8 +907,7 @@ TEST_F(AircraftTreeTest, setWingSweepByShearingSimpleWing){
 
 
 
-TEST_F(AircraftTreeTest, getWingDihedral)
-{
+TEST_F(AircraftTreeTest, getWingDihedral) {
 
     double dihedral = -1;
     double sweep = -1;
@@ -919,7 +918,7 @@ TEST_F(AircraftTreeTest, getWingDihedral)
     //
 
 
-    setVariables( "wing-simple.xml") ;
+    setVariables("wing-simple.xml");
 
     dihedral = tree.getWingDihedral("Wing", 0);
     EXPECT_TRUE(mthf::CompareDoubleEpsilon(dihedral, 0));
@@ -935,15 +934,15 @@ TEST_F(AircraftTreeTest, getWingDihedral)
     //  SIMPLE WING WITH DIHEDRAL AND SWEEP
     //
 
-    setVariables( "wing-simple-d30-s30-by-positioning.xml");
+    setVariables("wing-simple-d30-s30-by-positioning.xml");
 
 
     // just some check about the sweep (remember the sweep angle is not the same as in the positiong in cpacs file)
     sweep = tree.getWingSweep("Wing");
-    EXPECT_TRUE(mthf::CompareDoubleEpsilon(sweep,33.69));
+    EXPECT_TRUE(mthf::CompareDoubleEpsilon(sweep, 33.69));
 
-    sweep = tree.getWingSweep("Wing",0.5);
-    EXPECT_TRUE(mthf::CompareDoubleEpsilon(sweep,33.69));
+    sweep = tree.getWingSweep("Wing", 0.5);
+    EXPECT_TRUE(mthf::CompareDoubleEpsilon(sweep, 33.69));
 
     // dihedral
     dihedral = tree.getWingDihedral("Wing", 0);
@@ -959,15 +958,15 @@ TEST_F(AircraftTreeTest, getWingDihedral)
     //  SIMPLE WING WITH NEGATIVE DIHEDRAL AND NEGATIVE SWEEP
     //
 
-    setVariables( "wing-simple-dm30-sm30-by-positioning.xml");
+    setVariables("wing-simple-dm30-sm30-by-positioning.xml");
 
 
     // just some check about the sweep (remember the sweep angle is not the same as in the positiong in cpacs file)
     sweep = tree.getWingSweep("Wing");
-    EXPECT_TRUE(mthf::CompareDoubleEpsilon(sweep,-33.69));
+    EXPECT_TRUE(mthf::CompareDoubleEpsilon(sweep, -33.69));
 
-    sweep = tree.getWingSweep("Wing",0.5);
-    EXPECT_TRUE(mthf::CompareDoubleEpsilon(sweep,-33.69));
+    sweep = tree.getWingSweep("Wing", 0.5);
+    EXPECT_TRUE(mthf::CompareDoubleEpsilon(sweep, -33.69));
 
     // dihedral
     dihedral = tree.getWingDihedral("Wing", 0);
@@ -985,14 +984,14 @@ TEST_F(AircraftTreeTest, getWingDihedral)
     //  SIMPLE WING WITH NEGATIVE DIHEDRAL AND POSITIVE SWEEP
     //
 
-    setVariables( "wing-simple-dm30-s30-by-positioning.xml");
+    setVariables("wing-simple-dm30-s30-by-positioning.xml");
 
     // just some check about the sweep (remember the sweep angle is not the same as in the positiong in cpacs file)
     sweep = tree.getWingSweep("Wing");
-    EXPECT_TRUE(mthf::CompareDoubleEpsilon(sweep,33.69));
+    EXPECT_TRUE(mthf::CompareDoubleEpsilon(sweep, 33.69));
 
-    sweep = tree.getWingSweep("Wing",0.5);
-    EXPECT_TRUE(mthf::CompareDoubleEpsilon(sweep,33.69));
+    sweep = tree.getWingSweep("Wing", 0.5);
+    EXPECT_TRUE(mthf::CompareDoubleEpsilon(sweep, 33.69));
 
     // dihedral
     dihedral = tree.getWingDihedral("Wing", 0);
@@ -1010,14 +1009,14 @@ TEST_F(AircraftTreeTest, getWingDihedral)
     //  SIMPLE WING WITH POSITIVE DIHEDRAL AND NEGATIVE SWEEP
     //
 
-    setVariables( "wing-simple-d30-sm30-by-positioning.xml");
+    setVariables("wing-simple-d30-sm30-by-positioning.xml");
 
     // just some check about the sweep (remember the sweep angle is not the same as in the positiong in cpacs file)
     sweep = tree.getWingSweep("Wing");
-    EXPECT_TRUE(mthf::CompareDoubleEpsilon(sweep,-33.69));
+    EXPECT_TRUE(mthf::CompareDoubleEpsilon(sweep, -33.69));
 
-    sweep = tree.getWingSweep("Wing",0.5);
-    EXPECT_TRUE(mthf::CompareDoubleEpsilon(sweep,- 33.69));
+    sweep = tree.getWingSweep("Wing", 0.5);
+    EXPECT_TRUE(mthf::CompareDoubleEpsilon(sweep, -33.69));
 
     // dihedral
     dihedral = tree.getWingDihedral("Wing", 0);
@@ -1028,19 +1027,6 @@ TEST_F(AircraftTreeTest, getWingDihedral)
 
     dihedral = tree.getWingDihedral("Wing", 1);
     EXPECT_TRUE(mthf::CompareDoubleEpsilon(dihedral, 30));
-
-
-    // TEST CASE D150
-
-    setVariables("d150-vt-dihedral.xml");
-    std::string wingUID = "D150_VAMP_vtp_SL1";
-    tree.writeToFile();
-
-    double before = tree.getWingDihedral(wingUID, 0);
-    EXPECT_TRUE(before > 9.9 && before < 10.1);
-
-    before = tree.getWingDihedral(wingUID, 1);
-    EXPECT_TRUE(before > 9.9 && before < 10.1);
 
 }
 
@@ -1546,7 +1532,7 @@ TEST_F(AircraftTreeTest, setWingTransformation ) {
 
     // optimal aircraft
 
-    setVariables("TestCases/Optimale17.xml");
+    setVariables("TestCases/optimale17.xml");
     wingUID = "Wing";
 
 
@@ -1674,7 +1660,7 @@ TEST_F(AircraftTreeTest, positioningsStandardization  ) {
     EXPECT_TRUE(tree.checkIfPositioningsAreStandardizedForWing(wingUID));
 
     // Optimal aircraft case
-    setVariables("TestCases/Optimale17.xml");
+    setVariables("TestCases/optimale17.xml");
     wingUID = "Wing";
 
     backupChordPointsOfWing(wingUID);
@@ -1767,10 +1753,10 @@ TEST_F(AircraftTreeTest, completeNormalization  ) {
 
 
 
-    // TEST CASE: Optimale17
+    // TEST CASE: optimale17
 
     wingUID = "Wing";
-    setVariables("TestCases/Optimale17.xml");
+    setVariables("TestCases/optimale17.xml");
 
     backupChordPointsOfWing(wingUID);
     EXPECT_FALSE(tree.isWingStandardized(wingUID));
@@ -1857,7 +1843,7 @@ TEST_F(AircraftTreeTest, area){
 
     // In the case the wing is rotated by 90 degree
 
-    setVariables("d150-vt0.xml");
+    setVariables("TestCases/d150.xml");
     wingUID = "D150_VAMP_vtp_SL1";
 
 
@@ -1867,17 +1853,19 @@ TEST_F(AircraftTreeTest, area){
 
     tiglWingGetReferenceArea(tiglHandle,3, TIGL_X_Z_PLANE,&tempArea);
     myArea = tree.getWingPlanformArea(wingUID, PLANE::XY_PLANE);
-    EXPECT_EQ(tempArea, myArea);
+    EXPECT_TRUE(mthf::CompareDoubleEpsilon(tempArea, myArea ) );
 
 
     tiglWingGetReferenceArea(tiglHandle,3, TIGL_Y_Z_PLANE,&tempArea);
     myArea = tree.getWingPlanformArea(wingUID, PLANE::YZ_PLANE);
-    EXPECT_EQ(tempArea, myArea);
+    EXPECT_TRUE(mthf::CompareDoubleEpsilon(tempArea, myArea ) );
 
 
     tiglWingGetReferenceArea(tiglHandle,3, TIGL_NO_SYMMETRY,&tempArea);
     myArea = tree.getWingPlanformArea(wingUID, PLANE::NO_PLANE);
-    EXPECT_EQ(tempArea, myArea);
+    EXPECT_TRUE(mthf::CompareDoubleEpsilon(tempArea, myArea ) );
+
+
 
 
 }

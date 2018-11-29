@@ -15,6 +15,13 @@
         <version>ver1</version>
         <cpacsVersion>3.0</cpacsVersion>
       </update>
+      <update>
+        <modification>Converted to cpacs 3.0 using cpacs2to3</modification>
+        <creator>cpacs2to3</creator>
+        <timestamp>2018-11-21T12:09:05</timestamp>
+        <version>ver1</version>
+        <cpacsVersion>3.0</cpacsVersion>
+      </update>
     </updates>
   </header>
   <vehicles xsi:type="vehiclesType">
@@ -23,7 +30,7 @@
         <name>NASA_CRM</name>
         <description>NASA_CRM model</description>
         <reference xsi:type="referenceType">
-          <point>
+          <point uID="NASA_CRM_point1">
             <x>33.67786</x>
             <y>0</y>
             <z>4.519930</z>

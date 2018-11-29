@@ -532,6 +532,18 @@ bool CTiglTransformation::IsEqual(const tigl::CTiglTransformation &other) {
     return equal;
 }
 
+bool CTiglTransformation::IsApprox(const tigl::CTiglTransformation &other, double precision){
+    bool equal = true;
+    for(int i =  0; i < 4; i++ ){
+        for(int j =  0; j < 4; j++ ) {
+            equal = equal && (this->GetValue(i,j) <= other.GetValue(i,j) + precision )  ;
+            equal = equal && (this->GetValue(i,j) >= other.GetValue(i,j) - precision )  ;
+        }
+    }
+    return equal;
+}
+
+
 std::ostream& operator<<(std::ostream& os, const CTiglTransformation& t)
 {
     for (int i = 0; i < 4; ++i) {

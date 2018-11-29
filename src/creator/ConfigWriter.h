@@ -25,37 +25,51 @@ namespace cpcr {
 
         bool isValid();
 
-        /**
-         * Open and register an new CCPACSConfiguration in the CCPACSConfigurationManager
-         * @param filename
-         * @param modelUID
-         */
-        void open(std::string filename, UID modelUID);
 
         /**
-         * Set a preexisting CCPACSConfiguration
+         * Set a preexisting CCPACSConfigurationHandle
+         * @remark the CCPACSConfigurationHandle need to be valid anbd open
          * @param tiglHandle
          */
-        void open(TiglCPACSConfigurationHandle tiglHandle);
-        void close();
+        void setTiglHandle(TiglCPACSConfigurationHandle tiglHandle);
 
-        void save();
-        void save(std::string newFilname);
+        /**
+         * Get the current CCPACSConfigurationHandle
+         * @return TiglCPACSConfigurationHandle
+         */
+        inline TiglCPACSConfigurationHandle getTiglHandle(){return tiglHandle; };
 
+        //TODO: find a way to save it back in the file without issue for tigl
+        void save();  // not implemented
+        void save(std::string newFilname); // not implemented
+
+        /**
+         *  Return the CTiglTransformation that is pointed by the xpath.
+         *  If the xpath is not pointing on a transformation, it's return a trivial transformation and rise a warning.
+         *  @remark Currently only the transformation for fuselage and wing are supported
+         * @param xpath
+         * @return
+         */
         tigl::CTiglTransformation getTransformation(UniqueXPath xpath);
 
+        /**
+         *  Set the transformation pointed by the xpath.
+         *  If the xpath is not pointing on a transformation, it will do nothing and rise a warning.
+         *  @remark Currently only the transformation for fuselage and wing are supported
+         * @param xpath
+         * @return
+         */
         void setTransformation(UniqueXPath xpath, tigl::CTiglTransformation t);
 
-        std::string getUid();
 
+        tigl::CCPACSConfiguration&  getConfiguration();
+        std::string getModelUid();
 
     protected:
-        tigl::CCPACSConfiguration&  getConfiguration();
 
         /**
          * Return the CCPACSTransformation pointed by the given xpath by reference.
-         * @remark because the CCPACSTransformation is geven by reference modify it wil change the value store by
-         * the element that has this transformation.
+         * @remark we can modify this reference and store it in tixi "memory" using WriteCPACS on it.
          * @param xpath
          * @return
          */

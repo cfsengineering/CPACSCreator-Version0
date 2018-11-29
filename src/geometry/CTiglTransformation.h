@@ -122,6 +122,9 @@ public:
     // compare the values of this CTiglTransformation with another one
     TIGL_EXPORT bool IsEqual(const CTiglTransformation& other);
 
+    // compare the values of this CTiglTransformation with another one
+    TIGL_EXPORT bool IsApprox(const CTiglTransformation& other, double precision = 0.0001);
+
 private:
     bool IsUniform() const;
 

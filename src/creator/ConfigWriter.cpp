@@ -13,18 +13,6 @@ cpcr::ConfigWriter::ConfigWriter() {
 
 }
 
-void cpcr::ConfigWriter::open(std::string filename, UID modelUID) {
-
-
-    TixiDocumentHandle  tixiHandle = tixi::TixiOpenDocument(filename);
-    TiglReturnCode tiglRet = tiglOpenCPACSConfiguration(tixiHandle, modelUID.c_str(),  &tiglHandle);
-    if(tiglRet != TIGL_SUCCESS){
-        tiglHandle = -1;
-        throw CreatorException("ConfigWriter::open:: Error open tigl");
-    }
-
-    return ;
-}
 
 
 tigl::CCPACSConfiguration &cpcr::ConfigWriter::getConfiguration() {
@@ -61,19 +49,36 @@ tigl::CTiglTransformation cpcr::ConfigWriter::getTransformation(cpcr::UniqueXPat
 
 void cpcr::ConfigWriter::setTransformation(cpcr::UniqueXPath xpath, tigl::CTiglTransformation newTransformation) {
 
+
     if( ! isValidWithWarning() ){
         LOG(WARNING) << "ConfigWriter::getTransformation:: Impossible to set the transformation, the configWriter is not in a valid state!" << std::endl;
         return;
     }
 
-
     try {
 
         tigl::CCPACSTransformation& refTransformation = this->getTransformationReference(xpath);
-        refTransformation.setTransformationMatrix(newTransformation);
-        tigl::CCPACSConfiguration & config = getConfiguration();
-        std::string modelUID = config.GetUID();
-        getConfiguration().WriteCPACS(modelUID);
+
+        // patch because the  refTransformation.setTransformationMatrix(newTransformation) is not working (decomposition of the matrix not implemented)
+        Eigen::Matrix4d tempM;
+        for(int i =  0; i < 4; i++ ){
+            for(int j =  0; j < 4; j++ ) {
+                tempM(i,j)  = newTransformation.GetValue(i,j);
+            }
+        }
+        MCPACSTransformation tempMT(tempM);
+
+        refTransformation.setScaling(tigl::CTiglPoint(tempMT.getScaling().x,tempMT.getScaling().y, tempMT.getScaling().z ));
+        double rotX = tempMT.getRotation().x;
+        double rotY = tempMT.getRotation().y;
+        double rotZ = tempMT.getRotation().z;
+        refTransformation.setRotation(tigl::CTiglPoint( rotX, rotY, rotZ ));
+        refTransformation.setTranslation(tigl::CTiglPoint(tempMT.getTranslation().x,tempMT.getTranslation().y, tempMT.getTranslation().z ));
+        // end patch
+
+        xpath.addParticleAtEnd("transformation[1]");
+        refTransformation.WriteCPACS(getConfiguration().GetTixiDocumentHandle(), xpath.toString() ) ;
+
     }
     catch( const CreatorException& e){
         LOG(ERROR)  << "ConfigWriter::getTransformation throw error with message: "
@@ -166,28 +171,26 @@ tigl::CCPACSTransformation &cpcr::ConfigWriter::getTransformationReference(cpcr:
 
 
 void cpcr::ConfigWriter::save(std::string newFilname) {
-/*
-    if (!isValidWithWarning()) return;
 
-    tiglSaveCPACSConfiguration(modelUID.c_str(), tiglHandle );
-    TixiDocumentHandle tixiHandle = getConfiguration().GetTixiDocumentHandle();
+// The following code is not working properly because the tixi save need to reopen the document after to be able to rewrite in it
+// TODO: fins a way to save the current state of the CPACSConfiguration back in the file
+//    if (!isValidWithWarning()) return;
+//
+//    tiglSaveCPACSConfiguration(getModelUid().c_str(), tiglHandle );
+//    TixiDocumentHandle tixiHandle = getConfiguration().GetTixiDocumentHandle();
+//
+//    int ret = tixiSaveDocument(tixiHandle, newFilname.c_str());
+//    if( ret > 0){
+//        throw CreatorException("ConfigWriter::save:: Impossible to save file with the name: " + newFilname );
+//    }
+//
 
-    int ret = tixiSaveDocument(tixiHandle, newFilname.c_str());
-    if( ret > 0){
-        throw CreatorException("ConfigWriter::save:: Impossible to save file with the name: " + newFilname );
-    }
-    tixiCloseDocument(tixiHandle);
-    filename = newFilname;
-    // Is it ok for the cpacsconfigurationmanager
-    tixiOpenDocument(filename.c_str(), &tixiHandle);
-    */
 }
 
 void cpcr::ConfigWriter::save() {
-    if(! isValidWithWarning() ){
-        return;
-    }
-   // this->save(filename);
+
+    // TODO: how we can get the current file name from the current CPACSConfiguration
+    // this->save(filname);
 }
 
 
@@ -204,13 +207,9 @@ bool cpcr::ConfigWriter::isValidWithWarning() {
 
 
 
-void cpcr::ConfigWriter::close() {
-    tiglHandle = -1;
-
-}
 
 
-void cpcr::ConfigWriter::open(TiglCPACSConfigurationHandle newTiglHandle) {
+void cpcr::ConfigWriter::setTiglHandle(TiglCPACSConfigurationHandle newTiglHandle) {
     tiglHandle = newTiglHandle;
     if( ! isValid()){
         tiglHandle = -1;
@@ -226,4 +225,13 @@ bool cpcr::ConfigWriter::isValid() {
     }else{
         return false;
     }
+}
+
+std::string cpcr::ConfigWriter::getModelUid() {
+    if (!isValidWithWarning()){
+        return "";
+    }
+    tigl::CCPACSConfiguration & config = getConfiguration();
+    std::string modelUID = config.GetUID();
+    return modelUID;
 }

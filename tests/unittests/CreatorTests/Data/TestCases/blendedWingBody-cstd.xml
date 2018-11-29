@@ -15,6 +15,13 @@
         <version>ver1</version>
         <cpacsVersion>3.0</cpacsVersion>
       </update>
+      <update>
+        <modification>Converted to cpacs 3.0 using cpacs2to3</modification>
+        <creator>cpacs2to3</creator>
+        <timestamp>2018-11-21T12:07:24</timestamp>
+        <version>ver1</version>
+        <cpacsVersion>3.0</cpacsVersion>
+      </update>
     </updates>
   </header>
   <vehicles>
@@ -694,8 +701,14 @@
                       <description/>
                       <ribsPositioning>
                         <ribReference>wing_Spar_FS</ribReference>
-                        <etaStart>0.5</etaStart>
-                        <etaEnd>0.95</etaEnd>
+                        <etaStart>
+                          <eta>0.5</eta>
+                          <referenceUID>BWB450_wing_CS</referenceUID>
+                        </etaStart>
+                        <etaEnd>
+                          <eta>0.95</eta>
+                          <referenceUID>BWB450_wing_CS</referenceUID>
+                        </etaEnd>
                         <ribStart>wing_Spar_FS</ribStart>
                         <ribEnd>wing_Spar_RS</ribEnd>
                         <numberOfRibs>10</numberOfRibs>
@@ -719,24 +732,39 @@
                   <spars>
                     <sparPositions>
                       <sparPosition uID="wing_Spar_FS_P0">
-                        <eta>0.3</eta>
-                        <xsi>0.25</xsi>
+                        <sparPoint>
+                          <eta>0.3</eta>
+                          <xsi>0.25</xsi>
+                          <referenceUID>BWB450_wing_CS</referenceUID>
+                        </sparPoint>
                       </sparPosition>
                       <sparPosition uID="wing_Spar_FS_P1">
-                        <eta>1</eta>
-                        <xsi>0.25</xsi>
+                        <sparPoint>
+                          <eta>1</eta>
+                          <xsi>0.25</xsi>
+                          <referenceUID>BWB450_wing_CS</referenceUID>
+                        </sparPoint>
                       </sparPosition>
                       <sparPosition uID="wing_Spar_RS_P0">
-                        <eta>0.3</eta>
-                        <xsi>0.65</xsi>
+                        <sparPoint>
+                          <eta>0.3</eta>
+                          <xsi>0.65</xsi>
+                          <referenceUID>BWB450_wing_CS</referenceUID>
+                        </sparPoint>
                       </sparPosition>
                       <sparPosition uID="wing_Spar_RS_P1">
-                        <eta>0.6</eta>
-                        <xsi>0.5</xsi>
+                        <sparPoint>
+                          <eta>0.6</eta>
+                          <xsi>0.5</xsi>
+                          <referenceUID>BWB450_wing_CS</referenceUID>
+                        </sparPoint>
                       </sparPosition>
                       <sparPosition uID="wing_Spar_RS_P2">
-                        <eta>1</eta>
-                        <xsi>0.5</xsi>
+                        <sparPoint>
+                          <eta>1</eta>
+                          <xsi>0.5</xsi>
+                          <referenceUID>BWB450_wing_CS</referenceUID>
+                        </sparPoint>
                       </sparPosition>
                     </sparPositions>
                     <sparSegments>
@@ -816,9 +844,18 @@
                       <parentUID>BWB_wing_CS</parentUID>
                       <outerShape>
                         <innerBorder>
-                          <etaLE>0.000</etaLE>
-                          <etaTE>0.000</etaTE>
-                          <xsiLE>0.958</xsiLE>
+                          <etaLE>
+                            <eta>0</eta>
+                            <referenceUID>BWB_InnerElevator</referenceUID>
+                          </etaLE>
+                          <etaTE>
+                            <eta>0</eta>
+                            <referenceUID>BWB_InnerElevator</referenceUID>
+                          </etaTE>
+                          <xsiLE>
+                            <xsi>0.958</xsi>
+                            <referenceUID>BWB_InnerElevator</referenceUID>
+                          </xsiLE>
                           <leadingEdgeShape>
                             <relHeightLE>0.211</relHeightLE>
                             <xsiUpperSkin>0.5</xsiUpperSkin>
@@ -826,9 +863,18 @@
                           </leadingEdgeShape>
                         </innerBorder>
                         <outerBorder>
-                          <etaLE>0.204</etaLE>
-                          <etaTE>0.204</etaTE>
-                          <xsiLE>0.94</xsiLE>
+                          <etaLE>
+                            <eta>0.204</eta>
+                            <referenceUID>BWB_InnerElevator</referenceUID>
+                          </etaLE>
+                          <etaTE>
+                            <eta>0.204</eta>
+                            <referenceUID>BWB_InnerElevator</referenceUID>
+                          </etaTE>
+                          <xsiLE>
+                            <xsi>0.94</xsi>
+                            <referenceUID>BWB_InnerElevator</referenceUID>
+                          </xsiLE>
                           <leadingEdgeShape>
                             <relHeightLE>0.211</relHeightLE>
                             <xsiUpperSkin>0.5</xsiUpperSkin>
@@ -848,12 +894,12 @@
                         <steps>
                           <step>
                             <relDeflection>-1</relDeflection>
-                            <innerHingeTranslation>
+                            <innerHingeTranslation uID="BWB_InnerElevator_innerHingeTranslation1">
                               <x>0.0</x>
                               <y>0.0</y>
                               <z>0.0</z>
                             </innerHingeTranslation>
-                            <outerHingeTranslation>
+                            <outerHingeTranslation uID="BWB_InnerElevator_outerHingeTranslation1">
                               <x>0.0</x>
                               <z>0.0</z>
                             </outerHingeTranslation>
@@ -861,12 +907,12 @@
                           </step>
                           <step>
                             <relDeflection>0</relDeflection>
-                            <innerHingeTranslation>
+                            <innerHingeTranslation uID="BWB_InnerElevator_innerHingeTranslation2">
                               <x>0.0</x>
                               <y>0.0</y>
                               <z>0.0</z>
                             </innerHingeTranslation>
-                            <outerHingeTranslation>
+                            <outerHingeTranslation uID="BWB_InnerElevator_outerHingeTranslation2">
                               <x>0.0</x>
                               <z>0.0</z>
                             </outerHingeTranslation>
@@ -874,12 +920,12 @@
                           </step>
                           <step>
                             <relDeflection>1</relDeflection>
-                            <innerHingeTranslation>
+                            <innerHingeTranslation uID="BWB_InnerElevator_innerHingeTranslation3">
                               <x>0.0</x>
                               <y>0.0</y>
                               <z>0.0</z>
                             </innerHingeTranslation>
-                            <outerHingeTranslation>
+                            <outerHingeTranslation uID="BWB_InnerElevator_outerHingeTranslation3">
                               <x>0.0</x>
                               <z>0.0</z>
                             </outerHingeTranslation>
@@ -889,7 +935,10 @@
                       </path>
                       <tracks>
                         <track uID="TED1FT1">
-                          <eta>0</eta>
+                          <eta>
+                            <eta>0</eta>
+                            <referenceUID>BWB_InnerElevator</referenceUID>
+                          </eta>
                           <trackType>trackType3</trackType>
                           <trackSubType>trackSubType2</trackSubType>
                           <actuator uID="TED1_Act_FT1">
@@ -901,7 +950,10 @@
                           </actuator>
                         </track>
                         <track uID="TED1FT2">
-                          <eta>0.663</eta>
+                          <eta>
+                            <eta>0.663</eta>
+                            <referenceUID>BWB_InnerElevator</referenceUID>
+                          </eta>
                           <trackType>trackType3</trackType>
                           <actuator uID="TED1_Act_FT2">
                             <actuatorUID>Act_FT</actuatorUID>
@@ -919,8 +971,14 @@
                       <parentUID>BWB_wing_CS</parentUID>
                       <outerShape>
                         <innerBorder>
-                          <etaLE>0.204</etaLE>
-                          <xsiLE>0.940</xsiLE>
+                          <etaLE>
+                            <eta>0.204</eta>
+                            <referenceUID>BWB_InnerElevon</referenceUID>
+                          </etaLE>
+                          <xsiLE>
+                            <xsi>0.94</xsi>
+                            <referenceUID>BWB_InnerElevon</referenceUID>
+                          </xsiLE>
                           <leadingEdgeShape>
                             <relHeightLE>0.211</relHeightLE>
                             <xsiUpperSkin>0.5</xsiUpperSkin>
@@ -928,8 +986,14 @@
                           </leadingEdgeShape>
                         </innerBorder>
                         <outerBorder>
-                          <etaLE>0.3150</etaLE>
-                          <xsiLE>0.855</xsiLE>
+                          <etaLE>
+                            <eta>0.315</eta>
+                            <referenceUID>BWB_InnerElevon</referenceUID>
+                          </etaLE>
+                          <xsiLE>
+                            <xsi>0.855</xsi>
+                            <referenceUID>BWB_InnerElevon</referenceUID>
+                          </xsiLE>
                           <leadingEdgeShape>
                             <relHeightLE>0.211</relHeightLE>
                             <xsiUpperSkin>0.27</xsiUpperSkin>
@@ -949,12 +1013,12 @@
                         <steps>
                           <step>
                             <relDeflection>-1</relDeflection>
-                            <innerHingeTranslation>
+                            <innerHingeTranslation uID="BWB_InnerElevon_innerHingeTranslation1">
                               <x>0.0</x>
                               <y>0.0</y>
                               <z>0.0</z>
                             </innerHingeTranslation>
-                            <outerHingeTranslation>
+                            <outerHingeTranslation uID="BWB_InnerElevon_outerHingeTranslation1">
                               <x>0.0</x>
                               <z>0.0</z>
                             </outerHingeTranslation>
@@ -962,12 +1026,12 @@
                           </step>
                           <step>
                             <relDeflection>0</relDeflection>
-                            <innerHingeTranslation>
+                            <innerHingeTranslation uID="BWB_InnerElevon_innerHingeTranslation2">
                               <x>0.0</x>
                               <y>0.0</y>
                               <z>0.0</z>
                             </innerHingeTranslation>
-                            <outerHingeTranslation>
+                            <outerHingeTranslation uID="BWB_InnerElevon_outerHingeTranslation2">
                               <x>0.0</x>
                               <z>0.0</z>
                             </outerHingeTranslation>
@@ -975,12 +1039,12 @@
                           </step>
                           <step>
                             <relDeflection>1</relDeflection>
-                            <innerHingeTranslation>
+                            <innerHingeTranslation uID="BWB_InnerElevon_innerHingeTranslation3">
                               <x>0.0</x>
                               <y>0.0</y>
                               <z>0.0</z>
                             </innerHingeTranslation>
-                            <outerHingeTranslation>
+                            <outerHingeTranslation uID="BWB_InnerElevon_outerHingeTranslation3">
                               <x>0.0</x>
                               <z>0.0</z>
                             </outerHingeTranslation>
@@ -990,7 +1054,10 @@
                       </path>
                       <tracks>
                         <track uID="InnerElevon_FT1">
-                          <eta>0.280</eta>
+                          <eta>
+                            <eta>0.28</eta>
+                            <referenceUID>BWB_InnerElevon</referenceUID>
+                          </eta>
                           <trackType>trackType3</trackType>
                           <actuator>
                             <actuatorUID>Act_FT</actuatorUID>
@@ -1001,7 +1068,10 @@
                           </actuator>
                         </track>
                         <track uID="InnerElevon_FT2">
-                          <eta>0.808</eta>
+                          <eta>
+                            <eta>0.808</eta>
+                            <referenceUID>BWB_InnerElevon</referenceUID>
+                          </eta>
                           <trackType>trackType3</trackType>
                           <actuator>
                             <actuatorUID>Act_FT</actuatorUID>
@@ -1019,8 +1089,14 @@
                       <parentUID>BWB_wing_CS</parentUID>
                       <outerShape>
                         <innerBorder>
-                          <etaLE>0.35</etaLE>
-                          <xsiLE>0.845</xsiLE>
+                          <etaLE>
+                            <eta>0.35</eta>
+                            <referenceUID>BWB_MiddleElevon</referenceUID>
+                          </etaLE>
+                          <xsiLE>
+                            <xsi>0.845</xsi>
+                            <referenceUID>BWB_MiddleElevon</referenceUID>
+                          </xsiLE>
                           <leadingEdgeShape>
                             <relHeightLE>0.211</relHeightLE>
                             <xsiUpperSkin>0.5</xsiUpperSkin>
@@ -1028,8 +1104,14 @@
                           </leadingEdgeShape>
                         </innerBorder>
                         <outerBorder>
-                          <etaLE>0.5525</etaLE>
-                          <xsiLE>0.725</xsiLE>
+                          <etaLE>
+                            <eta>0.5525</eta>
+                            <referenceUID>BWB_MiddleElevon</referenceUID>
+                          </etaLE>
+                          <xsiLE>
+                            <xsi>0.725</xsi>
+                            <referenceUID>BWB_MiddleElevon</referenceUID>
+                          </xsiLE>
                           <leadingEdgeShape>
                             <relHeightLE>0.211</relHeightLE>
                             <xsiUpperSkin>0.27</xsiUpperSkin>
@@ -1049,12 +1131,12 @@
                         <steps>
                           <step>
                             <relDeflection>-1</relDeflection>
-                            <innerHingeTranslation>
+                            <innerHingeTranslation uID="BWB_MiddleElevon_innerHingeTranslation1">
                               <x>0.0</x>
                               <y>0.0</y>
                               <z>0.0</z>
                             </innerHingeTranslation>
-                            <outerHingeTranslation>
+                            <outerHingeTranslation uID="BWB_MiddleElevon_outerHingeTranslation1">
                               <x>0.0</x>
                               <z>0.0</z>
                             </outerHingeTranslation>
@@ -1062,12 +1144,12 @@
                           </step>
                           <step>
                             <relDeflection>0</relDeflection>
-                            <innerHingeTranslation>
+                            <innerHingeTranslation uID="BWB_MiddleElevon_innerHingeTranslation2">
                               <x>0.0</x>
                               <y>0.0</y>
                               <z>0.0</z>
                             </innerHingeTranslation>
-                            <outerHingeTranslation>
+                            <outerHingeTranslation uID="BWB_MiddleElevon_outerHingeTranslation2">
                               <x>0.0</x>
                               <z>0.0</z>
                             </outerHingeTranslation>
@@ -1075,12 +1157,12 @@
                           </step>
                           <step>
                             <relDeflection>1</relDeflection>
-                            <innerHingeTranslation>
+                            <innerHingeTranslation uID="BWB_MiddleElevon_innerHingeTranslation3">
                               <x>0.0</x>
                               <y>0.0</y>
                               <z>0.0</z>
                             </innerHingeTranslation>
-                            <outerHingeTranslation>
+                            <outerHingeTranslation uID="BWB_MiddleElevon_outerHingeTranslation3">
                               <x>0.0</x>
                               <z>0.0</z>
                             </outerHingeTranslation>
@@ -1090,7 +1172,10 @@
                       </path>
                       <tracks>
                         <track uID="MiddleEvevon_FT1">
-                          <eta>0.280</eta>
+                          <eta>
+                            <eta>0.28</eta>
+                            <referenceUID>BWB_MiddleElevon</referenceUID>
+                          </eta>
                           <trackType>trackType3</trackType>
                           <actuator>
                             <actuatorUID>Act_FT</actuatorUID>
@@ -1101,7 +1186,10 @@
                           </actuator>
                         </track>
                         <track uID="MiddleEvevon_FT2">
-                          <eta>0.808</eta>
+                          <eta>
+                            <eta>0.808</eta>
+                            <referenceUID>BWB_MiddleElevon</referenceUID>
+                          </eta>
                           <trackType>trackType3</trackType>
                           <actuator>
                             <actuatorUID>Act_FT</actuatorUID>
@@ -1119,8 +1207,14 @@
                       <parentUID>BWB_wing_CS</parentUID>
                       <outerShape>
                         <innerBorder>
-                          <etaLE>0.5525</etaLE>
-                          <xsiLE>0.725</xsiLE>
+                          <etaLE>
+                            <eta>0.5525</eta>
+                            <referenceUID>BWB_OuterElevon</referenceUID>
+                          </etaLE>
+                          <xsiLE>
+                            <xsi>0.725</xsi>
+                            <referenceUID>BWB_OuterElevon</referenceUID>
+                          </xsiLE>
                           <leadingEdgeShape>
                             <relHeightLE>0.211</relHeightLE>
                             <xsiUpperSkin>0.5</xsiUpperSkin>
@@ -1128,8 +1222,14 @@
                           </leadingEdgeShape>
                         </innerBorder>
                         <outerBorder>
-                          <etaLE>0.81268</etaLE>
-                          <xsiLE>0.725</xsiLE>
+                          <etaLE>
+                            <eta>0.81268</eta>
+                            <referenceUID>BWB_OuterElevon</referenceUID>
+                          </etaLE>
+                          <xsiLE>
+                            <xsi>0.725</xsi>
+                            <referenceUID>BWB_OuterElevon</referenceUID>
+                          </xsiLE>
                           <leadingEdgeShape>
                             <relHeightLE>0.211</relHeightLE>
                             <xsiUpperSkin>0.27</xsiUpperSkin>
@@ -1149,12 +1249,12 @@
                         <steps>
                           <step>
                             <relDeflection>-1</relDeflection>
-                            <innerHingeTranslation>
+                            <innerHingeTranslation uID="BWB_OuterElevon_innerHingeTranslation1">
                               <x>0.0</x>
                               <y>0.0</y>
                               <z>0.0</z>
                             </innerHingeTranslation>
-                            <outerHingeTranslation>
+                            <outerHingeTranslation uID="BWB_OuterElevon_outerHingeTranslation1">
                               <x>0.0</x>
                               <z>0.0</z>
                             </outerHingeTranslation>
@@ -1162,12 +1262,12 @@
                           </step>
                           <step>
                             <relDeflection>0</relDeflection>
-                            <innerHingeTranslation>
+                            <innerHingeTranslation uID="BWB_OuterElevon_innerHingeTranslation2">
                               <x>0.0</x>
                               <y>0.0</y>
                               <z>0.0</z>
                             </innerHingeTranslation>
-                            <outerHingeTranslation>
+                            <outerHingeTranslation uID="BWB_OuterElevon_outerHingeTranslation2">
                               <x>0.0</x>
                               <z>0.0</z>
                             </outerHingeTranslation>
@@ -1175,12 +1275,12 @@
                           </step>
                           <step>
                             <relDeflection>1</relDeflection>
-                            <innerHingeTranslation>
+                            <innerHingeTranslation uID="BWB_OuterElevon_innerHingeTranslation3">
                               <x>0.0</x>
                               <y>0.0</y>
                               <z>0.0</z>
                             </innerHingeTranslation>
-                            <outerHingeTranslation>
+                            <outerHingeTranslation uID="BWB_OuterElevon_outerHingeTranslation3">
                               <x>0.0</x>
                               <z>0.0</z>
                             </outerHingeTranslation>
@@ -1190,7 +1290,10 @@
                       </path>
                       <tracks>
                         <track uID="OuterElevon_FT1">
-                          <eta>0.280</eta>
+                          <eta>
+                            <eta>0.28</eta>
+                            <referenceUID>BWB_OuterElevon</referenceUID>
+                          </eta>
                           <trackType>trackType3</trackType>
                           <actuator>
                             <actuatorUID>Act_FT</actuatorUID>
@@ -1201,7 +1304,10 @@
                           </actuator>
                         </track>
                         <track uID="OuterElevon_FT2">
-                          <eta>0.808</eta>
+                          <eta>
+                            <eta>0.808</eta>
+                            <referenceUID>BWB_OuterElevon</referenceUID>
+                          </eta>
                           <trackType>trackType3</trackType>
                           <actuator>
                             <actuatorUID>Act_FT</actuatorUID>
@@ -1219,9 +1325,18 @@
                       <parentUID>BWB_wing_CS</parentUID>
                       <outerShape>
                         <innerBorder>
-                          <etaLE>0.81268</etaLE>
-                          <etaTE>0.81268</etaTE>
-                          <xsiLE>0.721</xsiLE>
+                          <etaLE>
+                            <eta>0.81268</eta>
+                            <referenceUID>BWB_AllSpeedAileron</referenceUID>
+                          </etaLE>
+                          <etaTE>
+                            <eta>0.81268</eta>
+                            <referenceUID>BWB_AllSpeedAileron</referenceUID>
+                          </etaTE>
+                          <xsiLE>
+                            <xsi>0.721</xsi>
+                            <referenceUID>BWB_AllSpeedAileron</referenceUID>
+                          </xsiLE>
                           <leadingEdgeShape>
                             <relHeightLE>0.5</relHeightLE>
                             <xsiUpperSkin>0.85</xsiUpperSkin>
@@ -1229,8 +1344,14 @@
                           </leadingEdgeShape>
                         </innerBorder>
                         <outerBorder>
-                          <etaLE>0.961</etaLE>
-                          <xsiLE>0.697</xsiLE>
+                          <etaLE>
+                            <eta>0.961</eta>
+                            <referenceUID>BWB_AllSpeedAileron</referenceUID>
+                          </etaLE>
+                          <xsiLE>
+                            <xsi>0.697</xsi>
+                            <referenceUID>BWB_AllSpeedAileron</referenceUID>
+                          </xsiLE>
                           <leadingEdgeShape>
                             <relHeightLE>0.5</relHeightLE>
                             <xsiUpperSkin>0.85</xsiUpperSkin>
@@ -1250,12 +1371,12 @@
                         <steps>
                           <step>
                             <relDeflection>-1</relDeflection>
-                            <innerHingeTranslation>
+                            <innerHingeTranslation uID="BWB_AllSpeedAileron_innerHingeTranslation1">
                               <x>0.0</x>
                               <y>0.0</y>
                               <z>0.0</z>
                             </innerHingeTranslation>
-                            <outerHingeTranslation>
+                            <outerHingeTranslation uID="BWB_AllSpeedAileron_outerHingeTranslation1">
                               <x>0.0</x>
                               <z>0.0</z>
                             </outerHingeTranslation>
@@ -1263,12 +1384,12 @@
                           </step>
                           <step>
                             <relDeflection>0.0</relDeflection>
-                            <innerHingeTranslation>
+                            <innerHingeTranslation uID="BWB_AllSpeedAileron_innerHingeTranslation2">
                               <x>0.0</x>
                               <y>0.0</y>
                               <z>0.0</z>
                             </innerHingeTranslation>
-                            <outerHingeTranslation>
+                            <outerHingeTranslation uID="BWB_AllSpeedAileron_outerHingeTranslation2">
                               <x>0.0</x>
                               <z>0.0</z>
                             </outerHingeTranslation>
@@ -1276,12 +1397,12 @@
                           </step>
                           <step>
                             <relDeflection>1</relDeflection>
-                            <innerHingeTranslation>
+                            <innerHingeTranslation uID="BWB_AllSpeedAileron_innerHingeTranslation3">
                               <x>0.0</x>
                               <y>0.0</y>
                               <z>0.0</z>
                             </innerHingeTranslation>
-                            <outerHingeTranslation>
+                            <outerHingeTranslation uID="BWB_AllSpeedAileron_outerHingeTranslation3">
                               <x>0.0</x>
                               <z>0.0</z>
                             </outerHingeTranslation>
@@ -1291,11 +1412,17 @@
                       </path>
                       <tracks>
                         <track uID="Aileron_Hinge1">
-                          <eta>0.25</eta>
+                          <eta>
+                            <eta>0.25</eta>
+                            <referenceUID>BWB_AllSpeedAileron</referenceUID>
+                          </eta>
                           <trackType>trackType1</trackType>
                         </track>
                         <track uID="Aileron_Hinge2">
-                          <eta>0.75</eta>
+                          <eta>
+                            <eta>0.75</eta>
+                            <referenceUID>BWB_AllSpeedAileron</referenceUID>
+                          </eta>
                           <trackType>trackType1</trackType>
                         </track>
                       </tracks>
@@ -1352,8 +1479,14 @@
                       <parentUID>BWB_wing_CS</parentUID>
                       <outerShape>
                         <innerBorder>
-                          <etaLE>0.5525</etaLE>
-                          <xsiLE>0.726</xsiLE>
+                          <etaLE>
+                            <eta>0.5525</eta>
+                            <referenceUID>BWB_Spoiler</referenceUID>
+                          </etaLE>
+                          <xsiLE>
+                            <xsi>0.726</xsi>
+                            <referenceUID>BWB_Spoiler</referenceUID>
+                          </xsiLE>
                           <leadingEdgeShape>
                             <relHeightLE>0.211</relHeightLE>
                             <xsiUpperSkin>0.5</xsiUpperSkin>
@@ -1361,8 +1494,14 @@
                           </leadingEdgeShape>
                         </innerBorder>
                         <outerBorder>
-                          <etaLE>0.81268</etaLE>
-                          <xsiLE>0.726</xsiLE>
+                          <etaLE>
+                            <eta>0.81268</eta>
+                            <referenceUID>BWB_Spoiler</referenceUID>
+                          </etaLE>
+                          <xsiLE>
+                            <xsi>0.726</xsi>
+                            <referenceUID>BWB_Spoiler</referenceUID>
+                          </xsiLE>
                           <leadingEdgeShape>
                             <relHeightLE>0.211</relHeightLE>
                             <xsiUpperSkin>0.27</xsiUpperSkin>
@@ -1382,12 +1521,12 @@
                         <steps>
                           <step>
                             <relDeflection>0</relDeflection>
-                            <innerHingeTranslation>
+                            <innerHingeTranslation uID="BWB_Spoiler_innerHingeTranslation1">
                               <x>0.0</x>
                               <y>0.0</y>
                               <z>0.0</z>
                             </innerHingeTranslation>
-                            <outerHingeTranslation>
+                            <outerHingeTranslation uID="BWB_Spoiler_outerHingeTranslation1">
                               <x>0.0</x>
                               <z>0.0</z>
                             </outerHingeTranslation>
@@ -1395,12 +1534,12 @@
                           </step>
                           <step>
                             <relDeflection>1</relDeflection>
-                            <innerHingeTranslation>
+                            <innerHingeTranslation uID="BWB_Spoiler_innerHingeTranslation2">
                               <x>0.0</x>
                               <y>0.0</y>
                               <z>0.0</z>
                             </innerHingeTranslation>
-                            <outerHingeTranslation>
+                            <outerHingeTranslation uID="BWB_Spoiler_outerHingeTranslation2">
                               <x>0.0</x>
                               <z>0.0</z>
                             </outerHingeTranslation>
@@ -2506,10 +2645,10 @@
           </aeroPerformanceMap>
           <massBreakdown>
             <designMasses>
-              <mTOM>
+              <mTOM uID="BWB450_mTOM1">
                 <name/>
                 <mass>435617.3078</mass>
-                <location>
+                <location uID="BWB450_mTOM1_location1">
                   <x>23.0042</x>
                   <y>4.5003</y>
                   <z>-0.034804</z>
@@ -2520,18 +2659,18 @@
                   <Jzz>63402390.1951</Jzz>
                 </massInertia>
               </mTOM>
-              <mMLM>
+              <mMLM uID="BWB450_mMLM1">
                 <name/>
                 <mass>0</mass>
               </mMLM>
-              <mMRM>
+              <mMRM uID="BWB450_mMRM1">
                 <name/>
                 <mass>390000</mass>
               </mMRM>
-              <mZFM>
+              <mZFM uID="BWB450_mZFM1">
                 <name/>
                 <mass>292995.8025</mass>
-                <location>
+                <location uID="BWB450_mZFM1_location1">
                   <x>20.59</x>
                   <y>6.6909</y>
                   <z>-0.051746</z>
@@ -2544,10 +2683,10 @@
               </mZFM>
             </designMasses>
             <fuel>
-              <massDescription>
+              <massDescription uID="BWB450_massDescription1">
                 <name/>
                 <mass>142621.5053</mass>
-                <location>
+                <location uID="BWB450_massDescription1_location1">
                   <x>27.9639</x>
                   <y>0</y>
                   <z>0</z>
@@ -2555,15 +2694,15 @@
               </massDescription>
             </fuel>
             <payload>
-              <massDescription>
+              <massDescription uID="BWB450_massDescription2">
                 <name>Passanger Mass + Extra Cargo Mass</name>
                 <mass>50000</mass>
               </massDescription>
               <mPax>
-                <massDescription>
+                <massDescription uID="BWB450_massDescription3">
                   <name>Passanger Mass 100 kg per Passanger</name>
                   <mass>44961.2471</mass>
-                  <location>
+                  <location uID="BWB450_massDescription3_location1">
                     <x>16.233</x>
                     <y>3.9664</y>
                     <z>-1.05</z>
@@ -2571,10 +2710,10 @@
                 </massDescription>
               </mPax>
               <mCargo>
-                <massDescription>
+                <massDescription uID="BWB450_massDescription4">
                   <name>Extra Cargo Mass</name>
                   <mass>144.3428</mass>
-                  <location>
+                  <location uID="BWB450_massDescription4_location1">
                     <x>13.0102</x>
                     <y>1.7545</y>
                     <z>-0.75</z>
@@ -2587,9 +2726,9 @@
                 <mStructure>
                   <mWingsStructure>
                     <mWingStructure>
-                      <massDescription>
+                      <massDescription uID="BWB450_massDescription5">
                         <mass>22044.3819</mass>
-                        <location>
+                        <location uID="BWB450_massDescription5_location1">
                           <x>28.5116</x>
                           <y>18.3176</y>
                           <z>0</z>
@@ -2602,9 +2741,9 @@
                       </massDescription>
                     </mWingStructure>
                     <mWingStructure>
-                      <massDescription>
+                      <massDescription uID="BWB450_massDescription6">
                         <mass>6425</mass>
-                        <location>
+                        <location uID="BWB450_massDescription6_location1">
                           <x>29.6467</x>
                           <y>0</y>
                           <z>0</z>
@@ -2616,9 +2755,9 @@
                         </massInertia>
                       </massDescription>
                     </mWingStructure>
-                    <massDescription>
+                    <massDescription uID="BWB450_massDescription7">
                       <mass>28469.3819</mass>
-                      <location>
+                      <location uID="BWB450_massDescription7_location1">
                         <x>28.7678</x>
                         <y>14.1837</y>
                         <z>0</z>
@@ -2632,9 +2771,9 @@
                   </mWingsStructure>
                   <mFuselagesStructure>
                     <mFuselageStructure>
-                      <massDescription>
+                      <massDescription uID="BWB450_massDescription8">
                         <mass>99174.8115</mass>
-                        <location>
+                        <location uID="BWB450_massDescription8_location1">
                           <x>18.0867</x>
                           <y>4.0568</y>
                           <z>0</z>
@@ -2646,9 +2785,9 @@
                         </massInertia>
                       </massDescription>
                     </mFuselageStructure>
-                    <massDescription>
+                    <massDescription uID="BWB450_massDescription9">
                       <mass>99174.8115</mass>
-                      <location>
+                      <location uID="BWB450_massDescription9_location1">
                         <x>18.0867</x>
                         <y>4.0568</y>
                         <z>0</z>
@@ -2662,9 +2801,9 @@
                   </mFuselagesStructure>
                   <mLandingGears>
                     <mLandingGear>
-                      <massDescription>
+                      <massDescription uID="BWB450_massDescription10">
                         <mass>17200</mass>
-                        <location>
+                        <location uID="BWB450_massDescription10_location1">
                           <x>19.0161</x>
                           <y>0</y>
                           <z>-4.2631</z>
@@ -2676,9 +2815,9 @@
                         </massInertia>
                       </massDescription>
                     </mLandingGear>
-                    <massDescription>
+                    <massDescription uID="BWB450_massDescription11">
                       <mass>17200</mass>
-                      <location>
+                      <location uID="BWB450_massDescription11_location1">
                         <x>19.0161</x>
                         <y>0</y>
                         <z>-4.2631</z>
@@ -2691,9 +2830,9 @@
                     </massDescription>
                   </mLandingGears>
                   <mPylons>
-                    <massDescription>
+                    <massDescription uID="BWB450_massDescription12">
                       <mass>10090</mass>
-                      <location>
+                      <location uID="BWB450_massDescription12_location1">
                         <x>33.5</x>
                         <y>2.5</y>
                         <z>4</z>
@@ -2705,9 +2844,9 @@
                       </massInertia>
                     </massDescription>
                   </mPylons>
-                  <massDescription>
+                  <massDescription uID="BWB450_massDescription13">
                     <mass>154934.1934</mass>
-                    <location>
+                    <location uID="BWB450_massDescription13_location1">
                       <x>21.1563</x>
                       <y>5.3659</y>
                       <z>-0.21277</z>
@@ -2721,9 +2860,9 @@
                 </mStructure>
                 <mPowerUnits>
                   <mEquippedEngines>
-                    <massDescription>
+                    <massDescription uID="BWB450_massDescription14">
                       <mass>14000</mass>
-                      <location>
+                      <location uID="BWB450_massDescription14_location1">
                         <x>33.5</x>
                         <y>2.5</y>
                         <z>4</z>
@@ -2736,9 +2875,9 @@
                     </massDescription>
                   </mEquippedEngines>
                   <mBleedAirSystem>
-                    <massDescription>
+                    <massDescription uID="BWB450_massDescription15">
                       <mass>898</mass>
-                      <location>
+                      <location uID="BWB450_massDescription15_location1">
                         <x>33.083</x>
                         <y>4.0594</y>
                         <z>3.605</z>
@@ -2751,9 +2890,9 @@
                     </massDescription>
                   </mBleedAirSystem>
                   <mFuelSystem>
-                    <massDescription>
+                    <massDescription uID="BWB450_massDescription16">
                       <mass>1632.564</mass>
-                      <location>
+                      <location uID="BWB450_massDescription16_location1">
                         <x>33.083</x>
                         <y>4.0594</y>
                         <z>3.605</z>
@@ -2766,9 +2905,9 @@
                     </massDescription>
                   </mFuelSystem>
                   <mInterGasSystem>
-                    <massDescription>
+                    <massDescription uID="BWB450_massDescription17">
                       <mass>0</mass>
-                      <location>
+                      <location uID="BWB450_massDescription17_location1">
                         <x>0</x>
                         <y>0</y>
                         <z>0</z>
@@ -2781,9 +2920,9 @@
                     </massDescription>
                   </mInterGasSystem>
                   <mEngineControl>
-                    <massDescription>
+                    <massDescription uID="BWB450_massDescription18">
                       <mass>0</mass>
-                      <location>
+                      <location uID="BWB450_massDescription18_location1">
                         <x>0</x>
                         <y>0</y>
                         <z>0</z>
@@ -2795,9 +2934,9 @@
                       </massInertia>
                     </massDescription>
                   </mEngineControl>
-                  <massDescription>
+                  <massDescription uID="BWB450_massDescription19">
                     <mass>16530.564</mass>
-                    <location>
+                    <location uID="BWB450_massDescription19_location1">
                       <x>33.4362</x>
                       <y>2.7387</y>
                       <z>3.9395</z>
@@ -2811,9 +2950,9 @@
                 </mPowerUnits>
                 <mSystems>
                   <mAuxillaryPowerUnit>
-                    <massDescription>
+                    <massDescription uID="BWB450_massDescription20">
                       <mass>1000</mass>
-                      <location>
+                      <location uID="BWB450_massDescription20_location1">
                         <x>21.1401</x>
                         <y>2.7294</y>
                         <z>0</z>
@@ -2826,9 +2965,9 @@
                     </massDescription>
                   </mAuxillaryPowerUnit>
                   <mHydraulicGeneration>
-                    <massDescription>
+                    <massDescription uID="BWB450_massDescription21">
                       <mass>2293.941</mass>
-                      <location>
+                      <location uID="BWB450_massDescription21_location1">
                         <x>21.1401</x>
                         <y>2.7294</y>
                         <z>0</z>
@@ -2841,9 +2980,9 @@
                     </massDescription>
                   </mHydraulicGeneration>
                   <mHydraulicDistribution>
-                    <massDescription>
+                    <massDescription uID="BWB450_massDescription22">
                       <mass>2295.4517</mass>
-                      <location>
+                      <location uID="BWB450_massDescription22_location1">
                         <x>21.1401</x>
                         <y>2.7294</y>
                         <z>0</z>
@@ -2856,9 +2995,9 @@
                     </massDescription>
                   </mHydraulicDistribution>
                   <mAirConditioning>
-                    <massDescription>
+                    <massDescription uID="BWB450_massDescription23">
                       <mass>2916.255</mass>
-                      <location>
+                      <location uID="BWB450_massDescription23_location1">
                         <x>21.1401</x>
                         <y>2.7294</y>
                         <z>0</z>
@@ -2871,9 +3010,9 @@
                     </massDescription>
                   </mAirConditioning>
                   <mDeIcing>
-                    <massDescription>
+                    <massDescription uID="BWB450_massDescription24">
                       <mass>52.2521</mass>
-                      <location>
+                      <location uID="BWB450_massDescription24_location1">
                         <x>21.1401</x>
                         <y>2.7294</y>
                         <z>0</z>
@@ -2886,9 +3025,9 @@
                     </massDescription>
                   </mDeIcing>
                   <mFireProtection>
-                    <massDescription>
+                    <massDescription uID="BWB450_massDescription25">
                       <mass>758.1839</mass>
-                      <location>
+                      <location uID="BWB450_massDescription25_location1">
                         <x>21.1401</x>
                         <y>2.7294</y>
                         <z>0</z>
@@ -2901,9 +3040,9 @@
                     </massDescription>
                   </mFireProtection>
                   <mFlightControls>
-                    <massDescription>
+                    <massDescription uID="BWB450_massDescription26">
                       <mass>0</mass>
-                      <location>
+                      <location uID="BWB450_massDescription26_location1">
                         <x>21.1401</x>
                         <y>2.7294</y>
                         <z>0</z>
@@ -2916,9 +3055,9 @@
                     </massDescription>
                   </mFlightControls>
                   <mInstrumentPanel>
-                    <massDescription>
+                    <massDescription uID="BWB450_massDescription27">
                       <mass>611.538</mass>
-                      <location>
+                      <location uID="BWB450_massDescription27_location1">
                         <x>21.1401</x>
                         <y>2.7294</y>
                         <z>0</z>
@@ -2931,9 +3070,9 @@
                     </massDescription>
                   </mInstrumentPanel>
                   <mAutomaticFlightSystem>
-                    <massDescription>
+                    <massDescription uID="BWB450_massDescription28">
                       <mass>0</mass>
-                      <location>
+                      <location uID="BWB450_massDescription28_location1">
                         <x>21.1401</x>
                         <y>2.7294</y>
                         <z>0</z>
@@ -2946,9 +3085,9 @@
                     </massDescription>
                   </mAutomaticFlightSystem>
                   <mCommunication>
-                    <massDescription>
+                    <massDescription uID="BWB450_massDescription29">
                       <mass>1116.427</mass>
-                      <location>
+                      <location uID="BWB450_massDescription29_location1">
                         <x>21.1401</x>
                         <y>2.7294</y>
                         <z>0</z>
@@ -2961,9 +3100,9 @@
                     </massDescription>
                   </mCommunication>
                   <mElectricalGeneration>
-                    <massDescription>
+                    <massDescription uID="BWB450_massDescription30">
                       <mass>0</mass>
-                      <location>
+                      <location uID="BWB450_massDescription30_location1">
                         <x>21.1401</x>
                         <y>2.7294</y>
                         <z>0</z>
@@ -2976,9 +3115,9 @@
                     </massDescription>
                   </mElectricalGeneration>
                   <mElectricalDistribution>
-                    <massDescription>
+                    <massDescription uID="BWB450_massDescription31">
                       <mass>3510.282</mass>
-                      <location>
+                      <location uID="BWB450_massDescription31_location1">
                         <x>21.1401</x>
                         <y>2.7294</y>
                         <z>0</z>
@@ -2991,9 +3130,9 @@
                     </massDescription>
                   </mElectricalDistribution>
                   <mIntegratedModularAvionics>
-                    <massDescription>
+                    <massDescription uID="BWB450_massDescription32">
                       <mass>0</mass>
-                      <location>
+                      <location uID="BWB450_massDescription32_location1">
                         <x>21.1401</x>
                         <y>2.7294</y>
                         <z>0</z>
@@ -3006,9 +3145,9 @@
                     </massDescription>
                   </mIntegratedModularAvionics>
                   <mMillitarySystems>
-                    <massDescription>
+                    <massDescription uID="BWB450_massDescription33">
                       <mass>0</mass>
-                      <location>
+                      <location uID="BWB450_massDescription33_location1">
                         <x>21.1401</x>
                         <y>2.7294</y>
                         <z>0</z>
@@ -3021,9 +3160,9 @@
                     </massDescription>
                   </mMillitarySystems>
                   <mNavigation>
-                    <massDescription>
+                    <massDescription uID="BWB450_massDescription34">
                       <mass>0</mass>
-                      <location>
+                      <location uID="BWB450_massDescription34_location1">
                         <x>21.1401</x>
                         <y>2.7294</y>
                         <z>0</z>
@@ -3035,9 +3174,9 @@
                       </massInertia>
                     </massDescription>
                   </mNavigation>
-                  <massDescription>
+                  <massDescription uID="BWB450_massDescription35">
                     <mass>14554.3307</mass>
-                    <location>
+                    <location uID="BWB450_massDescription35_location1">
                       <x>21.1401</x>
                       <y>2.7294</y>
                       <z>0</z>
@@ -3051,9 +3190,9 @@
                 </mSystems>
                 <mFurnishing>
                   <mFurnishings>
-                    <massDescription>
+                    <massDescription uID="BWB450_massDescription36">
                       <mass>16618.4948</mass>
-                      <location>
+                      <location uID="BWB450_massDescription36_location1">
                         <x>18.33</x>
                         <y>3.6193</y>
                         <z>0</z>
@@ -3066,9 +3205,9 @@
                     </massDescription>
                   </mFurnishings>
                   <mFixedEmergencyOxygen>
-                    <massDescription>
+                    <massDescription uID="BWB450_massDescription37">
                       <mass>497.855</mass>
-                      <location>
+                      <location uID="BWB450_massDescription37_location1">
                         <x>18.33</x>
                         <y>3.6193</y>
                         <z>0</z>
@@ -3081,9 +3220,9 @@
                     </massDescription>
                   </mFixedEmergencyOxygen>
                   <mLightning>
-                    <massDescription>
+                    <massDescription uID="BWB450_massDescription38">
                       <mass>1049.5637</mass>
-                      <location>
+                      <location uID="BWB450_massDescription38_location1">
                         <x>18.33</x>
                         <y>3.6193</y>
                         <z>0</z>
@@ -3096,9 +3235,9 @@
                     </massDescription>
                   </mLightning>
                   <mWaterSystem>
-                    <massDescription>
+                    <massDescription uID="BWB450_massDescription39">
                       <mass>2048.787</mass>
-                      <location>
+                      <location uID="BWB450_massDescription39_location1">
                         <x>18.33</x>
                         <y>3.6193</y>
                         <z>0</z>
@@ -3111,9 +3250,9 @@
                     </massDescription>
                   </mWaterSystem>
                   <mLiquidCooling>
-                    <massDescription>
+                    <massDescription uID="BWB450_massDescription40">
                       <mass>0</mass>
-                      <location>
+                      <location uID="BWB450_massDescription40_location1">
                         <x>18.33</x>
                         <y>3.6193</y>
                         <z>0</z>
@@ -3125,9 +3264,9 @@
                       </massInertia>
                     </massDescription>
                   </mLiquidCooling>
-                  <massDescription>
+                  <massDescription uID="BWB450_massDescription41">
                     <mass>20214.7005</mass>
-                    <location>
+                    <location uID="BWB450_massDescription41_location1">
                       <x>18.33</x>
                       <y>3.6193</y>
                       <z>0</z>
@@ -3140,9 +3279,9 @@
                   </massDescription>
                 </mFurnishing>
                 <mOperatorItems>
-                  <massDescription>
+                  <massDescription uID="BWB450_massDescription42">
                     <mass>20828.212</mass>
-                    <location>
+                    <location uID="BWB450_massDescription42_location1">
                       <x>19.0195</x>
                       <y>19.0195</y>
                       <z>0</z>
@@ -3154,9 +3293,9 @@
                     </massInertia>
                   </massDescription>
                 </mOperatorItems>
-                <massDescription>
+                <massDescription uID="BWB450_massDescription43">
                   <mass>227062.0006</mass>
-                  <location>
+                  <location uID="BWB450_massDescription43_location1">
                     <x>21.6017</x>
                     <y>6.1026</y>
                     <z>0.14162</z>
@@ -3169,9 +3308,9 @@
                 </massDescription>
               </mEM>
               <mOperatorItems>
-                <massDescription>
+                <massDescription uID="BWB450_massDescription44">
                   <mass>20828.212</mass>
-                  <location>
+                  <location uID="BWB450_massDescription44_location1">
                     <x>19.0194</x>
                     <y>19.0194</y>
                     <z>0</z>
@@ -3183,9 +3322,9 @@
                   </massInertia>
                 </massDescription>
               </mOperatorItems>
-              <massDescription>
+              <massDescription uID="BWB450_massDescription45">
                 <mass>247890.2126</mass>
-                <location>
+                <location uID="BWB450_massDescription45_location1">
                   <x>21.3847</x>
                   <y>7.1879</y>
                   <z>0.12972</z>
@@ -3341,7 +3480,7 @@
         <reference>
           <area>908.4892</area>
           <length>24.4413</length>
-          <point>
+          <point uID="BWB450_point1">
             <x>18.2762</x>
             <y>0</y>
             <z>0</z>
