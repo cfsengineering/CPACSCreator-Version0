@@ -2728,7 +2728,7 @@ bool cpcr::AircraftTree::isFuselageTransformationStandardized(cpcr::UID fuselage
     cpcr::MCPACSTransformation currentWingT = this->modifier.getTransformation(wing->getXPath().toString() + "/transformation");
 
     bool simmilar = true;
-    if( ! (idealWingT.getTranslation().toEigen().isApprox(currentWingT.getTranslation().toEigen(), 0.0001)) ){
+    if( ! (idealWingT.getTranslation().toEigen().isApprox(currentWingT.getTranslation().toEigen(), 0.001)) ){
         simmilar = false;
     }
     if( !(idealWingT.getRotation() == currentWingT.getRotation()) ){

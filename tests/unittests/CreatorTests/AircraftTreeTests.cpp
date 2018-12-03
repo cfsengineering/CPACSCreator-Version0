@@ -2366,14 +2366,14 @@ TEST_F(AircraftTreeTest, getFuselageLengthBetween) {
     setVariables("simple-aircraft-fuselages.xml");
 
     double r = tree.getFuselageLengthBetween("D150_Fuselage_1Section1IDElement1", "D150_Fuselage_1Section2IDElement1");
-    EXPECT_EQ(r, 1);
+    EXPECT_DOUBLE_EQ(r, 1);
 
     r = tree.getFuselageLengthBetween("D150_Fuselage_1Section2IDElement1", "D150_Fuselage_1Section3IDElement1");
-    EXPECT_EQ(r, 1);
+    EXPECT_DOUBLE_EQ(r, 1);
 
 
     r = tree.getFuselageLengthBetween( "D150_Fuselage_1Section3IDElement1", "D150_Fuselage_1Section2IDElement1");
-    EXPECT_EQ(r, 1);
+    EXPECT_DOUBLE_EQ(r, 1);
 
 
     r = tree.getFuselageLengthBetween("D150_Fuselage_4Section1IDElement1", "D150_Fuselage_4Section3IDElement1");
@@ -2392,10 +2392,10 @@ TEST_F(AircraftTreeTest, getFuselageLength) {
     setVariables("simple-aircraft-fuselages.xml");
 
     double r = tree.getFuselageLength("SimpleFuselage");
-    EXPECT_EQ(r, 2);
+    EXPECT_DOUBLE_EQ(r, 2);
 
     r = tree.getFuselageLength("FuselageUnconventionalOrdering");
-    EXPECT_EQ(r, 2.5);
+    EXPECT_DOUBLE_EQ(r, 2.5);
 
 
     r = tree.getFuselageLength("SimpleFuselage3");
@@ -2453,7 +2453,9 @@ TEST_F(AircraftTreeTest, setFuselageLengthBetween) {
     tree.writeToFile();
     EXPECT_LE(r, newPartialL + 0.00001);
     EXPECT_GE(r, newPartialL - 0.00001);
-    EXPECT_DOUBLE_EQ(globalL, oldGlobalL-oldPartialL+newPartialL );
+
+    bool temp = mthf::CompareDoubleEpsilon(globalL, (oldGlobalL-oldPartialL+newPartialL));
+    EXPECT_TRUE(temp);
 
 
 
