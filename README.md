@@ -1,3 +1,6 @@
+# WARNING 
+This is the first version of CPACSCreator. This version is not maintain and was used as a proof of concept. If you want the use CPACSCreator prefer the new version that you can find at DLR tigl github: https://github.com/DLR-SC/tigl
+
 # About CPACSCreator
 
 The CPACSCreator framework can be used for the computation, the modification 
